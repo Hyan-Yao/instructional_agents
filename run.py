@@ -44,7 +44,7 @@ def load_catalog():
 
 
 
-def run_instructional_design(copilot: bool = False, catalog: bool = False, model_name: str = "gpt-4o-mini", exp_name: str = ""):
+def run_instructional_design(course_name: str, copilot: bool = False, catalog: bool = False, model_name: str = "gpt-4o-mini", exp_name: str = ""):
     """
     Main function to run the instructional design workflow by sequentially
     executing the six deliberation processes
@@ -83,7 +83,7 @@ def run_instructional_design(copilot: bool = False, catalog: bool = False, model
     start_time = time.time()
     
     # Create ADDIE instance
-    addie = ADDIE(model_name=model_name, copilot=copilot, catalog=catalog, data_catalog=data_catalog)
+    addie = ADDIE(course_name, model_name=model_name, copilot=copilot, catalog=catalog, data_catalog=data_catalog)
     
     # Run the workflow
     output_dir = f"./exp/{exp_name}/"
@@ -102,10 +102,13 @@ def run_instructional_design(copilot: bool = False, catalog: bool = False, model
 
 
 if __name__ == "__main__":
-    os.environ["OPENAI_API_KEY"] = "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"
-        
+    with open("config.json", "r") as f:
+        config = json.load(f)
+    os.environ["OPENAI_API_KEY"] = config.get("OPENAI_API_KEY", "")
+
     # Set up command line arguments
     parser = argparse.ArgumentParser(description="Run instructional design workflow")
+    parser.add_argument("course_name", type=str, help="Name of the course")
     parser.add_argument(
         "--copilot", 
         action="store_true",
@@ -125,11 +128,11 @@ if __name__ == "__main__":
     parser.add_argument(
         "--exp", 
         type=str,
-        default="",
+        default="exp1",
         help="Experiment name for logging"
     )
 
     args = parser.parse_args()
     
     # Run workflow with specified options
-    run_instructional_design(copilot=args.copilot, catalog=args.catalog, model_name=args.model, exp_name=args.exp)
+    run_instructional_design(args.course_name, copilot=args.copilot, catalog=args.catalog, model_name=args.model, exp_name=args.exp)

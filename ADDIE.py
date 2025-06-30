@@ -10,6 +10,7 @@ from agents import (
 )
 
 from slides import SlidesDeliberation
+from compile import LaTeXCompiler
 
 class SyllabusProcessor(Agent):
     """
@@ -98,7 +99,7 @@ class ADDIERunner:
     Runner class for the ADDIE workflow
     Handles command-line interaction and execution logic
     """
-    def __init__(self, addie_instance, output_dir):
+    def __init__(self, addie_instance, output_dir="output"):
         """
         Initialize the runner with an ADDIE instance
         
@@ -110,6 +111,7 @@ class ADDIERunner:
         self.output_dir = output_dir
         self.results = []
         self.chapters = []
+
         # Store these for retry logic with slides
         self.latex_source = None
         self.slides_script = None
@@ -117,7 +119,7 @@ class ADDIERunner:
     def setup(self):
         """Setup the runner by getting user input and creating output directory"""
         # Get user input for course name or topic
-        self.course_name = input("Please provide the course name or topic: ").strip()
+        self.course_name = self.addie.course_name
         if not self.course_name:
             raise ValueError("Course name or topic is required to proceed.")
         
@@ -239,7 +241,11 @@ class ADDIERunner:
             
             # Run SlidesDeliberation for this chapter with retry support
             self._run_slides_generation_with_retry(chapter, chapter_idx, chapter_dir)
-            
+        
+        # After all chapters, compile the LaTeX source and slides script
+        compiler = LaTeXCompiler(self.output_dir)
+        compiler.compile_all()
+        
     def _run_slides_generation_with_retry(self, chapter, chapter_idx, chapter_dir):
         """Run slides generation with retry support"""
         print(f"\n{'#'*40}\nSlides Generation for Chapter {chapter_idx+1}: {len(self.chapters)}: {chapter['title']}\n{'#'*40}\n")
@@ -357,6 +363,7 @@ class ADDIERunner:
             llm=self.addie.llm,
             output_dir=os.path.join(self.output_dir, chapter_dir_name),
             catalog=self.addie.catalog,
+            catalog_dict=self.addie.catalog_dict,
         )
     
     def _save_result(self, deliberation, result):
@@ -489,7 +496,7 @@ class ADDIE:
     ADDIE (Analyze, Design, Develop, Implement, Evaluate) class for instructional design
     This class coordinates a series of deliberations to create a complete course design
     """
-    def __init__(self, model_name: str = "gpt-4o-mini", copilot: bool = False, catalog: bool = False, data_catalog: dict = {}):
+    def __init__(self, course_name, model_name: str = "gpt-4o-mini", copilot: bool = False, catalog: bool = False, data_catalog: dict = {}):
         """
         Initialize ADDIE workflow
         
@@ -497,6 +504,7 @@ class ADDIE:
             model_name: Name of the LLM model to use
             copilot: Whether to enable copilot mode with user feedback
         """
+        self.course_name = course_name
         self.model_name = model_name
         self.copilot = copilot
         self.catalog = catalog
@@ -514,7 +522,8 @@ class ADDIE:
             "resource_assessment": "",
             "learner_analysis": "",
             "syllabus_design": "",
-            "slides_length": 50,
+            "assessment_planning": "",
+            "slides_length": 30,
         }
         
         if self.catalog:
@@ -522,7 +531,8 @@ class ADDIE:
                 "objectives_definition": [data_catalog['course_structure'], data_catalog['institutional_requirements']],
                 "resource_assessment": [data_catalog['teaching_constraints'], data_catalog['institutional_requirements']],
                 "learner_analysis": [data_catalog['student_profile'], data_catalog['prior_feedback']],
-                "syllabus_design": [data_catalog['course_structure'], data_catalog['institutional_requirements']],
+                "syllabus_design": [data_catalog['course_structure'], data_catalog['institutional_requirements'],  data_catalog['instructor_preferences']],
+                "assessment_planning": [data_catalog['assessment_design'], data_catalog['instructor_preferences']],
                 "slides_length": int(data_catalog['teaching_constraints']['max_slide_count'])
             }
 
@@ -537,6 +547,8 @@ class ADDIE:
         self.deliberations.append(self.create_resource_assessment_deliberation()) # Resource Assessment
         self.deliberations.append(self.create_learner_analysis_deliberation()) # Learner Analysis
         self.deliberations.append(self.create_syllabus_design_deliberation()) # Syllabus Design
+        self.deliberations.append(self.create_assessment_planning_deliberation()) # Assessment Planning
+        self.deliberations.append(self.create_final_exam_deliberation()) # Final Exam Design
         
     
     def create_objectives_definition_deliberation(self) -> Deliberation:
@@ -687,6 +699,122 @@ class ADDIE:
             output_format="md",
         )
     
+    def create_assessment_planning_deliberation(self) -> Deliberation:
+        """Create deliberation for planning course assessments and evaluations"""
+        
+        # Create agents for this process
+        teaching_faculty = Agent(
+            name="Teaching Faculty",
+            role="Professor planning course assessments",
+            llm=self.llm,
+            system_prompt=(
+                "You are a Professor responsible for designing a course's assessment and evaluation strategy. "
+                "Your task is to define project-based, milestone-driven, and real-world-relevant assessments, "
+                "including formats, timing, grading rubrics, and submission logistics. Avoid traditional exam-heavy approaches."
+            )
+        )
+        
+        instructional_designer = Agent(
+            name="Instructional Designer",
+            role="Department committee member reviewing assessment plans",
+            llm=self.llm,
+            system_prompt=(
+                "You are a Department Committee Member responsible for evaluating assessment plans to ensure "
+                "they align with institutional policies, learning outcomes, and best practices in competency-based education. "
+                "Provide constructive feedback on assessment design, balance, and fairness."
+            )
+        )
+        
+        summarizer = Agent(
+            name="Summarizer",
+            role="Executive summary creator",
+            llm=self.llm,
+            system_prompt=(
+                "You are a Summarizer for Course Assessment Planning. Please generate a structured document that outlines "
+                "assessment types, milestone structure, grading criteria, submission formats, and delivery platforms. "
+                "Ensure clarity, real-world relevance, and alignment with course objectives."
+            ),
+            output_constraint="Only generate the final assessment planning document, no extra explanations."
+        )
+        
+        # Create and return the deliberation
+        return Deliberation(
+            id="assessment_planning",
+            name="Assessment & Evaluation Planning",
+            agents=[teaching_faculty, instructional_designer],
+            max_rounds=1,
+            summary_agent=summarizer,
+            instruction_prompt=(
+                "Design a complete assessment and evaluation plan for the course. "
+                "Include project-based evaluations, milestone breakdowns (e.g., proposals, progress reports), "
+                "question types (open-ended, MCQs), grading rubrics, and submission formats (.pdf, .ipynb via Canvas LMS). "
+                "Replace the final exam with a cumulative or staged final project. Emphasize real-world application and analytical thinking."
+            ),
+            input_files=self.catalog_dict.get("assessment_planning", []),
+            output_format="md",
+        )
+    
+    def create_final_exam_deliberation(self) -> Deliberation:
+        """Create deliberation for designing a project-based final assessment"""
+
+        # Create agents for this process
+        teaching_faculty = Agent(
+            name="Teaching Faculty",
+            role="Professor designing the final project",
+            llm=self.llm,
+            system_prompt=(
+                "You are a Professor designing a project-based final assessment that replaces the traditional exam. "
+                "The final project should align with course learning objectives and simulate real-world problem-solving. "
+                "Consider incorporating multiple milestones (e.g., proposal, progress update, final deliverable), "
+                "interdisciplinary elements, and collaborative or individual work formats. "
+                "The assessment must promote critical thinking, applied skills, and authentic data usage."
+            )
+        )
+
+        instructional_designer = Agent(
+            name="Instructional Designer",
+            role="Department committee member reviewing final project design",
+            llm=self.llm,
+            system_prompt=(
+                "You are a Department Committee Member responsible for reviewing and refining the design of a final project "
+                "that serves as the course’s summative assessment. Ensure alignment with course objectives, student workload balance, "
+                "inclusive learning principles, and institutional policy. Offer suggestions on clarity, scaffolding, fairness, "
+                "and the use of feedback loops like peer or instructor checkpoints."
+            )
+        )
+
+        summarizer = Agent(
+            name="Summarizer",
+            role="Executive summary creator",
+            llm=self.llm,
+            system_prompt=(
+                "You are a Summarizer for Final Project Planning. Please generate a structured final project plan "
+                "that includes a description, objectives, timeline with milestones, deliverables, grading rubric, "
+                "submission formats, and academic integrity guidelines. The project should reflect real-world relevance and encourage analytical thinking."
+            ),
+            output_constraint="Only generate the final project plan document. Do not include extra explanations or commentary."
+        )
+
+        # Create and return the deliberation
+        return Deliberation(
+            id="final_exam_project",
+            name="Final Project Assessment Design",
+            agents=[teaching_faculty, instructional_designer],
+            max_rounds=1,
+            summary_agent=summarizer,
+            instruction_prompt=(
+                "Collaboratively design a final project to replace the traditional final exam. "
+                "The project should reflect course objectives, be broken into multiple milestones "
+                "(e.g., proposal, draft, final submission), and emphasize real-world data or scenarios. "
+                "Include details such as team vs. individual work, submission format (.pdf, .ipynb, etc.), Canvas LMS compatibility, "
+                "assessment rubrics, peer/instructor feedback checkpoints, and academic integrity considerations. "
+                "The final deliverable should demonstrate applied learning and higher-order thinking."
+            ),
+            input_files=self.catalog_dict.get("assessment_planning", []),
+            output_format="md",
+        )
+
+        
     def run(self, output_dir: str = "./outputs/") -> List[str]:
         """Run the ADDIE workflow using the ADDIERunner
         
@@ -696,5 +824,5 @@ class ADDIE:
         Returns:
             List of results from each deliberation
         """
-        runner = ADDIERunner(self, output_dir)
+        runner = ADDIERunner(self, output_dir=output_dir)
         return runner.run()

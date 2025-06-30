@@ -6,13 +6,8 @@ import time
 
 class LLM:
     def __init__(self, model_name: str = "gpt-4o-mini"):
-        self.model_name = "gpt-4.1-mini" # "gemini-2.0-flash" # "meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8"  # "gpt-4o-mini"
-
-        # os.environ["OPENAI_API_KEY"] = "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"
+        self.model_name = "gpt-4o-mini"
         self.client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
-        # self.client = OpenAI(api_key="sk-NkPZscjNh8q6wym43c80DeCd14A5498281D0BbEfF4Cc2aE4",
-        #    base_url="https://api.gptplus5.com/v1")
 
     def generate_response(self, messages: List[Dict[str, str]], stream = False) -> str:
         start_time = time.time()

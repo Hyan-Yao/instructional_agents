@@ -230,12 +230,18 @@ class CourseEvaluationSystem:
     """
     Main system for evaluating course materials
     """
-    def __init__(self):
+    def __init__(self, exp_name: str):
         self.llm = LLM()
         self.program_chair = ValidationAgent("Program Chair", self.llm)
         self.test_student = ValidationAgent("Test Student", self.llm)
         self.evaluator = EvaluationAgent(self.llm)
-    
+        self.exp_name = exp_name
+
+        self.eval_dir = Path(f"eval/{self.exp_name}/evaluation_results")
+        self.eval_dir.mkdir(parents=True, exist_ok=True)
+        self.valid_dir = Path(f"eval/{self.exp_name}/validation_reports")
+        self.valid_dir.mkdir(parents=True, exist_ok=True)
+
     def read_file_content(self, filepath: str) -> str:
         """Read content from file"""
         try:
@@ -258,8 +264,7 @@ class CourseEvaluationSystem:
     
     def save_validation_report(self, agent_name: str, file_type: str, filename: str, evaluation: str):
         """Save validation report to markdown file"""
-        output_dir = Path("validation_reports")
-        output_dir.mkdir(exist_ok=True)
+        output_dir = self.valid_dir
         
         report_filename = f"{agent_name}_{file_type}_{Path(filename).stem}_validation.md"
         report_path = output_dir / report_filename.replace(" ", "_")
@@ -276,9 +281,8 @@ class CourseEvaluationSystem:
     
     def save_evaluation_results(self, results: Dict):
         """Save evaluation results to JSON and markdown"""
-        output_dir = Path("eval/eval_ca_41/")
-        output_dir.mkdir(exist_ok=True)
-        
+        output_dir = self.eval_dir
+
         # Save JSON results
         json_path = output_dir / "evaluation_scores.json"
         with open(json_path, 'w', encoding='utf-8') as f:
@@ -310,8 +314,10 @@ def main():
     Main function to process course materials
     """
     print("Starting Course Material Evaluation System...")
-    system = CourseEvaluationSystem()
-    root_dir = Path("exp/dmca")
+
+    exp_name = "data_mining"
+    system = CourseEvaluationSystem(exp_name)
+    root_dir = Path(f"exp/{exp_name}")
 
     # Collect all files to process
     file_data = {
@@ -397,6 +403,8 @@ def main():
         print(f"  Score Range: {data['summary']['min_score']} - {data['summary']['max_score']}")
 
 if __name__ == "__main__":
-    os.environ["OPENAI_API_KEY"] = "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"
-        
+    with open("config.json", "r") as f:
+        config = json.load(f)
+    os.environ["OPENAI_API_KEY"] = config.get("OPENAI_API_KEY", "")
+    
     main()

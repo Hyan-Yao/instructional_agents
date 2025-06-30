@@ -20,6 +20,7 @@ class SlidesDeliberation:
                  max_rounds: int = 1,
                  output_dir: str = "./outputs/",
                  catalog: bool = False,
+                 catalog_dict: Dict[str, Any] = None
                  ):
         """
         Initialize SlidesDeliberation
@@ -40,6 +41,7 @@ class SlidesDeliberation:
         self.max_rounds = max_rounds
         self.output_dir = output_dir
         self.catalog = catalog
+        self.catalog_dict = catalog_dict if catalog_dict else {}
         
         # Initialize containers for results
         self.slides_outline = []
@@ -128,10 +130,6 @@ class SlidesDeliberation:
         print(f"Slides script saved to: {script_path}")
         print(f"Assessment saved to: {assessment_path}")
 
-        # pdf_path = self.compile_latex_to_pdf()
-        print(f"PDF slides saved to: {pdf_path}")
-        print(f"\n{'='*50}\n")
-
         with open(os.path.join(self.output_dir, "statistics_{}.json").format(self.id), "w") as f:
             json.dump({
                 "time_slides": self.time_slides,
@@ -181,7 +179,7 @@ class SlidesDeliberation:
         Additional Context:
         {json.dumps(context, indent=2)}
         
-        Please generate a comprehensive slides outline with about 20 slides covering all important aspects of this chapter.
+        Please generate a comprehensive slides outline with about {self.catalog_dict['slides_length'] / 3} slides covering all important aspects of this chapter.
         The outline should be in JSON format with the following structure:
         
         {outline_template}
@@ -473,6 +471,9 @@ class SlidesDeliberation:
         
         {assessment_template}
         
+        Assessments should meet the following requirements:
+        {self.catalog_dict['assessment_planning']}
+
         Each assessment entry should include:
         1. Multiple choice questions (with options and correct answers)
         2. Practical activities or exercises
@@ -909,7 +910,7 @@ class SlidesDeliberation:
             if i in self.slides_script:
                 script = self.slides_script[i]
                 frame_count = script.get("frame_count", 1)
-                script_md += f"## Slide {script['slide_id']}: {script['title']}\n"
+                script_md += f"## Section {script['slide_id']}: {script['title']}\n"
                 if frame_count > 1:
                     script_md += f"*({frame_count} frames)*\n\n"
                 else:
@@ -926,7 +927,7 @@ class SlidesDeliberation:
         for i in range(len(self.slides_outline)):
             if i in self.assessment_content:
                 assessment = self.assessment_content[i]
-                assessment_md += f"## Slide {assessment['slide_id']}: {assessment['title']}\n\n"
+                assessment_md += f"## Section {assessment['slide_id']}: {assessment['title']}\n\n"
                 
                 # Learning Objectives
                 if assessment['assessment'].get('learning_objectives'):
@@ -963,12 +964,3 @@ class SlidesDeliberation:
         
         return assessment_md
     
-    def compile_latex_to_pdf(self):
-        """Compile the LaTeX source to PDF using pdflatex"""
-        latex_path = os.path.join(self.output_dir, f"slides.tex")
-        try:
-            os.system(f"pdflatex -output-directory={self.output_dir} {latex_path}")
-            print(f"PDF compiled successfully: slides.pdf")
-        except Exception as e:
-            print(f"Error compiling LaTeX to PDF: {e}")
-        return os.path.join(self.output_dir, f"slides.pdf")
