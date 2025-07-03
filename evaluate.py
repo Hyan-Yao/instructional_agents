@@ -5,6 +5,7 @@ from openai import OpenAI
 from pathlib import Path
 import pandas as pd
 from agents import LLM
+import argparse
 
 class ValidationAgent:
     """
@@ -159,19 +160,28 @@ class EvaluationAgent:
             {"role": "user", "content": prompt}
         ]
         
-        response, elapsed_time, token_usage = self.llm.generate_response(messages, stream=False)
-        
-        try:
-            result = json.loads(response)
-            score = float(result.get("SCORE", 3.0))
-            if 1.0 <= score <= 5.0:
-                return score
-            else:
-                print(f"Invalid score {score} for {metric} in {file_type}. Defaulting to 3.0.")
-                return 3.0
-        except Exception as e:
-            print(f"Failed to parse score from response: {response}. Error: {e}")
-            return 3.0  # Default to midpoint
+        max_retries = 3  # 最多重试3次
+        retries = 0
+
+        while retries < max_retries:
+            response, elapsed_time, token_usage = self.llm.generate_response(messages, stream=False)
+
+            try:
+                result = json.loads(response)
+                score = float(result.get("SCORE", 3.0))
+                if 1.0 <= score <= 5.0:
+                    return score
+                else:
+                    print(f"Invalid score {score} for {metric} in {file_type}. Retrying...")
+            except Exception as e:
+                print(f"Failed to parse score from response: {response}. Error: {e}. Retrying...")
+
+            retries += 1
+
+        # 如果重试后仍然失败，默认返回3.0
+        print(f"Max retries reached. Defaulting to 3.0 for {metric} in {file_type}.")
+        return 3.0
+
 
     def evaluate_files(self, file_data: Dict[str, List[Dict]]) -> Dict:
         """
@@ -309,13 +319,12 @@ class CourseEvaluationSystem:
         
         print(f"Saved evaluation results: {json_path}, {md_path}")
 
-def main():
+def main(exp_name):
     """
     Main function to process course materials
     """
     print("Starting Course Material Evaluation System...")
 
-    exp_name = "data_mining"
     system = CourseEvaluationSystem(exp_name)
     root_dir = Path(f"exp/{exp_name}")
 
@@ -355,7 +364,7 @@ def main():
                     
                     if content and file_type != 'Unknown':
                         file_data[file_type].append({
-                            'filename': f"{chapter_dir.name}/{filename}",
+                            'filename': f"{chapter_dir.name}_{filename}",
                             'content': content,
                             'filepath': str(filepath)
                         })
@@ -406,5 +415,15 @@ if __name__ == "__main__":
     with open("config.json", "r") as f:
         config = json.load(f)
     os.environ["OPENAI_API_KEY"] = config.get("OPENAI_API_KEY", "")
+
+    # Set up command line arguments
+    parser = argparse.ArgumentParser(description="Run evaluation ......")
+    parser.add_argument(
+        "--exp", 
+        type=str,
+        default="exp1",
+        help="Experiment name for logging"
+    )
     
-    main()
+    args = parser.parse_args()
+    main(exp_name = args.exp)

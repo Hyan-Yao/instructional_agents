@@ -238,6 +238,6 @@ class LaTeXCompiler:
 
 # Example usage:
 if __name__ == "__main__":
-    output_directory = "/home/ubuntu/EduAgents/exp/ac"
+    output_directory = "/home/ubuntu/EduAgents/exp/30dm"
     compiler = LaTeXCompiler(output_directory)
     compiler.compile_all()

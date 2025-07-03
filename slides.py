@@ -141,7 +141,62 @@ class SlidesDeliberation:
             }, f, indent=2)
     
     def _get_templates(self):
-        self.latex_template = ""
+        self.latex_template = r"""
+        \documentclass{beamer}
+
+        % Theme choice
+        \usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+        % Encoding and font
+        \usepackage[utf8]{inputenc}
+        \usepackage[T1]{fontenc}
+
+        % Graphics and tables
+        \usepackage{graphicx}
+        \usepackage{booktabs}
+
+        % Code listings
+        \usepackage{listings}
+        \lstset{
+        basicstyle=\ttfamily\small,
+        keywordstyle=\color{blue},
+        commentstyle=\color{gray},
+        stringstyle=\color{red},
+        breaklines=true,
+        frame=single
+        }
+
+        % Math packages
+        \usepackage{amsmath}
+        \usepackage{amssymb}
+
+        % Colors
+        \usepackage{xcolor}
+
+        % TikZ and PGFPlots
+        \usepackage{tikz}
+        \usepackage{pgfplots}
+        \pgfplotsset{compat=1.18}
+        \usetikzlibrary{positioning}
+
+        % Hyperlinks
+        \usepackage{hyperref}
+
+        % Title information
+        \title{Sample Beamer Presentation}
+        \author{Your Name}
+        \institute{Your Institution}
+        \date{\today}
+
+        \begin{document}
+
+        % Title frame
+        \begin{frame}[fragile]
+            \titlepage
+        \end{frame}
+
+        \end{document}
+        """
 
         if self.catalog:
             template_dir = "catalog/references"
