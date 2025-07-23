@@ -6,45 +6,29 @@ import json
 from ADDIE import ADDIE
 
 
-def load_catalog():
-    # 设置目录路径
-    catalog_dir = "catalog"
+def load_catalog(catalog_dir: str = "catalog", catalog_name: str = "merged_catalog") -> dict:
+    # 设置目录路径和合并后的 JSON 文件路径
+    merged_file = os.path.join(catalog_dir, f"{catalog_name}.json")
 
-    # 要读取的文件名列表
-    json_filenames = [
-        "student_profile.json",
-        "instructor_preferences.json",
-        "course_structure.json",
-        "assessment_design.json",
-        "teaching_constraints.json",
-        "institutional_requirements.json",
-        "prior_feedback.json"
-    ]
+    # 尝试加载合并后的 JSON 文件
+    try:
+        with open(merged_file, "r", encoding="utf-8") as f:
+            data_catalog = json.load(f)
+    except Exception as e:
+        print(f"❌ Failed to load {catalog_name}.json: {e}")
+        return {}
 
-    # 初始化结果字典
-    data_catalog = {}
-
-    # 遍历文件名并加载 JSON 数据
-    for filename in json_filenames:
-        filepath = os.path.join(catalog_dir, filename)
-        try:
-            with open(filepath, "r", encoding="utf-8") as f:
-                data = json.load(f)
-                key = filename.replace(".json", "")
-                data_catalog[key] = data
-        except Exception as e:
-            print(f"Failed to load {filename}: {e}")
-
-    # 示例输出：打印每个部分的字段数
+    # 示例输出：打印每个部分的字段名
     for section, content in data_catalog.items():
-        print(f"{section}: {list(content.keys())} fields loaded.")
-    
+        if isinstance(content, dict):
+            print(f"{section}: {list(content.keys())} fields loaded.")
+        else:
+            print(f"{section}: loaded (type: {type(content).__name__})")
+
     return data_catalog
 
 
-
-
-def run_instructional_design(course_name: str, copilot: bool = False, catalog: bool = False, model_name: str = "gpt-4o-mini", exp_name: str = ""):
+def run_instructional_design(course_name: str, copilot = None, catalog = None, model_name: str = "gpt-4o-mini", exp_name: str = "test"):
     """
     Main function to run the instructional design workflow by sequentially
     executing the six deliberation processes
@@ -65,17 +49,32 @@ def run_instructional_design(course_name: str, copilot: bool = False, catalog: b
             return
         os.environ["OPENAI_API_KEY"] = api_key
     
-    # load input files
-    data_catalog = load_catalog()
+    # Determine catalog flag and catalog source name
+    use_catalog = catalog is not None
+    catalog_source = catalog if use_catalog else None
+    data_catalog = None
     
+    use_copilot = copilot is not None
+    copilot_source = copilot if use_copilot else None
+    data_copilot = None
+
+    # load input files
+    if use_catalog:
+        print(f"Loading catalog from source: {catalog_source}")
+        data_catalog = load_catalog(catalog_dir="catalog", catalog_name=catalog_source)
+
+    if use_copilot:
+        print(f"Using copilot source: {copilot_source}")
+        data_copilot = load_catalog(catalog_dir="copilot", catalog_name=copilot_source)
+
     # Get information about copilot mode
-    mode_str = "COPILOT" if copilot else "AUTOMATIC"
+    mode_str = "COPILOT" if use_copilot else "AUTOMATIC"
     print("\n" + "="*80)
     print(f"INSTRUCTIONAL DESIGN WORKFLOW EXECUTION - {mode_str} MODE")
     print(f"Using SlidesDeliberation for enhanced slide generation")
     print("="*80 + "\n")
-    
-    if copilot:
+
+    if use_copilot:
         print("copilot mode enabled. You will be prompted for suggestions after each deliberation.")
         print("You can also choose to re-run a deliberation with your suggestions.\n")
     
@@ -83,8 +82,11 @@ def run_instructional_design(course_name: str, copilot: bool = False, catalog: b
     start_time = time.time()
     
     # Create ADDIE instance
-    addie = ADDIE(course_name, model_name=model_name, copilot=copilot, catalog=catalog, data_catalog=data_catalog)
-    
+    print("Using catalog data for the workflow.")
+
+
+    addie = ADDIE(course_name, model_name=model_name, copilot=use_copilot, catalog=use_catalog, data_catalog=data_catalog, data_copilot=data_copilot)
+
     # Run the workflow
     output_dir = f"./exp/{exp_name}/"
     os.makedirs(output_dir, exist_ok=True)
@@ -108,31 +110,46 @@ if __name__ == "__main__":
 
     # Set up command line arguments
     parser = argparse.ArgumentParser(description="Run instructional design workflow")
+
     parser.add_argument("course_name", type=str, help="Name of the course")
+
     parser.add_argument(
         "--copilot", 
-        action="store_true",
-        help="Enable copilot mode with user feedback"
+        type=str,
+        nargs='?',  # 表示该参数是可选的，但若提供就需附带字符串
+        const="default_copilot",  # 若用户写了 --copilot 但没提供值，则赋默认值 "default"
+        help="Enable copilot mode. Optionally specify copilot source name."
     )
+
     parser.add_argument(
         "--catalog", 
-        action="store_true",
-        help="Enable catalog mode with catalog files input"
+        type=str,
+        nargs='?',  # 表示该参数是可选的，但若提供就需附带字符串
+        const="default_catalog",  # 若用户写了 --catalog 但没提供值，则赋默认值 "default"
+        help="Enable catalog mode. Optionally specify catalog source name."
     )
+
     parser.add_argument(
         "--model", 
         type=str, 
         default="gpt-4o-mini",
         help="OpenAI model to use (default: gpt-4o-mini)"
     )
+
     parser.add_argument(
         "--exp", 
         type=str,
-        default="exp1",
+        default="test",
         help="Experiment name for logging"
     )
 
     args = parser.parse_args()
-    
+
     # Run workflow with specified options
-    run_instructional_design(args.course_name, copilot=args.copilot, catalog=args.catalog, model_name=args.model, exp_name=args.exp)
+    run_instructional_design(
+        course_name=args.course_name,
+        copilot=args.copilot,
+        catalog=args.catalog,
+        model_name=args.model,
+        exp_name=args.exp,
+    )

@@ -1,0 +1,900 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+basicstyle=\ttfamily\small,
+keywordstyle=\color{blue},
+commentstyle=\color{gray},
+stringstyle=\color{red},
+breaklines=true,
+frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Week 5: Basic RL Algorithms}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Q-Learning - Overview}
+    \begin{block}{Overview of Q-Learning}
+        Q-Learning is a model-free reinforcement learning algorithm that learns the optimal action-selection policy for an agent in an environment. It estimates the value of actions taken in states, allowing the agent to maximize cumulative rewards over time.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Q-Learning - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Agent and Environment:}
+        \begin{itemize}
+            \item The agent is the learner or decision-maker and interacts with the environment.
+            \item The environment encompasses everything the agent interacts with, including states and rewards.
+        \end{itemize}
+        
+        \item \textbf{Rewards:}
+        \begin{itemize}
+            \item Rewards are signals received after taking an action in a specific state, guiding the learning process.
+        \end{itemize}
+
+        \item \textbf{Policy:}
+        \begin{itemize}
+            \item A policy is a mapping from states to actions, defining the agent's behavior.
+        \end{itemize}
+
+        \item \textbf{Q-Value:}
+        \begin{itemize}
+            \item The Q-value is the expected total reward for taking an action in a specific state and following a specific policy.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Q-Learning - The Q-Learning Algorithm}
+    \begin{block}{Q-Learning Update Rule}
+        The key equation in Q-learning is given by:
+        \begin{equation}
+        Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item $Q(s, a)$ is the current estimate of the Q-value for state $s$ and action $a$.
+            \item $\alpha$ is the learning rate (0 < $\alpha$ ≤ 1).
+            \item $r$ is the reward received after executing action $a$ in state $s$.
+            \item $\gamma$ is the discount factor (0 ≤ $\gamma$ < 1).
+            \item $s'$ is the next state after taking action $a$.
+            \item $\max_{a'} Q(s', a')$ is the maximum estimated future rewards from the next state $s'$.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Q-Learning - Example Scenario}
+    \begin{block}{Example Scenario}
+        Consider a robot navigating a grid world where it receives rewards for reaching the goal and penalties for hitting walls. Using Q-learning, the robot updates its Q-values based on the rewards it receives, gradually improving its policy to find the most efficient path to the goal.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Q-Learning - Significance}
+    \begin{itemize}
+        \item \textbf{Model-Free:} Able to learn optimal policies without needing a model of the environment.
+        \item \textbf{Off-Policy Learning:} Learns the Q-value for the optimal policy while exploring with a different policy (e.g., random actions).
+        \item \textbf{Widely Applicable:} Foundational in applications such as gaming (e.g., AlphaGo) and robotics.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Q-Learning - Key Points}
+    \begin{itemize}
+        \item Q-learning provides a mechanism for agents to learn from trial and error.
+        \item The balance between exploration (trying new actions) and exploitation (choosing the best-known action) is crucial for effective learning.
+        \item Q-Learning forms the basis for more complex algorithms in reinforcement learning, such as Deep Q-Networks (DQN).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Reinforcement Learning - Overview}
+    \begin{itemize}
+        \item Introduction to essential concepts: 
+        \begin{enumerate}
+            \item Agents
+            \item Environments
+            \item Rewards
+            \item Policies
+            \item Value Functions
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts - Agents}
+    \begin{block}{Agents}
+        \begin{itemize}
+            \item \textbf{Definition}: An agent is an entity that makes decisions in an environment to achieve certain goals.
+            \item \textbf{Characteristics}: 
+                \begin{itemize}
+                    \item Learns from interactions with the environment.
+                    \item Seeks to maximize cumulative rewards over time.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+    \textbf{Example}: A robot navigating through a maze processes surrounding information to decide its next move.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts - Environments}
+    \begin{block}{Environments}
+        \begin{itemize}
+            \item \textbf{Definition}: The environment includes everything that the agent interacts with to obtain rewards.
+            \item \textbf{Characteristics}:
+                \begin{itemize}
+                    \item Static or dynamic, deterministic or stochastic.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+    \textbf{Example}: In a video game, obstacles, enemies, and rewards collected shape agent decisions.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts - Rewards and Policies}
+    \begin{block}{Rewards}
+        \begin{itemize}
+            \item \textbf{Definition}: A feedback signal received by the agent for performing an action in the environment.
+            \item \textbf{Characteristics}:
+                \begin{itemize}
+                    \item Immediate or delayed rewards.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+    \textbf{Example}: In checkers, winning yields a high reward while losing incurs a penalty.
+    
+    \begin{block}{Policies}
+        \begin{itemize}
+            \item \textbf{Definition}: A strategy used by the agent to determine actions based on the current state.
+            \item \textbf{Characteristics}:
+                \begin{itemize}
+                    \item Deterministic or stochastic.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+    \textbf{Example}: A maze-solving agent might always turn left when encountering a wall.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts - Value Functions}
+    \begin{block}{Value Functions}
+        \begin{itemize}
+            \item \textbf{Definition}: Estimates the expected return an agent can achieve starting from a particular state under a specific policy.
+            \item \textbf{Types}:
+                \begin{itemize}
+                    \item \textbf{State Value Function (V)}: Measures expected return from a state \( s \).
+                    \item \textbf{Action Value Function (Q)}: Measures expected return from taking an action \( a \) in a state \( s \).
+                \end{itemize}
+        \end{itemize}
+        \begin{equation}
+            V(s) = \mathbb{E}[R_t | S_t = s]
+        \end{equation}
+        \begin{equation}
+            Q(s, a) = \mathbb{E}[R_t | S_t = s, A_t = a]
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Reinforcement Learning revolves around the interaction between agents and environments.
+        \item The reward system guides agents in learning optimal behavior.
+        \item Policies and value functions are essential in determining the best actions for the agent.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet - Action Selection}
+    \begin{lstlisting}[language=Python]
+def choose_action(state, policy):
+    if random.random() < epsilon:  # Explore
+        return random.choice(actions)
+    else:  # Exploit
+        return best_action(state, policy)
+    \end{lstlisting}
+    \textbf{Purpose}: This code demonstrates how an agent might balance exploration (trying new actions) and exploitation (using known best actions) in a given state.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Marked Decision Processes (MDPs)}
+    \begin{block}{Definition}
+        A Marked Decision Process (MDP) is a mathematical framework used to describe an environment in reinforcement learning. 
+    \end{block}
+    It consists of a set of states, actions, rewards, and transition probabilities, enabling agents to make decisions optimally over time.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Components of MDPs}
+    \begin{enumerate}
+        \item \textbf{States (S)}:
+        \begin{itemize}
+            \item Possible configurations of the environment.
+            \item Example: In a chess game, each unique arrangement of the pieces is a different state.
+        \end{itemize}
+        
+        \item \textbf{Actions (A)}:
+        \begin{itemize}
+            \item Set of possible moves available to the agent in each state.
+            \item Example: In chess, actions include moving a knight, pawn, or any other piece.
+        \end{itemize}
+        
+        \item \textbf{Rewards (R)}:
+        \begin{itemize}
+            \item A scalar feedback signal that indicates how good a particular action is in a state.
+            \item Example: Winning might yield +1 reward, while losing gives -1.
+        \end{itemize}
+        
+        \item \textbf{Transition Dynamics (P)}:
+        \begin{itemize}
+            \item Probabilities of moving from one state to another after taking an action.
+            \item Represented as $P(s'|s, a)$.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning in MDPs}
+    \begin{itemize}
+        \item \textbf{Q-Learning Goal:}
+        To learn the optimal action-selection policy by approximating the value of state-action pairs (Q-values) based on experience.
+        
+        \item \textbf{Value Function:}
+        Represents expected long-term rewards of taking an action in a state and following the optimal policy thereafter.
+    \end{itemize}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Sequential decision making frameworks.
+            \item Balance between exploration of new actions and exploitation of known rewarding actions.
+            \item Markov property: Future states depend only on current state and action.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning Update Rule}
+    The Q-value update for an action taken in a state is given by:
+    
+    \begin{equation}
+    Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
+    \end{equation}
+
+    Where:
+    \begin{itemize}
+        \item $ \alpha $: learning rate
+        \item $ r $: immediate reward
+        \item $ \gamma $: discount factor (importance of future rewards)
+        \item $ s' $: next state following action $ a $
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Understanding MDPs is crucial for mastering reinforcement learning, as they lay the foundation for algorithms like Q-learning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning Algorithm - Overview}
+    \begin{itemize}
+        \item Q-learning is a model-free reinforcement learning algorithm.
+        \item It enables an agent to learn the optimal action-selection policy using Q-values.
+        \item Q-value represents the expected future rewards for taking an action in a specific state.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Q-Learning}
+    \begin{itemize}
+        \item \textbf{State (s)}: Representation of the environment at a specific time.
+        \item \textbf{Action (a)}: Decision or move made by the agent.
+        \item \textbf{Reward (r)}: Immediate payoff after performing an action.
+        \item \textbf{Next State (s')}: State resulting from the action taken in the current state.
+        \item \textbf{Discount Factor ($\gamma$)}: Value between 0 and 1 that impacts future rewards' significance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Value Update Rule}
+    The core of Q-learning is the Q-value update rule:
+    \[
+    Q(s,a) \leftarrow Q(s,a) + \alpha \left[r + \gamma \max Q(s', a') - Q(s,a)\right]
+    \]
+
+    \begin{block}{Breakdown of the Formula}
+        \begin{itemize}
+            \item \textbf{Q(s, a)}: Current estimate of the action value.
+            \item \textbf{α (alpha)}: Learning rate (0 < α ≤ 1), influencing speed of learning.
+            \item \textbf{r}: Reward received after taking action \( a \).
+            \item \textbf{$\gamma \max Q(s', a')$}: Best action value in the next state weighted by the discount factor.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example Update}
+        \begin{itemize}
+            \item Current State: \( s \)
+            \item Chosen Action: \( a \)
+            \item Received Reward: \( r = 10 \)
+            \item Next State: \( s' \)
+            \item Max Q-Value for Next State: \( \max Q(s', a') = 15 \)
+            \item Learning Rate: \( \alpha = 0.1 \)
+            \item Discount Factor: \( \gamma = 0.9 \)
+        \end{itemize}
+
+        Illustration of Q-value update:
+        \[
+        Q(s, a) \leftarrow Q(s, a) + 0.1 \times (23.5 - Q(s, a))
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Points}
+    \begin{itemize}
+        \item Q-learning is a powerful algorithm utilized in numerous applications such as games and robotics.
+        \item The Q-value update rule is fundamental for learning, balancing new information with existing knowledge.
+        \item Learning rate ($\alpha$) and discount factor ($\gamma$) significantly impact learning efficiency and convergence.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation}
+    \begin{block}{Introduction to the Exploration-Exploitation Dilemma}
+        In the context of reinforcement learning (RL), exploration and exploitation represent two fundamental strategies employed by an agent to optimize its decision-making process:
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation - Exploration}
+    \begin{itemize}
+        \item \textbf{Exploration}:
+            \begin{itemize}
+                \item Strategy of trying out new actions to discover their potential rewards.
+                \item Allows the agent to gather information about the environment, crucial for long-term decisions.
+                \item \textit{Example:} In a maze, an agent might explore a previously unvisited path instead of sticking to a known route.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation - Exploitation}
+    \begin{itemize}
+        \item \textbf{Exploitation}:
+            \begin{itemize}
+                \item Involves selecting actions known to yield the highest reward based on past experiences.
+                \item Utilizes information already acquired to maximize immediate rewards.
+                \item \textit{Example:} After learning that turning right in the maze leads to a reward, the agent consistently chooses the right turn.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Dilemma and Q-Learning}
+    \begin{block}{The Dilemma}
+        The challenge arises because focusing solely on exploration may result in delayed rewards, while concentrating only on exploitation can lead to suboptimal performance due to a lack of understanding of the environment.
+        This balance is often referred to as the exploration-exploitation trade-off.
+    \end{block}
+    
+    \begin{block}{Impact on Q-Learning Performance}
+        In Q-learning:
+        \begin{itemize}
+            \item The agent updates its Q-values based on past actions and rewards.
+            \item Excessive exploitation might miss critical information.
+            \item Too much exploration can lead to inefficient learning.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Strategies to Balance Exploration and Exploitation}
+    \begin{enumerate}
+        \item \textbf{Epsilon-Greedy Strategy}:
+            \begin{itemize}
+                \item With probability $\epsilon$, the agent explores random actions; with probability $1 - \epsilon$, it exploits the action with the highest Q-value.
+            \end{itemize}
+        
+        \item \textbf{Softmax Action Selection}:
+            \begin{itemize}
+                \item Actions are selected probabilistically based on their Q-values.
+                \item Higher Q-values are more likely chosen.
+                \item \textit{Formula:} 
+                \[
+                P(a) = \frac{e^{Q(s,a)/\tau}}{\sum_{a'} e^{Q(s,a')/\tau}}, \text{ where } \tau \text{ is the temperature parameter.}
+                \]
+            \end{itemize}
+        
+        \item \textbf{Upper Confidence Bound (UCB)}:
+            \begin{itemize}
+                \item Balances exploration by considering the uncertainty in estimates.
+                \item Encourages less-explored actions alongside high-reward ones.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item Finding the right balance between exploration and exploitation is crucial for effective learning in RL.
+        \item Common strategies: Epsilon-greedy, Softmax, and UCB.
+        \item The resolution of this dilemma affects the convergence rate and overall performance of Q-learning.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        A successful agent must learn to manage the exploration-exploitation trade-off to maximize its performance. Understanding this concept is vital for the successful application of Q-learning algorithms.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Rate and Discount Factor - Insights}
+    \begin{block}{Overview}
+        Insights into the influence of learning rate ($\alpha$) and discount factor ($\gamma$) on Q-learning and convergence.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Rate ($\alpha$)}
+    \begin{block}{Understanding Learning Rate}
+        The learning rate ($\alpha$) is a hyperparameter that determines the degree to which new information overrides old information in Q-learning.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Definition:} Controls how much of the new Q-value estimate we consider against the old Q-value.
+        \item Ranges from 0 to 1.
+        \begin{itemize}
+            \item \textbf{High $\alpha$ (e.g., 0.9):} Faster learning, may overshoot optimal values.
+            \item \textbf{Low $\alpha$ (e.g., 0.1):} Slower learning, more stable convergence, risk of local minima.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Rate Formula}
+    \begin{block}{Q-value Update Rule}
+        The Q-value update rule in Q-learning is represented as:
+        \begin{equation}
+            Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+        \end{equation}
+        Here, $Q(s, a)$ is the current estimate, $r$ is the immediate reward, $\gamma$ is the discount factor, and $s', a'$ represent the next state and action.
+    \end{block}
+    \begin{example}
+        \textbf{Example:} Let $\alpha = 0.5$, current $Q$-value = 5, and optimal return = 10:
+        \begin{equation}
+            Q(s, a) \leftarrow 5 + 0.5 \left( 10 - 5 \right) = 7.5
+        \end{equation}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Discount Factor ($\gamma$)}
+    \begin{block}{Understanding Discount Factor}
+        The discount factor ($\gamma$) represents the importance of future rewards compared to immediate rewards.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Definition:} Ranges from 0 to 1.
+        \begin{itemize}
+            \item \textbf{$\gamma = 0$}: Values immediate rewards only (short-sighted).
+            \item \textbf{$\gamma \approx 1$}: Considers long-term rewards (better strategies).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impact of Discount Factor}
+    \begin{block}{Effect of $\gamma$}
+        A higher discount factor emphasizes future rewards, while a lower value prioritizes immediate gains.
+    \end{block}
+    \begin{example}
+        \textbf{Example:} If $\gamma = 0.9$ and future reward = 20 units, the effective value is:
+        \begin{equation}
+            \text{Effective Value} = 20 \times 0.9 = 18
+        \end{equation}
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points}
+    \begin{itemize}
+        \item The choice of $\alpha$ affects the speed and stability of learning; balancing is key.
+        \item The choice of $\gamma$ influences the agent's strategy regarding rewards.
+        \item Both hyperparameters are critical for Q-learning convergence and should be tuned contextually.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Final Thoughts}
+        Understanding and setting the learning rate ($\alpha$) and discount factor ($\gamma$) are vital for improving Q-learning performance. 
+    \end{block}
+    \begin{itemize}
+        \item Fine-tuning these parameters leads to better convergence and policy formation.
+        \item Testing different configurations of $\alpha$ and $\gamma$ is beneficial to observe their impact.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Implementing Q-Learning}
+    \begin{block}{Overview}
+        Q-Learning is a value-based reinforcement learning algorithm that aims to find the best action to take given the current state. It does this by learning a policy that maximizes the total expected reward over time.
+    \end{block}
+    
+    \begin{itemize}
+        \item **Agent**: The learner or decision-maker.
+        \item **Environment**: The setting where the agent operates.
+        \item **Actions**: Choices available to the agent.
+        \item **States**: Different situations the agent can find itself in.
+        \item **Rewards**: Feedback from the environment based on the agent's actions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementation Steps - Step 1 and 2}
+    \textbf{Step 1: Import Required Libraries}
+    \begin{lstlisting}[language=Python]
+import numpy as np
+import gym
+    \end{lstlisting}
+    \begin{itemize}
+        \item **NumPy**: Useful for handling arrays and mathematical operations.
+        \item **OpenAI Gym**: A toolkit for developing and comparing reinforcement learning algorithms.
+    \end{itemize}
+    
+    \textbf{Step 2: Initialize the Environment and Parameters}
+    \begin{lstlisting}[language=Python]
+env = gym.make('Taxi-v3')  # Create a Taxi environment
+n_states = env.observation_space.n  # Number of states
+n_actions = env.action_space.n  # Number of actions
+
+# Initialize Q-table
+Q = np.zeros((n_states, n_actions))
+
+# Hyperparameters
+alpha = 0.1  # Learning rate
+gamma = 0.9  # Discount factor
+epsilon = 1.0  # Exploration rate
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementation Steps - Steps 3 to 5}
+    \textbf{Step 3: Define the Q-Learning Algorithm}
+    \begin{lstlisting}[language=Python]
+def q_learning(env, Q, episodes, alpha, gamma, epsilon):
+    for episode in range(episodes):
+        state = env.reset()  # Initialize environment
+        done = False
+        
+        while not done:
+            if np.random.rand() < epsilon:
+                action = env.action_space.sample()  # Explore
+            else:
+                action = np.argmax(Q[state])  # Exploit
+
+            next_state, reward, done, _ = env.step(action)
+
+            # Update Q value
+            Q[state, action] += alpha * (reward + gamma * np.max(Q[next_state]) - Q[state, action])
+            state = next_state
+    \end{lstlisting}
+
+    \textbf{Step 4: Run the Q-Learning Algorithm}
+    \begin{lstlisting}[language=Python]
+q_learning(env, Q, episodes=1000, alpha=0.1, gamma=0.9, epsilon=0.1)
+    \end{lstlisting}
+
+    \textbf{Step 5: Evaluate the Learned Policy}
+    \begin{lstlisting}[language=Python]
+def evaluate_policy(env, Q):
+    state = env.reset()
+    total_reward = 0
+    done = False
+
+    while not done:
+        action = np.argmax(Q[state])  # Follow optimal policy
+        state, reward, done, _ = env.step(action)
+        total_reward += reward
+        
+    return total_reward
+
+reward = evaluate_policy(env, Q)
+print("Total Reward:", reward)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item Q-Learning is off-policy and can learn from following different policies.
+        \item Updating Q-values through learning rates and exploration strategies is crucial for effective learning.
+        \item The exploration rate (epsilon) can dynamically decrease, known as epsilon decay.
+    \end{itemize}
+    \begin{block}{Key Takeaway}
+        Implementing Q-learning in Python provides hands-on experience with adaptive decision-making in dynamic environments, essential for understanding reinforcement learning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges and Limitations of Q-Learning}
+    \begin{block}{Introduction to Q-Learning Challenges}
+        While Q-Learning is a powerful reinforcement learning algorithm, it has some inherent challenges and limitations that can affect performance and effectiveness. Understanding these challenges helps in developing more robust algorithms and applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Convergence Issues}
+    \begin{itemize}
+        \item \textbf{Explanation:}
+        \begin{itemize}
+            \item Convergence refers to the algorithm's ability to reach a stable solution where the Q-values stop changing significantly.
+        \end{itemize}
+        \item \textbf{Challenges:}
+        \begin{itemize}
+            \item Learning Rate ($\alpha$) Sensitivity:
+            \begin{itemize}
+                \item If $\alpha$ is too high, Q-values may oscillate and not converge.
+                \item If too low, convergence can be very slow.
+            \end{itemize}
+            \item Exploration vs. Exploitation:
+            \begin{itemize}
+                \item Insufficient exploration can lead the agent to converge on suboptimal policies.
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Example:}
+        \begin{itemize}
+            \item Consider a grid world where an agent learns to navigate to a goal. If it only explores a portion of the grid, it might conclude that a long path is optimal, ignoring a shorter one.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Curse of Dimensionality}
+    \begin{itemize}
+        \item \textbf{Explanation:}
+        \begin{itemize}
+            \item The curse of dimensionality refers to the exponential increase in the state space as the number of dimensions (features) increases.
+        \end{itemize}
+        \item \textbf{Challenges:}
+        \begin{itemize}
+            \item State-Action Pair Explosion:
+            \begin{itemize}
+                \item In environments with many states or actions, maintaining a Q-table becomes impractical.
+            \end{itemize}
+            \item Data Sparsity:
+            \begin{itemize}
+                \item This sparsity can lead to long learning times as more samples are needed to effectively update Q-values.
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Example:}
+        \begin{itemize}
+            \item In a driving simulation with numerous possible states (speed, direction, traffic conditions), the size of the Q-table grows substantially, causing slow learning.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Emphasis Points}
+    \begin{itemize}
+        \item Q-Learning's efficacy is heavily reliant on the tuning of parameters and the complexity of the environment.
+        \item Effective algorithms often utilize function approximation methods (e.g., neural networks in Deep Q-Learning) to address the curse of dimensionality.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning Update Rule}
+    \begin{equation}
+        Q(s,a) \leftarrow Q(s,a) + \alpha \left[r + \gamma \max_{a'} Q(s',a') - Q(s,a)\right]
+    \end{equation}
+    \begin{itemize}
+        \item Where:
+        \begin{itemize}
+            \item $Q(s, a)$ = Current Q-value
+            \item $r$ = Reward received
+            \item $s'$ = Next state
+            \item $\gamma$ = Discount factor
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding and addressing these challenges is crucial for effectively implementing Q-Learning in complex environments. By optimizing parameters and considering alternative approaches, we can mitigate limitations and enhance the learning process in various applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Q-Learning}
+    \begin{block}{Introduction}
+        Q-learning is a reinforcement learning algorithm allowing agents to learn decision-making by maximizing cumulative rewards in varying environments. This presentation explores its significant applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Game Playing}
+    \begin{block}{Explanation}
+        Q-learning is effective in game playing, where agents learn strategies through environment interaction to maximize scores.
+    \end{block}
+    \begin{exampleblock}{Examples}
+        \begin{itemize}
+            \item \textbf{AlphaGo}: AI that defeated human champions in Go, learned optimal strategies from countless game iterations using Q-learning.
+            \item \textbf{Atari Games}: Q-learning optimized gameplay in Atari by learning from pixel inputs and recommending effective moves.
+        \end{itemize}
+    \end{exampleblock}
+    \begin{block}{Key Point}
+        Game environments provide a clear reward structure, facilitating Q-learning in evaluating and improving policies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Robotics}
+    \begin{block}{Explanation}
+        Q-learning enables robots to learn navigation and task completion through trial and error in dynamic environments.
+    \end{block}
+    \begin{exampleblock}{Examples}
+        \begin{itemize}
+            \item \textbf{Robot Navigation}: A robot learns to navigate mazes with rewards for reaching destinations and penalties for collisions.
+            \item \textbf{Manipulation Tasks}: Robots adjust their actions based on feedback to successfully manipulate objects.
+        \end{itemize}
+    \end{exampleblock}
+    \begin{block}{Key Point}
+        Applications in robotics highlight real-time learning, allowing Q-learning to foster adaptive behavior in real-world settings.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Decision-Making Systems}
+    \begin{block}{Explanation}
+        Q-learning enhances various decision-making systems including finance and healthcare, optimizing long-term reward-based decisions.
+    \end{block}
+    \begin{exampleblock}{Examples}
+        \begin{itemize}
+            \item \textbf{Budget Allocation}: Organizations learn to optimize budget distribution across projects by analyzing past data.
+            \item \textbf{Healthcare}: Q-learning refines treatment plans based on patient feedback and treatment outcomes to improve health.
+        \end{itemize}
+    \end{exampleblock}
+    \begin{block}{Key Point}
+        Decision-making applications leverage Q-learning's ability to evaluate multiple actions and their long-term impacts for informed choices.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Q-learning demonstrates adaptability across diverse applications, including game playing, robotics, and decision-making systems. As agents learn from their environments, they refine decision-making capabilities, paving the way for advanced applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning Update Rule}
+    The Q-learning update rule is given by:
+    \begin{equation}
+    Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+    \end{equation}
+    \begin{itemize}
+        \item $Q(s, a)$: Current value estimate for state $s$ and action $a$
+        \item $r$: Received reward after taking action $a$ in state $s$
+        \item $\gamma$: Discount factor
+        \item $\alpha$: Learning rate
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions}
+    \begin{itemize}
+        \item Summary of key takeaways from the chapter.
+        \item Discussion on future trends in reinforcement learning algorithms.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways from the Chapter}
+    \begin{enumerate}
+        \item \textbf{Understanding Q-Learning:}
+            \begin{itemize}
+                \item Q-Learning is a model-free algorithm that learns action values without a model.
+                \item Updates Q-values using the Bellman equation:
+                \begin{equation}
+                Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
+                \end{equation}
+                \item Where:
+                \begin{itemize}
+                    \item \(Q(s, a)\) is the current action-value.
+                    \item \(\alpha\) is the learning rate.
+                    \item \(r\) is the received reward.
+                    \item \(\gamma\) is the discount factor.
+                    \item \(s'\) is the state after the action.
+                \end{itemize}
+            \end{itemize}
+        
+        \item \textbf{Exploration vs. Exploitation:}
+            \begin{itemize}
+                \item Need to balance trying new actions and choosing known rewards.
+                \item Techniques like ε-greedy strategy are employed to achieve this balance.
+            \end{itemize}
+        
+        \item \textbf{Applications of Q-Learning:}
+            \begin{itemize}
+                \item Game Playing
+                \item Robotics
+                \item Decision-Making Systems
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Reinforcement Learning}
+    \begin{enumerate}
+        \item \textbf{Deep Reinforcement Learning:}
+            \begin{itemize}
+                \item Integration with neural networks to handle high-dimensional inputs.
+                \item Models like Deep Q-Networks (DQN) have shown success in complex tasks.
+            \end{itemize}
+        
+        \item \textbf{Multi-Agent Reinforcement Learning:}
+            \begin{itemize}
+                \item Studying simultaneous learning of multiple agents in shared environments.
+            \end{itemize}
+        
+        \item \textbf{Hierarchical Reinforcement Learning:}
+            \begin{itemize}
+                \item Structuring tasks in a hierarchy for efficient learning and policy generalization.
+            \end{itemize}
+        
+        \item \textbf{Imitation Learning:}
+            \begin{itemize}
+                \item Training agents by mimicking expert behavior to reduce exploration.
+            \end{itemize}
+        
+        \item \textbf{Safe Reinforcement Learning:}
+            \begin{itemize}
+                \item Developing algorithms that ensure safety during training.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Reinforcement learning is an evolving field with immense potential. 
+    \begin{itemize}
+        \item By understanding foundational algorithms like Q-Learning, we can navigate future trends.
+        \item These advancements aim to solve complex real-world problems effectively.
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,711 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+basicstyle=\ttfamily\small,
+keywordstyle=\color{blue},
+commentstyle=\color{gray},
+stringstyle=\color{red},
+breaklines=true,
+frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Week 2: Markov Decision Processes (MDPs)}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Markov Decision Processes (MDPs)}
+    \begin{block}{What are MDPs?}
+        An MDP is a mathematical framework used for modeling decision-making situations where outcomes are partly under the control of a decision-maker (the agent) and partly random.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of MDPs in Reinforcement Learning}
+    \begin{itemize}
+        \item \textbf{Foundation for RL:} MDPs serve as the cornerstone for most reinforcement learning algorithms, allowing agents to learn optimal strategies through experience.
+        \item \textbf{Structured Environment:} They provide a framework for representing the environment in which an agent interacts, facilitating the computation of policies that maximize expected rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components of MDPs}
+    \begin{enumerate}
+        \item \textbf{States (S):} The various situations or configurations in which the agent can find itself. \\
+        \textit{Example:} In a game of chess, each unique arrangement of pieces represents a different state.
+        
+        \item \textbf{Actions (A):} The set of all possible actions that the agent can take in a given state. \\
+        \textit{Example:} Possible moves a player can make in chess (e.g., knight to E5).
+        
+        \item \textbf{Transition Function (P):} Defines the probabilities of moving from one state to another given a specific action. \\
+        \textit{Example:} \( P(s' | s, a) \) specifies the probability of reaching state \( s' \) from state \( s \) after taking action \( a \).
+        
+        \item \textbf{Rewards (R):} A function that provides feedback to the agent by evaluating the immediate benefit received after transitioning from one state to another. \\
+        \textit{Example:} In a game, capturing an opponent’s piece may yield a positive reward.
+        
+        \item \textbf{Discount Factor ($\gamma$):} A value between 0 and 1 that represents the importance of future rewards compared to immediate rewards. \\
+        \textit{Example:} If $\gamma = 0.9$, the agent values immediate rewards more than future rewards, but still considers future outcomes.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Objectives of the Session}
+    \begin{itemize}
+        \item \textbf{Understand MDPs:} Clarify what constitutes a Markov Decision Process and how it applies to reinforcement learning.
+        \item \textbf{Explore Examples:} Investigate real-world applications and theoretical examples of MDPs to reinforce understanding.
+        \item \textbf{Develop Insights:} Begin to formulate thoughts on how MDPs can inform strategies for developing reinforcement learning algorithms.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item MDPs are pivotal in decision-making problems where uncertainty and dynamic environments exist.
+        \item Comprehension of MDPs empowers you to understand advanced concepts in reinforcement learning, such as policy optimization, value functions, and exploration-exploitation dilemmas.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is an MDP?}
+    
+    \begin{block}{Definition}
+        A Markov Decision Process (MDP) is a mathematical framework used to model decision-making in situations where outcomes are partly random and partly under the control of a decision-maker. MDPs provide a formalism for designing policies that optimize decision-making strategies over time.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components of MDP}
+    
+    \begin{enumerate}
+        \item \textbf{States (S):} The different situations the decision-maker can encounter.
+        \item \textbf{Actions (A):} The set of possible actions the decision-maker can take.
+        \item \textbf{Transition Probabilities (P):}
+        \[
+        P(s'|s,a) = P(\text{next state is } s' | \text{current state is } s \text{ and action } a)
+        \]
+        \item \textbf{Rewards (R):}
+        \[
+        R(s, a) = \text{expected reward after taking action } a \text{ in state } s
+        \]
+        \item \textbf{Policy ($\pi$):} A strategy that defines the action the decision-maker will take in each state.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustrative Example of an MDP}
+    
+    \begin{block}{Grid-World Scenario}
+        \begin{itemize}
+            \item \textbf{States (S):} Each cell in the grid represents a distinct state.
+            \item \textbf{Actions (A):} The robot can move up, down, left, or right.
+            \item \textbf{Transition Probabilities (P):} 
+            If the robot attempts to move up, 
+            \begin{itemize}
+                \item 70\% chance it goes up,
+                \item 30\% chance it moves sideways.
+            \end{itemize}
+            \item \textbf{Rewards (R):} 
+            \begin{itemize}
+                \item Reaching the goal provides a reward of +10,
+                \item Crashing into a wall results in a -5 penalty.
+            \end{itemize}
+            \item \textbf{Policy ($\pi$):} Determines the robot's movements based on expected rewards.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Components of an MDP - Overview}
+    \begin{block}{Overview}
+        In this section, we will explore the five fundamental components of a Markov Decision Process (MDP):
+        \begin{itemize}
+            \item \textbf{States (S)}
+            \item \textbf{Actions (A)}
+            \item \textbf{Rewards (R)}
+            \item \textbf{Transition Probabilities (P)}
+            \item \textbf{Policy ($\pi$)}
+        \end{itemize}
+        Understanding these elements is crucial for modeling decision-making scenarios effectively.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Components of an MDP - Details}
+    \begin{enumerate}
+        \item \textbf{States (S)}:
+            \begin{itemize}
+                \item \textbf{Definition:} Represents all possible situations of an agent.
+                \item \textbf{Example:} Positions in a grid world, e.g., S1 = (0,0), S2 = (0,1).
+            \end{itemize}
+        
+        \item \textbf{Actions (A)}:
+            \begin{itemize}
+                \item \textbf{Definition:} Choices available to the agent in each state.
+                \item \textbf{Example:} From S1, possible actions: move up, down, left, right.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Components of an MDP - Continuation}
+    \begin{enumerate}[resume]
+        \item \textbf{Rewards (R)}:
+            \begin{itemize}
+                \item \textbf{Definition:} Immediate feedback received after taking an action.
+                \item \textbf{Example:} +10 for reaching a goal state; -1 for hitting a wall.
+            \end{itemize}
+        
+        \item \textbf{Transition Probabilities (P)}:
+            \begin{itemize}
+                \item \textbf{Definition:} Likelihood of moving from one state to another after taking an action.
+                \item \textbf{Mathematical Representation:} \( P(s', r | s, a) \).
+                \item \textbf{Example:} 0.8 probability of moving to S2, 0.2 probability of hitting a wall.
+            \end{itemize}
+
+        \item \textbf{Policy ($\pi$)}:
+            \begin{itemize}
+                \item \textbf{Definition:} Strategy for choosing actions based on the current state.
+                \item \textbf{Notation:} \( \pi(a | s) \) denotes the probability of taking action \( a \) in state \( s \).
+                \item \textbf{Example:} "If in S1, move right; if in S2, move down."
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mathematical Foundations of MDPs - Introduction}
+    Markov Decision Processes (MDPs) are mathematical frameworks for modeling decision-making in environments where outcomes are partially random and partially under the control of a decision-maker. 
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mathematical Foundations of MDPs - Key Components Recap}
+    \begin{itemize}
+        \item \textbf{States (S)}: The set of all possible states of the environment.
+        \item \textbf{Actions (A)}: The set of all possible actions the decision-maker can take.
+        \item \textbf{Transition Probabilities (P)}: The probabilities of moving from one state to another based on a given action.
+        \item \textbf{Rewards (R)}: Immediate returns received after transitioning between states.
+        \item \textbf{Policy ($\pi$)}: A strategy that defines the action taken in each state.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{State Transitions, Rewards and Policy}
+    \textbf{Markov Property:}
+    \begin{equation}
+        P(S_{t+1} | S_t, A_t) = P(S_{t+1} | S_t)
+    \end{equation}
+    The future state depends only on the current state and action.
+
+    \textbf{Transition Probabilities:}
+    \begin{equation}
+        P(s' | s, a) = P(S_{t+1} = s' | S_t = s, A_t = a)
+    \end{equation}
+
+    \textbf{Reward Function:}
+    \begin{equation}
+        R(s, a) = \text{Immediate reward received after taking action } a \text{ in state } s
+    \end{equation}
+    
+    \textbf{Policy Types:}
+    \begin{itemize}
+        \item \textbf{Deterministic Policy:} $\pi: S \rightarrow A$
+        \item \textbf{Stochastic Policy:} $\pi(a|s)$ signifies the probability of taking action $a$ in state $s$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Function and Summary}
+    \textbf{Key Formula: Value Function}
+    \begin{equation}
+        V^\pi(s) = \mathbb{E} \left[ \sum_{t=0}^{\infty} \gamma^t R(S_t, A_t) | S_0 = s \right]
+    \end{equation}
+    where $\gamma$ (0 ≤ $\gamma$ < 1) is the discount factor.
+
+    \textbf{Summary of Key Points:}
+    \begin{itemize}
+        \item MDPs encapsulate a decision-making scenario with state transitions, rewards, and policies.
+        \item The Markov property ensures that decisions are made based only on the current state.
+        \item Transition probabilities dictate state dynamics, while rewards inform value assessments.
+        \item Understanding the structure of policies is crucial for evaluating and deciding on actions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Framing Problems as MDPs - Overview}
+    \begin{block}{Overview of MDPs}
+        Markov Decision Processes (MDPs) are mathematical frameworks used for modeling decision-making in situations where outcomes are partly under the control of a decision-maker and partly random. The MDP framework facilitates the representation of sequential decision-making problems.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Framing Problems as MDPs - Guidelines}
+    \begin{block}{Conceptualizing Real-World Problems as MDPs}
+        To frame a problem as an MDP, follow these guidelines:
+    \end{block}
+    \begin{enumerate}
+        \item \textbf{Identify the State Space (S):}
+            \begin{itemize}
+                \item Define all possible states of the system.
+                \item \textit{Example:} States in a self-driving car include positions and velocities.
+            \end{itemize}
+        
+        \item \textbf{Define Actions (A):}
+            \begin{itemize}
+                \item Identify the set of actions available in each state.
+                \item \textit{Example:} Actions for a self-driving car might be 'accelerate', 'brake', 'turn'.
+            \end{itemize}
+        
+        \item \textbf{Determine Transition Probabilities (P):}
+            \begin{itemize}
+                \item Specify probabilities for moving from one state to another after an action.
+                \item \textit{Example:} Probability of making a left turn or colliding.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Framing Problems as MDPs - Continued Guidelines}
+    \begin{enumerate}[resume]
+        \item \textbf{Establish Rewards (R):}
+            \begin{itemize}
+                \item Define rewards associated with state-action pairs.
+                \item \textit{Example:} Positive reward for safely reaching a destination, negative for collisions.
+            \end{itemize}
+
+        \item \textbf{Identify the Discount Factor ($\gamma$):}
+            \begin{itemize}
+                \item Choose a discount factor (0 $\leq$ $\gamma$ < 1) to weigh future versus immediate rewards.
+                \item \textit{Example:} $\gamma$ set at 0.9 prioritizes immediate rewards.
+            \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item MDPs provide a structured methodology to model complex decision problems.
+            \item Each component interacts to define the unique decision-making environment.
+            \item MDPs are applicable across various fields like robotics, finance, and healthcare.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustration of an MDP}
+    You can visualize an MDP as a directed graph:
+    \begin{itemize}
+        \item \textbf{States} are nodes.
+        \item \textbf{Actions} represent transitions between states, labeled with rewards.
+    \end{itemize}
+
+    \begin{center}
+        \begin{verbatim}
+        [ State A ] --( Action 1, Reward = +10)--> [ State B ]
+                   \
+                    --( Action 2, Reward = -5)--> [ State C ]
+        \end{verbatim}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Next Steps}
+    By using the MDP framework, you can break down complex decision-making scenarios into manageable components. This facilitates the development of optimized decision-making strategies through techniques such as reinforcement learning and dynamic programming.
+    
+    \textbf{Next Topic:} Explore \textbf{Value Functions and Optimal Policies}, crucial concepts for solving MDPs effectively.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Functions and Optimal Policies}
+    \begin{block}{Overview}
+        This presentation covers value functions, Bellman equations, and optimal policies in the context of Markov Decision Processes (MDPs).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Value Functions}
+    \begin{itemize}
+        \item A **Value Function** quantifies the expected return from a given state in an MDP.
+        \item Helps determine the quality of being in a state when following a policy.
+    \end{itemize}
+    
+    \begin{enumerate}
+        \item **State Value Function \( V(s) \)**: 
+            \[
+            V(s) = \mathbb{E}_\pi \left[ R_t | S_t = s \right]
+            \]
+        \item **Action Value Function \( Q(s, a) \)**: 
+            \[
+            Q(s, a) = \mathbb{E}_\pi \left[ R_t | S_t = s, A_t = a \right]
+            \]
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Bellman Equations}
+    \begin{block}{Bellman Equations}
+        Provides a recursive way to express value functions.
+    \end{block}
+    
+    \begin{itemize}
+        \item For the State Value Function:
+            \[
+            V(s) = \sum_{a \in A} \pi(a | s) \sum_{s' \in S} P(s' | s, a) [R(s, a, s') + \gamma V(s')]
+            \]
+        \item For the Action Value Function:
+            \[
+            Q(s, a) = \sum_{s' \in S} P(s' | s, a) [R(s, a, s') + \gamma \sum_{a' \in A} \pi(a' | s') Q(s', a')]
+            \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimal Policies}
+    \begin{block}{Definition}
+        An **Optimal Policy** maximizes the expected return for every state.
+    \end{block}
+    
+    \begin{itemize}
+        \item Optimal policy \( \pi^* \):
+            \[
+            V^*(s) = \max_{\pi} V_{\pi}(s) \quad \text{for all } s \in S
+            \]
+        \item \( V^*(s) \) indicates the maximum value obtainable from state \( s \).
+    \end{itemize}
+    
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Value functions are critical for evaluating states and actions.
+            \item Bellman equations are key tools for computing value functions.
+            \item Optimal policies maximize expected returns in decision-making scenarios.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Illustration}
+    \begin{block}{Grid World Example}
+        Imagine a grid world where an agent moves to reach a goal.
+    \end{block}
+    
+    \begin{itemize}
+        \item **Value Function**: Expected cumulative reward from each cell, higher values closer to the goal.
+        \item **Bellman Equations**: Express how to derive the value of each state from neighboring cells based on actions.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        This foundational understanding supports the application of dynamic programming methods to derive optimal policies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dynamic Programming and MDPs - Overview}
+    % Introduction to Dynamic Programming and its relevance to MDPs
+    Dynamic Programming (DP) is a powerful approach for solving Markov Decision Processes (MDPs). It focuses on breaking down complex problems into simpler subproblems, leveraging the principle of optimality.
+    
+    Key topics:
+    \begin{itemize}
+        \item Policy Evaluation
+        \item Policy Improvement
+        \item Value Iteration
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dynamic Programming and MDPs - Key Concepts}
+    % Key concepts related to MDPs and value functions
+    \begin{block}{Markov Decision Process (MDP)}
+        An MDP is defined by:
+        \begin{itemize}
+            \item A set of states \( S \)
+            \item A set of actions \( A \)
+            \item Transition probabilities \( P(s' | s, a) \)
+            \item Rewards \( R(s, a) \)
+            \item A discount factor \( \gamma \) (0 ≤ \( \gamma < 1 \))
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Value Function}
+        The value function \( V(s) \) describes the expected return from state \( s \) under a specific policy. It captures how good it is to be in a given state.
+    \end{block}
+
+    \begin{block}{Policy}
+        A policy \( \pi \) defines the action to take in each state. A policy can be deterministic or stochastic.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dynamic Programming Methods}
+    % Detailed methods for solving MDPs using Dynamic Programming
+
+    \begin{enumerate}
+        \item \textbf{Policy Evaluation}:
+            \begin{itemize}
+                \item Calculate the value function \( V^{\pi}(s) \) for a given policy \( \pi \):
+                \begin{equation}
+                    V^{\pi}(s) = R(s, \pi(s)) + \gamma \sum_{s' \in S} P(s' | s, \pi(s)) V^{\pi}(s')
+                \end{equation}
+                \item Initialize \( V(s) \) arbitrarily and iteratively update until convergence.
+            \end{itemize}
+        
+        \item \textbf{Policy Improvement}:
+            \begin{itemize}
+                \item Improve a given policy \( \pi \):
+                \begin{equation}
+                    \pi'(s) = \text{argmax}_a \left( R(s, a) + \gamma \sum_{s'} P(s' | s, a) V(s') \right)
+                \end{equation}
+                \item The improved policy \( \pi' \) is guaranteed to be at least as good as \( \pi \).
+            \end{itemize}
+        
+        \item \textbf{Value Iteration}:
+            \begin{itemize}
+                \item Compute the optimal value function \( V^*(s) \):
+                \begin{equation}
+                    V_{k+1}(s) = \max_a \left( R(s, a) + \gamma \sum_{s'} P(s' | s, a) V_k(s') \right)
+                \end{equation}
+                \item Update \( V(s) \) iteratively until convergence.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of MDPs in RL - Overview}
+    \begin{block}{Overview of MDPs}
+        Markov Decision Processes (MDPs) provide a mathematical framework for modeling decision-making where outcomes are partly random and partly under the control of a decision-maker. An MDP is characterized by:
+    \end{block}
+    \begin{itemize}
+        \item \textbf{States (S):} All possible situations the agent can be in.
+        \item \textbf{Actions (A):} All possible moves the agent can take.
+        \item \textbf{Transition probabilities (P):} The probability of moving from one state to another given an action.
+        \item \textbf{Rewards (R):} Immediate feedback from the environment after taking an action in a state.
+        \item \textbf{Policy ($\pi$):} A strategy that the agent employs to decide actions based on its current state.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of MDPs in RL - Part 1}
+    \begin{enumerate}
+        \item \textbf{Applications in Robotics:}
+            \begin{itemize}
+                \item \textbf{Autonomous Navigation:} Robots use MDPs to navigate environments, understanding potential outcomes.
+                \item \textit{Example:} A delivery drone uses an MDP to find the most efficient route while avoiding obstacles.
+            \end{itemize}
+
+        \item \textbf{Applications in Finance:}
+            \begin{itemize}
+                \item \textbf{Portfolio Management:} MDPs are employed to make decisions on asset allocation.
+                \item \textit{Example:} An investment algorithm uses an MDP to decide whether to buy, hold, or sell based on current market states.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of MDPs in RL - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Applications in Healthcare:}
+            \begin{itemize}
+                \item \textbf{Treatment Planning:} MDPs model patient treatment plans.
+                \item \textit{Example:} A system uses MDPs to personalize treatment decisions for chronic diseases.
+            \end{itemize}
+        
+        \item \textbf{Applications in Gaming:}
+            \begin{itemize}
+                \item \textbf{Game AI Development:} MDPs control NPC behavior in games.
+                \item \textit{Example:} In strategy games, AI uses MDPs to decide actions like attack or defense based on the current game state.
+            \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item MDPs help model decision-making in uncertain environments.
+            \item They optimize strategies through reinforcement learning.
+            \item Applications span multiple industries, showcasing the versatility of MDPs.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of MDPs in RL - Conclusion}
+    \begin{block}{Conclusion}
+        MDPs are essential in various fields, providing structured methodologies for decision-making under uncertainty. Understanding their application can enhance problem-solving capabilities in complex scenarios.
+    \end{block}
+
+    \begin{block}{Practical Application}
+        As a practical output, coding frameworks (e.g., Python's OpenAI Gym) enable simple implementations of MDP-like environments to practice designing, learning, and optimizing policies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MDP Implementation - Introduction}
+    Markov Decision Processes (MDPs) provide a robust framework for modeling decision-making in areas such as robotics and finance. 
+    \begin{itemize}
+        \item Challenges in MDP implementation can significantly affect efficiency and feasibility.
+        \item Key challenges include:
+            \begin{itemize}
+                \item State space complexity
+                \item Computational limitations
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MDP Implementation - State Space Complexity}
+    \begin{block}{Definition}
+        The state space of an MDP is the set of all possible states in which the system can exist. The size of this space is referred to as state space complexity.
+    \end{block}
+    
+    \begin{itemize}
+        \item High-dimensional state spaces can grow exponentially due to the curse of dimensionality.
+        \item Large state spaces demand extensive memory and computational power.
+    \end{itemize}
+    
+    \begin{example}
+        In a robot navigation task, the total number of states increases rapidly as we consider various positions and orientations.
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MDP Implementation - Computational Limitations}
+    \begin{block}{Value Iteration}
+        A prevalent algorithm for solving MDPs is value iteration, which requires multiple iterations to converge to an optimal policy.
+    \end{block}
+    
+    \begin{itemize}
+        \item High computational costs arise from needing to update values for every state across numerous iterations.
+        \item Policy iteration faces similar computational challenges.
+    \end{itemize}
+    
+    \begin{example}
+        In chess, the vast state space with numerous configurations increases computation requirements dramatically.
+    \end{example}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MDP Implementation - Approximation Techniques}
+    To address state space complexity and computational limitations, we can employ various approximation techniques:
+    \begin{itemize}
+        \item \textbf{Function Approximation}: Estimation methods to simplify the value functions and policies.
+        \item \textbf{Hierarchical Reinforcement Learning (HRL)}: Decomposes the MDP into smaller sub-problems for easier management.
+    \end{itemize}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item State space dimensions significantly impact MDP implementation feasibility.
+            \item Computational limitations present practical challenges in algorithm performance.
+            \item Effective approximation methods are essential for applying MDPs in real-world scenarios.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Value Update Formula}
+    Understanding the challenges in MDP implementation is essential for developing efficient algorithms.
+    
+    \begin{block}{Value Update Formula}
+        \begin{equation}
+            V(s) \leftarrow \max_{a \in A} \sum_{s' \in S} P(s'|s,a) \left[ R(s,a,s') + \gamma V(s') \right]
+        \end{equation}
+    \end{block}
+    Where:
+    \begin{itemize}
+        \item \( V(s) \): Value of state \( s \)
+        \item \( A \): Action space
+        \item \( P \): State transition probability
+        \item \( R \): Reward function
+        \item \( \gamma \): Discount factor
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary: Key Points}
+    \begin{itemize}
+        \item \textbf{Markov Decision Processes (MDPs):}
+        \begin{itemize}
+            \item Framework for decision-making with random outcomes and controlled actions.
+            \item Defined by the tuple (S, A, P, R, $\gamma$):
+            \begin{itemize}
+                \item \textbf{S (States):} All possible states.
+                \item \textbf{A (Actions):} All possible actions.
+                \item \textbf{P (Transition Probabilities):} P(s'|s,a) - transition probabilities.
+                \item \textbf{R (Rewards):} Feedback from actions.
+                \item \textbf{$\gamma$ (Discount Factor):} Balances immediate vs future rewards (0 to 1).
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Key Algorithms:}
+        \begin{itemize}
+            \item Value Iteration & Policy Iteration for optimal policy and value function.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MDP Implementation}
+    \begin{itemize}
+        \item \textbf{State Space Complexity:} Real-world problems can create vast state spaces.
+        \item \textbf{Computational Limitations:} Finding optimal policies is computationally demanding.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions}
+    \begin{enumerate}
+        \item \textbf{Scaling MDPs:} Exploring scalable algorithms, like Approximate Dynamic Programming.
+        \item \textbf{Deep Reinforcement Learning (DRL):} Merging MDPs with deep learning for better handling of high-dimensional state spaces.
+        \item \textbf{Partially Observable MDPs (POMDPs):} Addressing uncertainties when agents lack complete knowledge of states.
+        \item \textbf{Multi-Agent Systems:} Coordinating multiple agents in MDP frameworks.
+    \end{enumerate}
+
+    \begin{block}{Key Emphasis}
+        \begin{itemize}
+            \item MDPs as fundamental in reinforcement learning.
+            \item Future exploration, especially in DRL and POMDPs, will enhance decision-making in complex environments.
+            \item Continuous improvement of algorithms is essential for real-world applications.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Iteration Algorithm}
+    \begin{lstlisting}
+    Initialize V(s) for all s in S
+    Repeat until convergence:
+        For each state s in S:
+            V(s) = max_a Σ_s' P(s'|s,a) * (R(s, a, s') + γ * V(s'))
+    \end{lstlisting}
+    This pseudo-code illustrates the iterative process of value updates in the Value Iteration algorithm until convergence.
+\end{frame}
+
+
+\end{document}

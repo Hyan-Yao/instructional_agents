@@ -1,0 +1,855 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Apache Hadoop - Overview}
+    \begin{block}{What is Apache Hadoop?}
+        Apache Hadoop is an open-source framework designed for distributed storage and processing of large datasets across clusters of computers. 
+        It utilizes simple programming models and scales from a single server to thousands of machines, each offering local computation and storage.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Apache Hadoop - Importance in Data Processing}
+    \begin{enumerate}
+        \item \textbf{Scalability:} Easily scale up by adding more nodes to handle increasing volumes of data without significant costs.
+        \item \textbf{Fault Tolerance:} Automatically replicates data across multiple nodes, ensuring accessibility during hardware failures.
+        \item \textbf{Cost-Effectiveness:} Open-source nature eliminates licensing costs, allowing use of commodity hardware for storage.
+        \item \textbf{Flexibility:} Supports various data formats (structured, semi-structured, unstructured) for diverse data handling.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Apache Hadoop - Relevance and Example}
+    \begin{block}{Relevance in Big Data Technologies}
+        - \textbf{Data Volume Management:} Provides infrastructure for managing and analyzing vast datasets effectively.
+        - \textbf{Integration with Other Tools:} Serves as a foundation for big data technologies (e.g., Apache Spark, Apache Hive).
+    \end{block}
+
+    \begin{block}{Example Code Snippet}
+        \begin{lstlisting}[language=Java]
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+
+public class WordCount {
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        Job job = Job.getInstance(conf, "word count");
+        job.setJarByClass(WordCount.class);
+        job.setMapperClass(TokenizerMapper.class);
+        job.setCombinerClass(IntSumReducer.class);
+        job.setReducerClass(IntSumReducer.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(IntWritable.class);
+        FileInputFormat.addInputPath(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        System.exit(job.waitForCompletion(true) ? 0 : 1);
+    }
+}
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Hadoop Ecosystem Overview}
+    \begin{block}{Introduction}
+        The Hadoop ecosystem comprises various tools and frameworks that work together to process large-scale data efficiently. Understanding its core components is essential for leveraging big data technologies effectively.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Core Components of the Hadoop Ecosystem}
+    \begin{enumerate}
+        \item \textbf{Hadoop Distributed File System (HDFS)}
+        \item \textbf{Yet Another Resource Negotiator (YARN)}
+        \item \textbf{MapReduce}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Hadoop Distributed File System (HDFS)}
+    \begin{block}{Explanation}
+        HDFS is the backbone of the Hadoop ecosystem designed to store vast files across multiple machines, enabling high throughput access.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Key Features:}
+        \begin{itemize}
+            \item \textbf{Scalability:} Supports large datasets across commodity servers.
+            \item \textbf{Fault Tolerance:} Automatically replicates files for data integrity.
+            \item \textbf{High Throughput:} Optimized for read operations.
+        \end{itemize}
+        \item \textbf{Example:} A large video file (e.g., 1 TB) split into blocks (default 128 MB each).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Yet Another Resource Negotiator (YARN)}
+    \begin{block}{Explanation}
+        YARN manages and schedules resources across the Hadoop cluster, allowing concurrent data processing engines.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Key Features:}
+        \begin{itemize}
+            \item \textbf{Resource Management:} Monitors and allocates CPU and memory to applications.
+            \item \textbf{Multi-tenancy:} Supports diverse applications (e.g., MapReduce, Spark).
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{yarn_diagram.png} % Optional: Include an illustrative diagram
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]{MapReduce}
+    \begin{block}{Explanation}
+        MapReduce is a programming model for processing large datasets using a two-phase algorithm: Map and Reduce.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Key Features:}
+        \begin{itemize}
+            \item \textbf{Scalability:} Efficiently processes vast amounts of data.
+            \item \textbf{Simplicity:} Users focus on application logic, while Hadoop manages complexity.
+        \end{itemize}
+        \item \textbf{Example Code Snippet:}
+    \end{itemize}
+    
+    \begin{lstlisting}[language=Java]
+    public class WordCount {
+        public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
+            public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+                StringTokenizer tokenizer = new StringTokenizer(value.toString());
+                while (tokenizer.hasMoreTokens()) {
+                    context.write(new Text(tokenizer.nextToken()), new IntWritable(1));
+                }
+            }
+        }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Conclusion}
+    Understanding the core components of the Hadoop ecosystem—HDFS, YARN, and MapReduce—provides a foundation for working with big data technologies. 
+    In upcoming slides, we will explore these components in greater detail, starting with HDFS.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hadoop Distributed File System (HDFS)}
+    \begin{block}{What is HDFS?}
+        The \textbf{Hadoop Distributed File System (HDFS)} is a distributed file storage system designed to store and manage large datasets across clusters of computers in an efficient and fault-tolerant manner. It is one of the core components of the Hadoop ecosystem, providing high-throughput access to application data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Features of HDFS}
+    \begin{itemize}
+        \item \textbf{Scalability}:
+        \begin{itemize}
+            \item HDFS allows for data storage scaling across multiple servers seamlessly. New nodes can be added as data grows without significant overhead.
+        \end{itemize}
+        
+        \item \textbf{Fault Tolerance}:
+        \begin{itemize}
+            \item Data blocks are replicated across multiple nodes. By default, each block is replicated three times. In case of server failure, another copy can be used for data retrieval.
+        \end{itemize}
+
+        \item \textbf{High Throughput}:
+        \begin{itemize}
+            \item HDFS is optimized for large datasets, capable of delivering high data throughput for big data processing applications.
+        \end{itemize}
+
+        \item \textbf{Data Locality}:
+        \begin{itemize}
+            \item HDFS moves computation closer to the data, minimizing network congestion and increasing processing speed.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{HDFS Architecture}
+    \begin{itemize}
+        \item \textbf{Master-Slave Structure}:
+        \begin{itemize}
+            \item \textbf{NameNode}: The master server that manages metadata, such as the directory structure and file access permissions (does not store actual data).
+            \item \textbf{DataNodes}: Slave servers that store actual data blocks, responsible for serving read and write requests from clients.
+        \end{itemize}
+        
+        \item \textbf{Data Blocks}:
+        \begin{itemize}
+            \item HDFS divides files into fixed-sized blocks (default is 128 MB). Each block is distributed across different DataNodes, allowing large files to be processed in parallel.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Storage Process & Example}
+    \begin{enumerate}
+        \item \textbf{File Splitting}:
+        \begin{itemize}
+            \item When a file is uploaded to HDFS, it is split into blocks (e.g., 128 MB).
+        \end{itemize}
+        
+        \item \textbf{Replication}:
+        \begin{itemize}
+            \item Each block is replicated to several DataNodes (typically three) for redundancy and fault tolerance.
+        \end{itemize}
+
+        \item \textbf{Metadata Management}:
+        \begin{itemize}
+            \item The NameNode keeps track of where each block is stored across the cluster. Clients interact with the NameNode to read or write data.
+        \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Example}
+        Imagine a large dataset consisting of a log file of several terabytes:
+        - The log file is split into chunks of 128 MB each.
+        - Each chunk is stored on different DataNodes (DN1, DN2, DN3).
+        - If DN1 fails, data is still accessible from DN2 and DN3 due to replication.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item HDFS is essential for enabling the storage of large datasets reliably and scalably.
+        \item Its architecture features a single NameNode and multiple DataNodes, ensuring efficient data management and retrieval.
+        \item The system is designed to promote high throughput and fault tolerance, forming a foundation for big data applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{YARN: Yet Another Resource Negotiator}
+    \begin{block}{Overview of YARN}
+        YARN is the resource management layer in Hadoop, introduced in Hadoop 2.0.
+        It enables efficient management of computing resources, decoupling resource management from data processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components of YARN}
+    \begin{enumerate}
+        \item \textbf{ResourceManager (RM)}:
+        \begin{itemize}
+            \item Master daemon responsible for resource allocation.
+            \item Manages the cluster and coordinates resource requests.
+        \end{itemize}
+        
+        \item \textbf{NodeManager (NM)}:
+        \begin{itemize}
+            \item Per-node daemon managing container execution.
+            \item Monitors resource usage (CPU, memory) and reports to the RM.
+        \end{itemize}
+        
+        \item \textbf{ApplicationMaster (AM)}:
+        \begin{itemize}
+            \item Each application has an AM negotiating resources with the RM.
+            \item Works with NM to execute and monitor application tasks.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How YARN Works}
+    \begin{enumerate}
+        \item \textbf{Resource Allocation}:
+        \begin{itemize}
+            \item Applications submit resource requests to the RM.
+            \item RM allocates containers based on availability and requirements.
+        \end{itemize}
+
+        \item \textbf{Container Execution}:
+        \begin{itemize}
+            \item NM receives launch commands from the AM for containers.
+            \item Containers execute tasks utilizing allocated resources.
+        \end{itemize}
+
+        \item \textbf{Monitoring and Management}:
+        \begin{itemize}
+            \item NMs report resource usage back to RM for health monitoring.
+            \item If a task fails, the AM can request resources to restart the task.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{YARN Example Use Case}
+    \begin{block}{Without YARN}
+        The cluster can only run one task at a time, leading to underutilization of resources.
+    \end{block}
+    
+    \begin{block}{With YARN}
+        Supports running multiple applications simultaneously, maximizing cluster resource utilization.
+        For instance, one application can process data while another stores it.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Resource Efficiency}: YARN allows full resource utilization with concurrent applications.
+        \item \textbf{Scalability}: Facilitates easy scaling of applications and workloads.
+        \item \textbf{Flexibility}: Supports various processing models (e.g., MapReduce, Spark) within the Hadoop ecosystem.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        YARN enhances resource management in Hadoop, enabling efficient communication and better cluster utilization, crucial for processing massive datasets in real time.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{YARN Architecture Diagram}
+    \begin{center}
+        \texttt{
+        ┌──────────────────┐\\
+        │ ResourceManager  │\\
+        └─────────┬────────┘\\
+                  │\\
+        ┌─────────▼────────┐\\
+        │                 │\\
+        │  NodeManager 1  │         ┌─────────────┐\\
+        │                 │         │ Application  │\\
+        └────────────┬────┘         │  Master 1   │\\
+                     │               └─────────────┘\\
+        ┌────────────▼───────┐       ┌─────────────┐\\
+        │   Container 1      │ <-----│  Container  │\\
+        │   (Task Executing) │       │     1       │\\   
+        └────────────────────┘       └─────────────┘
+        }
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce: Basics}
+    % Introduction to the MapReduce programming model used for processing large datasets in parallel across a Hadoop cluster.
+
+    \begin{block}{Introduction to MapReduce}
+        MapReduce is a programming model designed for processing and generating large datasets that can be parallelized across a distributed computing environment, such as a Hadoop cluster. By splitting the dataset into smaller chunks, MapReduce allows for efficient data processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of MapReduce}
+    
+    \begin{enumerate}
+        \item \textbf{Two Main Phases:}
+        \begin{itemize}
+            \item \textbf{Map Phase:} 
+            The input data is divided into smaller sub-problems (chunks). Each chunk is processed independently by a "mapper" function that transforms the data into a simplified key-value pair format.
+            \item \textbf{Reduce Phase:} 
+            The output from the mappers is grouped by keys and passed to a "reducer" function, which performs a summary operation like counting, aggregating, or filtering to provide the final output.
+        \end{itemize}
+
+        \item \textbf{Key-Value Pair:}
+        Data is represented as key-value pairs in both the map and reduce phases. 
+        Example: For counting words, a key could be a word (e.g., “apple”), and its corresponding value could be the count (e.g., 1).
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce Process Overview}
+    
+    \begin{enumerate}
+        \item \textbf{Input Data:} 
+        Consider a text file containing the text "apple banana apple."
+        
+        \item \textbf{Map Phase Execution:} 
+        Each mapper reads its assigned chunk and outputs:
+        \begin{lstlisting}
+        ("apple", 1)
+        ("banana", 1)
+        ("apple", 1)
+        \end{lstlisting}
+
+        \item \textbf{Shuffle and Sort Phase:} 
+        The framework groups all values by their key:
+        \begin{lstlisting}
+        ("apple", [1, 1])
+        ("banana", [1])
+        \end{lstlisting}
+
+        \item \textbf{Reduce Phase Execution:} 
+        The reducer takes the grouped data and combines counts:
+        \begin{lstlisting}
+        ("apple", 2)
+        ("banana", 1)
+        \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce Job Execution - Overview}
+    \begin{itemize}
+        \item MapReduce is a programming model for processing large datasets in parallel.
+        \item Execution consists of key components:
+        \begin{enumerate}
+            \item Input Data
+            \item Mapper
+            \item Reducer
+            \item Output
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce Job Execution - Input Data}
+    \begin{block}{Input Data}
+        \begin{itemize}
+            \item Definition: Initial data stored in HDFS.
+            \item Example: A text file named \texttt{input.txt} containing:
+            \begin{verbatim}
+Hello Hadoop
+Hello MapReduce
+Welcome to Hadoop
+            \end{verbatim}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce Job Execution - Mapper}
+    \begin{block}{Mapper}
+        \begin{itemize}
+            \item Definition: Transforms input data into intermediate key-value pairs.
+            \item Operation: Reads lines, splits into words, emits each as key with value 1.
+        \end{itemize}
+        \begin{lstlisting}[language=Java]
+public static class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+    private final static IntWritable one = new IntWritable(1);
+    private Text word = new Text();
+    
+    public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        String line = value.toString();
+        StringTokenizer itr = new StringTokenizer(line);
+        while (itr.hasMoreTokens()) {
+            word.set(itr.nextToken());
+            context.write(word, one); // Emit each word with value 1
+        }
+    }
+}
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce Job Execution - Reducer}
+    \begin{block}{Reducer}
+        \begin{itemize}
+            \item Definition: Aggregates intermediate key-value pairs.
+            \item Operation: Sums values for each unique key (word).
+        \end{itemize}
+        \begin{lstlisting}[language=Java]
+public static class WordCountReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+    private IntWritable result = new IntWritable();
+    
+    public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+        int sum = 0;
+        for (IntWritable val : values) {
+            sum += val.get(); // Sum all values for the key
+        }
+        result.set(sum);
+        context.write(key, result); // Emit the word and its count
+    }
+}
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce Job Execution - Output}
+    \begin{block}{Output}
+        \begin{itemize}
+            \item Definition: Final result written back to HDFS.
+            \item Example Output for the input data:
+            \begin{verbatim}
+Hello   2
+Hadoop  1
+MapReduce 1
+Welcome 1
+            \end{verbatim}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item MapReduce enables efficient parallel processing of large datasets.
+        \item Mapper and Reducer functions are essential for data transformation and aggregation.
+        \item Output is stored in HDFS for further analysis or querying.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-on: Running a MapReduce Job - Overview}
+    \begin{block}{Definition}
+        MapReduce is a programming model used for processing large data sets with a distributed algorithm on a cluster. 
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Mapper}: Transforms input data into a set of intermediate key-value pairs.
+        \item \textbf{Reducer}: Merges these intermediate results to produce the final output.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-on: Running a MapReduce Job - Key Components}
+    \begin{itemize}
+        \item \textbf{Input Data}: Initial dataset for processing (e.g., text file, CSV).
+        \item \textbf{Mapper}: Processes input data and emits key-value pairs.
+        \item \textbf{Reducer}: Aggregates the output from the mapper to produce final results.
+        \item \textbf{Output}: Result file after running the MapReduce job.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-on: Running a MapReduce Job - Steps}
+    \begin{enumerate}
+        \item \textbf{Setup Environment}
+            \begin{itemize}
+                \item Install Hadoop and configure properly.
+                \item Upload input data to HDFS:
+                \begin{lstlisting}
+hadoop fs -put localinput.txt /user/hadoop/input/
+                \end{lstlisting}
+            \end{itemize}
+        \item \textbf{Create Mapper and Reducer Classes}
+            \begin{itemize}
+                \item Mapper code (sample provided).
+                \item Reducer code (sample provided).
+            \end{itemize}
+        \item \textbf{Compile and Package Code}
+            \begin{itemize}
+                \item Compile Java code into JAR:
+                \begin{lstlisting}
+javac -classpath `hadoop classpath` -d /path/to/class/files WordCountMapper.java WordCountReducer.java
+jar -cvf wordcount.jar -C /path/to/class/files/ .
+                \end{lstlisting}
+            \end{itemize}
+        \item \textbf{Run the MapReduce Job}
+            \begin{itemize}
+                \item Execute using:
+                \begin{lstlisting}
+hadoop jar wordcount.jar WordCountMapper WordCountReducer /user/hadoop/input /user/hadoop/output
+                \end{lstlisting}
+            \end{itemize}
+        \item \textbf{View Output}
+            \begin{itemize}
+                \item Access results from HDFS:
+                \begin{lstlisting}
+hadoop fs -cat /user/hadoop/output/part-*
+                \end{lstlisting}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-on: Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Data Types}: Understand the key-value pair structure in MapReduce.
+        \item \textbf{HDFS Commands}: Familiarize with common HDFS commands for managing data.
+        \item \textbf{Job Configuration}: Know how to specify the mapper and reducer in your job configuration.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Running a MapReduce job enables efficient processing of large data volumes. By following the outlined steps, you will gain practical experience in big data workflows. 
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Hadoop in Big Data - Overview}
+    \begin{block}{Introduction to Big Data Challenges}
+        Big Data refers to vast volumes of data generated every second, presenting challenges that traditional data processing tools face:
+        \begin{itemize}
+            \item \textbf{Volume}: Managing large datasets (terabytes to petabytes).
+            \item \textbf{Velocity}: Processing data in real-time or near-real-time.
+            \item \textbf{Variety}: Handling various data formats (structured, semi-structured, unstructured).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hadoop's Role in Addressing Challenges}
+    \begin{block}{Hadoop Framework}
+        Hadoop is an open-source framework designed to manage Big Data challenges through:
+        \begin{itemize}
+            \item \textbf{Distributed Storage and Processing}: 
+            It uses the distributed file system (HDFS) to store data across multiple machines efficiently.
+            \item \textbf{MapReduce Framework}: 
+            Divides tasks into smaller sub-tasks, running them in parallel to optimize processing speed.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Scalability and Conclusion}
+    \begin{block}{Scalability Advantages}
+        Hadoop provides several scalability advantages:
+        \begin{itemize}
+            \item \textbf{Horizontal Scalability}: Easily add more nodes as data grows.
+            \item \textbf{Cost-Effectiveness}: Operates on commodity hardware, lowering costs compared to traditional systems.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Hadoop is a cornerstone for managing Big Data, offering solutions to its challenges while providing the flexibility and scalability required for competitive advantage.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction}
+    \begin{itemize}
+        \item Apache Hadoop is a powerful framework for distributed processing of large datasets.
+        \item Its capabilities have made it a preferred choice for various industries.
+        \item This slide highlights compelling real-world applications of Hadoop in finance, healthcare, and social media.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Finance: Fraud Detection}
+    \begin{itemize}
+        \item \textbf{Overview:} The financial sector generates large amounts of data that need real-time analysis.
+        \item \textbf{Example:} Banks use Hadoop to analyze millions of transactions to detect anomalies suggesting fraud.
+        \item \textbf{Benefits:}
+        \begin{itemize}
+            \item Enhanced security
+            \item Rapid response to suspicious activity
+            \item Improved risk management
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Healthcare: Patient Data Management}
+    \begin{itemize}
+        \item \textbf{Overview:} Healthcare organizations manage vast amounts of patient data.
+        \item \textbf{Example:} Hospitals aggregate electronic health records using Hadoop for trend identification.
+        \item \textbf{Benefits:}
+        \begin{itemize}
+            \item Improved patient outcomes
+            \item Streamlined operations
+            \item Capability for large-scale health studies
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Social Media: Sentiment Analysis}
+    \begin{itemize}
+        \item \textbf{Overview:} Social media platforms produce extensive unstructured data daily.
+        \item \textbf{Example:} Companies analyze tweets and posts using Hadoop to gauge public opinion on trends.
+        \item \textbf{Benefits:}
+        \begin{itemize}
+            \item Enhanced marketing strategies
+            \item Improved customer engagement
+            \item Timely insights into public perception
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Scalability and Flexibility:} Hadoop efficiently processes vast amounts of data from diverse sources.
+        \item \textbf{Data Storage and Processing:} Handles both structured and unstructured data.
+        \item \textbf{Cost Effectiveness:} Saves on infrastructure costs through the use of commodity hardware.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        Hadoop's capabilities in processing large datasets in real-time are vital across various sectors, proving its significance in today's data-driven world.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Call to Action}
+    \begin{itemize}
+        \item Reflect on how your organization could benefit from Hadoop.
+        \item Consider the types of data you handle and how Hadoop’s capabilities can enhance your analysis and decision-making processes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion: Understanding Apache Hadoop}
+    % This slide provides a comprehensive recap of the key points about Hadoop.
+    \begin{block}{Key Points Recap}
+        \begin{enumerate}
+            \item \textbf{What is Hadoop?}
+                \begin{itemize}
+                    \item Apache Hadoop is an open-source software framework for scalable and distributed storage and processing of large datasets.
+                    \item Core components:
+                        \begin{itemize}
+                            \item \textbf{HDFS}: For storing data across multiple nodes with redundancy.
+                            \item \textbf{MapReduce}: For parallel data processing across the cluster.
+                        \end{itemize}
+                \end{itemize}
+            \item \textbf{Importance of Hadoop in Data Processing}
+                \begin{itemize}
+                    \item \textbf{Scalability}: Handles petabytes of data by adding nodes.
+                    \item \textbf{Cost-Effectiveness}: Utilizes commodity hardware, reducing costs.
+                    \item \textbf{Flexibility}: Processes various data types (structured, unstructured, semi-structured).
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Hadoop}
+    % This slide covers the real-world applications of Hadoop in various industries.
+    \begin{block}{Real-World Applications}
+        \begin{itemize}
+            \item \textbf{Finance}: Used for fraud detection and risk management.
+            \item \textbf{Healthcare}: Analyzes patient data and supports personalized medicine.
+            \item \textbf{Social Media}: Analyzes user engagement and content trends.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways and Final Thoughts}
+    % This slide summarizes the critical takeaways from the chapter about Hadoop.
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item \textbf{Critical Understanding}: Essential for modern data professionals as it underpins big data operations.
+            \item \textbf{Adaptability}: Knowledge of Hadoop enhances job readiness and data lifecycle management.
+            \item \textbf{Interconnected Ecosystem}: Part of a broader ecosystem (e.g., Hive, Pig, HBase) that enriches data processing.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Final Thoughts}
+        Understanding Hadoop transcends learning a framework; it embodies a paradigm shift in managing large-scale data challenges, paving the way for success in the data-driven landscape.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading and Resources - Overview}
+    \begin{block}{Overview}
+        To deepen your understanding of Apache Hadoop and its ecosystem, exploring diverse resources such as books, articles, and online platforms is highly beneficial. Below are curated recommendations tailored to enhance your knowledge and practical skills in Hadoop.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading and Resources - Recommended Books}
+    \begin{enumerate}
+        \item \textbf{"Hadoop: The Definitive Guide" by Tom White} 
+        \begin{itemize}
+            \item \textit{Description:} This guide covers everything from the basics to advanced features of Hadoop, including MapReduce and HDFS.
+            \item \textit{Key Takeaway:} An essential resource for grasping the core architecture and ecosystem of Hadoop.
+        \end{itemize}
+        
+        \item \textbf{"Learning Hadoop 2" by Garry Turkington}
+        \begin{itemize}
+            \item \textit{Description:} Provides a hands-on approach to learning Hadoop, with practical exercises and insightful examples.
+            \item \textit{Key Takeaway:} Ideal for beginners looking for a structured path to mastering Hadoop.
+        \end{itemize}
+        
+        \item \textbf{"Hadoop in Practice" by Alex Holmes}
+        \begin{itemize}
+            \item \textit{Description:} Offers more than 85 practical techniques derived from real-world deployments of Hadoop.
+            \item \textit{Key Takeaway:} An excellent follow-up for those seeking to implement Hadoop in practical scenarios.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading and Resources - Articles and Online Courses}
+    \begin{block}{Articles and Whitepapers}
+        \begin{enumerate}
+            \item \textbf{"Apache Hadoop: The Future of Data"}
+            \begin{itemize}
+                \item \textit{Source:} Apache Hadoop Official Website
+                \item \textit{Description:} An overview of Hadoop’s capabilities and applications across various industries.
+                \item \textit{Key Takeaway:} Great for understanding Hadoop’s relevance and impact on today’s data-driven landscape.
+            \end{itemize}
+            
+            \item \textbf{"Data Lakes vs. Data Warehouses"}
+            \begin{itemize}
+                \item \textit{Source:} IBM Analytics Blog
+                \item \textit{Description:} Explains how Hadoop plays a critical role in data lake architectures.
+                \item \textit{Key Takeaway:} Clarifies the differences between data lakes and warehouses and the importance of Hadoop within that context.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+
+    \begin{block}{Online Courses}
+        \begin{enumerate}
+            \item \textbf{Coursera - "Big Data Specialization"}
+            \begin{itemize}
+                \item \textit{Description:} Includes a series of courses focused on Hadoop with video lectures and hands-on assignments.
+                \item \textit{Key Takeaway:} A comprehensive curriculum offering both theoretical knowledge and practical skills.
+            \end{itemize}
+            
+            \item \textbf{edX - "Introduction to Hadoop"}
+            \begin{itemize}
+                \item \textit{Description:} An introductory online course featuring key concepts of Hadoop, designed for beginners.
+                \item \textit{Key Takeaway:} Great for self-paced learning with interactive content and quizzes.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading and Resources - Key Points}
+    \begin{itemize}
+        \item \textbf{Hadoop Ecosystem:} Understanding Hadoop means exploring its ecosystem, including components like Hive, Pig, and HBase.
+        \item \textbf{Real-World Application:} Focus on how Hadoop solves real-world data problems and prepares you for data engineering careers.
+        \item \textbf{Continuous Learning:} The field of Big Data is constantly evolving, making ongoing education crucial.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        By engaging with these resources, you will not only reinforce your learning from this chapter but also develop a robust foundation for working with Hadoop and tackling complex data challenges in the future.
+    \end{block}
+\end{frame}
+
+
+\end{document}

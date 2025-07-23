@@ -1,0 +1,282 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Q-learning and SARSA]{Chapter 3: Q-learning and SARSA}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Q-learning and SARSA}
+    \begin{block}{Overview}
+        In this chapter, we will explore two fundamental algorithms in Reinforcement Learning: 
+        \textbf{Q-learning} and \textbf{SARSA}. These algorithms are critical for learning optimal policies 
+        to maximize cumulative rewards in an environment.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts - Part 1}
+    \begin{itemize}
+        \item \textbf{Reinforcement Learning Basics}:
+            \begin{itemize}
+                \item An agent interacts with an environment through actions.
+                \item Receives feedback in forms of rewards to update its knowledge.
+                \item Objective: Learn a policy that maximizes expected rewards.
+            \end{itemize}
+        \item \textbf{Q-learning}:
+            \begin{itemize}
+                \item A model-free, off-policy algorithm.
+                \item Learns the value of actions in a state, known as the \textbf{Q-value}.
+            \end{itemize}
+        \item \textbf{SARSA}:
+            \begin{itemize}
+                \item An on-policy algorithm that updates Q-values based on the agent's actions. 
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Comparisons}
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Feature} & \textbf{Q-learning} & \textbf{SARSA} \\
+            \hline
+            Policy Type & Off-policy & On-policy \\
+            \hline
+            Update Rule & Uses maximum Q-value & Uses the action taken \\
+            \hline
+            Exploration Strategy & More flexible & More conservative \\
+            \hline
+            Convergence & Guarantees under certain conditions & Converges at the current policy \\
+            \hline
+        \end{tabular}
+        \caption{Comparison of Q-learning and SARSA}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mathematical Notation}
+    \begin{itemize}
+        \item \textbf{Q-value Update Equation (Q-learning)}:
+        \begin{equation}
+            Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+        \end{equation}
+        
+        \item \textbf{Q-value Update Equation (SARSA)}:
+        \begin{equation}
+            Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma Q(s', a') - Q(s, a) \right)
+        \end{equation}
+
+        \item Where:
+        \begin{itemize}
+            \item $s$ = current state
+            \item $a$ = action taken
+            \item $r$ = reward received
+            \item $s'$ = next state
+            \item $a'$ = action taken in next state
+            \item $\alpha$ = learning rate
+            \item $\gamma$ = discount factor
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Q-learning and SARSA}
+    \begin{block}{Key Concepts}
+        Introduction to Reinforcement Learning (RL) strategies, focusing on Q-learning and SARSA as foundational algorithms. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-learning}
+    \begin{itemize}
+        \item \textbf{Definition}: 
+        Q-learning is an off-policy method that learns the value of the optimal policy regardless of the actions taken.
+        \item \textbf{Q-value Update Rule}:
+        \begin{equation}
+        Q(s, a) \leftarrow Q(s, a) + \alpha \left( R + \gamma \max_a Q(s', a') - Q(s, a) \right)
+        \end{equation}
+        \begin{itemize}
+            \item \( s \): current state
+            \item \( a \): action taken
+            \item \( R \): reward received after taking action \( a \)
+            \item \( s' \): next state after taking action \( a \)
+            \item \( \gamma \): discount factor
+            \item \( \alpha \): learning rate
+        \end{itemize}
+        \item \textbf{Example}:
+        In a grid world, reaching a goal state might update the Q-value to reflect a reward of +10.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SARSA: State-Action-Reward-State-Action}
+    \begin{itemize}
+        \item \textbf{Definition}: 
+        SARSA is an on-policy method that updates Q-values based on the agent's actual actions, learning from the current policy.
+        \item \textbf{Q-value Update Rule}:
+        \begin{equation}
+        Q(s, a) \leftarrow Q(s, a) + \alpha \left( R + \gamma Q(s', a') - Q(s, a) \right)
+        \end{equation}
+        \begin{itemize}
+            \item \( a' \): next action taken in state \( s' \)
+        \end{itemize}
+        \item \textbf{Example}:
+        Different actions taken in the grid world will affect Q-values, potentially leading to slower convergence.
+    \end{itemize}
+    
+    \begin{block}{Comparison of Q-learning and SARSA}
+        \begin{itemize}
+            \item \textbf{Learning Type}:
+            \begin{itemize}
+                \item Q-learning: Off-policy
+                \item SARSA: On-policy
+            \end{itemize}
+            \item \textbf{Exploration vs. Exploitation}: Both implement epsilon-greedy strategies.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Chapter 3: Q-learning and SARSA}
+    \begin{enumerate}
+        \item Summary of reinforcement learning algorithms focusing on Q-learning and SARSA.
+        \item Importance of understanding off-policy and on-policy methods.
+        \item Practical implications and applications in various domains.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Concepts}
+    \begin{block}{Q-learning}
+        \begin{itemize}
+            \item Off-policy reinforcement learning algorithm.
+            \item Learns optimal action value without any environmental model.
+            \item Q-value update: 
+            \[
+            Q(s, a) \gets Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
+            \]
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Concepts (continued)}
+    \begin{block}{SARSA (State-Action-Reward-State-Action)}
+        \begin{itemize}
+            \item On-policy reinforcement learning algorithm.
+            \item Q-value updates based on the action taken in the next state:
+            \[
+            Q(s, a) \gets Q(s, a) + \alpha \left[ r + \gamma Q(s', a') - Q(s, a) \right]
+            \]
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Comparison}
+        \begin{itemize}
+            \item Q-learning: off-policy, learns optimal policy independently of agent’s behavior.
+            \item SARSA: on-policy, learns from actions taken by current policy.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Implications and Key Points}
+    \begin{itemize}
+        \item Q-learning more effective in exploratory contexts.
+        \item SARSA preferred in safety-critical environments.
+        \item Both methods focus on maximizing cumulative rewards through interaction.
+        \item Understanding exploration vs. exploitation is critical for algorithm effectiveness.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Application Example}
+    \begin{block}{Game Playing}
+        \begin{itemize}
+            \item Q-learning: Suitable for complex games allowing aggressive exploration (e.g., chess).
+            \item SARSA: Better for scenarios where safety matters (e.g., human-robot interactions).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+\end{document}

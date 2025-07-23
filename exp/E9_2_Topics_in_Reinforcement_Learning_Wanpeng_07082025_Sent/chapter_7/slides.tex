@@ -1,0 +1,1174 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Week 7: Policy Gradient Methods]{Week 7: Policy Gradient Methods}
+\subtitle{An In-Depth Exploration}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Policy Gradient Methods}
+    \begin{block}{Overview}
+        Policy Gradient Methods optimize the policy directly in reinforcement learning, contrasting with value-based methods that derive policies through value functions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Policy Gradient Methods?}
+    \begin{itemize}
+        \item **Policy**: A mapping from states to actions (deterministic or stochastic).
+        \item **Objective**: Maximize expected return \( J(\theta) \) from the initial state under policy \( \pi(a|s; \theta) \).
+        \item **Return**: Total cumulated reward \( G_t \) from time step \( t \):
+        \begin{equation}
+            G_t = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \ldots
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Why Use Policy Gradient Methods?}
+    \begin{itemize}
+        \item **Continuous Action Spaces**: Effective in environments with continuous actions.
+        \item **Stochastic Policies**: Ability to learn policies that incorporate randomness for better exploration.
+        \item **Direct Optimization**: Parameterizing policies often leads to quicker convergence.
+    \end{itemize}
+    
+    \begin{block}{Examples of Policy Gradient Methods}
+        \begin{enumerate}
+            \item **REINFORCE**: Updates using full return.
+            \item **Actor-Critic**: Combines policy gradients and value functions for stability.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policy Optimization Process}
+    \begin{enumerate}
+        \item **Collect Trajectory**: Gather state-action-reward sequences.
+        \item **Calculate Returns**: Determine returns for each trajectory.
+        \item **Update Policy**: Adjust parameters using gradient ascent.
+    \end{enumerate}
+    
+    \begin{block}{Conclusion}
+        Policy gradient methods are vital in reinforcement learning, enabling effective handling of complex decision-making tasks, especially in continuous action spaces.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Course Learning Objectives - Part 1}
+    \frametitle{Understanding Policy Gradient Methods in Reinforcement Learning}
+    
+    \begin{block}{Learning Objectives}
+        \begin{enumerate}
+            \item \textbf{Define Policy Gradient Methods:}
+            \begin{itemize}
+                \item Understand the concept of policy gradient methods and their role in reinforcement learning (RL).
+                \item Differentiate between value-based and policy-based methods.
+            \end{itemize}
+            \item \textbf{Understand the Importance of Policy Gradients:}
+            \begin{itemize}
+                \item Explain why policy gradient methods are essential for handling high-dimensional action spaces.
+                \item Discuss scenarios where policy-based approaches outperform traditional methods.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+    
+\end{frame}
+
+\begin{frame}[fragile]{Course Learning Objectives - Part 2}
+    \frametitle{Mathematical Foundations and Implementation}
+    
+    \begin{block}{Mathematical Foundations}
+        \begin{enumerate}[resume]
+            \item Familiarize with the mathematical formulation of policy gradients.
+            \begin{itemize}
+                \item Derive the objective function used in policy optimization.
+                \item \textbf{Key Formula:}
+                \begin{equation}
+                    J(\theta) = \mathbb{E} \left[ \sum_{t=0}^{T} \gamma^t r_t \right]
+                \end{equation}
+                \begin{equation}
+                    \nabla J(\theta) \approx \mathbb{E} \left[ \nabla \log \pi_\theta(a_t | s_t) Q(s_t, a_t) \right]
+                \end{equation}
+            \end{itemize}
+            \item \textbf{Implement Policy Gradient Algorithms:}
+            \begin{itemize}
+                \item Gain practical experience by implementing basic policy gradient algorithms (e.g., REINFORCE).
+                \item Analyze algorithm performance on simple RL environments.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+    
+\end{frame}
+
+\begin{frame}[fragile]{Course Learning Objectives - Part 3}
+    \frametitle{Challenges and Key Takeaways}
+    
+    \begin{block}{Address Challenges and Limitations}
+        \begin{itemize}
+            \item Identify common challenges in policy gradient methods, such as high variance in gradient estimates.
+            \item Explore techniques to mitigate these challenges, like baseline subtraction or using Actor-Critic methods.
+            \item \textbf{Key Point:} Understanding these challenges is crucial for developing effective reinforcement learning models.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Policy Gradient Methods are pivotal for tackling complex RL problems.
+            \item Mastery of these concepts will enable students to formulate and solve advanced RL challenges successfully.
+        \end{itemize}
+    \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Policy Gradient Methods?}
+    \begin{block}{Definition}
+        Policy Gradient Methods are a class of reinforcement learning algorithms 
+        that directly optimize the policy by adjusting the policy parameters based 
+        on the gradient of expected reward. They differ from value-based methods by 
+        focusing on learning the best action in a given state.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{itemize}
+        \item \textbf{Policy}: A strategy that defines the action to take given a state, represented as 
+        a parameterized function \( \pi_{\theta}(a|s) \).
+        
+        \item \textbf{Reward}: Feedback from the environment based on actions taken, with the 
+        goal to maximize total expected reward over time.
+        
+        \item \textbf{Objective}: Maximize expected cumulative reward:
+        \begin{equation}
+            J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta}} \left[ R(\tau) \right]
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Policy Gradient Works}
+    \begin{itemize}
+        \item \textbf{Gradient Ascent}: Update rule for adjusting the parameters is given by:
+        \begin{equation}
+            \theta \leftarrow \theta + \alpha \nabla_{\theta} J(\theta)
+        \end{equation}
+        where \( \alpha \) is the learning rate.
+        
+        \item \textbf{Example - REINFORCE Algorithm}:
+        \begin{enumerate}
+            \item Sample trajectories from interacting with the environment.
+            \item Compute gradients based on actions and returns.
+            \item Update the policy using computed gradients.
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparing Value-Based and Policy-Based Methods}
+    \begin{block}{Introduction to Reinforcement Learning Approaches}
+        In reinforcement learning (RL), there are two primary approaches: 
+        \textbf{Value-Based Methods} and \textbf{Policy-Based Methods}. Each has its own characteristics, advantages, and challenges.
+        Understanding the differences between these methods is essential for selecting the right approach for a specific problem or environment.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value-Based Methods}
+    \begin{itemize}
+        \item \textbf{Definition}: Focus on estimating the value function, predicting how good it is to be in a given state or to perform a specific action in that state.
+        \item \textbf{Key Components}:
+            \begin{itemize}
+                \item \textbf{Value Function (V or Q)}: Represents expected future rewards. 
+                \item \textbf{Bellman Equation}: Utilized for updating the value function.
+            \end{itemize}
+        \item \textbf{Examples}:
+            \begin{itemize}
+                \item \textbf{Q-Learning}: A model-free RL algorithm that learns the value of actions in states through exploration and exploitation.
+                \item \textbf{Deep Q-Networks}: Combine Q-learning with deep learning to handle large state spaces.
+            \end{itemize}
+        \item \textbf{Key Point}: Requires maintaining and updating complex value functions, challenging in high-dimensional spaces.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policy-Based Methods}
+    \begin{itemize}
+        \item \textbf{Definition}: Optimize the policy directly, representing the agent’s behavior.
+        \item \textbf{Key Components}:
+            \begin{itemize}
+                \item \textbf{Policy Function} $\pi(a|s; \theta)$: Outputs probabilities of taking action $a$ given state $s$, parameterized by $\theta$.
+                \item \textbf{Objective Function}: Maximizes expected return through the policy gradient:
+                \[
+                J(\theta) = \mathbb{E}_{\pi_{\theta}} [R]
+                \]
+            \end{itemize}
+        \item \textbf{Examples}:
+            \begin{itemize}
+                \item \textbf{REINFORCE Algorithm}: Uses Monte Carlo methods to update policy parameters based on received rewards.
+                \item \textbf{Proximal Policy Optimization (PPO)}: Uses a surrogate objective to stabilize training.
+            \end{itemize}
+        \item \textbf{Key Point}: Can directly learn stochastic policies, suitable for problems with continuous action spaces.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Methods}
+    \begin{itemize}
+        \item \textbf{Feature Comparison Table}:
+        \end{itemize}
+        \begin{center}
+            \begin{tabular}{|l|l|l|}
+            \hline
+            Feature & Value-Based Methods & Policy-Based Methods \\
+            \hline
+            Learning Focus & Value function approximation & Direct optimization of policy \\
+            \hline
+            Exploration Strategy & Greedy based on value & Random sampling from the policy \\
+            \hline
+            Handling of Stochasticity & Less effective with stochastic policies & Naturally handles stochastic policies \\
+            \hline
+            Convergence & May converge to a sub-optimal policy & Can converge to a better global optimum \\
+            \hline
+            Efficiency & Faster in deterministic environments & More sample efficient in complex spaces \\
+            \hline
+            \end{tabular}
+        \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Key Takeaways}
+        Both value-based and policy-based methods have their strengths and limitations. 
+        \begin{itemize}
+            \item Value-based methods excel in discrete action spaces.
+            \item Policy-based methods shine in situations requiring continuous actions.
+            \item A hybrid approach, combining both methods, is often employed in practice to leverage the advantages of both.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Final Thought}
+        By understanding these fundamental differences, students can better appreciate the nuances of reinforcement learning and make informed decisions on which techniques to apply in various scenarios.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Policy Representation}
+  In the context of policy gradient methods, a policy defines a strategy or a mapping from states to actions. 
+  Understanding this representation is crucial for implementing and improving reinforcement learning algorithms effectively.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{1. Basic Concepts}
+  \begin{itemize}
+    \item \textbf{Policy}: A policy \( \pi(a|s) \) is a probability distribution over actions \( a \) given a state \( s \).
+    \item \textbf{Deterministic Policies}: Provide a specific action for each state: \( \pi(s) = a \).
+    \item \textbf{Stochastic Policies}: Provide a distribution over actions for each state: \( \pi(a|s) \).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{2. Mathematical Representation}
+  \begin{block}{Stochastic Policies}
+    \begin{equation}
+      \pi(a|s) = P(A = a | S = s)
+    \end{equation}
+    This implies that the policy outputs the probability of taking action \( a \) in state \( s \).
+  \end{block}
+
+  \begin{block}{Deterministic Policies}
+    \begin{equation}
+      a = \pi(s)
+    \end{equation}
+    This represents a direct action selection rather than a distribution.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{3. Function Approximation}
+  Given the complexity of real environments, policies are often approximated using parameterized functions:
+  \begin{equation}
+    \pi(a|s; \theta)
+  \end{equation}
+  where \( \theta \) are parameters (weights) of the policy represented often by neural networks.
+
+  \begin{block}{Example: Neural Network}
+  \begin{lstlisting}[language=Python]
+import torch
+import torch.nn as nn
+
+class PolicyNetwork(nn.Module):
+    def __init__(self, state_size, action_size):
+        super(PolicyNetwork, self).__init__()
+        self.fc1 = nn.Linear(state_size, 128)
+        self.fc2 = nn.Linear(128, action_size)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        return torch.softmax(self.fc2(x), dim=-1)
+
+# Initialize the policy network
+policy_net = PolicyNetwork(state_size=4, action_size=2)
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{4. Key Points to Emphasize}
+  \begin{itemize}
+    \item \textbf{Importance of Policies}: The choice and representation of the policy significantly influence the performance of reinforcement learning models.
+    \item \textbf{Exploration vs. Exploitation}: Stochastic policies naturally incorporate exploration, essential for discovering optimal strategies.
+    \item \textbf{Continuous vs. Discrete Actions}: Policies can be adapted to handle both continuous outputs (e.g., through Gaussian distributions) and discrete actions (e.g., softmax for categorical outputs).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{5. Visualizing Policies}
+  \begin{itemize}
+    \item Diagrams can be used to show the mapping from states to actions probabilistically.
+    \item \textbf{State-Action Value Graphs}: Can illustrate action probabilities across various states.
+  \end{itemize}
+  With the discussion of policy representation laid out, students are now prepared to delve into the foundational theorems supporting policy gradient methods in the next slide.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Theorem Background - Overview}
+    \begin{block}{Introduction}
+        Policy gradient methods are a class of reinforcement learning algorithms that enable an agent to learn optimal policies directly. 
+        This frame introduces the foundational theorems that provide the theoretical basis for these methods, ensuring their effectiveness and efficiency.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Theorem Background - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Markov Decision Process (MDP):}
+            \begin{itemize}
+                \item Framework for modeling decision-making situations.
+                \item \textbf{Components:} States (S), Actions (A), Reward function (R), Transition probabilities (T), and Discount factor ($\gamma$).
+                \item \textbf{Policy ($\pi$):} Strategy to determine the next action based on the current state.
+            \end{itemize}
+        
+        \item \textbf{Theorem of Policy Gradients:}
+            \begin{itemize}
+                \item Specifies how to compute the gradient of the expected reward concerning policy parameters.
+                \item \textbf{Formula:} 
+                \begin{equation}
+                \nabla J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \nabla \log \pi_\theta(a | s) \cdot R(\tau) \right]
+                \end{equation}
+                Where $J(\theta)$ is the expected return, $\tau$ is a trajectory, and $R(\tau)$ indicates total reward.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Theorem Background - The Role of Baselines}
+    \begin{block}{The Role of Baselines}
+        To reduce variance in the approximation of the gradient, we often subtract a baseline $b(s)$:
+        \begin{equation}
+        \nabla J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \nabla \log \pi_\theta(a | s) \cdot (R(\tau) - b(s)) \right]
+        \end{equation}
+        Choosing a good baseline can significantly improve training stability and efficiency.
+    \end{block}
+
+    \begin{block}{Example of Application}
+        \textbf{Scenario:} Training an agent to play a game (e.g., CartPole).
+        \begin{itemize}
+            \item \textbf{States:} Position and velocity of the pole.
+            \item \textbf{Actions:} Move left or right.
+            \item The policy gradient theorem allows for iterative updates to the agent's policy based on trajectories sampled during gameplay.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Understanding MDPs is essential for grasping policy gradient methods.
+            \item The policy gradient theorem is central to optimizing policies in reinforcement learning.
+            \item Implementing a baseline is a practical technique to improve training efficiency.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Objective Function - Introduction}
+  \begin{itemize}
+    \item The objective function is crucial in Policy Gradient Methods in Reinforcement Learning (RL).
+    \item It quantifies agent performance by measuring expected returns (cumulative rewards) when following a certain policy over time.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Objective Function - Policies and Returns}
+  \begin{itemize}
+    \item \textbf{Policy (π)}: A mapping from states to actions that guides the agent.
+    \item \textbf{Return (G)}: Total accumulated reward, calculated as:
+    \begin{equation}
+      G_t = R_t + \gamma R_{t+1} + \gamma^2 R_{t+2} + \ldots = \sum_{k=0}^{\infty} \gamma^k R_{t+k}
+    \end{equation}
+    where \( R_t \) is the reward at time \( t \), and \( \gamma \) (0 ≤ \( \gamma \) < 1) is the discount factor.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Objective Function - Formulation and Importance}
+  \begin{itemize}
+    \item The goal is to maximize the expected return:
+    \begin{equation}
+      J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} \left[ G \right]
+    \end{equation}
+    \item Key components:
+    \begin{itemize}
+      \item Allows for \textbf{stochastic policies}, providing flexibility in action selection.
+      \item Acts as a measure for policy performance across episodes.
+      \item Aids in systematic improvements and stable learning through smooth updates.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Objective Function - Example and Conclusion}
+  \begin{itemize}
+    \item Example: In a scenario where an agent moves left or right:
+    \begin{itemize}
+      \item Moving right yields a reward of 10, while moving left gives none.
+      \item In 100 episodes, if the agent chooses right 70 times, the average reward = \( \frac{70 \times 10}{100} = 7 \).
+    \end{itemize}
+    \item Importance:
+    \begin{itemize}
+      \item Provides direct feedback for policy effectiveness.
+      \item Forms the basis for optimization using gradient ascent methods.
+    \end{itemize}
+    \item \textbf{Key Takeaway}: Proper tuning of the objective function is crucial for optimizing agent behaviors.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Next Steps}
+  \begin{itemize}
+    \item In the next slide, we will explore the \textbf{Gradient Ascent Mechanism}, detailing how to utilize the objective function for updating and enhancing policies effectively.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Gradient Ascent Mechanism}
+    \begin{block}{Introduction to Gradient Ascent in Policy Optimization}
+        Gradient ascent is a powerful optimization technique used to improve the parameters of a policy in reinforcement learning. The objective is to maximize the expected reward by iteratively adjusting the policy parameters in the direction of the gradient of the objective function.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Objective Function}:
+        \[
+        J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} [R(\tau)]
+        \]
+        where \(R(\tau)\) is the total reward obtained from trajectory \(\tau\).
+
+        \item \textbf{Gradient Ascent}:
+        \[
+        \theta_{new} = \theta_{old} + \alpha \nabla_\theta J(\theta)
+        \]
+        where \(\alpha\) is the learning rate.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How It Works}
+    \begin{itemize}
+        \item \textbf{Step 1: Collect Data}: Run the current policy \(\pi_\theta\) to collect trajectories of states, actions, and rewards.
+        \item \textbf{Step 2: Calculate Returns}: Evaluate the returns for each trajectory to understand the performance of the policy.
+        \item \textbf{Step 3: Compute Gradient}: Estimate the gradient \(\nabla_\theta J(\theta)\) using the collected data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example}
+    Imagine our agent is navigating a grid world to maximize the reward from reaching a target. After running the current policy, we collect:
+    \begin{itemize}
+        \item \textbf{Trajectory}: States and actions taken.
+        \item \textbf{Rewards}: Rewards received at each step.
+    \end{itemize}
+    
+    1. \textbf{Calculate Returns}: The return will be high if actions lead to high rewards.
+    2. \textbf{Compute Gradient}: Estimate adjustments in the policy to achieve higher returns.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Visual Representation}
+    \begin{itemize}
+        \item A diagram can illustrate:
+        \begin{itemize}
+            \item X-axis: Parameter \(\theta\)
+            \item Y-axis: Expected Reward \(J(\theta)\)
+            \item Arrows indicating directions of ascent based on gradients.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Convergence}: The process repeats until convergence is achieved.
+        \item \textbf{Learning Rate}: The choice of \(\alpha\) affects convergence speed.
+        \item \textbf{Stochastic Nature}: Randomness in trajectories can lead to noisy gradients; variance reduction can help.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding the gradient ascent mechanism is crucial for optimizing policies in reinforcement learning. This foundation leads us into specific algorithms like REINFORCE.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{REINFORCE Algorithm - Introduction}
+  \begin{itemize}
+    \item The REINFORCE algorithm is a fundamental method in reinforcement learning.
+    \item It falls under the category of policy gradient methods.
+    \item REINFORCE directly parameterizes and improves the policy using gradient ascent.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{REINFORCE Algorithm - Key Concepts}
+  \begin{enumerate}
+    \item \textbf{Policy Representation}:
+      \begin{itemize}
+        \item A policy maps states to actions: \( \pi(a|s; \theta) \)
+      \end{itemize}
+    \item \textbf{Objective}:
+      \begin{equation}
+      J(\theta) = \mathbb{E}_{\pi_\theta} \left[ R_t \right] = \sum_{s_t} \sum_{a_t} P(s_t, a_t) R_t
+      \end{equation}
+    \item \textbf{Gradient Estimation}:
+      \begin{equation}
+      \nabla J(\theta) \approx \nabla \log \pi(a_t|s_t; \theta) R_t
+      \end{equation}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{REINFORCE Algorithm - How It Works}
+  \begin{enumerate}
+    \item \textbf{Sampling}:
+      \begin{itemize}
+        \item The agent collects episodes from the environment.
+      \end{itemize}
+    \item \textbf{Policy Update}:
+      \begin{equation}
+      \theta \leftarrow \theta + \alpha \nabla \log \pi(a_t|s_t; \theta) R_t
+      \end{equation}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{REINFORCE Algorithm - Example}
+  \begin{itemize}
+    \item In a maze navigation game:
+      \begin{itemize}
+        \item Positive reward (+1) for reaching a goal.
+        \item No reward (0) for hitting walls.
+      \end{itemize}
+    \item Successful actions increase their probabilities in future episodes, improving the policy.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{REINFORCE Algorithm - Key Points}
+  \begin{itemize}
+    \item No need for a separate value function.
+    \item Allows for stochastic policies, enhancing exploration.
+    \item Variance can be reduced using techniques like reward normalization.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{REINFORCE Algorithm - Summary}
+  \begin{itemize}
+    \item REINFORCE is a simple yet powerful policy gradient method.
+    \item Forms the foundation for advanced reinforcement learning techniques.
+    \item Prepares students for exploring Actor-Critic methods in the next topic.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor-Critic Methods - Overview}
+    \begin{block}{Definition}
+        Actor-Critic methods are a hybrid approach in reinforcement learning that combines value-based and policy-based methods.
+    \end{block}
+    \begin{itemize}
+        \item **Actor**: Updates the policy to maximize expected cumulative rewards.
+        \item **Critic**: Evaluates the value of the policy and provides feedback on actions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor-Critic Methods - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Actor}:
+            \begin{itemize}
+                \item Defines the policy (mapping from states to actions).
+                \item Learns to maximize rewards using gradients.
+            \end{itemize}
+        \item \textbf{Critic}:
+            \begin{itemize}
+                \item Estimates the value function (expected return from state-action pairs).
+                \item Provides feedback that helps the Actor improve.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor-Critic Methods - Interaction Example}
+    \begin{block}{Example Scenario}
+        Consider an AI agent in a game:
+        \begin{itemize}
+            \item **States**: Different game situations (e.g., near an enemy).
+            \item **Actions**: Moves the agent can take (e.g., jump, shoot).
+            \item **Interaction**:
+                \begin{itemize}
+                    \item **State**: "Agent is near an enemy."
+                    \item **Action**: "Jump over the enemy."
+                    \item **Reward**: +10 (successful jump).
+                    \item **Critic Update**: Indicates positive value for the action.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor-Critic Methods - Mathematical Formulation}
+    \begin{block}{Expected Return}
+        The total expected return from action \(a\) in state \(s\) is represented as \(Q(s, a)\). The policy update uses:
+        \begin{equation}
+            \nabla J(\theta) \approx \nabla \log \pi_\theta(a|s) \cdot (R_t - V(s))
+        \end{equation}
+        where:
+        \begin{itemize}
+            \item \( \theta \): Policy parameters (Actor)
+            \item \( \pi_\theta(a|s) \): Policy function
+            \item \( R_t \): Total return
+            \item \( V(s) \): Value estimate from Critic
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor-Critic Methods - Advantages}
+    \begin{itemize}
+        \item **Lower Variance**: Critic reduces variance of policy gradient estimates, leading to stability.
+        \item **Better Sample Efficiency**: Utilizes both policy and value functions, enhancing data usage and policy updates.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor-Critic Methods - Summary}
+    \begin{itemize}
+        \item Leverages both policy and value functions for improved learning.
+        \item Consists of two distinct components enhancing efficiency and stability.
+        \item Widely used in advanced reinforcement learning applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantage Function - Overview}
+    \begin{block}{Definition}
+        The advantage function quantifies how much better or worse a particular action is compared to the average action in a certain state.
+    \end{block}
+    \begin{block}{Role in Policy Gradient Methods}
+        It adds precision to policy performance estimates and is essential in context of Policy Gradient methods.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantage Function - Mathematical Formulation}
+    The advantage function \( A(s, a) \) is defined as:
+    \begin{equation}
+        A(s, a) = Q(s, a) - V(s)
+    \end{equation}
+    
+    Where:
+    \begin{itemize}
+        \item \( Q(s, a) \): Action-value function, representing the expected return of taking action \( a \) in state \( s \).
+        \item \( V(s) \): State-value function, representing the expected return for being in state \( s \).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantage Function - Importance}
+    \begin{enumerate}
+        \item \textbf{Variance Reduction:} 
+        Focusing on how much better an action is compared to the average outcome reduces variance in policy gradient estimates.
+        
+        \item \textbf{Targeting Preferences:}
+        Allows targeted learning based on relative action quality:
+        \begin{itemize}
+            \item \( A(s, a) > 0 \): action \( a \) is preferable.
+            \item \( A(s, a) < 0 \): action \( a \) should be less favored.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantage Function - Example}
+    \textbf{Scenario:} Robot navigating a maze.
+    
+    \begin{itemize}
+        \item \textbf{States:} Positions in the maze.
+        \item \textbf{Actions:} Moving up, down, left, or right.
+    \end{itemize}
+    
+    Evaluations:
+    \begin{itemize}
+        \item For action "up": \( Q(s, \text{up}) = 5 \), \( V(s) = 3 \) 
+        \[
+            A(s, \text{up}) = 5 - 3 = 2 \quad(\text{favorable})
+        \]
+        \item For action "down": \( Q(s, \text{down}) = 1 \), \( V(s) = 3 \) 
+        \[
+            A(s, \text{down}) = 1 - 3 = -2 \quad(\text{unfavorable})
+        \]
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantage Function - Conclusion}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Distinguishes between *good* and *bad* actions relative to the state value.
+            \item Integral to algorithms like Actor-Critic for refined decisions and evaluations.
+            \item Enhances exploratory behavior and policy performance in reinforcement learning.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation - Concept Overview}
+    \begin{block}{Overview}
+        In reinforcement learning, particularly in policy gradient methods, the exploration-exploitation dilemma is critical. It focuses on balancing:
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Exploration}: Trying new actions to discover potential rewards.
+        \item \textbf{Exploitation}: Choosing known actions that yield the highest rewards based on current information.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation - Importance and Key Points}
+    \begin{block}{Why is the Trade-Off Important?}
+        \begin{itemize}
+            \item \textbf{Exploration} helps an agent gather more information to avoid missing better actions. 
+            \item However, excessive exploration can waste resources and prevent the agent from maximizing known rewards.
+        \end{itemize}
+    \end{block}
+    \begin{enumerate}
+        \item \textbf{Dynamic Balance}: 
+            \begin{itemize}
+                \item Early training demands more exploration; later stages should focus on exploitation.
+            \end{itemize}
+        \item \textbf{Strategies to Manage the Trade-Off}:
+            \begin{itemize}
+                \item \textbf{Epsilon-Greedy Strategy}: 
+                Choose a random action with probability $\epsilon$ and the best-known action with probability $1 - \epsilon$.
+                \item \textbf{Softmax Action Selection}:
+                Actions chosen probabilistically based on estimated values.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation - Examples and Formulas}
+    \begin{block}{Example Illustration}
+        Imagine a grid-world agent that explores randomly at first to find hidden rewards. 
+        As it learns, it begins to favor the action that consistently yields the highest rewards (e.g., moving East).
+    \end{block}
+    \begin{block}{Formulas}
+        \textbf{Epsilon-Greedy Formula}:
+        \begin{equation}
+        a = 
+        \begin{cases} 
+        \text{random action} & \text{with probability } \epsilon \\
+        \text{argmax}(Q(s, a)) & \text{with probability } 1 - \epsilon
+        \end{cases}
+        \end{equation}
+        
+        \textbf{Softmax Action Selection}:
+        \begin{equation}
+        P(a) = \frac{e^{Q(a)/\tau}}{\sum_{a'} e^{Q(a')/\tau}}
+        \end{equation}
+        where $\tau$ is the temperature parameter controlling exploration.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Applications of Policy Gradient Methods}
+    \begin{block}{Introduction}
+        Policy gradient methods optimize decision-making policies directly, contrasting with value-based methods. This presentation reviews key domains where these methods have made significant impacts.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Domains of Application}
+    \begin{enumerate}
+        \item \textbf{Robotics} 
+            \begin{itemize}
+                \item Robot arm manipulation for grasping and placement tasks.
+                \item \textbf{Key Point:} High flexibility and adaptability in dynamic environments.
+            \end{itemize}
+        \item \textbf{Game Playing} 
+            \begin{itemize}
+                \item AlphaGo's mastery of Go using deep reinforcement learning.
+                \item \textbf{Key Point:} Achieved superhuman performance through novel strategies.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Continued Applications}
+    \begin{enumerate}[resume]
+        \item \textbf{Finance} 
+            \begin{itemize}
+                \item Utilization for developing trading strategies that maximize returns.
+                \item \textbf{Key Point:} Adapts better to changing market dynamics than static strategies.
+            \end{itemize}
+        \item \textbf{Healthcare} 
+            \begin{itemize}
+                \item Assisting in developing personalized treatment plans for patients.
+                \item \textbf{Key Point:} Promotes tailored therapies leading to improved outcomes.
+            \end{itemize}
+        \item \textbf{Natural Language Processing} 
+            \begin{itemize}
+                \item Used for text generation with contextually relevant responses.
+                \item \textbf{Key Point:} Enables more natural interactions in chatbots and agents.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Benefits}
+    \begin{itemize}
+        \item \textbf{Flexibility:} Real-time policy adaptation based on feedback.
+        \item \textbf{Performance:} Often outperforms traditional methods.
+        \item \textbf{Exploration:} Balances exploration and exploitation effectively.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Formula}
+    \begin{block}{Conclusion}
+        Policy gradient methods enable direct policy optimization across various fields, showing versatility in solving complex problems.
+    \end{block}
+    
+    \begin{equation}
+        \theta_{t+1} = \theta_t + \alpha \nabla J(\theta)
+    \end{equation}
+    \begin{itemize}
+        \item where:
+        \begin{itemize}
+            \item $\theta$: parameters of the policy,
+            \item $\alpha$: learning rate,
+            \item $J(\theta)$: expected return based on policy parameters.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Final Thoughts}
+    Understanding policy gradient applications enhances knowledge of reinforcement learning and potential solutions for real-world challenges across diverse sectors.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges and Limitations - Overview}
+    \begin{block}{Overview}
+        Policy Gradient methods, while powerful and widely used, come with their set of challenges and limitations. Understanding these hurdles is crucial for effective implementation and advancement in reinforcement learning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges and Limitations - High Variance}
+    \begin{itemize}
+        \item \textbf{High Variance in Estimates}
+            \begin{itemize}
+                \item \textit{Explanation}: Policy gradient methods often suffer from high variance in the estimation of return predictions, leading to unstable updates.
+                \item \textit{Example}: An agent learning to play a game may receive very different rewards for similar actions due to randomness in the environment, resulting in oscillating policy updates.
+                \item \textit{Mitigation}: Techniques like Baselines (e.g., Value Function) can be used to reduce variance.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges and Limitations - Sample Inefficiency & Local Optima}
+    \begin{itemize}
+        \item \textbf{Sample Inefficiency}
+            \begin{itemize}
+                \item \textit{Explanation}: Policy gradient methods typically require a large number of interactions with the environment to converge to a good policy.
+                \item \textit{Example}: In complex environments, like Atari, thousands of episodes may be required, leading to inefficiency.
+                \item \textit{Mitigation}: Strategies like experience replay or structured exploration can help reduce the number of samples needed.
+            \end{itemize}
+        
+        \item \textbf{Local Optima}
+            \begin{itemize}
+                \item \textit{Explanation}: The optimization landscape for policy gradient methods can be rugged, leading to local optima traps.
+                \item \textit{Illustration}: Visualize a mountainous terrain where the agent may settle on a peak that isn’t the highest, instead of exploring other peaks.
+                \item \textit{Mitigation}: Stochastic elements or advanced algorithms like Proximal Policy Optimization (PPO) can encourage exploration.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges and Limitations - Computational Intensity & Sensitivity to Hyperparameters}
+    \begin{itemize}
+        \item \textbf{Computationally Intensive}
+            \begin{itemize}
+                \item \textit{Explanation}: Training a policy network often requires significant computational resources.
+                \item \textit{Example}: Resource-intensive simulations in high-dimensional environments may need specialized hardware.
+                \item \textit{Mitigation}: Utilizing distributed computing or more efficient algorithms can reduce this challenge.
+            \end{itemize}
+
+        \item \textbf{Sensitivity to Hyperparameters}
+            \begin{itemize}
+                \item \textit{Explanation}: The choice of hyperparameters can significantly influence the performance of policy gradient methods.
+                \item \textit{Example}: Adjusting the learning rate or batch size can lead to convergence or divergence in agent performance.
+                \item \textit{Mitigation}: Automated hyperparameter tuning techniques can assist, but may also require extensive computational resources.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary & Conclusion}
+    \begin{itemize}
+        \item Key Points:
+            \begin{itemize}
+                \item High variance can destabilize training.
+                \item Sample inefficiency necessitates large amounts of data.
+                \item Risk of getting stuck in local optima.
+                \item Computational demands can limit accessibility.
+                \item Sensitivity to hyperparameter choices complicates training.
+            \end{itemize}
+        
+        \item \textbf{Conclusion}: Addressing these challenges is essential for effectively implementing policy gradient methods and advancing their applicability in real-world scenarios. Continued research and innovation are crucial to evolving these methods for more robust solutions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Policy Gradient Research}
+    \begin{block}{Introduction}
+    Policy gradient methods are a critical area of study in reinforcement learning (RL) that enable agents to learn policies directly in high-dimensional action spaces. Emerging trends and research areas are enhancing their effectiveness, efficiency, and applicability.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Enhancements in Policy Gradient Methods}
+    \begin{enumerate}
+        \item \textbf{Enhanced Stability and Convergence}
+        \begin{itemize}
+            \item \textbf{Challenge}: High variance and slow convergence in traditional methods.
+            \item \textbf{Direction}: Advanced variance reduction techniques inspired by other optimization strategies.
+            \item \textbf{Example}: Actor-Critic methods improve stability by learning policies and value functions simultaneously.
+        \end{itemize}
+        
+        \item \textbf{Sample Efficiency}
+        \begin{itemize}
+            \item \textbf{Challenge}: High data requirements for effective training.
+            \item \textbf{Direction}: Experience replay and meta-learning to optimize sample usage.
+            \item \textbf{Illustration}: Memory buffers allow agents to learn from past actions, reducing data needs.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Current Challenges and Future Directions}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Start numbering from 3
+        \item \textbf{Multi-Agent Environments}
+        \begin{itemize}
+            \item \textbf{Challenge}: Many methods are focused on single-agent scenarios.
+            \item \textbf{Direction}: Research into collaborative or competitive multi-agent systems.
+            \item \textbf{Example}: Communication protocols can enhance agent performance and strategy.
+        \end{itemize}
+        
+        \item \textbf{Generalization and Transfer Learning}
+        \begin{itemize}
+            \item \textbf{Challenge}: Difficulty in generalizing to new environments.
+            \item \textbf{Direction}: Utilizing transfer learning to improve policy robustness.
+            \item \textbf{Concept}: Shared representations and adaptive policies boost performance in unfamiliar tasks.
+        \end{itemize}
+        
+        \item \textbf{Incorporating Human Feedback}
+        \begin{itemize}
+            \item \textbf{Challenge}: Traditional algorithms often disregard human input.
+            \item \textbf{Direction}: Integrating human preferences to align policies with user intentions.
+            \item \textbf{Example}: Inverse Reinforcement Learning to optimize policies based on human behavior.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Overview}
+    Policy gradient methods are a class of reinforcement learning (RL) algorithms that optimize the policy directly rather than the value function. They are particularly useful for:
+
+    \begin{itemize}
+        \item High-dimensional action spaces
+        \item Continuous action environments
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of Policy Gradient Methods}
+    \begin{enumerate}
+        \item \textbf{Policy Representation:} Policies can be deterministic or stochastic, often represented as neural networks.
+        
+        \item \textbf{Objective Function:} Maximize expected return:
+        \begin{equation}
+            J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta} [R(\tau)]
+        \end{equation}
+        
+        \item \textbf{Gradient Estimation:} Techniques include:
+        \begin{itemize}
+            \item REINFORCE Algorithm (Monte Carlo sampling)
+            \item Actor-Critic Methods (combination of actor and critic)
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways and Implications}
+    \begin{itemize}
+        \item \textbf{Exploration vs. Exploitation:} Balances exploration and exploitation, often leading to better local optima.
+        
+        \item \textbf{Stability and Convergence:} Advanced techniques (e.g., TRPO, PPO) enhance stability in policy updates.
+        
+        \item \textbf{Adaptability:} Applicable in diverse RL fields like robotics and game playing.
+        
+        \item \textbf{Performance in Complex Spaces:} Excels in continuous or high-dimensional environments.
+        
+        \item \textbf{Potential for Scaling:} Integration with deep learning allows scaling from simple to complex RL problems.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Policy Gradient in Action}
+    Consider an agent learning to play a game:
+
+    \begin{itemize}
+        \item The policy \( \pi_\theta \) is a neural network.
+        \item The objective \( J(\theta) \) is computed from gameplay episodes.
+    \end{itemize}
+
+    \begin{lstlisting}[language=Python]
+    # Pseudo-code for a simple policy update with REINFORCE
+    for episode in range(num_episodes):
+        states, actions, rewards = collect_episode(env, policy)
+        returns = compute_returns(rewards)
+        for t in range(len(actions)):
+            loss = -log(policy(states[t], actions[t])) * returns[t]
+            policy.update(loss)
+    \end{lstlisting}
+\end{frame}
+
+
+\end{document}

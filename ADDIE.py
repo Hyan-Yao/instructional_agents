@@ -140,12 +140,23 @@ class ADDIERunner:
             print(f"\n{'#'*50}\nDeliberation {i+1}/{len(foundation_deliberations)}: {deliberation.name}\n{'#'*50}\n")
             
             # Get user suggestion if copilot mode is enabled
+            '''
             user_suggestion = None
             if self.addie.copilot:
                 print("\nWould you like to add any suggestions before starting this deliberation? (press Enter to skip)")
                 user_suggestion = input("Your suggestion: ").strip()
                 if not user_suggestion:
                     user_suggestion = None
+            '''
+            user_suggestion = ""
+            if self.addie.copilot:
+                print("\nLoading user suggestions from copilot catalog...")
+                user_suggestion = f'''###User Feedback:
+                Suggestions for learning objectives: {self.addie.copilot_catalog.get("learning_objectives", None)}
+                Suggestions for syllabus: {self.addie.copilot_catalog.get("syllabus", None)}
+                Suggestions for overall package: {self.addie.copilot_catalog.get("overall", None)}
+                \n\n'''
+                print(f"User suggestions loaded: {user_suggestion}")
             
             # Run deliberation with current state and user suggestion
             result, elapsed_time, token_usage = deliberation.run(current_context=str(self.results), user_suggestion=user_suggestion)
@@ -164,6 +175,8 @@ class ADDIERunner:
             self._save_result(deliberation, result)
             
             # Check if user wants to proceed or retry in copilot mode
+            '''
+            #FLAG<1>#
             if self.addie.copilot:
                 retried = self._check_for_retry(deliberation, i+1)  # +1 to skip the course name
                 if not retried:
@@ -171,6 +184,8 @@ class ADDIERunner:
                     i += 1
             else:
                 i += 1
+            '''
+            i += 1
 
         # After running the syllabus design deliberation, process the syllabus
         self._process_syllabus()
@@ -249,35 +264,52 @@ class ADDIERunner:
     def _run_slides_generation_with_retry(self, chapter, chapter_idx, chapter_dir):
         """Run slides generation with retry support"""
         print(f"\n{'#'*40}\nSlides Generation for Chapter {chapter_idx+1}: {len(self.chapters)}: {chapter['title']}\n{'#'*40}\n")
-        
+
         # Get user suggestion if copilot mode is enabled
+        '''#FLAG<1>#
         user_suggestion = None
         if self.addie.copilot:
             print("\nWould you like to add any suggestions before starting slides creation? (press Enter to skip)")
             user_suggestion = input("Your suggestion: ").strip()
             if not user_suggestion:
                 user_suggestion = None
+        '''
         
         # Create context for slides deliberation
         slides_context = {
             "foundation_results": self.results,
             "course_name": self.course_name,
-            "user_suggestion": user_suggestion
+            "slides": "",
+            "script": "",
+            "assessment": "",
+            "overall": "",
         }
-        
+        if self.addie.copilot:
+            print("\nLoading user suggestions from copilot catalog...")
+            slides_context["slides"] = self.addie.copilot_catalog.get("slides", [])
+            slides_context['script'] = self.addie.copilot_catalog.get("script", [])
+            slides_context['assessment'] = self.addie.copilot_catalog.get("assessment", [])
+            slides_context['overall'] = self.addie.copilot_catalog.get("overall", "")
+            print(f"User suggestions loaded: {slides_context['slides']}, {slides_context['script']}, {slides_context['assessment']}, {slides_context['overall']}")
+
         # Create a SlidesDeliberation instance for this chapter
         slides_deliberation = self._create_slides_deliberation(chapter, f"chapter_{chapter_idx+1}")
         
         # Store original context for retries
+        '''
+        #FLAG<1>#
         original_context = slides_context.copy()
         previous_suggestions = []
         if user_suggestion:
             previous_suggestions.append(user_suggestion)
+        '''
         
         # Run the SlidesDeliberation
         slides_deliberation.run(chapter, slides_context)
 
         # Retry logic for slides generation
+        '''
+        #FLAG<1>#
         if self.addie.copilot:
             retry_loop = True
             while retry_loop:
@@ -320,6 +352,7 @@ class ADDIERunner:
                 satisfaction = input("Your choice (1 or 2): ").strip()
                 if satisfaction == "1":
                     retry_loop = False
+        '''
     
     
     def _create_slides_deliberation(self, chapter, chapter_dir_name):
@@ -496,7 +529,7 @@ class ADDIE:
     ADDIE (Analyze, Design, Develop, Implement, Evaluate) class for instructional design
     This class coordinates a series of deliberations to create a complete course design
     """
-    def __init__(self, course_name, model_name: str = "gpt-4o-mini", copilot: bool = False, catalog: bool = False, data_catalog: dict = {}):
+    def __init__(self, course_name, model_name: str = "gpt-4o-mini", copilot: bool = False, catalog: bool = False, data_catalog: dict = {}, data_copilot: dict = {}):
         """
         Initialize ADDIE workflow
         
@@ -514,6 +547,7 @@ class ADDIE:
         
         # Create all deliberations in the workflow
         self.set_catalog(data_catalog)
+        self.set_copilot(data_copilot)
         self.create_deliberations()
         
     def set_catalog(self, data_catalog: dict):
@@ -527,6 +561,9 @@ class ADDIE:
         }
         
         if self.catalog:
+            # Debugging line: Check available keys in data_catalog before accessing them.
+            # Added to troubleshoot potential KeyError when loading course_structure from JSON.
+            print("Debug: data_catalog keys =", data_catalog.keys())
             self.catalog_dict = {
                 "objectives_definition": [data_catalog['course_structure'], data_catalog['institutional_requirements']],
                 "resource_assessment": [data_catalog['teaching_constraints'], data_catalog['institutional_requirements']],
@@ -535,6 +572,27 @@ class ADDIE:
                 "assessment_planning": [data_catalog['assessment_design'], data_catalog['instructor_preferences']],
                 "slides_length": int(data_catalog['teaching_constraints']['max_slide_count'])
             }
+    
+    def set_copilot(self, data_copilot: dict):
+        self.copilot_catalog = {
+            "learning_objectives": "",
+            "syllabus": "",
+            "slides": "",
+            "script": "",
+            "assessment": "",
+            "overall": "",
+        }
+
+        if self.copilot:
+            self.copilot_catalog = {
+                "learning_objectives": data_copilot["learning_objectives"] if "learning_objectives" in data_copilot else "",
+                "syllabus": data_copilot["syllabus"] if "syllabus" in data_copilot else "",
+                "slides": data_copilot["slides"] if "slides" in data_copilot else "",
+                "script": data_copilot["script"] if "script" in data_copilot else "",
+                "assessment": data_copilot["assessment"] if "assessment" in data_copilot else "",
+                "overall": data_copilot["overall"] if "overall" in data_copilot else "",
+            }
+        print(f"Catalog initialized with: {self.catalog_dict}")
 
 
     def create_deliberations(self):

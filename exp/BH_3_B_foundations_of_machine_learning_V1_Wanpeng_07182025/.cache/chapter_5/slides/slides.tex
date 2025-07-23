@@ -1,0 +1,1306 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Chapter 5: Decision Trees and Ensemble Methods]{Chapter 5: Decision Trees and Ensemble Methods}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+    Department of Computer Science\\
+    University Name\\
+    \vspace{0.3cm}
+    Email: email@university.edu\\
+    Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Decision Trees and Ensemble Methods}
+    \begin{block}{Overview}
+        Decision trees and ensemble methods are powerful tools in machine learning, widely used for both classification and regression tasks. 
+        This slide provides a foundational understanding of these techniques, setting the stage for deeper exploration in subsequent sections.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Decision Trees}
+    \begin{itemize}
+        \item \textbf{Definition}: A decision tree is a flowchart-like structure where:
+        \begin{itemize}
+            \item Each internal node represents a decision based on an attribute,
+            \item Each branch represents the outcome of that decision,
+            \item Each leaf node represents a class label or predicted value.
+        \end{itemize}
+        
+        \item \textbf{Process}: The tree is constructed by splitting the data into subsets based on feature values, using criteria like Gini impurity or entropy.
+        
+        \item \textbf{Example}: Decision tree for a weather dataset:
+        \begin{itemize}
+            \item \textbf{Node 1}: Is it raining?
+            \begin{itemize}
+                \item Yes: \textbf{Node 2}
+                \begin{itemize}
+                    \item \textbf{Node 2}: Is it windy?
+                    \begin{itemize}
+                        \item Yes: Play indoors
+                        \item No: Play outside
+                    \end{itemize}
+                \end{itemize}
+                \item No: Play outside
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ensemble Methods}
+    \begin{block}{Overview}
+        Ensemble methods combine multiple models to produce a stronger model, improving predictive performance and robustness.
+    \end{block}
+
+    \begin{enumerate}
+        \item \textbf{Random Forests}
+        \begin{itemize}
+            \item A random forest is an ensemble of decision trees enhancing predictive accuracy and controlling overfitting.
+            \item Each tree is built from a bootstrapped sample of the data, with only a random subset of features for each split.
+            \item \textbf{Mathematical Representation}:
+            \begin{equation}
+            \hat{Y} = \frac{1}{M} \sum_{m=1}^{M} T_m(X)
+            \end{equation}
+            Where \( T_m \) is the m-th tree and \( M \) is the number of trees.
+        \end{itemize}
+        
+        \item \textbf{Gradient Boosting}
+        \begin{itemize}
+            \item Unlike random forests, builds trees sequentially; each new tree corrects errors from the previous ones.
+            \item Focuses on optimizing a loss function by adding weak learners (trees).
+            \item \textbf{Mathematical Representation}:
+            \begin{equation}
+            F_{m}(x) = F_{m-1}(x) + \nu \cdot T_m(x)
+            \end{equation}
+            Where \( \nu \) is the learning rate and \( T_m(x) \) represents the new tree added at stage \( m \).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Presentation Overview}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+\begin{frame}[fragile]{Decision Trees: What are They?}
+  \begin{itemize}
+    \item A decision tree is a flowchart-like structure used for classification and regression tasks.
+    \item It mimics human decision-making, breaking down complex decisions into simpler ones based on criteria.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Structure of a Decision Tree}
+  \begin{enumerate}
+    \item \textbf{Root Node}:
+      \begin{itemize}
+        \item The top node where the decision begins.
+      \end{itemize}
+    \item \textbf{Nodes}:
+      \begin{itemize}
+        \item Each internal node represents a feature and a test on that feature.
+      \end{itemize}
+    \item \textbf{Branches}:
+      \begin{itemize}
+        \item Outcomes of the decision that connect nodes.
+      \end{itemize}
+    \item \textbf{Leaf Nodes}:
+      \begin{itemize}
+        \item Terminal nodes representing the final decision (class label or output).
+      \end{itemize}
+  \end{enumerate}
+  \begin{block}{Diagram Example}
+  \begin{verbatim}
+                [Root Node: Feature 1]
+                       /       \
+               [Yes] /         \ [No]
+                     /           \
+              [Feature 2]       [Leaf Node: Class A]
+                /       \
+              [Yes]     [No]
+          [Leaf Node: Class B] [Leaf Node: Class C]
+  \end{verbatim}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{How Decision Trees Make Decisions}
+  \begin{itemize}
+    \item \textbf{Splitting}:
+      \begin{itemize}
+        \item The dataset is split based on the feature providing the most information gain.
+        \item Common methods include:
+          \begin{itemize}
+            \item \textbf{Gini Index}: Measures impurity in a dataset.
+            \item \textbf{Entropy}: Measures disorder or unpredictability.
+          \end{itemize}
+      \end{itemize}
+    \item \textbf{Decision Path}:
+      \begin{itemize}
+        \item Traverse from the root to a leaf node based on feature tests for the final decision.
+      \end{itemize}
+    \item \textbf{Example}:
+      \begin{itemize}
+        \item Predicting customer buying behavior based on age and income.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Applications of Decision Trees}
+  \begin{itemize}
+    \item \textbf{Business}:
+      \begin{itemize}
+        \item Customer segmentation, credit scoring, sales forecasting.
+      \end{itemize}
+    \item \textbf{Healthcare}:
+      \begin{itemize}
+        \item Disease diagnosis, predicting patient outcomes.
+      \end{itemize}
+    \item \textbf{Finance}:
+      \begin{itemize}
+        \item Risk management, fraud detection.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Key Points to Emphasize}
+  \begin{itemize}
+    \item Decision trees provide a simple and interpretable model illustrating decision processes.
+    \item They effectively handle both numerical and categorical data.
+    \item Pruning techniques can be used to avoid overfitting, enhancing model performance.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example of Splitting: Gini Impurity Calculation}
+  \begin{equation}
+    Gini(D) = 1 - \sum_{i=1}^{C} (p_i)^2
+  \end{equation}
+  \begin{itemize}
+    \item Where \( C \) is the number of classes and \( p_i \) is the proportion of instances in class \( i \).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Next Steps}
+  \begin{itemize}
+    \item Understanding decision trees lays the groundwork for exploring more advanced methods like ensemble techniques.
+    \item \textbf{Interactive Element}: Sketch a simple decision tree based on a dataset. Consider which features to include and how the tree would split.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Terminology in Decision Trees}
+    \begin{block}{Overview}
+        This slide discusses key terms associated with decision trees, such as nodes, leaves, splits, and pruning, which are essential for understanding how decision trees operate.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Concepts Explained: Node and Leaf}
+    \begin{enumerate}
+        \item \textbf{Node}:
+        \begin{itemize}
+            \item \textbf{Definition}: Represents a decision point based on an attribute.
+            \item \textbf{Types}:
+            \begin{itemize}
+                \item \textit{Internal Node}: A decision point leading to further splits.
+                \item \textit{Root Node}: The topmost node initiating the decision-making process.
+            \end{itemize}
+            \item \textbf{Example}: In predicting whether to play tennis, a node might be "Weather" with branches for "Sunny," "Overcast," "Rainy."
+        \end{itemize}
+        
+        \item \textbf{Leaf (Terminal Node)}:
+        \begin{itemize}
+            \item \textbf{Definition}: An endpoint that provides the final prediction; does not split further.
+            \item \textbf{Example}: A leaf may indicate "Yes" (play tennis) or "No" (do not play tennis) based on the preceding decisions.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Concepts Explained: Split and Pruning}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Split}:
+        \begin{itemize}
+            \item \textbf{Definition}: Dividing a node into branches based on a condition on the features.
+            \item \textbf{Criteria for Splitting}:
+            \begin{itemize}
+                \item \textit{Gini Impurity}: Measures impurity, lower scores imply better splits.
+                \item \textit{Entropy}: Used in information gain (ID3) to select the best feature for splitting.
+            \end{itemize}
+            \item \textbf{Example}: A split on “Humidity” may branch into “High” and “Normal,” leading to different classifications.
+        \end{itemize}
+
+        \item \textbf{Pruning}:
+        \begin{itemize}
+            \item \textbf{Definition}: Removing nodes to reduce complexity and avoid overfitting.
+            \item \textbf{Types}:
+            \begin{itemize}
+                \item \textit{Pre-Pruning}: Stops growth based on thresholds (e.g., maximum depth).
+                \item \textit{Post-Pruning}: Trims branches after full growth based on predictive accuracy.
+            \end{itemize}
+            \item \textbf{Example}: Pruning branches that add minor predictive power simplifies the model.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustrative Code Snippet}
+    \begin{lstlisting}[language=Python]
+from sklearn.tree import DecisionTreeClassifier
+
+# Feature set: [Weather, Humidity]
+# Target set: [Play Tennis]
+X = [[0, 0], [0, 1], [1, 0], [1, 1]]  # 0: Sunny, 1: Rainy; 0: High, 1: Normal
+y = [1, 0, 1, 0]  # 1: Yes, 0: No
+
+# Creating the Decision Tree model
+tree_model = DecisionTreeClassifier(max_depth=3)
+tree_model.fit(X, y)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Understanding nodes and leaves aids in visualizing the decision process.
+            \item Effective classification relies on how splits are executed, directly impacting model performance.
+            \item Pruning is essential to maintain efficiency and avoid overfitting in a decision tree model.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Building a Decision Tree - Introduction}
+    \begin{block}{Introduction to Decision Trees}
+        A decision tree is a supervised learning model used for both classification and regression tasks. It breaks down a dataset into increasingly specific criteria, leading to a decision based on the features available.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Building a Decision Tree - Step-by-Step Process}
+    \begin{enumerate}
+        \item \textbf{Choose the Best Attribute to Split On}
+        \begin{itemize}
+            \item Maximize information gain or minimize impurity.
+            \item Common splitting criteria:
+            \begin{itemize}
+                \item \textbf{Entropy & Information Gain} (ID3):
+                \begin{equation}
+                    \text{Entropy}(S) = -\sum_{i=1}^{C} P(Class_i) \log_2 P(Class_i)
+                \end{equation}
+                \item \textbf{Gini Impurity} (CART):
+                \begin{equation}
+                    Gini(S) = 1 - \sum_{i=1}^C (P(Class_i))^2
+                \end{equation}
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Split the Dataset} - Partition the data into subsets based on the selected attribute.
+
+        \item \textbf{Repeat for Each Subset} - Recursively apply the same process, deepening the tree.
+
+        \item \textbf{Stopping Criteria} - Determine when to stop growing the tree.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Building a Decision Tree - Further Steps}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Pruning the Tree}
+        \begin{itemize}
+            \item Trimming branches to improve generalization.
+            \item Techniques include:
+            \begin{itemize}
+                \item \textbf{Pre-pruning} - Stop growth to avoid overfitting.
+                \item \textbf{Post-pruning} - Remove unimportant branches after full tree growth.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Algorithms Used}
+        \begin{itemize}
+            \item \textbf{ID3} - Uses information gain for attribute selection, creates a tree recursively.
+            \item \textbf{CART} - Handles both classification (Gini impurity) and regression, predicting continuous outcomes.
+        \end{itemize}
+
+        \item \textbf{Example Scenario}
+        \begin{itemize}
+            \item Classifying whether a person will buy a product based on features like age, income, and education.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages and Disadvantages of Decision Trees}
+    \begin{block}{Overview}
+        This section summarizes the major advantages and disadvantages of decision trees, including their interpretability, issues of overfitting, and stability.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Decision Trees}
+    \begin{enumerate}
+        \item \textbf{Interpretability}
+            \begin{itemize}
+                \item Decision trees are intuitive and easy to interpret due to their hierarchical structure.
+                \item Each decision is visualized as branches and leaves, clarifying the decision-making process.
+                \item \textbf{Example}: A health diagnosis tree shows the path from symptoms to potential diseases.
+            \end{itemize}
+        
+        \item \textbf{No Need for Data Normalization}
+            \begin{itemize}
+                \item Feature scaling or normalization is unnecessary, simplifying preprocessing.
+            \end{itemize}
+        
+        \item \textbf{Handling of Numerical and Categorical Data}
+            \begin{itemize}
+                \item Decision trees can work with both types of data, offering flexibility.
+            \end{itemize}
+        
+        \item \textbf{Non-linear Relationships}
+            \begin{itemize}
+                \item They capture non-linear relationships effectively, suitable for complex datasets.
+            \end{itemize}
+        
+        \item \textbf{Feature Selection}
+            \begin{itemize}
+                \item Decision trees perform inherent feature selection, focusing on informative variables to reduce overfitting.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Disadvantages of Decision Trees}
+    \begin{enumerate}
+        \item \textbf{Overfitting}
+            \begin{itemize}
+                \item Prone to overfitting with small datasets, capturing noise instead of underlying patterns.
+                \item \textbf{Solution}: Pruning techniques can help mitigate this risk.
+            \end{itemize}
+        
+        \item \textbf{Instability}
+            \begin{itemize}
+                \item Minor changes in data can lead to vastly different tree structures, indicating high variance.
+                \item \textbf{Example}: Small changes in input can alter splitting criteria significantly.
+            \end{itemize}
+        
+        \item \textbf{Bias towards Certain Features}
+            \begin{itemize}
+                \item May favor features with more categories, leading to disproportionate usage.
+            \end{itemize}
+        
+        \item \textbf{Limited Predictive Power}
+            \begin{itemize}
+                \item Single trees may struggle with very complex datasets compared to ensemble methods.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Balance in Complexity}: It's crucial to balance complex models for capturing patterns with simple models for generalizability.
+        \item \textbf{Pruning is Essential}: Employ pruning techniques to reduce overfitting, avoiding overly complex trees.
+        \item \textbf{Ensemble Methods for Improvement}: Integrating decision trees within ensemble methods (e.g., Random Forests or Gradient Boosting) can enhance stability and predictive performance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Diagram of Decision Tree}
+    \begin{block}{Diagram Suggestion}
+        Include a flow diagram illustrating the decision-making process of a decision tree. Highlight the split points and termination nodes to visualize the interpretability advantage.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Ensemble Methods}
+    \begin{block}{What are Ensemble Methods?}
+        Ensemble methods combine multiple individual models to improve overall performance. 
+        A group of weak learners can collectively create a strong learner.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Why are Ensemble Methods Effective?}
+    \begin{enumerate}
+        \item \textbf{Reduction of Overfitting:} Combines multiple models to mitigate individual biases and variances.
+        \item \textbf{Enhanced Predictive Performance:} Averages out different errors leading to higher accuracy.
+        \item \textbf{Robustness:} Relies on joint decisions, making them stable against anomalies in the data.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Ensemble Learning}
+    \begin{itemize}
+        \item \textbf{Weak Learners:} Models that perform slightly better than random guessing.
+        \item \textbf{Voting Mechanism:} In classification, each model votes on the predicted class; majority wins.
+        \item \textbf{Averaging:} For regression tasks, the final prediction is the average of all model predictions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Ensemble Methods}
+    \begin{enumerate}
+        \item \textbf{Bagging (Bootstrap Aggregating):}
+        \begin{itemize}
+            \item Example: Random Forests
+            \item Description: Multiple models trained on different data subsets; predictions are averaged.
+            \item Formula: 
+            \begin{equation}
+                \text{Final Prediction} = \frac{1}{n} \sum_{i=1}^{n} y_i
+            \end{equation}
+        \end{itemize}
+        
+        \item \textbf{Boosting:}
+        \begin{itemize}
+            \item Example: AdaBoost, Gradient Boosting
+            \item Description: Models trained sequentially, correcting errors of the previous model.
+            \item Key Idea: Weighted influence based on accuracy.
+        \end{itemize}
+        
+        \item \textbf{Stacking:}
+        \begin{itemize}
+            \item Description: Trains multiple models and a meta-model to make final predictions.
+            \item Example: Logistic regression as a meta-model on decision trees and SVMs.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Points}
+    \begin{block}{Conclusion}
+        Ensemble methods systematically improve model accuracy and robustness by leveraging multiple models' strengths. They are vital in data science for reducing variance and bias.
+    \end{block}
+    
+    \begin{itemize}
+        \item Models combined can outperform individual models.
+        \item Bagging reduces variance; boosting reduces bias.
+        \item Versatile applications across various domains.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Considerations}
+    \begin{itemize}
+        \item Choice of ensemble method depends on problem context and data characteristics.
+        \item Efficiency is critical since ensemble learning requires more computational resources.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Random Forests Overview}
+    \begin{itemize}
+        \item Ensemble learning method for classification and regression.
+        \item Constructs multiple decision trees during training.
+        \item Outputs mode of classes (classification) or mean prediction (regression).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{How Random Forests Work}
+    \begin{enumerate}
+        \item \textbf{Bootstrapping:} 
+            \begin{itemize}
+                \item Random sampling with replacement creates multiple subsets.
+            \end{itemize}
+        \item \textbf{Building Decision Trees:}
+            \begin{itemize}
+                \item Each tree uses a random subset of features for splits.
+                \item Reduces overfitting by diversifying tree construction.
+            \end{itemize}
+        \item \textbf{Voting/Averaging:} 
+            \begin{itemize}
+                \item Classification: Majority vote for the class.
+                \item Regression: Average predictions from all trees.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Advantages of Random Forests}
+    \begin{itemize}
+        \item \textbf{Overfitting Reduction:}
+            \begin{itemize}
+                \item Mitigates overfitting compared to a single decision tree.
+            \end{itemize}
+        \item \textbf{Robustness:}
+            \begin{itemize}
+                \item Less sensitive to noise; majority outcomes correct misclassifications.
+            \end{itemize}
+        \item \textbf{Feature Importance:}
+            \begin{itemize}
+                \item Assesses and ranks importance of features.
+            \end{itemize}
+        \item \textbf{Handling Missing Values:}
+            \begin{itemize}
+                \item Maintains accuracy despite missing data.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Applications of Random Forests}
+    \begin{itemize}
+        \item \textbf{Healthcare:} Predictive analytics for patient diagnosis.
+        \item \textbf{Finance:} Credit scoring and fraud detection.
+        \item \textbf{Marketing:} Customer behavior prediction.
+        \item \textbf{Environmental Science:} Land use classification, species distribution modeling.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Mathematical Representation}
+    \begin{block}{Ensemble Prediction}
+        \begin{equation}
+        \hat{y}_{\text{ensemble}} = \frac{1}{N} \sum_{i=1}^{N} \hat{y}_i 
+        \end{equation}
+        \footnotesize{For regression, where \( \hat{y}_i \) is the predicted value from each tree.}
+    \end{block}
+    \begin{block}{Majority Voting}
+        \begin{equation}
+        \hat{y} = \text{mode}(\hat{y}_1, \hat{y}_2, ..., \hat{y}_N) 
+        \end{equation}
+        \footnotesize{For classification, where \( \hat{y}_i \) are class labels from each tree.}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet - Random Forest in Python}
+    \begin{lstlisting}[language=Python]
+from sklearn.ensemble import RandomForestClassifier
+
+# Create a random forest classifier
+rf_classifier = RandomForestClassifier(n_estimators=100, random_state=42)
+
+# Fit on training data
+rf_classifier.fit(X_train, y_train)
+
+# Predict on test data
+predictions = rf_classifier.predict(X_test)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item Random forests are versatile and powerful in machine learning.
+        \item They improve accuracy and interpretability.
+        \item Robust to overfitting and effective in handling noise.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Building a Random Forest - Overview}
+    \begin{block}{Definition}
+        A Random Forest is an ensemble learning method primarily used for classification and regression tasks. It creates multiple decision trees during training and merges their results to improve accuracy and control overfitting.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Building a Random Forest - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Ensemble Learning:}
+        \begin{itemize}
+            \item Combines predictions from multiple models to produce a more reliable output.
+            \item Reduces variance and bias, enhancing model performance.
+        \end{itemize}
+
+        \item \textbf{Decision Trees:}
+        \begin{itemize}
+            \item Base learners in the Random Forest; constructed using different subsets of the training data.
+            \item Powerful models that split data based on feature values, creating a decision tree.
+        \end{itemize}
+
+        \item \textbf{Bagging (Bootstrap Aggregating):}
+        \begin{itemize}
+            \item Technique used for creating diverse decision trees:
+            \begin{itemize}
+                \item Random selection of data points with replacement (bootstrapping).
+                \item Each tree is trained on a different sample, introducing variability.
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Building a Random Forest - Steps}
+    \begin{enumerate}
+        \item \textbf{Data Preparation:}
+        \begin{itemize}
+            \item Clean and preprocess the data.
+            \item Ensure features are in suitable formats.
+        \end{itemize}
+        
+        \item \textbf{Bootstrapping:}
+        \begin{itemize}
+            \item Generate \( n \) bootstrap samples from the training set.
+        \end{itemize}
+
+        \item \textbf{Building Decision Trees:}
+        \begin{itemize}
+            \item For each bootstrap sample, grow a decision tree using a subset of features.
+        \end{itemize}
+
+        \item \textbf{Aggregating Results:}
+        \begin{itemize}
+            \item For classification, each tree votes for a class label, with the mode selected.
+            \item For regression, average the outputs from all trees.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Building a Random Forest - Example}
+    \textbf{Scenario: Classifying Spam Emails}
+    \begin{itemize}
+        \item \textbf{Collect Data:} Extract features such as keywords, sender's address, etc.
+        \item \textbf{Bootstrap Samples:} Create datasets by randomly sampling with replacement.
+        \item \textbf{Train Trees:} Each dataset trains a decision tree on a subset of features.
+        \item \textbf{Predict:} Aggregate the tree predictions to determine if an email is spam.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Building a Random Forest - Key Points}
+    \begin{itemize}
+        \item \textbf{Robustness:} Random Forests are resilient against overfitting compared to single trees.
+        \item \textbf{Diversity in Trees:} Growing trees on different subsets leads to less correlation and enhanced performance.
+        \item \textbf{Feature Importance:} Random Forests can be used to assess the importance of different features in predictions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Building a Random Forest - Prediction Formula}
+    For a given input \( x \):
+    \begin{itemize}
+        \item \textbf{Classification:}
+        \begin{equation}
+        \hat{y} = \text{mode}(h_1(x), h_2(x), \ldots, h_n(x))
+        \end{equation}
+        \item \textbf{Regression:}
+        \begin{equation}
+        \hat{y} = \frac{1}{n} \sum_{i=1}^{n} h_i(x)
+        \end{equation}
+    \end{itemize}
+    Where \( h_i(x) \) represents the prediction from the \( i^{th} \) decision tree.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Gradient Boosting - Introduction}
+    
+    \begin{block}{What is Gradient Boosting?}
+        Gradient Boosting is a powerful machine learning technique used for both regression and classification tasks. It builds an ensemble of decision trees by adding trees sequentially, each one correcting the errors of its predecessor. This approach helps improve the model's accuracy significantly.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Gradient Boosting - Key Principles}
+    
+    \begin{enumerate}
+        \item \textbf{Sequential Learning:}
+        \begin{itemize}
+            \item Constructs trees based on previous errors (residuals).
+            \item Each new model focuses on the areas where the previous models performed poorly.
+        \end{itemize}
+        
+        \item \textbf{Gradient Descent:}
+        \begin{itemize}
+            \item Minimizes a loss function by adjusting contributions of models (trees).
+            \item Loss function: mean squared error for regression, logarithmic loss for classification.
+        \end{itemize}
+        
+        \item \textbf{Learning Rate:}
+        \begin{itemize}
+            \item Determines the contribution of each tree.
+            \item A smaller learning rate can enhance performance but requires more trees.
+        \end{itemize}
+        
+        \item \textbf{Overfitting Control:}
+        \begin{itemize}
+            \item Techniques include limiting tree depth and using regularization to prevent overfitting.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Gradient Boosting - Comparison with Other Methods}
+    
+    \begin{block}{Comparison with Ensemble Methods}
+        \begin{itemize}
+            \item \textbf{Random Forest:}
+            \begin{itemize}
+                \item Combines trees in parallel (bagging) without sequential error correction.
+                \item Focuses on reducing variance.
+            \end{itemize}
+
+            \item \textbf{Boosting:}
+            \begin{itemize}
+                \item Combines trees sequentially, allowing reduction of bias.
+                \item Results in lower training errors as more trees are added.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Gradient Boosting - Mathematical Foundation}
+    
+    The core of Gradient Boosting lies in iteratively fitting new models to minimize the gradient of the loss function:
+
+    \begin{equation}
+        F_{m}(x) = F_{m-1}(x) + \gamma_m h_m(x)
+    \end{equation}
+    
+    Where:
+    \begin{itemize}
+        \item \( F_{m}(x) \) is the predictive model at iteration \( m \).
+        \item \( \gamma_m \) is the learning rate (step size).
+        \item \( h_m(x) \) is the new model (typically a decision tree) that corrects the previous model.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Gradient Boosting - Example}
+    
+    Imagine a scenario where you are predicting house prices based on features like size, location, and number of bedrooms. 
+    
+    \begin{enumerate}
+        \item \textbf{Initial Model:} Start with a simple prediction (like the average house price).
+        \item \textbf{Fit First Tree:} Analyze residuals to create the first decision tree.
+        \item \textbf{Add More Trees:} Each subsequent tree addresses these residuals leading to increasingly accurate predictions.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Gradient Boosting - Key Points}
+    
+    \begin{itemize}
+        \item Gradient Boosting is vital for achieving high predictive accuracy through iterative error minimization.
+        \item Careful hyperparameter tuning (learning rate and tree depth) is crucial for balancing performance and mitigating overfitting.
+        \item Popular implementations include frameworks like XGBoost and LightGBM, providing efficient algorithms for gradient boosting.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{Introduction to Gradient Boosting}
+    \begin{itemize}
+        \item Gradient boosting is an ensemble technique that builds models sequentially.
+        \item Each new model attempts to correct errors made by the previous ones.
+        \item Highly effective for both classification and regression tasks.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Step-by-Step Process}
+    \begin{enumerate}
+        \item Data Preparation
+        \item Split the Dataset
+        \item Initialize the Model
+        \item Training the Model
+        \item Evaluate the Model
+        \item Hyperparameter Tuning
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{1. Data Preparation}
+    \begin{itemize}
+        \item \textbf{Handling Missing Values:} Address missing data via imputation or removal.
+        \item \textbf{Feature Selection:} Identify significant features based on correlation or domain knowledge.
+        \item \textbf{Encoding Categorical Variables:} Use one-hot encoding or label encoding to convert categorical variables into numerical ones.
+    \end{itemize}
+    \textbf{Example:} For house prices, make sure features like 'Square Footage', 'Number of Bedrooms', and 'Location' are clean and numeric.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Split the Dataset}
+    Divide your dataset into training and test sets:
+    \begin{itemize}
+        \item Example split: 80\% training, 20\% testing
+    \end{itemize}
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Initialize the Model}
+    \begin{itemize}
+        \item Choose a library: XGBoost or LightGBM.
+        \item Define hyperparameters: learning rate, number of trees, and max depth.
+    \end{itemize}
+    \textbf{Example Initialization:}
+    \begin{lstlisting}[language=Python]
+# XGBoost
+import xgboost as xgb
+model = xgb.XGBRegressor(learning_rate=0.1, n_estimators=100, max_depth=3)
+
+# LightGBM
+import lightgbm as lgb
+model = lgb.LGBMRegressor(learning_rate=0.1, n_estimators=100, max_depth=3)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{4. Training the Model}
+    \begin{itemize}
+        \item Fit the model on the training data to learn patterns from the features and target variable.
+    \end{itemize}
+    \begin{lstlisting}[language=Python]
+model.fit(X_train, y_train)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{5. Evaluate the Model}
+    \begin{itemize}
+        \item Use metrics like Mean Squared Error (MSE) for regression or accuracy and F1-score for classification.
+    \end{itemize}
+    \textbf{Example Evaluation:}
+    \begin{lstlisting}[language=Python]
+from sklearn.metrics import mean_squared_error
+
+predictions = model.predict(X_test)
+mse = mean_squared_error(y_test, predictions)
+print(f'Mean Squared Error: {mse}')
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{6. Hyperparameter Tuning}
+    \begin{itemize}
+        \item Optimize model performance by adjusting hyperparameters.
+        \item Recommended methods: Grid Search or Random Search.
+    \end{itemize}
+    \textbf{Key Parameters to Tune:}
+    \begin{itemize}
+        \item learning\_rate
+        \item n\_estimators
+        \item max\_depth
+        \item subsample
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Sequential Learning:} Each tree corrects the errors of its predecessor.
+        \item \textbf{Regularization:} Helps reduce overfitting by controlling complexity.
+        \item \textbf{Flexibility:} Can handle different types of data and tasks.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    Gradient boosting is a powerful tool for predictive modeling. 
+    \begin{itemize}
+        \item Follow the step-by-step approach to build effective models.
+        \item Incorporate necessary preprocessing, evaluation, and tuning for successful implementations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Formulas to Remember}
+    \begin{equation}
+        f(x) = f_{m-1}(x) + \gamma_m h_m(x)
+    \end{equation}
+    Where \( h_m(x) \) is the new decision tree and \( \gamma_m \) is the gain from adding \( h_m(x) \).
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison: Random Forests vs. Gradient Boosting - Overview}
+    \begin{block}{Ensemble Methods}
+        Ensemble methods combine multiple base learners to improve predictions. We will focus on two popular techniques: 
+        \begin{itemize}
+            \item Random Forests
+            \item Gradient Boosting
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison: Random Forests vs. Gradient Boosting - Performance}
+    \begin{block}{Performance Comparison}
+        \begin{itemize}
+            \item \textbf{Accuracy}:
+                \begin{itemize}
+                    \item \textbf{Random Forest}: Robust and effective; performs well with less tuning.
+                    \item \textbf{Gradient Boosting}: Often superior performance, requires careful tuning.
+                \end{itemize}
+            \item \textbf{Speed}:
+                \begin{itemize}
+                    \item \textbf{Random Forest}: Faster to train after tree construction, parallel processing.
+                    \item \textbf{Gradient Boosting}: Slower due to its sequential nature.
+                \end{itemize}
+            \item \textbf{Overfitting}:
+                \begin{itemize}
+                    \item \textbf{Random Forest}: Less prone to overfitting with large feature sets.
+                    \item \textbf{Gradient Boosting}: More susceptible unless regularized.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison: Random Forests vs. Gradient Boosting - Use Cases}
+    \begin{block}{Use Cases}
+        \begin{itemize}
+            \item \textbf{Random Forest}:
+                \begin{itemize}
+                    \item Classification and regression tasks.
+                    \item Effective for datasets with many features and fewer instances.
+                \end{itemize}
+            \item \textbf{Gradient Boosting}:
+                \begin{itemize}
+                    \item Preferred for competitions (e.g., Kaggle).
+                    \item Ideal for structured data with complex feature relationships.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Hyperparameter tuning is crucial for Gradient Boosting.
+            \item Evaluate performance with multiple metrics (accuracy, AUC, F1-score).
+            \item Model interpretability differs; Random Forests provide intuitive feature importance.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippets for Random Forests and Gradient Boosting}
+    \begin{block}{Random Forest Example}
+    \begin{lstlisting}[language=Python]
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier(n_estimators=100)
+model.fit(X_train, y_train)
+    \end{lstlisting}
+    \end{block}
+
+    \begin{block}{Gradient Boosting Example}
+    \begin{lstlisting}[language=Python]
+from sklearn.ensemble import GradientBoostingClassifier
+model = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1)
+model.fit(X_train, y_train)
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance}
+    \begin{block}{Understanding Performance Metrics}
+        Evaluating model performance is crucial for understanding how well our decision trees and ensemble methods work. Key metrics include:
+        \begin{itemize}
+            \item Accuracy
+            \item Precision
+            \item Recall (Sensitivity)
+            \item AUC (Area Under the Curve)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Metrics Overview - Part 1}
+    \begin{itemize}
+        \item \textbf{Accuracy}
+        \begin{itemize}
+            \item \textbf{Definition:} Proportion of correct predictions out of total predictions.
+            \item \textbf{Formula:} 
+            \begin{equation}
+            \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Predictions}}
+            \end{equation}
+            \item \textbf{Example:} 80 correct out of 100 cases yields 80\% accuracy.
+        \end{itemize}
+        
+        \item \textbf{Precision}
+        \begin{itemize}
+            \item \textbf{Definition:} Ratio of true positive outcomes to total positive predictions made.
+            \item \textbf{Formula:} 
+            \begin{equation}
+            \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+            \end{equation}
+            \item \textbf{Example:} For 30 identified positive cases and 20 true positives, precision = 0.67.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Metrics Overview - Part 2}
+    \begin{itemize}
+        \item \textbf{Recall (Sensitivity)}
+        \begin{itemize}
+            \item \textbf{Definition:} Ratio of true positive outcomes to actual positive cases.
+            \item \textbf{Formula:} 
+            \begin{equation}
+            \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+            \end{equation}
+            \item \textbf{Example:} If 20 true positives and 10 missed, recall = 0.67.
+        \end{itemize}
+
+        \item \textbf{AUC (Area Under the Curve)}
+        \begin{itemize}
+            \item \textbf{Definition:} Measures area under the ROC curve (true positive rate vs. false positive rate).
+            \item \textbf{Interpretation:}
+                \begin{itemize}
+                    \item 0.5: No discrimination (random guessing).
+                    \item 1.0: Perfect discrimination.
+                \end{itemize}
+            \item \textbf{Example:} An AUC of 0.85 suggests good model discrimination.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Selecting the Right Metric}
+    \begin{block}{Choosing the Right Metric}
+        Different metrics are important based on the context. For example:
+        \begin{itemize}
+            \item In fraud detection, high precision is critical to avoid false positives.
+            \item In medical testing, high recall is essential to catch all actual positive cases.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Accuracy may be misleading with imbalanced datasets.
+            \item Precision and Recall are essential for imbalanced classes.
+            \item AUC provides a comprehensive view across thresholds.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction}
+    \begin{itemize}
+        \item Decision trees and ensemble methods are vital tools in data science.
+        \item Applications span various sectors, leading to significant real-world impacts.
+        \item This section explores:
+        \begin{itemize}
+            \item Real-world applications
+            \item Ethical considerations
+            \item Potential biases in model deployment
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications}
+    \begin{enumerate}
+        \item \textbf{Healthcare}
+        \begin{itemize}
+            \item Predicting disease outcomes and treatment efficiency.
+            \item Example: Decision trees identify diabetes risk factors (age, BMI, family history).
+        \end{itemize}
+        
+        \item \textbf{Finance}
+        \begin{itemize}
+            \item Credit scoring and risk assessment.
+            \item Example: Decision trees classify loan applicants as 'high risk' or 'low risk'.
+        \end{itemize}
+
+        \item \textbf{Retail}
+        \begin{itemize}
+            \item Customer segmentation and sales forecasting.
+            \item Example: Gradient Boosting Machines (GBM) analyze purchase patterns for inventory optimization.
+        \end{itemize}
+
+        \item \textbf{Marketing}
+        \begin{itemize}
+            \item Targeted advertising.
+            \item Example: Decision trees classify customers likely to respond to marketing campaigns.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations}
+    \begin{enumerate}
+        \item \textbf{Bias in Data}
+        \begin{itemize}
+            \item Concern: Models may reinforce societal biases if trained on biased datasets.
+            \item Example: Demographic traits affecting predictions in law enforcement contexts.
+        \end{itemize}
+
+        \item \textbf{Transparency and Explainability}
+        \begin{itemize}
+            \item Concern: Ensemble methods can be interpreted as "black boxes."
+            \item Example: Challenges in understanding decisions in healthcare or criminal justice.
+        \end{itemize}
+
+        \item \textbf{Accountability}
+        \begin{itemize}
+            \item Concern: Determining responsibility for model-based decisions.
+            \item Example: Understanding factors leading to a loan denial based on algorithm recommendations.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions - Key Takeaways}
+    \begin{enumerate}
+        \item \textbf{Foundations of Decision Trees:}
+        \begin{itemize}
+            \item \textit{Interpretability:} Intuitive and easily interpretable as a series of questions.
+            \item \textit{Split Criteria:} Metrics such as Gini impurity and information gain guide node splits.
+        \end{itemize}
+
+        \item \textbf{Ensemble Methods Superiority:}
+        \begin{itemize}
+            \item \textit{Diversity and Robustness:} Methods like Random Forests and Gradient Boosting enhance accuracy.
+            \item \textit{Boosting Effectiveness:} Iterative models focus on correcting past errors to reduce bias.
+        \end{itemize}
+
+        \item \textbf{Practical Applications:}
+        \begin{itemize}
+            \item Applications in diverse domains such as healthcare and finance, e.g., credit scoring and fraud detection.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions - Emerging Trends}
+    \begin{enumerate}
+        \item \textbf{Integration with Deep Learning:}
+        \begin{itemize}
+            \item \textit{Hybrid Models:} Combining decision trees with neural networks for enhanced performance.
+        \end{itemize}
+
+        \item \textbf{Automated Machine Learning (AutoML):}
+        \begin{itemize}
+            \item Emerging tools that automate model selection and tuning, expediting deployment.
+        \end{itemize}
+
+        \item \textbf{Explainable AI (XAI):}
+        \begin{itemize}
+            \item Development of techniques improving the explainability of complex ensemble models.
+        \end{itemize}
+
+        \item \textbf{Handling Imbalanced Data:}
+        \begin{itemize}
+            \item Techniques like SMOTE are researched to enhance model performance on imbalanced datasets.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions - Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Scalability:} Optimizing ensemble methods for large datasets.
+            \item \textbf{Model Evaluation:} Focus on continuous improvement of metrics like AUC-ROC and F1 score.
+            \item \textbf{Ethical Implications:} Addressing bias and fairness in AI model training.
+        \end{itemize}
+    \end{block}
+
+    \textbf{In conclusion,} decision trees and ensemble methods are essential in data science, with ongoing advancements promising enhanced utility across various applications. Exploring emerging trends maps out future innovations.
+\end{frame}
+
+
+\end{document}

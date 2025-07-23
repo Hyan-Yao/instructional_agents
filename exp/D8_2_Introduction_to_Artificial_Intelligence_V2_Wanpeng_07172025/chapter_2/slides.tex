@@ -1,0 +1,1363 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Week 3-5: Search Algorithms and CSPs]{Week 3-5: Search Algorithms and Constraint Satisfaction Problems}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Search Algorithms}
+    \begin{block}{Overview}
+        An introduction to search algorithms in AI and their significance in navigating problem spaces to find solutions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What Are Search Algorithms?}
+    \begin{itemize}
+        \item Fundamental part of Artificial Intelligence (AI)
+        \item Systematic exploration of problem spaces to find solutions
+        \item Applications: Finding shortest paths, solving puzzles, playing games
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Search Algorithms}
+    \begin{itemize}
+        \item \textbf{Problem Solving:} Helps uncover solutions to complex problems with multiple pathways
+        \item \textbf{Efficiency:} Reduces time complexity by guiding the search process
+        \item \textbf{Foundation of AI:} Essential for pathfinding in robotics and decision-making in games
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Types of Search Algorithms}
+    \begin{enumerate}
+        \item \textbf{Uninformed Search (Blind Search):}
+            \begin{itemize}
+                \item No domain-specific knowledge used
+                \item Examples:
+                \begin{itemize}
+                    \item \textbf{Breadth-First Search (BFS):} Explores all nodes at the present depth before moving to the next depth level
+                    \item \textbf{Depth-First Search (DFS):} Explores as far as possible along a branch before backtracking
+                \end{itemize}
+            \end{itemize}
+        \item \textbf{Informed Search (Heuristic Search):}
+            \begin{itemize}
+                \item Uses domain-specific information to enhance efficiency
+                \item Example: \textbf{A* Search Algorithm} combines cost to reach the node and estimated cost to the goal
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Search Algorithm Illustration}
+    \begin{block}{BFS vs. DFS Example}
+        \begin{itemize}
+            \item Imagine a maze needing an exit:
+            \begin{itemize}
+                \item \textbf{BFS:} Explores level by level, finding exit faster in shallow mazes
+                \item \textbf{DFS:} Dives deeply into one path; may take longer or require backtracking in long paths
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item Search algorithms are vital across various AI domains
+        \item Distinction between uninformed and informed strategies is crucial
+        \item Efficiency and effectiveness enhanced by thoughtful algorithm selection based on problem characteristics
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Next Steps}
+    \begin{block}{Upcoming Topics}
+        In the next slide, we will delve deeper into the \textbf{Types of Search Strategies} to distinguish between uninformed and informed search methods, along with their practical applications. Stay tuned!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Types of Search Strategies - Introduction}
+    \begin{block}{Introduction}
+        Search algorithms are crucial in artificial intelligence, enabling the exploration of possible states or solutions to a problem. They can be classified into two main categories:
+        \begin{itemize}
+            \item \textbf{Uninformed Search}
+            \item \textbf{Informed Search}
+        \end{itemize}
+        Understanding the distinction between these two strategies is vital for selecting the appropriate algorithm for various applications in AI.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Types of Search Strategies - Uninformed Search}
+    \frametitle{Uninformed Search (Blind Search)}
+    \begin{block}{Definition}
+        These strategies do not have any additional information about the goal beyond the problem definition.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Characteristics:}
+        \begin{itemize}
+            \item Completeness: Guaranteed to find a solution if one exists.
+            \item Optimality: Not necessarily optimal; the solution found may not be the best.
+            \item Space Complexity: Can be high, as they store all generated nodes.
+        \end{itemize}
+        
+        \item \textbf{Example Algorithms:}
+        \begin{itemize}
+            \item \textbf{Breadth-First Search (BFS)}: Explores nodes layer by layer.
+            \item \textbf{Depth-First Search (DFS)}: Explores one branch at a time before backtracking.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Types of Search Strategies - Informed Search}
+    \frametitle{Informed Search (Heuristic Search)}
+    \begin{block}{Definition}
+        These strategies utilize additional information (heuristics) to guide the search process.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Characteristics:}
+        \begin{itemize}
+            \item Completeness: Depends on the heuristic used.
+            \item Optimality: With an admissible heuristic, the solution is guaranteed to be optimal.
+            \item Efficiency: Generally more efficient compared to uninformed searches.
+        \end{itemize}
+        
+        \item \textbf{Example Algorithms:}
+        \begin{itemize}
+            \item \textbf{A* Search:} Uses the formula:
+            \begin{equation}
+                f(n) = g(n) + h(n)
+            \end{equation}
+            where \( g(n) \) is the cost to reach node \( n \) and \( h(n) \) the estimated cost to the goal.
+            \item \textbf{Greedy Best-First Search:} Focuses on \( h(n) \) to find the target quickly.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Types of Search Strategies - Summary and Example}
+    \frametitle{Summary and Example}
+    \begin{block}{Summary of Key Points}
+        \begin{itemize}
+            \item \textbf{Uninformed Search:} No additional information - breadth-first, depth-first search.
+            \item \textbf{Informed Search:} Uses heuristics to optimize search - A*, Greedy Best-First Search.
+            \item \textbf{Trade-offs:} Consider space and time efficiency.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Illustrative Example}
+        For a maze-solving problem:
+        \begin{itemize}
+            \item Using \textbf{BFS}: Explores paths layer by layer but can consume substantial memory.
+            \item Utilizing \textbf{A*}: Leverages knowledge about the maze structure to navigate more efficiently.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Uninformed Search Strategies - Overview}
+    Uninformed search strategies, also known as blind search strategies, explore the state space without any additional information about which direction leads to the goal. These algorithms do not rely on heuristics; instead, they systematically explore all possible paths.
+\end{frame}
+
+\begin{frame}[fragile]{Uninformed Search Strategies - Breadth-First Search (BFS)}
+    \frametitle{Breadth-First Search (BFS)}
+    
+    \textbf{Description:}  
+    BFS explores the search tree level by level.
+
+    \textbf{Algorithm Steps:}
+    \begin{enumerate}
+        \item Initialize a queue and add the initial state.
+        \item While the queue is not empty:
+        \begin{itemize}
+            \item Dequeue a node.
+            \item If the node is the goal, return the solution.
+            \item Enqueue all child nodes of the dequeued node.
+        \end{itemize}
+    \end{enumerate}
+
+    \textbf{Key Properties:}
+    \begin{itemize}
+        \item Complete: Guaranteed to find a solution if one exists.
+        \item Optimal: Finds the shortest path to the goal (uniform cost).
+        \item Space Complexity: \(O(b^d)\) where \(b\) is the branching factor and \(d\) is the depth of the shallowest solution.
+    \end{itemize}
+
+    \textbf{Example:}  
+    Finding an exit in a maze by exploring all paths level by level.
+\end{frame}
+
+\begin{frame}[fragile]{Uninformed Search Strategies - Depth-First Search (DFS)}
+    \frametitle{Depth-First Search (DFS)}
+    
+    \textbf{Description:}  
+    DFS explores as far as possible down one branch before backtracking.
+
+    \textbf{Algorithm Steps:}
+    \begin{enumerate}
+        \item Initialize a stack and push the initial state.
+        \item While the stack is not empty:
+        \begin{itemize}
+            \item Pop a node from the stack.
+            \item If the node is the goal, return the solution.
+            \item Push all child nodes of the popped node onto the stack.
+        \end{itemize}
+    \end{enumerate}
+
+    \textbf{Key Properties:}
+    \begin{itemize}
+        \item Complete: Not guaranteed; may get stuck in infinite loops in cyclic graphs.
+        \item Optimal: Not guaranteed to find the shortest path.
+        \item Space Complexity: \(O(b \cdot d)\), where \(d\) is the max depth of the search tree.
+    \end{itemize}
+
+    \textbf{Example:}  
+    Searching for a password by trying one fully before backtracking to another.
+\end{frame}
+
+\begin{frame}[fragile]{Uninformed Search Strategies - Applications and Summary}
+    \frametitle{Applications and Summary}
+
+    \textbf{Applications:}
+    \begin{itemize}
+        \item \textbf{BFS:} Finding shortest path in unweighted graphs, web-crawling, social networking algorithms.
+        \item \textbf{DFS:} Useful for deep solution scenarios like puzzle solving and topological sorting.
+    \end{itemize}
+
+    \textbf{Summary:}
+    Uninformed search strategies are foundational search algorithms. Their strengths and weaknesses illustrate applications in various computational problems.
+
+    \textbf{Key Points:}
+    \begin{itemize}
+        \item BFS: Best for least-cost solutions in unweighted graphs.
+        \item DFS: Explores large spaces quickly but can miss shorter paths.
+    \end{itemize}
+
+    Feel free to ask questions for further clarification!
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - Introduction}
+    Informed search strategies utilize additional information, often in the form of a heuristic, to guide the search process more effectively than uninformed strategies. A heuristic is an educated guess or rule of thumb that helps estimate the cost to reach the goal from a given state.
+    
+    \begin{block}{Key Characteristics}
+        \begin{itemize}
+            \item \textbf{Efficiency:} Informed search can significantly reduce the search space and the time taken to find a solution.
+            \item \textbf{Heuristic Function:} Denoted as \( h(n) \), where \( n \) is a node in the search space, estimating the minimum cost from node \( n \) to the goal.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example of Heuristic}
+        \begin{itemize}
+            \item \textbf{Straight-Line Distance:} A common heuristic in pathfinding problems on a map.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - A* Search Algorithm}
+    The A* search algorithm combines uniform-cost search and greedy search, making it one of the most popular algorithms in AI.
+
+    \begin{block}{Key Components}
+        \begin{itemize}
+            \item \textbf{Cost from Start \( g(n) \):} The cost incurred to reach node \( n \) from the start.
+            \item \textbf{Heuristic Estimate \( h(n) \):} The estimated cost to reach the goal from node \( n \).
+            \item \textbf{Evaluation Function \( f(n) \):} 
+            \begin{equation}
+                f(n) = g(n) + h(n)
+            \end{equation}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{How A* Works}
+        \begin{enumerate}
+            \item Initialize with the initial node in the open list.
+            \item Continuously remove the node with the lowest \( f(n) \) from the open list.
+            \item If removed node is the goal, return the path.
+            \item Generate successors, compute \( f \) for each, and update their status.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - Example Scenario}
+    \textbf{Example Scenario: Navigating a City}
+
+    Consider a map where intersections are nodes, and streets are edges with weights (travel time). A heuristic could be the straight-line distance to the destination.
+
+    \begin{enumerate}
+        \item Initialize the open list with the starting intersection.
+        \item Calculate \( g(n) \) (total time) and \( h(n) \) (straight-line distance).
+        \item Execute A*:
+        \begin{itemize}
+            \item Expand nodes based on \( f(n) \) value.
+            \item Navigate through the path of least cost until reaching the goal node.
+        \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Advantages of A*:} Complete and optimal if the heuristic is admissible.
+            \item \textbf{Applicability:} Commonly used in route planning and games for pathfinding.
+        \end{itemize}
+    \end{block}
+
+    Remember, an effective heuristic can dramatically improve the performance of search algorithms!
+\end{frame}
+
+\begin{frame}[fragile]{Backtracking Algorithms - Definition}
+    \frametitle{Definition of Backtracking}
+    \begin{block}{What is Backtracking?}
+        Backtracking is an algorithmic technique to solve problems incrementally, one piece at a time, and removes those solutions that fail to satisfy the conditions. 
+    \end{block}
+
+    \begin{block}{Applications}
+        \begin{itemize}
+            \item Particularly useful for solving constraint satisfaction problems (CSPs) where solutions must meet specific constraints.
+        \end{itemize}
+    \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Backtracking Algorithms - How It Works}
+    \frametitle{How Backtracking Works}
+    \begin{enumerate}
+        \item \textbf{Recursive Approach:} Uses recursion to explore potential paths toward a solution.
+        \item \textbf{Exploration of Solutions:} Begins with an empty solution, adding components and checking constraints.
+        \item \textbf{Backtracking on Failure:} If a partial solution violates constraints, backtrack to the previous step to try another option.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Backtracking Algorithms - Example and Applications}
+    \frametitle{Example: N-Queens Problem}
+    \begin{block}{Description}
+        Place N queens on an N×N chessboard so that no two queens threaten each other.
+    \end{block}
+    
+    \begin{itemize}
+        \item Algorithm Steps:
+        \begin{enumerate}
+            \item Place a queen in a column of the first row.
+            \item Move to the next row to place the next queen.
+            \item Check for conflicts; if a conflict exists, backtrack to the previous row and try the next column.
+        \end{enumerate}
+    \end{itemize}
+
+    \begin{block}{Illustration}
+        \begin{verbatim}
+        [Row 0] [X] [ ] [ ] [ ]
+        [Row 1] [ ] [X] [ ] [ ]
+        [Row 2] [ ] [ ] [X] [ ]
+        [Row 3] [X] [ ] [ ] [ ]
+        \end{verbatim}
+    \end{block}
+    
+    \begin{block}{Applications}
+        \begin{itemize}
+            \item CSPs: Sudoku, graph coloring, puzzle solving.
+            \item Optimization Problems: Finding feasible solutions in complex scenarios.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Backtracking Algorithms - Key Points and Code}
+    \frametitle{Key Points and Pseudocode}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item \textbf{Efficiency:} Though may not be the fastest, guarantees finding a solution if it exists.
+            \item \textbf{Heuristic Improvements:} Combining heuristics with backtracking can reduce search space.
+            \item \textbf{Suitability:} Effective for problems with solutions described as partial solutions.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Pseudocode}
+    \begin{lstlisting}[language=Python]
+function Backtrack(solution):
+    if solution is complete:
+        return solution
+    for each option in options:
+        if isValid(option, solution):
+            solution.add(option)
+            result = Backtrack(solution)
+            if result is not failure:
+                return result
+            solution.remove(option)  # backtrack
+    return failure
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Backtracking Algorithms - Conclusion}
+    \frametitle{Conclusion}
+    Backtracking algorithms are powerful tools for solving CSPs, exploring potential solutions and eliminating those that do not fit the constraints. Understanding backtracking enhances problem-solving skills and is applicable in many domains, from algorithm design to real-world scenarios.
+\end{frame}
+
+\begin{frame}[fragile]{Understanding Constraint Satisfaction Problems (CSP)}
+    \frametitle{Overview}
+    A **Constraint Satisfaction Problem (CSP)** is a mathematical framework involving:
+    \begin{itemize}
+        \item **Variables**: Elements that need value assignments.
+        \item **Domains**: Possible values for each variable.
+        \item **Constraints**: Conditions that define allowable combinations of values.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Characteristics of CSPs}
+    \frametitle{Key Characteristics}
+    CSPs can be characterized by:
+    \begin{itemize}
+        \item **Discrete vs. Continuous Domains**: Typically discrete, though some CSPs deal with continuous variables.
+        \item **Finite vs. Infinite Domains**: Most applications use finite sets, making them computationally feasible.
+        \item **Binary and Non-Binary Constraints**: Involves either pairs of variables (binary) or multiple variables (non-binary).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Examples of CSPs}
+    \frametitle{Common Examples}
+    Key examples include:
+    \begin{itemize}
+        \item **Sudoku**: Fill cells with numbers 1-9, ensuring unique numbers per row, column, and grid.
+        \item **N-Queens Problem**: Position N queens on an N×N board without them attacking each other.
+        \item **Map Coloring**: Assign colors to map regions such that no adjacent regions share the same color.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Real-World Applications}
+    \frametitle{Applications of CSPs}
+    CSPs have diverse applications:
+    \begin{enumerate}
+        \item **Scheduling**: Assigning time slots to avoid conflicts.
+        \item **Resource Allocation**: Managing resources with supply and demand constraints.
+        \item **Robotics**: Path-planning avoiding obstacles under movement constraints.
+        \item **Configuration Problems**: Designing systems that meet functional requirements.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Key Points and Conclusion}
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item CSPs involve effective variable assignments under constraints.
+        \item Various algorithms (e.g., backtracking) can solve CSPs.
+        \item Mastering CSP concepts equips students for optimization and decision-making challenges in computer science and engineering.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Modeling Constraint Satisfaction Problems}
+    \begin{block}{Introduction to CSP Modeling}
+        Constraint Satisfaction Problems (CSPs) provide a formal framework for representing various combinatorial problems. 
+        Modeling a CSP involves defining its essential components: \textbf{variables}, \textbf{domains}, and \textbf{constraints}.
+        Understanding these components is crucial for effective problem-solving.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components}
+    \begin{enumerate}
+        \item \textbf{Variables}
+            \begin{itemize}
+                \item \textbf{Definition}: Variables are the unknowns that we seek to assign values to.
+                \item \textbf{Example}: In a Sudoku puzzle, each cell represents a variable.
+            \end{itemize}
+        \item \textbf{Domains}
+            \begin{itemize}
+                \item \textbf{Definition}: The domain of a variable is the set of possible values it can take.
+                \item \textbf{Example}: For a Sudoku cell (variable), the domain consists of the numbers 1 through 9.
+            \end{itemize}
+        \item \textbf{Constraints}
+            \begin{itemize}
+                \item \textbf{Definition}: Constraints are rules that specify allowable combinations of values for variables.
+                \item \textbf{Types of Constraints}:
+                    \begin{itemize}
+                        \item \textbf{Unary Constraints}: Involve a single variable. 
+                        \item \textbf{Binary Constraints}: Involve two variables.
+                        \item \textbf{Global Constraints}: Involve more than two variables.
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques for Modeling CSPs}
+    \begin{enumerate}
+        \item \textbf{Identify the Variables}
+            \begin{itemize}
+                \item Determine what aspects of the problem can be treated as variables.
+                \item \textbf{Example}: In the N-Queens problem, each queen's position on the chessboard is a variable.
+            \end{itemize}
+        \item \textbf{Define the Domains}
+            \begin{itemize}
+                \item Specify the possible values for each variable.
+                \item \textbf{Example}: For a coloring problem, the domain for each node could be $\{Red, Green, Blue\}$.
+            \end{itemize}
+        \item \textbf{Establish Constraints}
+            \begin{itemize}
+                \item Formulate constraints based on the relationships and restrictions that apply to the variables.
+                \item \textbf{Example}: In a graph coloring problem, adjacent nodes must have different colors.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: Sudoku as a CSP}
+    \begin{itemize}
+        \item \textbf{Variables}: Each cell in the 9x9 grid.
+        \item \textbf{Domains}: Set $\{1, 2, 3, 4, 5, 6, 7, 8, 9\}$ for each cell.
+        \item \textbf{Constraints}:
+            \begin{itemize}
+                \item Each row must contain distinct numbers.
+                \item Each column must contain distinct numbers.
+                \item Each 3x3 sub-grid must contain distinct numbers.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Points}
+    \begin{block}{Conclusion}
+        Modeling CSPs effectively requires a clear understanding of variables, domains, and constraints. This foundation sets the stage for applying various search techniques to find solutions.
+    \end{block}
+    \begin{itemize}
+        \item Clearly understanding each component is vital for CSP formulation.
+        \item Constraints are integral to defining relationships between variables.
+        \item Real-world problems can often be modeled as CSPs, like scheduling, puzzle solving, and resource allocation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Next Steps}
+    In the following slide, we will explore \textbf{Search Techniques for CSPs}, focusing on methods like backtracking and constraint propagation that utilize our CSP models for solving problems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Search Techniques for CSPs}
+    \begin{block}{Introduction}
+        Constraint Satisfaction Problems (CSPs) involve finding values for variables under specific constraints.
+        This presentation covers the two primary search techniques: 
+        \begin{itemize}
+            \item Backtracking
+            \item Constraint Propagation
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Backtracking}
+    \begin{block}{Description}
+        Backtracking is a depth-first search algorithm that incrementally builds candidates for solutions and abandons candidates ("backtracks") once it is determined that they cannot lead to a valid solution.
+    \end{block}
+    
+    \begin{block}{Process}
+        \begin{enumerate}
+            \item Initialization: Start with an empty assignment.
+            \item Variable Selection: Choose a variable to assign a value.
+            \item Value Assignment: Assign a possible value from the variable's domain.
+            \item Check Constraints:
+                \begin{itemize}
+                    \item If valid, proceed to the next variable.
+                    \item If invalid, backtrack and try the next possible value.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+    
+    \begin{block}{Example}
+        In a simple CSP to assign colors to regions A, B, and C:
+        \begin{itemize}
+            \item Assign Red to A.
+            \item Assign Green to B (valid).
+            \item Attempt to assign Green to C (invalid), backtrack and try Blue.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Constraint Propagation}
+    \begin{block}{Description}
+        Constraint Propagation reduces the search space by enforcing constraints among variable assignments.
+    \end{block}
+    
+    \begin{block}{Key Techniques}
+        \begin{itemize}
+            \item Forward Checking: Adjust the domains of remaining variables after a value is assigned to eliminate conflicts.
+            \item Arc Consistency (e.g., AC-3): Ensures that for each value in one variable's domain, there is a consistent value in a neighboring variable's domain.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example of Forward Checking}
+        Given variables A, B, and C with domains $\{1, 2, 3\}$:
+        \begin{itemize}
+            \item Assign A = 1.
+            \item Domains of B and C drop to $\{2, 3\}$ (removing 1).
+        \end{itemize}
+        This significantly reduces the search space.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Takeaway Points}
+    \begin{block}{Summary}
+        \begin{itemize}
+            \item \textbf{Backtracking:} Explores potential assignments, relying on the ability to revert errors.
+            \item \textbf{Constraint Propagation:} Actively reduces the search space and narrows down variable domains.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Takeaway Points}
+        \begin{itemize}
+            \item Integrating both techniques may yield optimal results in solving CSPs.
+            \item Understanding variable domains and constraints is fundamental to effectively employing these search techniques.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Search Strategies}
+    \begin{block}{Overview}
+    Criteria for evaluating the efficiency and effectiveness of search algorithms in Constraint Satisfaction Problems (CSPs).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Criteria for Evaluating Search Algorithms}
+    \begin{enumerate}
+        \item \textbf{Completeness}
+            \begin{itemize}
+                \item \textbf{Definition}: Guarantees finding a solution if one exists.
+                \item \textbf{Example}: Backtracking algorithms.
+            \end{itemize}
+        \item \textbf{Optimality}
+            \begin{itemize}
+                \item \textbf{Definition}: Finds the best solution according to a metric.
+                \item \textbf{Example}: A* search algorithm.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Efficiency Metrics}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % To continue the enumeration
+        \item \textbf{Time Complexity}
+            \begin{itemize}
+                \item \textbf{Definition}: Time required to find a solution as a function of input size.
+                \item \textbf{Formula}: \(O(b^d)\) for brute-force search.
+                \item \textbf{Example}: Iterative Deepening Depth-First Search operates within \(O(b^d)\).
+            \end{itemize}
+        \item \textbf{Space Complexity}
+            \begin{itemize}
+                \item \textbf{Definition}: Memory required to run the algorithm based on input size.
+                \item \textbf{Example}: DFS uses \(O(d)\), BFS uses \(O(b^d)\).
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementation and Performance Metrics}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Implementation Cost}
+            \begin{itemize}
+                \item \textbf{Definition}: Ease of implementation, development time, maintenance cost.
+            \end{itemize}
+        \item \textbf{Performance Metrics}
+            \begin{itemize}
+                \item \textbf{Definition}: Metrics like nodes expanded, depth of solution, and quality.
+                \item \textbf{Example}: Heuristic performance comparison between first and optimal solution.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item Completeness ensures a solution is found if it exists.
+        \item Optimality guarantees the best solution is identified.
+        \item Time and Space Complexity impact practical implementation.
+        \item Balance between Implementation Cost and Performance Metrics is crucial.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Search Algorithms - Overview}
+    \begin{block}{Introduction to Search Algorithms}
+        Search algorithms are systematic methods used to explore and find solutions within complex spaces defined by constraints. They play a fundamental role in computer science, particularly in artificial intelligence and operations research.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Search Space}: The set of all possible solutions to a problem.
+        \item \textbf{Goal State}: A specific state that satisfies the problem's requirements.
+        \item \textbf{Heuristic}: A technique that helps find a solution more quickly when classic methods are too slow.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Search Algorithms - Real-World Examples}
+    \begin{enumerate}
+        \item \textbf{Route Finding and Navigation Systems}
+            \begin{itemize}
+                \item \textit{Example}: Google Maps and GPS systems using A* or Dijkstra's algorithm.
+                \item \textit{Key Point}: Balances speed and distance for optimal routes.
+            \end{itemize}
+    
+        \item \textbf{Game AI}
+            \begin{itemize}
+                \item \textit{Example}: Chess and Go algorithms like Minimax and Alpha-Beta pruning.
+                \item \textit{Key Point}: Analyzes potential moves for a competitive edge.
+            \end{itemize}
+        
+        \item \textbf{Solving Puzzles and Games}
+            \begin{itemize}
+                \item \textit{Example}: Sudoku and crosswords modeled as Constraint Satisfaction Problems (CSPs).
+                \item \textit{Key Point}: CSP techniques prune search space effectively.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Search Algorithms - Continued}
+    \begin{enumerate}
+        \setcounter{enumi}{3} % Start from 4
+        \item \textbf{Scheduling Problems}
+            \begin{itemize}
+                \item \textit{Example}: Airline flight scheduling and employee shift planning as CSPs.
+                \item \textit{Key Point}: Optimizes resource allocation under constraints.
+            \end{itemize}
+
+        \item \textbf{Machine Learning and Data Mining}
+            \begin{itemize}
+                \item \textit{Example}: Hyperparameter tuning with grid search or random search.
+                \item \textit{Key Point}: Improves performance by finding optimal parameters.
+            \end{itemize}
+
+        \item \textbf{Robotics}
+            \begin{itemize}
+                \item \textit{Example}: Pathfinding algorithms for robot navigation.
+                \item \textit{Key Point}: Ensures safety and efficiency in movement.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Case Study: Sudoku as a CSP}
+    \begin{block}{Overview}
+        Using Sudoku to illustrate the application of CSP-solving techniques.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Understanding Constraint Satisfaction Problems (CSPs)}
+    \begin{itemize}
+        \item \textbf{Definition:} A Constraint Satisfaction Problem (CSP) consists of:
+        \begin{itemize}
+            \item A set of variables
+            \item Each variable has a domain of possible values
+            \item A set of constraints that restrict simultaneous values for these variables
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Sudoku as a CSP}
+    \begin{block}{Overview}
+        \begin{itemize}
+            \item Sudoku is modeled as a CSP.
+            \item It consists of a 9x9 grid divided into 9 smaller 3x3 grids.
+            \item The goal is to fill the grid with digits from 1 to 9 under the following constraints:
+            \begin{enumerate}
+                \item Each row contains every digit exactly once.
+                \item Each column contains every digit exactly once.
+                \item Each 3x3 subgrid contains every digit exactly once.
+            \end{enumerate}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Components of Sudoku as a CSP}
+    \begin{itemize}
+        \item \textbf{Variables:}
+        \begin{itemize}
+            \item Each cell represents a variable (e.g., \( V_{1,1} \) for the cell in the first row and first column).
+        \end{itemize}
+        \item \textbf{Domains:}
+        \begin{itemize}
+            \item Domain of each variable: digits 1 to 9.
+        \end{itemize}
+        \item \textbf{Constraints:}
+        \begin{itemize}
+            \item Row Constraints: No duplicates in any row.
+            \item Column Constraints: No duplicates in any column.
+            \item Subgrid Constraints: No duplicates in any 3x3 subgrid.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Solving Sudoku as a CSP}
+    \begin{block}{Backtracking Algorithm}
+        A common method for solving CSPs:
+        \begin{itemize}
+            \item Selects an unassigned variable.
+            \item Assigns a value from its domain.
+            \item Checks for constraint violations.
+            \item If no violations, moves to the next variable; otherwise, backtracks and tries another value.
+        \end{itemize}
+    \end{block}
+    
+    \begin{lstlisting}[language=Python]
+def solve_sudoku(board):
+    empty_cell = find_empty(board)
+    if not empty_cell:
+        return True  # Puzzle solved
+
+    row, col = empty_cell
+    for number in range(1, 10):  # Numbers 1 to 9
+        if is_valid(board, number, row, col):
+            board[row][col] = number
+            if solve_sudoku(board):
+                return True
+            board[row][col] = 0  # Reset on backtrack
+
+    return False
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{CSP Characteristics:} Sudoku represents key CSP characteristics: finite variables, restricted domains, and constraints.
+        \item \textbf{Practical Applications:} Understanding Sudoku’s CSP model aids in grasping complex real-world applications, e.g., scheduling and resource allocation.
+        \item \textbf{Algorithm Efficiency:} Enhancements like forward checking improve backtracking performance on larger or complex problems.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Search Algorithms}
+    \begin{block}{Understanding the Limitations}
+        Search algorithms are fundamental in artificial intelligence, especially for pathfinding, scheduling, and configuration. However, they face several challenges and limitations.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Challenges - Part 1}
+    \begin{enumerate}
+        \item \textbf{Exponential Growth of Search Space:}
+        \begin{itemize}
+            \item As the input size increases, the number of possible states grows exponentially.
+            \item Example: A standard 9x9 Sudoku grid has 81 cells; each can hold any number from 1 to 9, leading to a vast search space.
+        \end{itemize}
+        
+        \item \textbf{Time Complexity:}
+        \begin{itemize}
+            \item Many algorithms (e.g., backtracking) have high time complexity.
+            \item Worst-case: \( O(b^d) \) where \( b \) is the branching factor and \( d \) is the depth.
+            \item Key Takeaway: Efficient strategies are critical for CSPs.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Challenges - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Memory Usage:}
+        \begin{itemize}
+            \item Algorithms (e.g., BFS) can be memory-intensive as they store all explored states.
+            \item Example: Depth-first search (DFS) is more memory-efficient but may result in longer search times.
+        \end{itemize}
+        
+        \item \textbf{Heuristic Limitations:}
+        \begin{itemize}
+            \item Heuristic-based algorithms rely on the quality of heuristics. Poor heuristics can lead to suboptimal solutions.
+            \item Developing robust heuristics is essential for algorithms like A* or Greedy Best-First Search.
+        \end{itemize}
+
+        \item \textbf{Dynamic and Uncertain Environments:}
+        \begin{itemize}
+            \item Real-world problems often change over time; static search algorithms struggle in such environments.
+            \item Example: In robot navigation, changing obstacles require continuous reevaluation of the search strategy.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Formulas}
+    \begin{block}{Conclusion}
+        Understanding these challenges helps in designing more effective search algorithms and tackling CSPs. Continuous research is vital for improving efficiency in real-world applications.
+    \end{block}
+    
+    \begin{block}{Key Formulas}
+        \begin{itemize}
+            \item \textbf{Time Complexity:} \( O(b^d) \) for many tree-based searches.
+            \item \textbf{Effective Branching Factor:} Essential to measure the average branching factor for efficiency.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Search Techniques}
+    \begin{itemize}
+        \item Overview of emerging trends and advancements in search strategies and CSP applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Incorporation of Machine Learning}
+    \begin{itemize}
+        \item \textbf{Explanation}: Machine learning (ML) is being integrated into search algorithms to enhance efficiency and accuracy.
+        \item \textbf{Example}: An ML-based algorithm may prioritize nodes based on historical search success rates rather than traditional heuristics. 
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Quantum Computing Applications}
+    \begin{itemize}
+        \item \textbf{Explanation}: Quantum computing can revolutionize search algorithms by solving problems in parallel, exponentially reducing search times.
+        \item \textbf{Example}: Grover's algorithm achieves O(√N) time complexity for searching unsorted databases, compared to O(N) for classical ones.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hybrid Search Approaches}
+    \begin{itemize}
+        \item \textbf{Explanation}: Combining different search methods can lead to more robust and flexible strategies.
+        \item \textbf{Example}: A hybrid algorithm could utilize constraint propagation to narrow down possibilities before a heuristic search.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Enhanced CSP Solving Techniques}
+    \begin{itemize}
+        \item \textbf{Explanation}: Future advancements may include more efficient constraint propagation algorithms and enhanced backtracking techniques.
+        \item \textbf{Key Point}: New algorithms may use concepts from network flows and combinatorial optimization for better CSP handling.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Search in Dynamic Environments}
+    \begin{itemize}
+        \item \textbf{Explanation}: Real-world problems often require algorithms to adapt to changing conditions.
+        \item \textbf{Example}: Anytime algorithms provide solutions quickly and improve them over time, valuable in dynamic settings.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Utilization of Graph Neural Networks (GNNs)}
+    \begin{itemize}
+        \item \textbf{Explanation}: GNNs excel in identifying paths and relationships in graph-structured data.
+        \item \textbf{Application}: Useful in recommender systems where user-item interactions are represented as a graph.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration of Unknown Spaces}
+    \begin{itemize}
+        \item \textbf{Explanation}: Algorithms capable of exploring unknown or partially known environments are an exciting frontier.
+        \item \textbf{Example}: Algorithms utilizing reinforcement learning to learn during exploration.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item The evolution of search algorithms and CSPs is an advancing field driven by technological and theoretical innovations.
+        \item Leveraging ML, quantum computing, hybrid approaches, and novel architectures holds promising enhancements for problem-solving.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet}
+    \begin{block}{Example of a Simple Heuristic Function in Python for A*}
+        \begin{lstlisting}[language=Python]
+def heuristic(a, b):
+    return abs(a[0] - b[0]) + abs(a[1] - b[1])  # Manhattan distance
+        \end{lstlisting}
+    \end{block}
+    \begin{itemize}
+        \item This function calculates the heuristic for grid-based search algorithms, aiding pathfinding efforts.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Summary of Key Concepts - Search Algorithms}
+    \frametitle{Search Algorithms}
+    \begin{block}{Definition}
+        Search algorithms are systematic methods for navigating through possible states or configurations to find a solution to a problem.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Types of Search Algorithms:}
+            \begin{itemize}
+                \item \textbf{Uninformed Search:}
+                    \begin{itemize}
+                        \item \textbf{Breadth-First Search (BFS):} 
+                            Explores the neighbor nodes at the present depth prior to moving on to nodes at the next depth level.
+                            \begin{itemize}
+                                \item \textit{Example:} Finding the shortest path in a maze.
+                            \end{itemize}
+                        \item \textbf{Depth-First Search (DFS):} 
+                            Explores as far as possible along a branch before backtracking.
+                            \begin{itemize}
+                                \item \textit{Example:} Solving puzzles like the classic 8-puzzle.
+                            \end{itemize}
+                    \end{itemize}
+
+                \item \textbf{Informed Search:}
+                    \begin{itemize}
+                        \item \textbf{A* Search:} 
+                            Uses heuristics to guide the search more efficiently towards the goal.
+                            \begin{itemize}
+                                \item \textit{Example:} GPS navigation which finds the shortest route based on distance and traffic.
+                            \end{itemize}
+                        \item \textbf{Greedy Best-First Search:} 
+                            Expands the node that appears to be closest to the goal, often sacrificing optimality.
+                    \end{itemize}
+            \end{itemize}
+    \end{itemize}
+
+    \begin{block}{Key Concept}
+        The choice of algorithm depends on the problem type, domain knowledge, and performance criteria such as time complexity and space complexity.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Summary of Key Concepts - Constraint Satisfaction Problems (CSP)}
+    \frametitle{Constraint Satisfaction Problems (CSP)}
+    \begin{block}{Definition}
+        CSPs are mathematical problems defined as a set of objects whose state must satisfy several constraints and rules.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Components of CSPs:}
+            \begin{itemize}
+                \item \textbf{Variables:} The elements that need to be assigned values.
+                \item \textbf{Domains:} The possible values each variable can take.
+                \item \textbf{Constraints:} Rules that dictate which combinations of variable assignments are permitted.
+            \end{itemize}
+
+        \item \textbf{Example of CSP:} 
+            \begin{itemize}
+                \item \textbf{Sudoku:} Each cell is a variable, the numbers 1-9 are the domain, and the constraints ensure that no number repeats in any row, column, or subgrid.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Summary of Key Concepts - CSP Solution Techniques}
+    \frametitle{CSP Solution Techniques}
+    \begin{itemize}
+        \item \textbf{Solution Techniques:}
+            \begin{itemize}
+                \item \textbf{Backtracking:} 
+                    Incrementally builds candidates for solutions and abandons a candidate as soon as it is determined that it cannot lead to a valid solution.
+                    \begin{itemize}
+                        \item \textit{Example:} Backtracking in a Sudoku solver to fill in a grid.
+                    \end{itemize}
+                \item \textbf{Forward Checking:} 
+                    Additional strategy during backtracking that involves checking the remaining variables and removing values from their domains that can't lead to a solution.
+            \end{itemize}
+    \end{itemize}
+
+    \begin{block}{Key Point}
+        CSPs are highly applicable in fields such as artificial intelligence, scheduling, resource allocation, and more due to their ability to model real-world problems.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and References}
+    \frametitle{Conclusion \& References}
+    \begin{block}{Conclusion}
+        Understanding both search algorithms and CSPs equips students with a toolbox for solving a variety of problems encountered in computer science and related fields.
+        It lays the foundation for more advanced topics in artificial intelligence and optimization.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{References:}
+            \begin{itemize}
+                \item Algorithms and Complexity: Introduction to Algorithms (Cormen et al.)
+                \item Artificial Intelligence: A Modern Approach (Russell and Norvig)
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Visual Aid Suggestion}
+    \frametitle{Visual Aid Suggestion}
+    \begin{itemize}
+        \item Consider using flowcharts to depict the processes of BFS, DFS, A*, and examples of CSPs to enhance understanding.
+        \item Include a simple diagram of a Sudoku puzzle to illustrate CSP concepts visually.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Review Questions}
+    \begin{block}{Objective}
+        Engage students with targeted questions that reinforce their understanding of search algorithms and constraint satisfaction problems (CSPs). This interactive approach will help solidify key concepts and prepare students for practical applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts to Review - Search Algorithms}
+    \begin{block}{Search Algorithms}
+        \begin{itemize}
+            \item \textbf{Definition}: A method for solving problems by exploring potential solutions.
+            \item \textbf{Types}:
+            \begin{itemize}
+                \item \textbf{Uninformed Search}: Algorithms that do not have additional information about states (e.g., Breadth-First Search, Depth-First Search).
+                \item \textbf{Informed Search}: Algorithms that utilize heuristics (e.g., A* algorithm).
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts to Review - Constraint Satisfaction Problems (CSPs)}
+    \begin{block}{Constraint Satisfaction Problems}
+        \begin{itemize}
+            \item \textbf{Definition}: A problem defined as a set of objects whose state must satisfy several constraints and limitations. 
+            \item \textbf{Components}:
+            \begin{itemize}
+                \item \textbf{Variables}: The elements we want to assign values to.
+                \item \textbf{Domains}: The set of possible values for each variable.
+                \item \textbf{Constraints}: Rules that dictate which combinations of values are acceptable.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Review Questions}
+    \begin{enumerate}
+        \item \textbf{What is the primary goal of a search algorithm?}
+            \begin{itemize}
+                \item \textit{Expected Answer}: To find a solution to a problem by exploring the search space.
+            \end{itemize}
+
+        \item \textbf{Differentiate between uninformed and informed search algorithms.}
+            \begin{itemize}
+                \item \textit{Expected Answer}: Uninformed algorithms explore the search space without additional information (e.g., BFS, DFS), while informed algorithms use heuristics to improve efficiency (e.g., A*).
+            \end{itemize}
+
+        \item \textbf{In a CSP, what are the main components, and how do they interact?}
+            \begin{itemize}
+                \item \textit{Expected Answer}: The main components are variables, domains, and constraints. Variables are assigned values from their respective domains in such a way that all constraints are satisfied.
+            \end{itemize}
+
+        \item \textbf{How can heuristics improve the efficiency of search algorithms? Provide an example.}
+            \begin{itemize}
+                \item \textit{Expected Answer}: Heuristics provide a way to evaluate paths in a search space to estimate which ones are likely to lead to a solution sooner. For example, in the A* algorithm, heuristics help prioritize which nodes to explore based on their estimated cost to the goal.
+            \end{itemize}
+
+        \item \textbf{What strategies can be employed to solve a CSP?}
+            \begin{itemize}
+                \item \textit{Expected Answer}: Strategies include backtracking, constraint propagation, and local search methods, such as hill-climbing and genetic algorithms.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Understanding the difference between search types is crucial} for selecting the right approach based on problem requirements.
+        \item \textbf{CSPs require careful consideration of constraints}; failing to satisfy constraints can lead to incomplete or incorrect solutions.
+        \item \textbf{Heuristics play a vital role} in making search algorithms practical for complex problems by reducing the search space.
+        \item Encourage students to think of real-world problems that can be represented as CSPs or can benefit from search algorithms.
+        \item Sparking discussions on possible optimizations and variations of established algorithms can stimulate critical thinking and application.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading and Resources - Overview}
+    To deepen your understanding of Search Algorithms and Constraint Satisfaction Problems (CSPs), consider exploring the following resources. 
+    These readings provide theoretical backgrounds and practical applications that will enhance your comprehension of these critical topics in artificial intelligence.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading - Recommended Readings}
+    \begin{enumerate}
+        \item \textbf{"Artificial Intelligence: A Modern Approach" by Stuart Russell and Peter Norvig}
+        \begin{itemize}
+            \item Concepts Covered: Comprehensive overview of search algorithms, CSPs, and their applications in AI.
+            \item Key Takeaway: Understand the relationship between different types of search techniques and problem-solving strategies.
+        \end{itemize}
+        
+        \item \textbf{"Search in Artificial Intelligence" by S. G. Huang et al.}
+        \begin{itemize}
+            \item Concepts Covered: Advanced search algorithms including A*, Iterative Deepening, and Minimax.
+            \item Key Takeaway: Discover the implications of each algorithm's efficiency and effectiveness in various contexts.
+        \end{itemize}
+        
+        \item \textbf{"Constraint Satisfaction Problems" by Rina Dechter}
+        \begin{itemize}
+            \item Concepts Covered: In-depth exploration of CSP concepts, algorithms, and their applications in fields such as scheduling and resource allocation.
+            \item Key Takeaway: Learn about backtracking, constraint propagation, and branch-and-bound strategies.
+        \end{itemize}
+        
+        \item \textbf{"Introduction to Artificial Intelligence" by Wolfgang Ertel}
+        \begin{itemize}
+            \item Concepts Covered: Basic search algorithms and an introduction to CSPs within a broader AI context.
+            \item Key Takeaway: Gain insight into problem framing and formulation for AI solutions.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading - Online Resources}
+    \begin{enumerate}
+        \item \textbf{Coursera: "Artificial Intelligence for Everyone"}
+        \begin{itemize}
+            \item Topics: Introduction to AI concepts, including search strategies and CSPs.
+            \item Link: \url{https://www.coursera.org/learn/ai-for-everyone}
+        \end{itemize}
+        
+        \item \textbf{Khan Academy: "Search Algorithms"}
+        \begin{itemize}
+            \item Topics: Videos and articles explaining the fundamentals of various search algorithms.
+            \item Link: \url{https://www.khanacademy.org/computing/computer-science/algorithms}
+        \end{itemize}
+        
+        \item \textbf{GeeksforGeeks: "Backtracking and Constraint Satisfaction Problems"}
+        \begin{itemize}
+            \item Topics: Definitions, examples, and problem-solving approaches related to CSPs.
+            \item Link: \url{https://www.geeksforgeeks.org/constraint-satisfaction-problems-csps/}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading - Key Points and Example}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Understanding Search Algorithms: Focus on the mechanisms behind search strategies and how they optimize the search space.
+            \item CSPs in Real-World Applications: Explore how CSP frameworks can solve complex problems in both theory and practice.
+            \item Engagement with Examples: Review examples provided in the texts and online content to see algorithms in action.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Coding Snippet - Backtracking Example}
+    \begin{lstlisting}[language=Python]
+def is_safe(board, row, col, num):
+    for i in range(col):
+        if board[row][i] == num:
+            return False
+    return True
+
+def solve_sudoku(board):
+    for row in range(9):
+        for col in range(9):
+            if board[row][col] == 0:
+                for num in range(1, 10):
+                    if is_safe(board, row, col, num):
+                        board[row][col] = num
+                        if solve_sudoku(board):
+                            return True
+                        board[row][col] = 0  # backtrack
+    return False
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+
+\end{document}

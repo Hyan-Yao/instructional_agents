@@ -1,0 +1,760 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Reward Structures}
+    \begin{block}{Overview of Reward Structures in Reinforcement Learning}
+        In reinforcement learning (RL), reward structures define how an agent receives feedback from its environment based on its actions. The goal of an RL agent is to maximize its cumulative reward over time. Understanding reward structures is crucial as they influence the agent's learning process and its overall behavior.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance of Reward Structures}
+    \begin{enumerate}
+        \item \textbf{Guiding Behavior:} Reward structures direct the agent’s actions towards desirable outcomes. Strategically designing reward signals encourages specific behaviors that align with our objectives.
+        \item \textbf{Learning Efficiency:} Well-structured rewards can lead to faster convergence on optimal policies, while poorly structured rewards may hinder learning or result in unintended behavior.
+        \item \textbf{Robustness:} A robust reward structure helps ensure that the agent can generalize its learning across different states and situations, making it more adaptable in dynamic environments.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Rewards and Key Points}
+    \begin{block}{Immediate vs. Delayed Rewards}
+        \begin{itemize}
+            \item \textbf{Immediate Rewards:} Given immediately after an action; useful for clear cause-and-effect tasks.
+            \item \textbf{Delayed Rewards:} Given after a series of actions; more representative of complex tasks.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Types of Reward Structures}
+        \begin{itemize}
+            \item \textbf{Scalar Rewards:} Simplicity; a single value for each action.
+            \item \textbf{Shaped Rewards:} Enhanced feedback to guide the agent (e.g., using potential-based shaping).
+            \item \textbf{Sparse Rewards:} Rare feedback, typically used in environments with long-term consequences.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Reward Structures}
+    \begin{block}{Introduction}
+        In reinforcement learning (RL), reward structures play a crucial role in shaping the behavior of agents. Understanding different types of reward structures can help us design better agents capable of achieving desired outcomes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Reward Structures - Scalar Rewards}
+    \begin{itemize}
+        \item \textbf{Definition}: Scalar rewards are single numerical values given to an agent for performing an action or achieving a goal.
+        \item \textbf{Characteristics}:
+        \begin{itemize}
+            \item Typically ranges from a negative to a positive value, indicating a penalty or a reward.
+            \item Simple and intuitive for the agent to interpret.
+        \end{itemize}
+        \item \textbf{Example}: In a game, the agent receives:
+        \begin{itemize}
+            \item +10 points for winning
+            \item 0 points for a draw
+            \item -5 points for losing
+        \end{itemize}
+        \item \textbf{Key Point}: While easy to implement, scalar rewards might not provide sufficient guidance in complex environments.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Reward Structures - Shaped Rewards}
+    \begin{itemize}
+        \item \textbf{Definition}: Shaped rewards modify the scalar rewards to guide an agent's learning process more effectively.
+        \item \textbf{Characteristics}:
+        \begin{itemize}
+            \item Intermediate rewards can be provided for reaching sub-goals or performing desirable behaviors.
+            \item Encourages exploration and can lead to faster convergence to optimal policies.
+        \end{itemize}
+        \item \textbf{Example}: In a navigation task:
+        \begin{itemize}
+            \item +1 point for moving closer to a target 
+            \item -1 point for moving away 
+            \item Final goal reward also provided.
+        \end{itemize}
+        \item \textbf{Key Point}: Careful design of shaped rewards is essential, as poorly shaped rewards can lead to unintended behaviors (e.g., reward hacking).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Reward Structures - Sparse Rewards}
+    \begin{itemize}
+        \item \textbf{Definition}: Sparse rewards are infrequent and only provided upon achieving significant milestones or goals.
+        \item \textbf{Characteristics}:
+        \begin{itemize}
+            \item Useful in complex environments where meaningful progress is rarely recognized.
+            \item Challenges agents to explore a vast state space with limited guidance.
+        \end{itemize}
+        \item \textbf{Example}: In a maze:
+        \begin{itemize}
+            \item The agent only receives a reward upon reaching the exit after potentially many steps without a reward.
+        \end{itemize}
+        \item \textbf{Key Point}: While sparse rewards can motivate exploratory behavior, they can also slow down learning due to a lack of feedback during the majority of the journey.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Reward Structures}
+    \begin{itemize}
+        \item \textbf{Scalar Rewards}: Simple, easy to interpret but may lack depth.
+        \item \textbf{Shaped Rewards}: Provides guidance through incremental feedback but requires careful design.
+        \item \textbf{Sparse Rewards}: Encourages exploration but can make learning challenging due to infrequent feedback.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding and selecting the appropriate reward structure is pivotal in guiding RL agents to learn effectively and exhibit desired behaviors. Each reward type has unique advantages and challenges, making it essential to consider the specific context and objectives of the task.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code Snippet}
+    \begin{lstlisting}[language=Python]
+def reward_function(outcome):
+    if outcome == "win":
+        return 10
+    elif outcome == "draw":
+        return 0
+    else:  # outcome == "loss"
+        return -5
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Designing Effective Reward Systems}
+    % Brief Overview
+    A well-designed reward system in reinforcement learning (RL) is essential for training agents to achieve desired behaviors. This presentation outlines key concepts and guidelines for crafting effective reward systems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Reward Systems}
+    % Content Overview
+    \begin{itemize}
+        \item Reward systems guide agents in performing tasks effectively.
+        \item They encourage desired behaviors and discourage unwanted actions.
+        \item Key to design: Align rewards with the agent’s goals.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Reward Design}
+    \begin{enumerate}
+        \item \textbf{Immediate vs. Delayed Rewards}
+        \begin{itemize}
+            \item Immediate: Quick learning but can lead to shortsightedness.
+            \item Delayed: Supports long-term planning with credit assignment challenges.
+        \end{itemize}
+        
+        \item \textbf{Scoring}
+        \begin{itemize}
+            \item Define a clear scale for rewards, ensuring balance and fairness.
+        \end{itemize}
+        
+        \item \textbf{Shaping Rewards}
+        \begin{itemize}
+            \item Adds auxiliary rewards to guide agents effectively towards main goals.
+        \end{itemize}
+        
+        \item \textbf{Sparse vs. Dense Rewards}
+        \begin{itemize}
+            \item Sparse rewards: Infrequent, harder learning.
+            \item Dense rewards: Frequent feedback, aiding learning.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Guidelines for Designing Reward Systems}
+    \begin{enumerate}
+        \item Align rewards with overall goals to avoid reward hacking.
+        \item Balance exploration and exploitation in strategies.
+        \item Reward incremental improvements for consistent growth.
+        \item Provide clear performance feedback to agents.
+        \item Continuously iterate and refine the reward system based on agent behavior.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Reward Structure in Pseudocode}
+    % Pseudocode Example
+    \begin{lstlisting}[language=Python]
+def get_reward(current_state, action, next_state):
+    if next_state == GOAL_STATE:
+        return 10  # High reward for reaching the goal
+    elif is_closer(current_state, next_state):
+        return 1   # Small reward for getting closer
+    else:
+        return -1  # Penalty for unproductive actions
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    % Wrap-Up Points
+    \begin{itemize}
+        \item Align reward systems with learning objectives to avoid misaligned incentives.
+        \item Structure rewards to support both short and long-term goals.
+        \item Regular feedback and adjustments enhance learning outcomes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reward Scheme Examples - Overview}
+    \begin{block}{Understanding Reward Schemes}
+        Reward schemes are crucial for shaping the learning process in reinforcement learning (RL) agents. They provide feedback on actions, influencing future decisions and behaviors.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reward Scheme Examples - Positive and Negative Reinforcement}
+    \begin{block}{1. Positive Reinforcement}
+        \begin{itemize}
+            \item \textbf{Concept}: Providing a reward increases the likelihood of a behavior being repeated.
+            \item \textbf{Example}: In a video game, giving extra points for collecting items encourages players to explore.
+            \item \textbf{Key Point}: Leads to faster learning as agents quickly associate actions with rewards.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{2. Negative Reinforcement}
+        \begin{itemize}
+            \item \textbf{Concept}: Removal of an unpleasant condition when a desired behavior occurs.
+            \item \textbf{Example}: Reducing penalties for staying within safety zones in robotic navigation tasks encourages robot behavior.
+            \item \textbf{Key Point}: Highlights undesired actions to refine behavior.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reward Scheme Examples - Punishment and Shaping}
+    \begin{block}{3. Punishment}
+        \begin{itemize}
+            \item \textbf{Concept}: Adverse consequence to decrease the likelihood of a behavior.
+            \item \textbf{Example}: Time penalties for hitting walls in maze-solving robots discourages collisions.
+            \item \textbf{Key Point}: Can deter undesirable actions; needs careful management to avoid discouraging exploration.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{4. Shaping and Gradual Reward}
+        \begin{itemize}
+            \item \textbf{Concept}: Gradually rewarding closer approximations to a desired behavior.
+            \item \textbf{Example}: Teaching a pet tricks by rewarding initial simple behaviors and progressively increasing the criteria.
+            \item \textbf{Key Point}: Breaks tasks into manageable steps, facilitating complex learning.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reward Scheme Examples - Sparse vs. Dense Rewards and Multi-Objective}
+    \begin{block}{5. Sparse vs. Dense Rewards}
+        \begin{itemize}
+            \item \textbf{Sparse Rewards}: Infrequent rewards typically given at the task's end. Example: Chess rewards given only after a win.
+            \item \textbf{Dense Rewards}: Frequent feedback given throughout tasks. Example: Scoring points in each level of a game.
+            \item \textbf{Key Point}: Sparse rewards can complicate learning, while dense rewards can speed up learning via continuous feedback.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{6. Multi-Objective Rewards}
+        \begin{itemize}
+            \item \textbf{Concept}: Balancing multiple goals in the reward structure.
+            \item \textbf{Example}: In autonomous driving, agents are rewarded for speed, safety, and fuel efficiency.
+            \item \textbf{Key Point}: Effective design leads to robust learning and improved real-world application.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Formulas}
+    \begin{block}{Conclusion}
+        Understanding different reward schemes is essential for designing effective RL algorithms. Thoughtfully constructed rewards enhance training outcomes and learning efficiency.
+    \end{block}
+
+    \begin{block}{Formulas and Notation}
+        \begin{equation}
+            R_t = f(s_t, a_t)
+        \end{equation}
+        where \( R_t \) is the reward at time \( t \), \( s_t \) is the state, and \( a_t \) is the action.
+
+        \begin{equation}
+            G_t = R_t + \gamma R_{t+1} + \gamma^2 R_{t+2} + \ldots
+        \end{equation}
+        where \( \gamma \) is the discount factor.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Trade-off Between Exploration and Exploitation}
+    \begin{block}{Key Concepts}
+        \begin{itemize}
+            \item \textbf{Exploration}: Strategy of trying out new actions to discover potential rewards.
+            \item \textbf{Exploitation}: Strategy of using existing knowledge to maximize immediate rewards.
+            \item \textbf{Reward Structures}: Design of reward systems influences the balance between exploration and exploitation, impacting learning efficiency.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration-Exploitation Dilemma}
+    \begin{block}{Definition}
+        The Exploration-Exploitation Dilemma represents the challenge of deciding when to explore new options and when to exploit known ones.
+    \end{block}
+    \begin{itemize}
+        \item Effective RL strategies balance both approaches to improve learning and make optimal decisions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Effects of Reward Structures}
+    \begin{enumerate}
+        \item \textbf{Immediate vs. Delayed Reward}
+            \begin{itemize}
+                \item Immediate Reward: Encourages exploitation as agents quickly learn optimal actions.
+                \item Delayed Reward: Promotes exploration as agents must test actions to understand their benefits.
+            \end{itemize}
+        \item \textbf{Sparse vs. Dense Reward}
+            \begin{itemize}
+                \item Sparse Reward: Infrequent reward signals promote exploration.
+                \item Dense Reward: Frequent rewards can lead to excessive exploitation, potentially hindering learning.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Strategies and Key Points}
+    \begin{itemize}
+        \item Finding the right balance between exploration and exploitation is critical for effective learning.
+        \item Reward structures can be designed to guide agents toward maximizing short-term gains (exploitation) or achieving long-term success (exploration).
+        \item Common strategies include:
+            \begin{itemize}
+                \item Epsilon-greedy methods
+                \item Softmax selection
+                \item Upper Confidence Bound (UCB)
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formulas and Code Snippet}
+    \begin{block}{Epsilon-Greedy Algorithm}
+    \begin{lstlisting}[language=Python]
+# Epsilon-Greedy Implementation
+def select_action(state, Q, epsilon):
+    if random.random() < epsilon:  # Explore
+        return random.choice(action_space)
+    else:  # Exploit
+        return np.argmax(Q[state])
+    \end{lstlisting}
+    \end{block}
+    \begin{block}{Upper Confidence Bound (UCB)}
+        \begin{equation}
+        a_t = \arg \max_a \left( \bar{Q}_a + c \sqrt{\frac{\ln t}{N_a}} \right)
+        \end{equation}
+        where \( \bar{Q}_a \) is the average reward of action \( a \), \( c \) is a constant for tuning exploration, \( t \) is the total actions taken, and \( N_a \) is the times action \( a \) has been chosen.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impact of Reward Structures on Learning - Introduction}
+    \begin{itemize}
+        \item \textbf{Definition}: Reward structures in RL define feedback mechanisms based on agent actions.
+        \item \textbf{Importance}: They guide learning by influencing agent behavior and learning speed.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impact of Reward Structures on Learning - Types of Reward Structures}
+    \begin{enumerate}
+        \item \textbf{Dense Reward}
+        \begin{itemize}
+            \item Agents get frequent rewards at every time step.
+            \item Example: +1 for moving closer to exit, -1 for hitting walls.
+            \item \textbf{Impact}: Speeds up learning but can lead to suboptimal strategies.
+        \end{itemize}
+        
+        \item \textbf{Sparse Reward}
+        \begin{itemize}
+            \item Rewards are infrequent, given only at task completion.
+            \item Example: +10 for navigating the entire maze.
+            \item \textbf{Impact}: Slows learning but encourages exploration.
+        \end{itemize}
+        
+        \item \textbf{Shaped Reward}
+        \begin{itemize}
+            \item Intermediate rewards in addition to final goal reward.
+            \item Example: Small rewards for completing milestones.
+            \item \textbf{Impact}: Balances exploration and exploitation.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impact of Reward Structures on Learning - Conclusion and Example}
+    \begin{itemize}
+        \item \textbf{Learning Speed}: Dense rewards lead to faster convergence; sparse rewards may lengthen the process.
+        \item \textbf{Learning Effectiveness}: Shaped rewards generally improve learning by avoiding local optima.
+    \end{itemize}
+    
+    \textbf{Example Scenario: Self-Driving Car}
+    \begin{itemize}
+        \item \textbf{Sparse Reward Structure}: +5 for completing a lap; delays feedback.
+        \item \textbf{Shaped Reward Structure}: +1 for navigating turns, providing incremental feedback for learning.
+    \end{itemize}
+    
+    \textbf{Conclusion}: Understanding reward structures is vital for successful RL system design and optimizing learning speed and effectiveness.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Reward Design - Introduction}
+    \begin{itemize}
+        \item Importance of reward design in reinforcement learning (RL).
+        \item A well-designed reward structure accelerates learning.
+        \item Poorly designed rewards can lead to suboptimal outcomes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Reward Design - Common Pitfalls}
+    \begin{enumerate}
+        \item \textbf{Sparse Rewards}
+            \begin{itemize}
+                \item Lack of feedback makes action-outcome associations difficult.
+                \item Example: Navigation tasks with rewards only at goal state.
+                \item \textit{Strategy:} Use intermediate rewards for more frequent feedback.
+            \end{itemize}
+        
+        \item \textbf{Reward Shaping}
+            \begin{itemize}
+                \item Additional rewards can mislead the agent.
+                \item Example: Maze rewards can encourage suboptimal routes.
+                \item \textit{Strategy:} Ensure shaped rewards do not obscure primary objectives.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Reward Design - Continued}
+    \begin{enumerate}[resume]
+        \item \textbf{Reward Hacking}
+            \begin{itemize}
+                \item Agents may exploit rewards in unintended ways.
+                \item Example: Robots creating messes to earn cleaning rewards.
+                \item \textit{Strategy:} Design rewards with potential unintended consequences in mind.
+            \end{itemize}
+        
+        \item \textbf{Delayed Rewards}
+            \begin{itemize}
+                \item Complicated learning when rewards are given after sequences of actions.
+                \item Example: Flapping wings rewarded only at task's end.
+                \item \textit{Strategy:} Use methods like Temporal-Difference Learning for better credit assignment.
+            \end{itemize}
+
+        \item \textbf{Conflicting Rewards}
+            \begin{itemize}
+                \item Conflicting signals can confuse agent decision-making.
+                \item Example: Conflicts between speed and safety in autonomous driving.
+                \item \textit{Strategy:} Prioritize overall goals and employ multi-objective optimization.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Iterative Design:} Testing and modifications are crucial based on agent feedback.
+        \item \textbf{Domain Knowledge:} Incorporating domain insights shapes effective reward structures.
+        \item \textbf{Continuous Assessment:} Monitoring agent behavior ensures rewards drive desired actions.
+    \end{itemize}
+    
+    \textbf{Conclusion:} Understanding challenges in reward design is vital for effective reinforcement learning. Proper strategies lead to more successful learning outcomes.
+    
+    \begin{block}{Example Formula}
+        Cumulative reward over time:
+        \begin{equation}
+            R_t = \sum_{i=0}^{t} r_i
+        \end{equation}
+        where \( R_t \) is the cumulative reward at time \( t \) and \( r_i \) is the reward at time step \( i \).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet - Reward Function}
+    \begin{lstlisting}[language=Python]
+def reward_function(state, action):
+    if state == GOAL_STATE:
+        return 10  # Positive reward for reaching the goal
+    elif action == DANGEROUS_ACTION:
+        return -5  # Negative reward for risky actions
+    else:
+        return -1  # Small penalty for each step to encourage efficiency
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Studies: Understanding Reward Structures in Action}
+    Reward structures are critical in reinforcement learning (RL) as they influence the agent's learning process. A well-designed reward structure can motivate desired behaviors, while a poorly designed one can lead to suboptimal learning outcomes.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 1: Gaming Industry - \textit{Through the Fire and Flames}}
+    \begin{block}{Context}
+        In video game design, reward structures enhance user experience through tiered reward systems.
+    \end{block}
+
+    \begin{itemize}
+        \item Players receive rewards for completing challenges and unlocking higher levels (e.g., finishing difficult levels).
+        \item Badges are awarded for various achievements, serving as extrinsic motivators to continue playing.
+    \end{itemize}
+
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item \textbf{Engagement}: Regular rewards motivate players to progress.
+            \item \textbf{Behavioral Feedback}: Real-time responses reinforce positive behaviors and promote skill improvement.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 2: Healthcare Sector - \textit{Patient Compliance Programs}}
+    \begin{block}{Context}
+        Reward structures aim to incentivize patient adherence to treatment plans.
+    \end{block}
+
+    \begin{itemize}
+        \item Patients earn points for taking medications, attending check-ups, and achieving health milestones.
+        \item Points can be redeemed for discounts on medications or health-related services.
+    \end{itemize}
+
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item \textbf{Motivational Strategies}: Positive reinforcement leads to better compliance.
+            \item \textbf{Long-term Engagement}: Continual rewards maintain patient interest in health management.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 3: Corporate Environment - \textit{Employee Performance Incentives}}
+    \begin{block}{Context}
+        Reward structures are implemented to boost employee productivity and morale.
+    \end{block}
+
+    \begin{itemize}
+        \item A tech company introduces bonuses for completing project milestones and high performance metrics.
+        \item Bonuses or public recognition are awarded for exceeding targets or delivering innovative solutions.
+    \end{itemize}
+
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item \textbf{Performance Motivation}: Clear rewards encourage competition and excellence.
+            \item \textbf{Team Dynamics}: Collaborative rewards promote teamwork and shared success.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Important Concepts}
+    These case studies illustrate how reward structures can enhance motivation, engagement, and overall performance across various industries.
+    
+    \begin{itemize}
+        \item \textbf{Incentivization}: Understanding how rewards motivate behavior is essential.
+        \item \textbf{Customization}: Tailoring rewards to fit the target audience enhances effectiveness.
+        \item \textbf{Continuous Feedback Loop}: Real-time feedback with rewards supports sustained engagement and improvement.
+    \end{itemize}
+    
+    With these insights, we will delve into evaluating these systems in the next slide on performance metrics for reward systems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Metrics for Reward Systems}
+    Performance metrics are essential in evaluating the effectiveness of different reward structures within organizations. 
+    \begin{itemize}
+        \item Assess how well a reward system motivates employees.
+        \item Aligns with business objectives.
+        \item Enhances overall performance.
+        \item Key to optimizing reward systems for desired outcomes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Performance Metrics Defined}
+        \begin{itemize}
+            \item Quantifiable measures to evaluate a system's success in achieving goals.
+            \item Assess the impact of rewards on employee behavior and organizational performance.
+        \end{itemize}
+
+        \item \textbf{Types of Performance Metrics}
+        \begin{itemize}
+            \item \textbf{Quantitative Metrics}: Productivity rates, sales figures, profit margins.
+            \item \textbf{Qualitative Metrics}: Employee satisfaction, engagement levels, organizational culture.
+        \end{itemize}
+        
+        \item \textbf{Common Metrics for Reward Systems}
+        \begin{itemize}
+            \item Employee Turnover Rate
+            \item Job Satisfaction Scores
+            \item Performance Review Ratings
+            \item Sales Growth
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples and Illustrations}
+    \begin{itemize}
+        \item \textbf{Illustrative Example}: 
+        \begin{itemize}
+            \item A sales team incentivized with commission-based rewards. 
+            \item Track both sales growth (quantitative) and employee satisfaction (qualitative) to evaluate effectiveness.
+        \end{itemize}
+        
+        \item \textbf{Case Study}: 
+        \begin{itemize}
+            \item Implementation of stock options in a tech company led to a 15\% increase in employee retention and job satisfaction.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Alignment with Goals}: Ensure metrics align with organizational goals.
+        \item \textbf{Regular Assessment}: Continuously monitor metrics to adapt reward structures.
+        \item \textbf{Employee Feedback}: Integrate insights for improvement in rewards.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        Leveraging performance metrics allows businesses to systematically evaluate and improve reward structures, fostering a motivated workforce and enhancing organizational success.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formulas}
+    \begin{block}{Turnover Rate Formula}
+        \[
+        \text{Turnover Rate} = \left( \frac{\text{Number of Employees Leaving}}{\text{Average Number of Employees}} \right) \times 100
+        \]
+    \end{block}
+    \begin{block}{Python Code Snippet}
+        \begin{lstlisting}[language=Python]
+def calculate_turnover_rate(employee_leaving, total_employees):
+    return (employee_leaving / total_employees) * 100
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions - Key Takeaways}
+    \begin{block}{Essence of Reward Structures}
+        Reward structures are critical for guiding agent behavior in reinforcement learning (RL). They inform the agent about the success or failure of its actions in the environment, leading to efficient learning and improved performance.
+    \end{block}
+    
+    \begin{block}{Performance Metrics}
+        Various metrics help evaluate reward systems, including:
+        \begin{itemize}
+            \item \textbf{Cumulative Reward}: Total reward over a specified period.
+            \item \textbf{Average Reward}: Average reward per time step, providing insights into long-term performance.
+            \item \textbf{Convergence Speed}: Rate at which an agent learns an optimal policy.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Types of Reward Structures}
+        \begin{itemize}
+            \item \textbf{Sparse vs. Dense Rewards}: Sparse rewards provide feedback occasionally; dense rewards provide frequent feedback.
+            \item \textbf{Shaping Rewards}: Intermediate rewards can accelerate learning by guiding towards the ultimate goal.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Exploration vs Exploitation}
+        Reward structures must balance exploration (trying new actions) and exploitation (relying on known rewarding actions) to improve performance and efficiency.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Research Directions}
+    \begin{itemize}
+        \item \textbf{Dynamic Reward Structures}: Creating adaptive rewards that change based on agent performance or task complexity.
+        \item \textbf{Multi-Agent Reward Systems}: Exploring reward structures in systems where agents cooperate or compete to gain new insights.
+        \item \textbf{Incorporating Human Feedback}: Researching how to integrate human preferences into reward systems for real-world applications.
+        \item \textbf{Robustness to Reward Hacking}: Developing structures that prevent exploitation of loopholes for reliable RL applications.
+        \item \textbf{Theoretical Foundations}: Investigating formal models that predict optimal reward structures for various tasks.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Closing Remarks and Sample Code}
+    Understanding and innovating on reward structures is fundamental to advancing reinforcement learning. The discussed strategies and future directions aim to develop more effective, robust, and ethically aligned RL systems.
+
+    \vspace{0.5cm}
+    \textbf{Sample Reward Function:}
+    \begin{lstlisting}[language=Python]
+def reward_function(state, action, next_state):
+    if goal_achieved(next_state):
+        return 100  # Positive reward for achieving goal
+    elif action_leads_to_danger(state):
+        return -50  # Negative reward for dangerous actions
+    else:
+        return -1  # Small penalty for regular actions
+    \end{lstlisting}
+    
+    \textbf{Key Points:}
+    \begin{itemize}
+        \item Design of reward structures is pivotal for success in RL.
+        \item Understanding performance metrics enhances evaluation of agent behavior.
+        \item Future research is vital for enhancing RL systems' capabilities.
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

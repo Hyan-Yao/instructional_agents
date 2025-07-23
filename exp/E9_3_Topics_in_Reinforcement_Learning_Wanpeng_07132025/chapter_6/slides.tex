@@ -1,0 +1,794 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Title Page Information
+\title[Actor-Critic Algorithms]{Chapter 6: Actor-Critic Algorithms}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Actor-Critic Algorithms}
+    \begin{block}{Overview of Actor-Critic Architecture}
+        Actor-Critic algorithms in reinforcement learning (RL) combine value-based and policy-based methods, consisting of:
+        \begin{itemize}
+            \item \textbf{Actor}: Selects actions based on the current policy, mapping states to action probabilities and improving the policy during training.
+            \item \textbf{Critic}: Evaluates actions taken by the actor by estimating the value function, producing a numerical value (advantage or value estimate) that reflects the quality of actions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance of Actor-Critic Algorithms}
+    \begin{itemize}
+        \item \textbf{Combining Strengths}: Balances exploratory and exploitative strategies, enabling faster convergence and better performance than pure methods.
+        \item \textbf{Policy Improvement}: Actor adjusts probabilities using feedback from the critic, leading to continuous improvement of the policy.
+        \item \textbf{Stability}: Separating value estimation and action selection creates more stable learning dynamics, beneficial for complex environments.
+    \end{itemize}
+    
+    \begin{block}{Applications}
+        Actor-Critic algorithms are utilized in:
+        \begin{itemize}
+            \item \textbf{Robotics}: Training robots for tasks like manipulation and navigation.
+            \item \textbf{Game Playing}: Achieving high performance in games such as Go and various video games.
+            \item \textbf{Finance}: Portfolio management and optimizing strategies in dynamic environments.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Actor-Critic}
+    \begin{itemize}
+        \item \textbf{Learning Process}: Actor and critic learn simultaneously and can update at different rates, adapting learning dynamics to specific problems.
+        \item \textbf{Exploration vs. Exploitation}: The stochastic nature of the actor encourages exploration, while the critic supports exploitation of learned actions.
+    \end{itemize}
+    
+    \begin{block}{Example}
+        In a grid world, the agent moves toward the goal while avoiding obstacles:
+        \begin{itemize}
+            \item \textbf{Actor}: Chooses among actions (up, down, left, right) based on the current policy.
+            \item \textbf{Critic}: Provides a value estimate reflecting the expected reward of reaching the goal.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mathematical Foundations}
+    \begin{block}{Value Estimation}
+        The value of state \(s\) is given by:
+        \begin{equation}
+            V(s) = E[R_t | s_t = s]
+        \end{equation}
+        where \(V(s)\) is the value function and \(R_t\) is the reward at time \(t\).
+    \end{block}
+    
+    \begin{block}{Policy Update}
+        The policy parameters are updated using:
+        \begin{equation}
+            \theta_{new} = \theta + \alpha \nabla_\theta J(\theta)
+        \end{equation}
+        where \(\theta\) are the policy parameters, \(\alpha\) is the learning rate, and \(J(\theta)\) is the performance objective.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Fundamentals - Overview}
+    \begin{itemize}
+        \item A review of foundational concepts in reinforcement learning (RL).
+        \item Key topics include:
+        \begin{itemize}
+            \item Agents and environments
+            \item States and actions
+            \item Rewards and policies
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Key Concepts in Reinforcement Learning}
+    \begin{itemize}
+        \item \textbf{Agent}:
+            \begin{itemize}
+                \item Definition: The learner or decision maker.
+                \item Role: Choose actions to maximize cumulative rewards.
+                \item Example: A robot navigating a maze.
+            \end{itemize}
+
+        \item \textbf{Environment}:
+            \begin{itemize}
+                \item Definition: Everything the agent interacts with.
+                \item Role: Responds to the agent's actions.
+                \item Example: The maze including walls and paths.
+            \end{itemize}
+        
+        \item \textbf{State (s)}:
+            \begin{itemize}
+                \item Definition: Description of the current situation.
+                \item Role: Influences agent behavior.
+                \item Example: The robot's location in the maze.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Continuing Key Concepts in RL}
+    \begin{itemize}
+        \item \textbf{Action (a)}:
+            \begin{itemize}
+                \item Definition: A choice made by the agent.
+                \item Role: Represents moves the agent can make.
+                \item Example: Move forward, turn left/right.
+            \end{itemize}
+
+        \item \textbf{Reward (r)}:
+            \begin{itemize}
+                \item Definition: Feedback signal after an action.
+                \item Role: Indicates success or failure, guiding learning.
+                \item Example: +1 for reaching exit, -1 for hitting wall.
+            \end{itemize}
+        
+        \item \textbf{Policy ($\pi$)}:
+            \begin{itemize}
+                \item Definition: A strategy that defines agent behavior.
+                \item Role: Maps states to actions.
+                \item Example: "If at (3, 5), turn right."
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Process}
+    \begin{enumerate}
+        \item \textbf{Perceive State}: Observe the environment's current state.
+        \item \textbf{Select Action}: Choose an action based on policy.
+        \item \textbf{Receive Reward}: Environment provides a reward and state transition.
+        \item \textbf{Update Policy}: Adjust policy based on received reward.
+    \end{enumerate}
+
+    \begin{block}{Cumulative Reward (Return)}
+        \begin{equation}
+            G_t = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \ldots
+        \end{equation}
+        Total reward accumulated over time, essential for evaluating performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Feedback Loop}: Agent learns through trial and error, optimizing policy based on experiences.
+        \item \textbf{Exploration vs Exploitation}: Balancing new actions vs known rewarding actions.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        Understanding these concepts is crucial for diving into actor-critic methods—where the roles of the agent split into distinct functions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Actor-Critic Framework - Overview}
+    \begin{itemize}
+        \item The Actor-Critic framework merges value-based and policy-based methods in reinforcement learning.
+        \item Key components:
+        \begin{itemize}
+            \item **Actor**: Learns the policy mapping states to actions.
+            \item **Critic**: Evaluates the Actor's actions and estimates the value function.
+        \end{itemize}
+        \item This interaction optimizes learning and policy performance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Actor-Critic Framework - Roles}
+    \begin{block}{1. The Actor}
+        \begin{itemize}
+            \item **Purpose**: Learns the policy to decide actions based on the current state.
+            \item **Feedback Mechanism**: Updates its parameters through feedback from the Critic.
+            \item **Example**: Navigating a maze by proposing moves that lead to rewards.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{2. The Critic}
+        \begin{itemize}
+            \item **Purpose**: Evaluates the actions chosen by the Actor by computing the value function.
+            \item **Feedback Mechanism**: Utilizes the Temporal-Difference error for updates.
+            \item **Example**: Assessing the effectiveness of the Actor's moves during maze navigation.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Actor-Critic Framework - Interaction and Formulas}
+    \begin{itemize}
+        \item **Interaction**:
+        \begin{itemize}
+            \item The Actor adjusts its policy based on the Critic's evaluations.
+            \item Forms a feedback loop improving policy and action choices over time.
+        \end{itemize}
+        
+        \item **Key Formulas**:
+        \begin{equation}
+            \delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)
+        \end{equation}
+        \begin{equation}
+            \theta \leftarrow \theta + \alpha \delta_t \nabla \log \pi(a_t | s_t; \theta)
+        \end{equation}
+        \begin{itemize}
+            \item \(\delta_t\): Temporal-Difference error
+            \item \( \theta \): Policy parameters
+            \item \( \alpha \): Learning rate
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor vs. Critic: Key Differences - Function}
+    
+    \begin{itemize}
+        \item \textbf{Actor:}
+        \begin{itemize}
+            \item \textbf{Definition:} The actor selects actions based on the current policy.
+            \item \textbf{Role:} Maps states to actions (policy function).
+            \item \textbf{Output:} Produces action probabilities (e.g., \( \pi(a|s) \)).
+        \end{itemize}
+        
+        \item \textbf{Critic:}
+        \begin{itemize}
+            \item \textbf{Definition:} Evaluates the actions taken by the actor, providing feedback.
+            \item \textbf{Role:} Estimates the value function (either \( V(s) \) or \( Q(s,a) \)).
+            \item \textbf{Output:} Provides a scalar value (e.g., \( V(s) \)).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor vs. Critic: Key Differences - Learning Objectives}
+    
+    \begin{itemize}
+        \item \textbf{Actor:}
+        \begin{itemize}
+            \item \textbf{Objective:} Optimize the policy directly by improving action selection over time.
+            \item \textbf{Goal:} Maximize expected return from each state by adjusting \( \pi \) based on feedback from the critic.
+        \end{itemize}
+        
+        \item \textbf{Critic:}
+        \begin{itemize}
+            \item \textbf{Objective:} Evaluate the performance of the actor by estimating value of states and actions.
+            \item \textbf{Goal:} Minimize the difference between estimated values and observed returns (temporal-difference learning).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor vs. Critic: Key Differences - Algorithmic Implementation}
+    
+    \begin{itemize}
+        \item \textbf{Actor:}
+        \begin{itemize}
+            \item \textbf{Method:} Uses policy gradient methods to adjust policy parameters \( \theta \).
+            \item \textbf{Update Rule:}
+            \begin{equation}
+                \theta \leftarrow \theta + \alpha \nabla \log \pi(a|s; \theta) \cdot (G_t - V(s; w))
+            \end{equation}
+            \end{itemize}
+        
+        \item \textbf{Critic:}
+        \begin{itemize}
+            \item \textbf{Method:} Utilizes value-based techniques, such as Temporal Difference (TD) learning.
+            \item \textbf{Update Rule:}
+            \begin{equation}
+                w \leftarrow w + \beta (G_t - V(s; w)) \nabla V(s; w)
+            \end{equation}
+        \end{itemize}
+        
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Complementary roles create a feedback loop for policy and value refinement.
+            \item Separation of policy improvement and value estimation enhances stability and efficiency.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor-Critic Architecture}
+    \begin{block}{Concept Overview}
+        Actor-Critic methods combine two key components in reinforcement learning:
+        \begin{itemize}
+            \item \textbf{Actor:} Proposes actions based on a policy.
+            \item \textbf{Critic:} Evaluates the action taken by assessing its value.
+        \end{itemize}
+        This dual architecture enables efficient exploration of the action space while stabilizing the learning process.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Actor-Critic Methods - Stability and Sample Efficiency}
+    \begin{enumerate}
+        \item \textbf{Stability}
+            \begin{itemize}
+                \item Actor-Critic methods stabilize training by addressing variance in policy evaluation.
+                \item \textbf{Example:} In variable environments like video games, the Critic reduces reward signal fluctuations, allowing reliable learning.
+            \end{itemize}
+        \item \textbf{High Sample Efficiency}
+            \begin{itemize}
+                \item Fewer interactions with the environment are required to learn effective policies.
+                \item \textbf{Example:} In robotic tasks, Actor-Critic methods achieve optimal movements using fewer trials than traditional methods.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Actor-Critic Methods - Direct Optimization and Key Points}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Directly Optimizing Policy}
+            \begin{itemize}
+                \item These methods update policy parameters directly, leading to smoother updates.
+                \item \textbf{Example:} In navigation tasks, direct action evaluation by the Critic facilitates optimal decision-making.
+            \end{itemize}
+    \end{enumerate}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Efficient blending of policy gradient and value function methods enhances performance.
+            \item Robust against fluctuations in less stable reward environments.
+            \item Adaptable architectures using modern enhancements like DDPG and A3C for complex problems.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formulas and Code Snippets}
+    \begin{block}{Policy Gradient Update}
+        The policy for the Actor can be updated using the gradient of the expected return:
+        \begin{equation}
+            \nabla J(\theta) \approx \mathbb{E}_t \left[ \nabla \log \pi_{\theta}(a_t | s_t) A_t \right]
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item $J(\theta)$ is the objective function.
+            \item $\pi_{\theta}(a_t | s_t)$ is the policy.
+            \item $A_t$ is the advantage function.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Value Update for Critic}
+        The Critic refines its value estimate through temporal difference learning:
+        \begin{equation}
+            V(s_t) \gets V(s_t) + \alpha (R_t + \gamma V(s_{t+1}) - V(s_t))
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item $R_t$ is the immediate reward.
+            \item $\alpha$ is the learning rate.
+            \item $\gamma$ is the discount factor.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Actor-Critic Algorithms}
+    Actor-Critic algorithms combine the benefits of policy-based and value-based reinforcement learning. They consist of two main components:
+    \begin{itemize}
+        \item \textbf{Actor}: Updates the policy based on feedback from the critic.
+        \item \textbf{Critic}: Evaluates the action taken by the actor and provides feedback for improvement.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Variants of Actor-Critic Algorithms}
+    \begin{enumerate}
+        \item \textbf{A3C (Asynchronous Actor-Critic Agents)}
+        \begin{itemize}
+            \item \textit{Overview}: Uses multiple agents exploring in parallel and updates a shared model.
+            \item \textit{Key Points}:
+            \begin{itemize}
+                \item Asynchronous Updates: Faster and more stable convergence.
+                \item Entropy Regularization: Encourages exploration.
+            \end{itemize}
+            \item \textit{Example Use Case}: Video games with simultaneous agent learning.
+        \end{itemize}
+
+        \item \textbf{DDPG (Deep Deterministic Policy Gradient)}
+        \begin{itemize}
+            \item \textit{Overview}: Designed for continuous action spaces with off-policy learning.
+            \item \textit{Key Points}:
+            \begin{itemize}
+                \item Actor-Critic Architecture: Actor selects actions, critic evaluates them.
+                \item Replay Buffer: Stores transitions to improve learning efficiency.
+            \end{itemize}
+            \item \textit{Example Use Case}: Robotics control tasks requiring precise actions.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{More Actor-Critic Variants}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{PPO (Proximal Policy Optimization)}
+        \begin{itemize}
+            \item \textit{Overview}: Balances performance with implementation simplicity.
+            \item \textit{Key Points}:
+            \begin{itemize}
+                \item Clipped Objective Function: Prevents destabilizing updates.
+                \item Trust Region Updates: Ensures stable learning by limiting policy deviation.
+            \end{itemize}
+            \item \textit{Example Use Case}: Robust training in continuous or discrete environments.
+        \end{itemize}
+
+        \item \textbf{TRPO (Trust Region Policy Optimization)}
+        \begin{itemize}
+            \item \textit{Overview}: Optimizes policy with constraints for stable updates.
+            \item \textit{Key Points}:
+            \begin{itemize}
+                \item Constrained Optimization: Balances exploration and exploitation.
+                \item Natural Gradients: Enhances stability in updates.
+            \end{itemize}
+            \item \textit{Example Use Case}: Complex continuous control tasks like drone flight.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Considerations}
+    \begin{itemize}
+        \item \textbf{Sample Efficiency}: Higher sample efficiency compared to pure actor or critic methods.
+        \item \textbf{Stability}: Combined actor and critic structure allows for stable convergence.
+        \item \textbf{Exploration vs. Exploitation}: Critical for success; balancing new and known actions is essential.
+    \end{itemize}
+    
+    \textbf{Conclusion:} Each variant of Actor-Critic algorithms has unique advantages tailored for diverse reinforcement learning problems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementation Steps for Actor-Critic Algorithms}
+    \begin{block}{Overview}
+        Actor-Critic algorithms combine policy-based and value-based methods. The \textbf{actor} updates the policy, guided by the \textbf{critic}, which evaluates actions and provides value feedback.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementation Steps - Initialization}
+    \begin{enumerate}
+        \item \textbf{Define the Environment}
+            \begin{itemize}
+                \item Specify states and actions (e.g., grid locations and movements).
+            \end{itemize}
+        \item \textbf{Initialize Actor and Critic Networks}
+            \begin{itemize}
+                \item Choose neural network architectures and initialize weights.
+            \end{itemize}
+        \item \textbf{Set Hyperparameters}
+            \begin{itemize}
+                \item Learning rates for actor and critic.
+                \item Discount factor ($\gamma$).
+                \item Exploration strategy (e.g., $\epsilon$-greedy).
+            \end{itemize}
+        \item \textbf{Example}
+            \begin{itemize}
+                \item For DDPG: Set up a deep neural network with separate heads for actor and critic.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementation Steps - Training Updates}
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Collect Experience}
+            \begin{itemize}
+                \item Generate actions and store states, actions, rewards, and next states.
+            \end{itemize}
+        \item \textbf{Compute Returns}
+            \begin{equation}
+            R_t = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \ldots
+            \end{equation}
+        \item \textbf{Critic Update}
+            \begin{equation}
+            L(\theta^{critic}) = \frac{1}{N} \sum_{t=0}^{N} (R_t - V(s_t; \theta^{critic}))^2
+            \end{equation}
+        \item \textbf{Actor Update}
+            \begin{equation}
+            \nabla J(\theta^{actor}) \approx \frac{1}{N} \sum_{t=0}^{N} \nabla \log \pi(a_t | s_t; \theta^{actor}) (R_t - V(s_t; \theta^{critic}))
+            \end{equation}
+        \item \textbf{Example}
+            \begin{itemize}
+                \item Use the critic's feedback to refine the actor's policy based on past actions.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementation Steps - Performance Evaluation}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Testing the Policy}
+            \begin{itemize}
+                \item Evaluate learning performance using total rewards over episodes.
+            \end{itemize}
+        \item \textbf{Monitor Learning Metrics}
+            \begin{itemize}
+                \item Plot average rewards, successful episodes, and episodic returns.
+            \end{itemize}
+        \item \textbf{Fine-Tuning}
+            \begin{itemize}
+                \item Tune hyperparameters and architectures if performance plateaus.
+            \end{itemize}
+        \item \textbf{Key Points to Monitor}
+            \begin{itemize}
+                \item Convergence speed and stability of updates.
+                \item Variance of returns.
+                \item Risks of overfitting or underfitting.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    Implementing an Actor-Critic algorithm involves:
+    \begin{itemize}
+        \item Initializing models and parameters.
+        \item Collecting experiences and optimizing through updates.
+        \item Continuously evaluating agent performance for effective learning.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Additional Notes}
+    \begin{itemize}
+        \item Use frameworks like TensorFlow or PyTorch for efficient implementation.
+        \item Balance exploration and exploitation for effective learning.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study: Actor-Critic in Practice}
+    \begin{block}{Overview}
+        Actor-Critic algorithms integrate strengths of policy-based and value-based methods in reinforcement learning.
+        We explore how an actor-critic algorithm optimized the energy consumption of heating systems in smart buildings.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actor-Critic Architecture}
+    \begin{itemize}
+        \item \textbf{Actor}: Learns and updates the policy function, deciding actions based on the current state.
+        \item \textbf{Critic}: Evaluates the action taken by the actor with a value function, providing feedback to enhance policy.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Heating System Optimization Case Study}
+    \begin{block}{Context}
+        Smart buildings require efficient energy management for cost reduction and environmental sustainability. 
+        An actor-critic algorithm was implemented to optimize heating in a commercial building.
+    \end{block}
+    
+    \begin{block}{Implementation Steps}
+        \begin{enumerate}
+            \item \textbf{Initialization}
+                \begin{itemize}
+                    \item Define state representation: temperature, outside conditions, occupancy.
+                    \item Initialize actor (policy) and critic (value) networks.
+                \end{itemize}
+            \item \textbf{Training}
+                \begin{itemize}
+                    \item State: constructed using sensory data.
+                    \item Action Selection: actor uses neural network to choose actions (e.g., adjust heating).
+                    \item Feedback: critic evaluates action based on fluctuations and consumption using:
+                    \begin{equation}
+                        \delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)
+                    \end{equation}
+                \end{itemize}
+            \item \textbf{Policy Update}
+                \begin{itemize}
+                    \item Actor: adjusts policy parameters with critic feedback.
+                    \item Critic: refines value function estimates.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Results and Key Points}
+    \begin{block}{Results}
+        \begin{itemize}
+            \item \textbf{Improved Energy Efficiency}: Reduced consumption by up to 20\%.
+            \item \textbf{User Comfort}: Maintained optimal temperatures for occupant satisfaction.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item \textbf{Adaptability}: Actor-Critic model adjusts to occupancy and weather changes.
+            \item \textbf{Real-time Learning}: Demonstrated ability to learn and refine actions continuously.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Actor-Critic algorithms show promise in practical applications, enhancing energy efficiency in smart buildings for sustainable urban development.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges and Limitations of Actor-Critic Algorithms - Introduction}
+    
+    \begin{itemize}
+        \item Actor-Critic algorithms blend value-based and policy-based reinforcement learning methods.
+        \item Despite their successes, they face several challenges.
+        \item This slide will explore the key issues impacting their effectiveness.
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Challenges and Limitations - Part 1}
+
+    \begin{enumerate}
+        \item \textbf{Stability and Convergence Issues}
+        \begin{itemize}
+            \item Divergence between Actor and Critic hinders stable learning.
+            \item Can slow down learning or prevent convergence to an optimal policy.
+            \item \textit{Example:} Overestimation by Critic leads to erratic policy updates.
+        \end{itemize}
+
+        \item \textbf{Variance in Gradient Estimates}
+        \begin{itemize}
+            \item High variance in policy gradient estimates affects learning consistency.
+            \item \textit{Example:} Noisy value estimations from the Critic yield unpredictable actions.
+        \end{itemize}
+    \end{enumerate}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Challenges and Limitations - Part 2}
+
+    \begin{enumerate}
+        \setcounter{enumiii}{2} % Resume the enumeration from the previous frame
+        \item \textbf{Complexity of Hyperparameter Tuning}
+        \begin{itemize}
+            \item Requires careful tuning of learning rates for Actor and Critic.
+            \item Suboptimal hyperparameters can degrade performance.
+            \item \textit{Example:} High learning rates may overshoot optimal policies; low rates can delay convergence.
+        \end{itemize}
+
+        \item \textbf{Sample Efficiency}
+        \begin{itemize}
+            \item Many methods require substantial data for effective learning.
+            \item \textit{Example:} In costly interaction scenarios (e.g., robotics), prolonged training is impractical.
+        \end{itemize}
+        
+        \item \textbf{Function Approximation Limitations}
+        \begin{itemize}
+            \item Use of function approximators can lead to generalization issues.
+            \item Poor generalization may cause overfitting to specific states.
+            \item \textit{Example:} Insufficient exploration of the action space leads to missing optimal long-term strategies.
+        \end{itemize}
+    \end{enumerate}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Actor-Critic Research - Overview}
+    \begin{block}{Overview}
+        Actor-Critic algorithms are pivotal in reinforcement learning (RL) for their unique ability to merge value-based and policy-based strategies. As research progresses, future directions focus on enhancing algorithm performance and applicability.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Actor-Critic Research - Key Trends}
+    \begin{enumerate}
+        \item \textbf{Integration with Deep Learning}
+            \begin{itemize}
+                \item Utilization of deep neural networks enhances scalability and flexibility.
+                \item Example: Recurrent neural networks (RNNs) are integrated to manage sequential data effectively.
+            \end{itemize}
+        \item \textbf{Multi-Agent Architectures}
+            \begin{itemize}
+                \item Focus on multiple actors learning simultaneously in competitive or cooperative settings.
+                \item Example: AI agents in gaming environments learn strategies against each other.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Actor-Critic Research - Continued Trends}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Start enumerating from 3
+        \item \textbf{Sample Efficiency and Offline RL}
+            \begin{itemize}
+                \item Aim to improve learning from limited data using offline datasets.
+                \item Example: Dataset Aggregation (D4PG) utilizes offline experiences to enhance learning efficiency.
+            \end{itemize}
+        \item \textbf{Exploration Strategies}
+            \begin{itemize}
+                \item Developing adaptive techniques for improved exploration, crucial for enhancing performance.
+                \item Example: Actors incentivized to explore uncertain states discover rewarding regions effectively.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Actor-Critic Research - Final Trends and Conclusion}
+    \begin{enumerate}
+        \setcounter{enumi}{4} % Continue from where the last frame ended
+        \item \textbf{Hierarchical RL}
+            \begin{itemize}
+                \item Decomposes tasks into subtasks with distinct actor-critic pairs, enhancing learning efficiency.
+                \item Example: A robot learns to navigate and then pick up objects as separate episodes with dedicated models.
+            \end{itemize}
+        \item \textbf{Improving Stability and Convergence}
+            \begin{itemize}
+                \item Ongoing methods aim to enhance stability and convergence rates of algorithms.
+                \item Example: Techniques like Trust Region Policy Optimization (TRPO) modify updates for stable learning.
+            \end{itemize}
+    \end{enumerate}
+    
+    \begin{block}{Conclusion}
+        The future of actor-critic research is filled with promise, driven by AI advancements and methodological innovations that will bolster robustness and efficiency in reinforcement learning systems.
+    \end{block}
+\end{frame}
+
+
+\end{document}

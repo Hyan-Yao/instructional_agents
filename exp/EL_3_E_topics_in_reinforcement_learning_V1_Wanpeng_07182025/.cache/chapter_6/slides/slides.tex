@@ -1,0 +1,313 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Q-Learning]{Week 6: Q-Learning}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Week 6: Q-Learning}
+    \begin{block}{Overview}
+        In this week’s module, we will explore \textbf{Q-Learning}, a cornerstone of reinforcement learning that maximizes rewards through trial and error.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Q-Learning?}
+    \begin{itemize}
+        \item Q-Learning is an off-policy learning algorithm helping agents act optimally by estimating the \textbf{quality (Q-value)} of actions.
+        \item Focus is on achieving future rewards rather than relying solely on immediate rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of Q-Learning}
+    \begin{enumerate}
+        \item \textbf{Agent and Environment}:
+            \begin{itemize}
+                \item The agent interacts with its environment, performing actions based on its state and receiving rewards for feedback.
+            \end{itemize}
+        \item \textbf{States and Actions}:
+            \begin{itemize}
+                \item A state represents the agent's current situation; an action leads to a state transition.
+            \end{itemize}
+        \item \textbf{Rewards}:
+            \begin{itemize}
+                \item Numerical feedback after an action that evaluates success towards a goal.
+            \end{itemize}
+        \item \textbf{Q-Values}:
+            \begin{itemize}
+                \item Indicates expected long-term rewards from taking an action in a state.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning Formula}
+    The Q-Learning algorithm updates the Q-value using the following formula:
+    \begin{equation}
+    Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item \(Q(s, a)\): Current Q-value estimate for state \(s\) and action \(a\).
+        \item \(\alpha\): Learning rate (0 < \( \alpha \) ≤ 1).
+        \item \(r\): Immediate reward received after action \(a\).
+        \item \(\gamma\): Discount factor (0 ≤ \( \gamma \) < 1).
+        \item \(s'\): New state after taking action \(a\).
+        \item \(\max_{a'} Q(s', a')\): Maximum predicted Q-value for the next state \(s'\).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Scenario: Grid World}
+    \begin{itemize}
+        \item Consider an agent navigating a grid world, able to move in four directions: up, down, left, and right.
+        \item The agent gains a reward for reaching a goal but incur penalties for hitting walls.
+        \item Through exploration, the agent updates its Q-values to learn better paths to maximize rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item Q-Learning enables optimal policy learning without environment modeling.
+        \item Balancing exploration and exploitation is essential for effective learning.
+        \item Understanding states, actions, rewards, and Q-values is foundational for reinforcement learning systems.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Looking Ahead}
+    As we progress through this module, we will dive into:
+    \begin{itemize}
+        \item Practical implementations of Q-Learning.
+        \item Techniques to enhance learning efficiency.
+        \item Interactive examples and coding exercises.
+    \end{itemize}
+    Prepare for engaging content in the upcoming slides!
+\end{frame}
+
+\begin{frame}[fragile]{Presentation Overview}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+\begin{frame}[fragile]{Q-Learning: A Brief Introduction}
+  \begin{block}{Definition}
+    Q-Learning is a model-free reinforcement learning algorithm used to find the optimal action-selection policy for an agent in a given environment. Unlike other algorithms, Q-Learning does not require a model of the environment, making it a potent tool in environments where the agent learns through exploration and experience.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Concepts: Agent, Environment, and State}
+  \begin{itemize}
+    \item \textbf{Agent}: The learner or decision-maker that interacts with the environment.
+    \item \textbf{Environment}: The context where the agent operates; it can change based on the agent's actions.
+    \item \textbf{State (s)}: A specific situation in which the agent finds itself. States represent the environment's configurations.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Key Concepts: Action, Reward, and Q-Value}
+  \begin{itemize}
+    \item \textbf{Action (a)}: The set of all possible moves the agent can make in a particular state. Actions help the agent transition from one state to another.
+    \item \textbf{Reward (r)}: A feedback signal received after taking an action in a state. It tells the agent how good or bad its action was.
+    \item \textbf{Q-Value (Q(s, a))}: 
+      \begin{equation}
+        Q(s,a) = r + \gamma \max_{a'} Q(s', a')
+      \end{equation}
+      Where:
+      \begin{itemize}
+        \item \( r \) is the immediate reward.
+        \item \( \gamma \) (0 ≤ $\gamma$ < 1) is the discount factor that represents the importance of future rewards.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Exploration vs. Exploitation}
+  \begin{block}{Concepts}
+    \begin{itemize}
+      \item \textbf{Exploration}: Trying new actions to discover their rewards.
+      \item \textbf{Exploitation}: Choosing the action that has been found to yield the highest reward based on current knowledge.
+    \end{itemize}
+    Balancing these strategies is crucial for effective learning.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Example Illustration}
+  \begin{block}{Maze Navigation Example}
+    Imagine an agent (robot) navigating a maze:
+    \begin{itemize}
+      \item \textbf{States}: Each square in the maze.
+      \item \textbf{Actions}: Move Up, Down, Left, Right.
+      \item \textbf{Rewards}: +10 for reaching the goal, -1 for hitting a wall.
+    \end{itemize}
+    The robot updates its Q-values based on experiences in the maze, gradually learning the best path to the goal.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Points to Emphasize}
+  \begin{itemize}
+    \item Q-Learning is powerful because it learns optimal strategies without needing a model of the environment.
+    \item Understanding the balance between exploration and exploitation is crucial for effective Q-learning performance.
+    \item Q-values are central to determining the best actions, guiding the agent in future decisions.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion}
+  Q-Learning provides a robust framework for making decisions in uncertain environments, making it a foundational concept in reinforcement learning. As we delve deeper into the mechanics in the next slides, remember the primary elements of states, actions, rewards, and Q-values.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Summary of Q-Learning}
+    Q-Learning is a model-free reinforcement learning algorithm enabling an agent to learn the value of actions in various states. It forms the basis for developing optimal policies based on agent experiences, particularly in unknown environments.
+    
+    \begin{itemize}
+        \item **States**: Different situations the agent can encounter (e.g., location in a maze).
+        \item **Actions**: Choices available to the agent (e.g., moving in different directions).
+        \item **Q-Values**: Quantify expected utility of actions in given states, updated via the Bellman equation.
+        \item **Convergence**: Over time, Q-Learning can reach optimal Q-Values to derive efficient policies.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Concepts and Learning Process}
+    \begin{enumerate}
+        \item **Learning Process**:
+            \begin{itemize}
+                \item Exploration vs. exploitation balance is crucial.
+                \item Continuous interaction improves learning efficiency.
+            \end{itemize}
+        
+        \item **Practical Example**:
+            \begin{itemize}
+                \item A robot navigating a grid-based environment:
+                \begin{itemize}
+                    \item States = grid cells.
+                    \item Actions = movement directions.
+                    \item Receives rewards for reaching targets, penalties for obstacles.
+                \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Points & Final Thoughts}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item **Exploration vs. Exploitation**: A delicate balance, with strategies like the $\epsilon$-greedy approach aiding learning.
+            \item **Incremental Learning**: Continuous environment interaction leads to gradual improvement.
+            \item **Beyond Q-Learning**: Paves the way for advanced algorithms, such as Deep Q-Networks (DQN).
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Final Thoughts}
+        Mastering Q-Learning techniques is essential for applying reinforcement learning methodologies effectively in various fields including robotics and game AI.
+    \end{block}
+\end{frame}
+
+
+\end{document}

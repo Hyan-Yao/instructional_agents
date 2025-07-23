@@ -51,7 +51,7 @@ class SlidesDeliberation:
         self.assessment_content = {}   # New: assessment content
     
    
-    def run(self, chapter: Dict[str, str], context: Dict[str, Any]):
+    def run(self, chapter: Dict[str, str], user_feedback: Dict[str, Any]):
         """
         Run the slides deliberation process
         
@@ -69,11 +69,13 @@ class SlidesDeliberation:
         self.time_script, self.token_script = 0, 0
         self.time_assessment, self.token_assessment = 0, 0
 
+        self.user_feedback = user_feedback
+
         # Step 0: Get templates
         self._get_templates()
         
         # Step 1: Generate slides outline
-        self._generate_slides_outline(chapter, context)
+        self._generate_slides_outline(chapter)
         
         # Step 2: Generate initial LaTeX template
         self._generate_initial_latex(chapter)
@@ -204,7 +206,7 @@ class SlidesDeliberation:
             with open(latex_template_path, "r", encoding="utf-8") as f:
                 self.latex_template = f.read()
     
-    def _generate_slides_outline(self, chapter: Dict[str, str], context: Dict[str, Any]):
+    def _generate_slides_outline(self, chapter: Dict[str, str]):
         """Generate slides outline using Instructional Designer agent"""
         instructional_designer = self.agents.get("instructional_designer")
         if not instructional_designer:
@@ -231,9 +233,9 @@ class SlidesDeliberation:
         Chapter Title: {chapter['title']}
         Chapter Description: {chapter['description']}
         
-        Additional Context:
-        {json.dumps(context, indent=2)}
-        
+        User Feedback:
+        {json.dumps(self.user_feedback, indent=2)}
+
         Please generate a comprehensive slides outline with about {self.catalog_dict['slides_length'] / 3} slides covering all important aspects of this chapter.
         The outline should be in JSON format with the following structure:
         
@@ -293,7 +295,11 @@ class SlidesDeliberation:
         
         Slides Outline:
         {json.dumps(self.slides_outline, indent=2)}
-        
+
+        User Feedback:
+        [For slides]{json.dumps(self.user_feedback['slides'], indent=2)}
+        [For overall]{json.dumps(self.user_feedback['overall'], indent=2)}
+
         LaTeX Template:
         ```latex
         {self.latex_template}
@@ -432,7 +438,11 @@ class SlidesDeliberation:
         
         Slides Outline:
         {json.dumps(self.slides_outline, indent=2)}
-        
+
+        User Feedback:
+        [For script]{json.dumps(self.user_feedback['script'], indent=2)}
+        [For overall]{json.dumps(self.user_feedback['overall'], indent=2)}
+
         Please generate a script template with placeholders for each slide in the outline.
         The template should be in JSON format with the following structure:
         
@@ -519,7 +529,11 @@ class SlidesDeliberation:
         
         Slides Outline:
         {json.dumps(self.slides_outline, indent=2)}
-        
+
+        User Feedback:
+        [For assessment]{json.dumps(self.user_feedback['assessment'], indent=2)}
+        [For overall]{json.dumps(self.user_feedback['overall'], indent=2)}
+
         Please generate an assessment template with placeholders for each slide in the outline.
         The template should include questions, activities, and learning objectives for each slide.
         The template should be in JSON format with the following structure:
@@ -629,6 +643,10 @@ class SlidesDeliberation:
         
         Context (adjacent slides for reference):
         {json.dumps(context_slides, indent=2)}
+
+        User Feedback:
+        [For slides]{json.dumps(self.user_feedback['slides'], indent=2)}
+        [For overall]{json.dumps(self.user_feedback['overall'], indent=2)}
         
         Please generate comprehensive, detailed, and easy-to-understand educational content for this slide.
         Your content should include:
@@ -681,6 +699,10 @@ class SlidesDeliberation:
         ```latex
         {current_frames_text}
         ```
+
+        User Feedback:
+        [For slides]{json.dumps(self.user_feedback['slides'], indent=2)}
+        [For overall]{json.dumps(self.user_feedback['overall'], indent=2)}
         
         Please generate the LaTeX code for this slide using the beamer class format.
         You should first summarize the content and extract key points to A BRIEF SUMMARY.
@@ -807,6 +829,10 @@ class SlidesDeliberation:
         Previous slide script: {prev_script[:200] + "..." if len(prev_script) > 200 else prev_script}
         Current placeholder: {current_script}
         Next slide script: {next_script[:200] + "..." if len(next_script) > 200 else next_script}
+
+        User Feedback:
+        [For script]{json.dumps(self.user_feedback['script'], indent=2)}
+        [For overall]{json.dumps(self.user_feedback['overall'], indent=2)}
         
         Please generate a comprehensive speaking script for this slide that:
         1. Introduces the slide topic
@@ -862,6 +888,10 @@ class SlidesDeliberation:
         
         Assessment Template:
         {json.dumps(template, indent=2)}
+
+        User Feedback:
+        [For assessment]{json.dumps(self.user_feedback['assessment'], indent=2)}
+        [For overall]{json.dumps(self.user_feedback['overall'], indent=2)}
         
         Please generate comprehensive assessment content in JSON format that includes:
         1. Multiple choice questions (3-5 questions) with 4 options each, correct answer, and explanation

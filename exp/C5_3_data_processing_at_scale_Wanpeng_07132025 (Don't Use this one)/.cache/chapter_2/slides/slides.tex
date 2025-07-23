@@ -1,0 +1,1173 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Distributed Databases}
+    \begin{block}{Overview of Distributed Databases}
+        A distributed database is a collection of multiple, interconnected databases stored in various locations but managed as a single cohesive system.
+    \end{block}
+    
+    \begin{itemize}
+        \item Data is spread across different nodes (servers).
+        \item Each node has its own database management system (DBMS).
+        \item Nodes communicate over a network.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance in Modern Computing}
+    \begin{itemize}
+        \item \textbf{Scalability:} 
+            \begin{itemize}
+                \item Can handle increasing amounts of data and user load by adding nodes.
+                \item \textit{Example:} An online retail company can manage a surge in traffic during sales by distributing queries across servers.
+            \end{itemize}
+        
+        \item \textbf{Fault Tolerance:} 
+            \begin{itemize}
+                \item Continues to operate even if some nodes fail, ensuring higher availability and data reliability.
+                \item \textit{Illustration:} A downed server in New York can reroute requests to Los Angeles or London.
+            \end{itemize}
+        
+        \item \textbf{Geographical Distribution:} 
+            \begin{itemize}
+                \item Stores data closer to users for faster access.
+                \item \textit{Example:} A video streaming service caches content in various regions to minimize latency.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Decentralization:} 
+            \begin{itemize}
+                \item Enhances performance and reliability by distributing data across multiple servers.
+            \end{itemize}
+        
+        \item \textbf{Data Consistency:} 
+            \begin{itemize}
+                \item Understanding techniques like eventual consistency and CAP theorem is crucial for distributed systems.
+            \end{itemize}
+        
+        \item \textbf{Types of Distributed Databases:} 
+            \begin{itemize}
+                \item \textit{Homogeneous:} All nodes run the same DBMS.
+                \item \textit{Heterogeneous:} Nodes may use different DBMSs.
+            \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Distributed databases offer scalability, fault tolerance, and geographical benefits crucial for modern applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Distributed Systems? - Definition}
+    \begin{block}{Definition}
+        \textbf{Distributed Systems} are a collection of independent computers that appear to the users as a single coherent system. These systems collaboratively work to accomplish a common goal, even though they may be physically dispersed across various locations.
+        
+        \textbf{Centralized Systems}, in contrast, are built around a single main server (or a few servers), where all data and processing occur in one or a limited number of locations.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Distributed Systems? - Characteristics and Differences}
+    \begin{block}{Key Characteristics of Distributed Systems}
+        \begin{itemize}
+            \item \textbf{Multiple Autonomous Components}: Each node operates independently but is connected through a network.
+            \item \textbf{Scalability}: Can scale easily by adding more nodes to handle increasing loads.
+            \item \textbf{Fault Tolerance}: If one node fails, others can continue functioning, enhancing reliability.
+            \item \textbf{Concurrency}: Multiple users can access and manipulate resources simultaneously.
+            \item \textbf{Geographic Distribution}: Nodes can be located in various geographic areas.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Differences from Centralized Systems}
+        \begin{center}
+            \begin{tabular}{|l|l|l|}
+                \hline
+                \textbf{Feature} & \textbf{Distributed Systems} & \textbf{Centralized Systems} \\
+                \hline
+                Architecture & Nodes work in unison, often spread out & Single or few servers on one site \\
+                \hline
+                Control & No single point of control & Central authority governs operations \\
+                \hline
+                Failure Recovery & High resilience through redundancy & Susceptible to single point of failure \\
+                \hline
+                Performance & Better performance through load balancing & May become bottlenecks as demand grows \\
+                \hline
+                Cost & Moderate cost, scalable on demand & High initial investment \\
+                \hline
+            \end{tabular}
+        \end{center}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Distributed Systems? - Examples and Conclusion}
+    \begin{block}{Examples of Distributed Systems}
+        \begin{enumerate}
+            \item \textbf{Cloud Services}: Google Cloud, AWS distribute resources across numerous servers.
+            \item \textbf{Peer-to-Peer Networks}: BitTorrent distributes the load of file sharing.
+            \item \textbf{Microservices Architecture}: Applications structured as loosely coupled services.
+        \end{enumerate}
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Independence: Nodes communicate and coordinate to achieve common objectives.
+            \item Complexity: Management of resources introduces complexity and potential latency.
+            \item Use Cases: Context understanding is critical for optimal design solutions.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Distributed systems form the backbone of modern applications and services, allowing for efficiencies and capabilities that centralized systems cannot provide.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Components of Distributed Databases}
+  \begin{block}{Key Components}
+    \begin{enumerate}
+      \item Nodes
+      \item Data Replication
+      \item Consistency Models
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Nodes}
+  \begin{itemize}
+    \item \textbf{Definition}: A node is any active computer participating in the distributed database system (server, client, or device).
+    \item \textbf{Function}: Each node may store part of the database or process queries.
+    \item \textbf{Example}: In a cloud application, each virtual machine running a database instance is a node. For example, an e-commerce platform with user data spread across servers has each server as a unique node.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Data Replication}
+  \begin{itemize}
+    \item \textbf{Definition}: Data replication is the process of storing copies of data across multiple nodes for redundancy and availability.
+    \item \textbf{Purpose}: Ensures data accessibility even if one node fails, enhancing reliability and performance via load balancing.
+    \item \textbf{Types of Replication}:
+    \begin{itemize}
+      \item \textbf{Synchronous}: All copies are updated simultaneously for consistency, requiring more bandwidth and causing higher latency.
+      \item \textbf{Asynchronous}: Updates can be delayed across nodes, reducing latency but leading to temporary inconsistencies.
+    \end{itemize}
+    \item \textbf{Example}: Social media platforms replicate user posts across servers in different locations for quick access.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Consistency Models}
+  \begin{itemize}
+    \item \textbf{Definition}: Consistency models define the rules for data operations perceived across distributed nodes, maintaining coherence.
+    \item \textbf{Types}:
+    \begin{itemize}
+      \item \textbf{Strong Consistency}: After a write is acknowledged, all reads return the latest value.
+      \item \textbf{Eventual Consistency}: If no further updates occur, eventually all nodes reflect the same value.
+      \item \textbf{Causal Consistency}: Causally related operations are seen by all nodes, while unrelated operations may not reflect immediately.
+    \end{itemize}
+    \item \textbf{Example}: In banking, strong consistency is critical to ensure real-time updates of account balances.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points to Remember}
+  \begin{itemize}
+    \item \textbf{Nodes} are essential for performance and reliability in a distributed database.
+    \item \textbf{Data Replication} enhances availability but needs careful consistency management to avoid issues.
+    \item \textbf{Consistency Models} have trade-offs in performance and accuracy; understanding them is key to effective design.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Illustration of Components}
+  \begin{block}{Visualization}
+    Consider a network diagram:
+    \begin{itemize}
+      \item Draw several interconnected nodes.
+      \item Highlight one node where updates occur, showing arrows to indicate data replication.
+      \item Label nodes with the type of consistency model employed (Strong, Eventual, Causal) as appropriate.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Distributed Databases}
+    \begin{block}{Overview of Distributed Databases}
+        Distributed databases are collections of data stored across multiple physical locations. 
+        These systems provide improved performance, availability, and fault tolerance. 
+        Understanding the types of distributed databases is fundamental for application architecture selection.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Homogeneous Distributed Databases}
+    \begin{block}{Definition}
+        A homogeneous distributed database system is one where all nodes use the same DBMS and operate with the same data formats.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Unified Database Management:} All databases share the same software, ensuring interoperability.
+        \item \textbf{Easier Administration:} Consistent tools simplify management tasks.
+        \item \textbf{Data Consistency:} Uniformity across systems eases the maintenance of consistency and integrity.
+    \end{itemize}
+    
+    \begin{block}{Example}
+        An organization using multiple servers running Oracle Database can be considered homogeneous, 
+        as each server handles queries using the same SQL syntax and isolation levels.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Heterogeneous Distributed Databases}
+    \begin{block}{Definition}
+        A heterogeneous distributed database system consists of different DBMS types across its nodes, 
+        leading to more complex integration.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Diverse Environments:} Different data models (e.g., relational, NoSQL) and operating systems are used.
+        \item \textbf{Interoperability Challenges:} Additional protocols or middleware may be needed for data communication.
+        \item \textbf{Flexibility:} Organizations can empower specialized functionalities across different DBMSs.
+    \end{itemize}
+    
+    \begin{block}{Example}
+        An educational institution using MySQL for student records, MongoDB for course materials, 
+        and PostgreSQL for research data, showcasing independent yet integrable databases via APIs.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Importance of Selection:} Choosing between homogeneous and heterogeneous databases is crucial based on consistency and scalability needs.
+        \item \textbf{Use Cases:} 
+            \begin{itemize}
+                \item Homogeneous systems suit simpler applications.
+                \item Heterogeneous systems are beneficial for diverse functionalities.
+            \end{itemize}
+        \item \textbf{Integration Complexity:} Critical to understand the integration for heterogeneous systems during the design phase.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        By grasping the types of distributed databases, developers and DBAs can make informed decisions that align with application requirements.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Database Models}
+    \begin{block}{Differentiation among Relational, NoSQL, and Graph Databases}
+        This slide covers the key database models and their characteristics for better understanding and effective application selection.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relational Databases}
+    \begin{itemize}
+        \item \textbf{Definition}: Store data in tables with structured rows and columns; relationships via foreign keys.
+        \item \textbf{Characteristics}:
+            \begin{itemize}
+                \item \textbf{Structured Schema}: Clear schema defined with data types.
+                \item \textbf{ACID Compliance}: Guarantees atomicity, consistency, isolation, and durability for transactions.
+                \item \textbf{SQL Usage}: Data is queried using Structured Query Language (SQL).
+            \end{itemize}
+        \item \textbf{Example}: MySQL, PostgreSQL, Oracle
+    \end{itemize}
+    
+    \begin{block}{Example Table: Customers}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            CustomerID & Name  & Email              \\
+            \hline
+            1          & Alice & alice@example.com   \\
+            2          & Bob   & bob@example.com     \\
+            \hline
+        \end{tabular}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{NoSQL Databases}
+    \begin{itemize}
+        \item \textbf{Definition}: Designed for handling unstructured/semi-structured data; schema-free.
+        \item \textbf{Characteristics}:
+            \begin{itemize}
+                \item \textbf{Flexible Schema}: Data can be added or modified freely.
+                \item \textbf{Scalability}: High volumes of data handled across many servers.
+                \item \textbf{BASE Model}: Focuses on availability and partition tolerance (Basically Available, Soft state, Eventually consistent).
+            \end{itemize}
+        \item \textbf{Examples}: MongoDB (Document-oriented), Redis (Key-Value store)
+    \end{itemize}
+    
+    \begin{block}{Example Document (MongoDB)}
+    \begin{lstlisting}[language=json]
+{
+  "CustomerID": 1,
+  "Name": "Alice",
+  "Email": "alice@example.com"
+}
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Graph Databases}
+    \begin{itemize}
+        \item \textbf{Definition}: Use graph structures (nodes, edges) to represent and store data; optimized for relationships.
+        \item \textbf{Characteristics}:
+            \begin{itemize}
+                \item \textbf{Flexible Relationships}: Handle complex relationships and queries easily.
+                \item \textbf{Schema-less}: Adapt to changing data models and relationships.
+                \item \textbf{Efficient Traversal}: Improved query performance with direct pointers between nodes.
+            \end{itemize}
+        \item \textbf{Examples}: Neo4j, Amazon Neptune
+    \end{itemize}
+    
+    \begin{block}{Example Graph Illustration}
+        \begin{center}
+        \textit{(Alice) -- loves --> (Bob)}
+        \end{center}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item \textbf{Use Cases}: Choose relational for structured data, NoSQL for flexible high volume, and graph for relationship-centric data.
+        \item \textbf{Scalability}: NoSQL and graph databases preferred for high scalability requirements.
+        \item \textbf{Learning Curves}: SQL needed for relational databases; NoSQL and graph databases require their own languages.
+    \end{itemize}
+    
+    Understanding each model's strengths and weaknesses is crucial for selecting the right database, enhancing the architecture of distributed data systems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Replication Strategies}
+    Data replication enhances data availability and reliability in distributed databases. Choosing the right strategy is essential for optimal performance.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Data Replication}
+    \begin{block}{Definition}
+        Data replication refers to the process of storing copies of data in multiple locations to enhance data availability and reliability.
+    \end{block}
+    
+    \begin{itemize}
+        \item Critical for designing distributed databases
+        \item Choosing the right replication strategy impacts availability and performance
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Data Replication Strategies}
+    \begin{enumerate}
+        \item \textbf{Full Replication}
+            \begin{itemize}
+                \item All data is stored across all nodes
+                \item \textbf{Advantages:}
+                    \begin{itemize}
+                        \item High availability
+                        \item Improved read performance
+                    \end{itemize}
+                \item \textbf{Disadvantages:}
+                    \begin{itemize}
+                        \item High storage cost
+                        \item Complexity in data synchronization
+                    \end{itemize}
+            \end{itemize}
+        
+        \item \textbf{Partial Replication}
+            \begin{itemize}
+                \item Only a subset of data is stored across nodes
+                \item \textbf{Advantages:}
+                    \begin{itemize}
+                        \item Efficient storage usage
+                        \item Faster updates
+                    \end{itemize}
+                \item \textbf{Disadvantages:}
+                    \begin{itemize}
+                        \item Complicated queries across nodes
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Data Replication Strategies (Contd.)}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Peer-to-Peer Replication}
+            \begin{itemize}
+                \item Each node acts as both client and server
+                \item \textbf{Advantages:}
+                    \begin{itemize}
+                        \item Cost-effective
+                        \item Improved resilience
+                    \end{itemize}
+                \item \textbf{Disadvantages:}
+                    \begin{itemize}
+                        \item Complexity in conflict resolution
+                    \end{itemize}
+            \end{itemize}
+        
+        \item \textbf{Master-Slave Replication}
+            \begin{itemize}
+                \item One master handles writes; slaves handle reads
+                \item \textbf{Advantages:}
+                    \begin{itemize}
+                        \item Simplified data consistency
+                        \item Load balancing for reads
+                    \end{itemize}
+                \item \textbf{Disadvantages:}
+                    \begin{itemize}
+                        \item Single point of failure on master
+                        \item Dependence on master node performance
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impact on Availability and Performance}
+    \begin{block}{Availability}
+        \begin{itemize}
+            \item More replicas lead to higher data availability.
+            \item Strategies like master-slave might introduce downtime during failover.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Performance}
+        \begin{itemize}
+            \item Read operations benefit; however, write operations might incur latency.
+            \item Balanced strategies depend on workload characteristics.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Select replication strategies aligned with application requirements for consistency, availability, and partition tolerance (CAP theorem).
+        \item Each strategy has trade-offs that necessitate careful consideration based on use cases.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustrative Diagram Concept}
+    % Note: Insert a visual representation concept as needed.
+    \begin{itemize}
+        \item Full Replication: Complete mesh connectivity.
+        \item Partial Replication: Subset connections.
+        \item Peer-to-Peer: Interconnected node structure.
+        \item Master-Slave: Central node with branches.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{CAP Theorem - Introduction}
+    \begin{block}{Overview}
+        The CAP theorem, also known as Brewer's theorem, is a fundamental principle in distributed data systems, stating that in the presence of a network partition, a distributed database can guarantee only two of the following three properties:
+    \end{block}
+    \begin{enumerate}
+        \item \textbf{Consistency (C)}
+        \item \textbf{Availability (A)}
+        \item \textbf{Partition Tolerance (P)}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{CAP Theorem - Properties}
+    \begin{itemize}
+        \item \textbf{Consistency (C)}: 
+        \begin{itemize}
+            \item Every read receives the most recent write or an error.
+            \item \textit{Example:} In online banking, all users see the updated balance immediately after a transaction.
+        \end{itemize}
+        
+        \item \textbf{Availability (A)}: 
+        \begin{itemize}
+            \item Every request receives a response, regardless of node state.
+            \item \textit{Example:} Users can post updates on a social media platform even if some servers are down.
+        \end{itemize}
+        
+        \item \textbf{Partition Tolerance (P)}: 
+        \begin{itemize}
+            \item The system continues to operate despite network partitions.
+            \item \textit{Example:} Databases in two regions process requests independently even during a network failure.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{CAP Theorem - Key Points}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item \textbf{Trade-offs}: You cannot achieve all three properties simultaneously.
+            \item \textbf{Real-world Systems}: 
+            \begin{itemize}
+                \item CP Systems: Prioritize consistency and partition tolerance (e.g., HDFS, Cassandra).
+                \item AP Systems: Prioritize availability and partition tolerance (e.g., DynamoDB, S3).
+            \end{itemize}
+            \item \textbf{Network Partitions}: Essential to design for partition tolerance as network failures can occur.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Summary}
+        Understanding the CAP theorem is crucial for database design, guiding how to handle data in distributed environments.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Consistency}
+    \begin{block}{Overview of Consistency Models}
+        In distributed databases, maintaining \textbf{consistency} across multiple nodes is crucial for ensuring reliable data access and integrity. Consistency models define the rules and guarantees regarding how data changes propagate through the system.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Consistency Models}
+    \begin{enumerate}
+        \item \textbf{Strong Consistency}
+        \begin{itemize}
+            \item Definition: Every read operation returns the most recent write.
+            \item Example: Banking transactions where all nodes reflect changes immediately.
+        \end{itemize}
+
+        \item \textbf{Eventual Consistency}
+        \begin{itemize}
+            \item Definition: Updates will propagate over time; immediate consistency is not guaranteed.
+            \item Example: Social media posts that eventually appear on all users' feeds.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{More Consistency Models}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Causal Consistency}
+        \begin{itemize}
+            \item Definition: Causally related operations are seen in the same order across all nodes.
+            \item Example: A message from User A to User B, followed by a reply from B, will be ordered.
+        \end{itemize}
+
+        \item \textbf{Read Your Writes Consistency}
+        \begin{itemize}
+            \item Definition: Users see their own writes immediately after they occur.
+            \item Example: Profile updates visible to the user right after they are made.
+        \end{itemize}
+
+        \item \textbf{Linearizability}
+        \begin{itemize}
+            \item Definition: Operations appear to be instantaneous.
+            \item Example: Increment operations on a distributed counter that seem ordered.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item The choice of consistency model impacts application behavior.
+        \item Understanding the trade-off between consistency, availability, and partition tolerance (CAP theorem) is crucial.
+        \item Proper system design requires selecting the right model to ensure data integrity.
+    \end{itemize}
+    \begin{block}{Closing Thought}
+        As distributed systems evolve, selecting an appropriate consistency model becomes critical to the success of database applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Availability in Distributed Databases}
+    \begin{block}{What Does Availability Mean?}
+        In the context of distributed databases, \textbf{availability} refers to the system's ability to remain operational and accessible to users, even when some of its components fail. 
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Operational Status}: The system must respond to requests promptly.
+        \item \textbf{Redundancy}: Multiple nodes or replicas serve requests to avoid single points of failure.
+        \item \textbf{Performance}: Aims for both operational continuity and responsiveness.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ensuring Availability in a Distributed System}
+    \begin{enumerate}
+        \item \textbf{Data Replication}
+        \item \textbf{Load Balancing}
+        \item \textbf{Fault Tolerance}
+        \item \textbf{Partitioning}
+        \item \textbf{Configuration Management}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Replication Essentials}
+    \begin{block}{Replication Overview}
+        \textbf{Replication} involves maintaining copies of data across different nodes or locations.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Types of Replication}:
+            \begin{itemize}
+                \item \underline{Master-Slave Replication}: One master node handles write operations, while slaves handle read operations.
+                \item \underline{Multi-Master Replication}: All nodes can accept write requests, enhancing availability and resilience.
+            \end{itemize}
+    \end{itemize}
+    \begin{block}{Example}
+        In an online retail system:
+        \begin{itemize}
+            \item If using Master-Slave: The system may be unable to accept new transactions if the master fails.
+            \item With Multi-Master: Orders can still be processed by replicas, ensuring service remains operational.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Handling Partitions - Overview of Partition Tolerance}
+    
+    \begin{block}{Definition}
+        Partition tolerance refers to the ability of a distributed database to continue operating correctly even when network partitions occur.
+    \end{block}
+    
+    \begin{block}{Importance in Distributed Environments}
+        \begin{itemize}
+            \item \textbf{Reliability:} Ensures data remains accessible and consistent despite disruptions.
+            \item \textbf{User Experience:} Minimizes downtime and disruptions for users, allowing continued operations.
+            \item \textbf{Scalability:} Facilitates growth in distributed systems, maintaining performance despite increased partition likelihood.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Handling Partitions - Key Concepts in Partition Handling}
+    
+    \begin{block}{The CAP Theorem}
+        The CAP theorem states that under network partition conditions, a distributed database can guarantee either:
+        \begin{itemize}
+            \item \textbf{Consistency:} All nodes see the same data at the same time.
+            \item \textbf{Availability:} The system remains operational.
+        \end{itemize}
+        \textbf{Example:} A system might return old data (consistent but unavailable) or allow conflicting writes (available but not consistent).
+    \end{block}
+    
+    \begin{block}{Partition Mitigation Strategies}
+        \begin{itemize}
+            \item \textbf{Data Replication:} Keeping copies of data on multiple nodes to ensure availability.
+            \item \textbf{Quorum-based Approaches:} Requires majority agreement on data state before operations can be confirmed.
+            \item \textbf{Application Logic:} Implementing retry mechanisms or fallback methods for handling partitions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Handling Partitions - Key Points and Conclusion}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Partition tolerance is essential for robust distributed databases.
+            \item The balance between consistency and availability requires careful consideration.
+            \item Designing for partition tolerance involves trade-offs aligned with business requirements.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Understanding and implementing partition tolerance is crucial for the reliability and scalability of distributed databases. Architects and developers must plan effectively for network partition scenarios.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-world Applications of Distributed Databases - Overview}
+    \begin{block}{Understanding Distributed Databases}
+        Distributed databases consist of databases that are not stored in a single location but are spread across multiple networked computers. This structure allows for improved scalability, redundancy, and reliability, making them ideal for addressing various business needs.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Data Distribution}: Load balancing across multiple nodes.
+        \item \textbf{Scalability}: Easily accommodating growth by adding nodes.
+        \item \textbf{Fault Tolerance}: Operational continuity despite individual node failures.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-world Applications - Examples}
+    \begin{enumerate}
+        \item \textbf{Google Cloud Spanner}
+            \begin{itemize}
+                \item \textbf{Overview}: A horizontally scalable, globally distributed database service.
+                \item \textbf{Use Case}: Services like Google Play requiring high availability and consistency.
+                \item \textbf{Key Feature}: Strong consistency guarantees despite high distribution.
+            \end{itemize}
+        
+        \item \textbf{Amazon DynamoDB}
+            \begin{itemize}
+                \item \textbf{Overview}: A fully managed NoSQL database for high-traffic applications.
+                \item \textbf{Use Case}: Companies like Lyft for session information and user profiles.
+                \item \textbf{Key Feature}: Low-latency performance and automatic backups.
+            \end{itemize}
+        
+        \item \textbf{Apache Cassandra}
+            \begin{itemize}
+                \item \textbf{Overview}: An open-source distributed NoSQL database for large data volumes.
+                \item \textbf{Use Case}: Netflix for managing user behavior analytics.
+                \item \textbf{Key Feature}: High throughput and resilience during node failure.
+            \end{itemize}
+        
+        \item \textbf{Microsoft Azure Cosmos DB}
+            \begin{itemize}
+                \item \textbf{Overview}: Globally distributed database service with horizontal scaling.
+                \item \textbf{Use Case}: Toyota managing real-time data from connected vehicles.
+                \item \textbf{Key Feature}: Multi-model support and variable consistency models.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Business Efficiency}: Higher performance in data access.
+            \item \textbf{Flexibility}: Support for various data models tailored to applications.
+            \item \textbf{Global Reach}: Accessibility across regions without performance compromise.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Distributed databases are critical for modern applications, enabling businesses to be agile and responsive. Understanding their applications provides insight into the evolving landscape of data management.
+    \end{block}
+    
+    \begin{block}{Diagrams/Code Snippets}
+        Simple Architecture Diagram illustrating nodes and data flow will be presented.
+        
+        \begin{lstlisting}[language=SQL, basicstyle=\tiny]
+        // Inserting data into a distributed database (DynamoDB)
+        aws dynamodb put-item --table-name Users --item '{"UserID": {"S": "123"}, "Name": {"S": "Alice"}, "Location": {"S": "UK"}}'
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Distributed Databases - Overview}
+    
+    \begin{block}{Key Challenges}
+        \begin{itemize}
+            \item Latency
+            \item Partition Handling
+            \item Consistency Maintenance
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Distributed Databases - Latency}
+    
+    \begin{itemize}
+        \item \textbf{Definition}: Delay between a request and response; can be influenced by network conditions and distance between nodes.
+        \item \textbf{Impact}: Higher latency results in slower query responses and affects user experience.
+        \item \textbf{Mitigation Strategies}:
+        \begin{enumerate}
+            \item Data replication: Place data copies closer to users.
+            \item In-memory databases: Use RAM for faster access.
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Distributed Databases - Partition Handling}
+    
+    \begin{itemize}
+        \item \textbf{Definition}: Distributing data across nodes; network issues can lead to partitioning.
+        \item \textbf{Impact}: Inaccessible database parts may lead to data loss or inconsistency.
+        \item \textbf{Mitigation Strategies}:
+        \begin{enumerate}
+            \item Consistent Hashing: Uniformly distribute data to balance load.
+            \item Partition Tolerance: Implement replication strategies according to the CAP theorem.
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Distributed Databases - Consistency Maintenance}
+    
+    \begin{itemize}
+        \item \textbf{Definition}: Ensuring all nodes have the same data simultaneously.
+        \item \textbf{Impact}: Inconsistent data views can cause errors in applications.
+        \item \textbf{Mitigation Strategies}:
+        \begin{enumerate}
+            \item Advanced Consistency Models: Use protocols like Paxos and Raft for consistent changes.
+            \item Eventual Consistency: Tolerate latency but ensure all nodes converge to the same state eventually.
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Scenarios}
+    
+    \begin{itemize}
+        \item \textbf{Latency Example}: Online retail app reduces latency through data replication during peak periods.
+        \item \textbf{Partition Handling Example}: A social media platform shards user data; fallback protocols maintain service during partitions.
+        \item \textbf{Consistency Maintenance Example}: An e-commerce shopping cart uses distributed locks to synchronize item changes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    
+    Understanding challenges in distributed databases is vital for building robust systems. Solutions often involve trade-offs between latency, availability, and consistency, requiring careful architectural planning.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Tools and Technologies}
+    \begin{block}{Understanding Distributed Databases}
+        Distributed databases are systems where data is stored across multiple locations, potentially on different servers or nodes. This increases scalability and fault tolerance but requires effective tools and technologies for management and operation.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Tools and Frameworks - Part 1}
+    \begin{enumerate}
+        \item \textbf{Apache Hadoop}
+        \begin{itemize}
+            \item \textbf{Overview}: An open-source framework for distributed storage and processing of large data sets.
+            \item \textbf{Components}:
+            \begin{itemize}
+                \item Hadoop Distributed File System (HDFS): High-throughput access to application data.
+                \item MapReduce: Programming model for parallel processing across a Hadoop cluster.
+            \end{itemize}
+            \item \textbf{Use Case Example}: A retail company analyzes customer purchasing behavior to optimize inventory management.
+        \end{itemize}
+
+        \item \textbf{Apache Spark}
+        \begin{itemize}
+            \item \textbf{Overview}: A unified analytics engine for big data processing.
+            \item \textbf{Key Features}:
+            \begin{itemize}
+                \item In-memory computing for faster processing.
+                \item Supports multiple languages (Scala, Python, Java).
+            \end{itemize}
+            \item \textbf{Use Case Example}: A financial institution performs real-time fraud detection using machine learning.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Tools and Frameworks - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue enumeration from previous frame
+        \item \textbf{Cassandra}
+        \begin{itemize}
+            \item \textbf{Overview}: A distributed NoSQL database handling large amounts of data across servers.
+            \item \textbf{Characteristics}:
+            \begin{itemize}
+                \item Decentralized: No master node; every node can handle requests.
+                \item Scalability: Easy horizontal scaling by adding more nodes.
+            \end{itemize}
+            \item \textbf{Use Case Example}: A social media platform stores user profiles and interactions.
+        \end{itemize}
+
+        \item \textbf{MongoDB}
+        \begin{itemize}
+            \item \textbf{Overview}: A NoSQL database designed for unstructured data.
+            \item \textbf{Key Features}:
+            \begin{itemize}
+                \item Document-oriented: Stores data in JSON-like documents.
+                \item High availability through replication and sharding.
+            \end{itemize}
+            \item \textbf{Use Case Example}: An e-commerce website stores product catalogs and user-generated content.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Scalability and Flexibility: Essential for big data applications.
+            \item Fault Tolerance: Ensures data availability and reliability.
+            \item Variety of Choices: Different databases serve specific needs; selection depends on use case.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Understanding these tools and technologies is crucial for designing effective distributed databases that meet application demands, addressing challenges like latency, partition handling, and consistency.
+    \end{block}
+
+    \begin{block}{Explore Further}
+        \begin{itemize}
+            \item Investigate how cloud services integrate these technologies for distributed data solutions.
+            \item Consider hands-on experience with Hadoop and Spark through virtual labs or cloud providers.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Trends in Distributed Databases}
+    \begin{block}{Introduction}
+        As technology evolves, so does the landscape of distributed databases, transforming how data is stored, processed, and accessed.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Emerging Trends - Part 1}
+    \begin{enumerate}
+        \item \textbf{Multi-Model Databases}
+        \begin{itemize}
+            \item Allows representation of data using various models (e.g., document, graph).
+            \item Example: A social app using graph database features along with document storage.
+        \end{itemize}
+
+        \item \textbf{Serverless Architectures}
+        \begin{itemize}
+            \item Developers build applications without managing infrastructure.
+            \item Example: AWS Lambda with DynamoDB for on-demand code execution.
+        \end{itemize}
+
+        \item \textbf{Machine Learning Integration}
+        \begin{itemize}
+            \item Predictive analytics automating insights from data.
+            \item Example: Databases adapting to user behavior and optimizing queries automatically.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Emerging Trends - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Blockchain Technology}
+        \begin{itemize}
+            \item Enhances security, transparency, and immutability.
+            \item Example: Secure transactions in finance using distributed databases and blockchain.
+        \end{itemize}
+
+        \item \textbf{Edge Computing}
+        \begin{itemize}
+            \item Computation and storage closer to data source to reduce latency.
+            \item Example: Data processing at IoT devices before sending to a central database.
+        \end{itemize}
+
+        \item \textbf{Automated Database Management}
+        \begin{itemize}
+            \item AI and ML automating management tasks for scalability and performance.
+            \item Example: Tools allocating resources based on workload patterns with no human intervention.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Adaptability:} Evolving to meet new demands across different applications.
+            \item \textbf{Interconnectivity:} Convergence of technologies driving innovation.
+            \item \textbf{Scalability:} Focus on handling increasing data efficiently.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Future innovations will enhance data accessibility, security, and management, optimizing distributed databases for performance and user satisfaction.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Key Takeaways - Overview}
+    \begin{block}{Key Concepts of Distributed Databases}
+        \begin{enumerate}
+            \item Definition:
+                \begin{itemize}
+                    \item A distributed database is a collection of data spread across multiple physical locations.
+                \end{itemize}
+            \item Types:
+                \begin{itemize}
+                    \item Homogeneous: Same DBMS and structure across all sites.
+                    \item Heterogeneous: Different DBMSs and structures coexist.
+                \end{itemize}
+            \item Architecture Models:
+                \begin{itemize}
+                    \item Client-Server Model: Clients request services from centralized servers.
+                    \item Peer-to-Peer Model: Nodes operate as both clients and servers.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Important Concepts of Distributed Databases}
+    \begin{block}{Key Principles}
+        \begin{enumerate}
+            \item Data Distribution:
+                \begin{itemize}
+                    \item Data can be partitioned or replicated across sites.
+                    \item \textbf{Example}: Retail businesses shard customer data by geography.
+                \end{itemize}
+            \item Database Consistency:
+                \begin{itemize}
+                    \item Techniques like Two-Phase Commit ensure data consistency across transactions.
+                \end{itemize}
+            \item Fault Tolerance:
+                \begin{itemize}
+                    \item Strategies are essential for data availability and integrity.
+                    \item \textbf{Example}: Rerouting requests if a node fails.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Importance of Distribution: Critical for optimizing performance and speed.
+            \item Impact of Architecture: Client-server vs. peer-to-peer can affect performance.
+            \item Real-world Applications: Power various platforms like social media and e-commerce.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        The fundamentals of distributed databases involve understanding their structure and significance. Given the growing data demands, mastery of these concepts is essential for data professionals.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Q\&A Session}
+  Open the floor for questions and discussions related to distributed databases.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Introduction to Distributed Databases}
+  \begin{itemize}
+    \item Distributed databases are spread across multiple locations:
+    \begin{itemize}
+      \item On multiple machines in a single site.
+      \item Across several sites, possibly in different geographic locations.
+    \end{itemize}
+    \item Benefits include:
+    \begin{itemize}
+      \item Greater scalability.
+      \item Improved fault tolerance.
+      \item Increased data availability.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Concepts to Discuss}
+  \begin{enumerate}
+    \item \textbf{Definition and Benefits}
+      \begin{itemize}
+        \item \textbf{Scalability:} Ability to add more nodes for growing data/user load.
+        \item \textbf{Fault Tolerance:} Redundancy ensures operation despite failures.
+        \item \textbf{Data Locality:} Local storage improves access speeds.
+      \end{itemize}
+    
+    \item \textbf{Distributed Database Architecture}
+      \begin{itemize}
+        \item \textbf{Client-Server Model:} Clients interact with a networked database service.
+        \item \textbf{Peer-to-Peer Model:} All nodes have equal roles with query initiation by any node.
+      \end{itemize}
+    
+    \item \textbf{Replication and Sharding}
+      \begin{itemize}
+        \item \textbf{Replication:} Copies of data for reliability and speed; synchronized changes.
+        \item \textbf{Sharding:} Data partitioning for managing large datasets efficiently.
+      \end{itemize}
+    
+    \item \textbf{Consistency and Availability}
+      \begin{itemize}
+        \item \textbf{CAP Theorem:} Guarantees two of three properties: Consistency, Availability, Partition Tolerance.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example Questions to Guide Discussion}
+  \begin{itemize}
+    \item What are the practical implications of choosing a distributed database over a traditional database?
+    \item How does data consistency impact application performance in distributed environments?
+    \item Can you provide real-world scenarios where sharding and replication were effectively implemented?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Encouraging Participation}
+  \begin{itemize}
+    \item \textbf{Ask for Student Experiences:} 
+      \begin{itemize}
+        \item Any challenges encountered using distributed databases in projects or internships?
+      \end{itemize}
+    
+    \item \textbf{Interactive Discussion:} 
+      \begin{itemize}
+        \item Share thoughts on how distributed databases might shape future trends in data management and analytics.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  This session aims to demystify distributed databases and address uncertainties. 
+  \begin{itemize}
+    \item Let's collaborate and explore these concepts further. 
+    \item What questions do you have?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Reminder}
+  Please write your questions clearly, and feel free to reference any previous slides for context! 
+  \begin{itemize}
+    \item Your engagement is valuable in deepening our understanding of distributed databases.
+  \end{itemize}
+\end{frame}
+
+
+\end{document}

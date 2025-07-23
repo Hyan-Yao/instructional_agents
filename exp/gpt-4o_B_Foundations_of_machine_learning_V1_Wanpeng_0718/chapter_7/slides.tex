@@ -1,0 +1,761 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+basicstyle=\ttfamily\small,
+keywordstyle=\color{blue},
+commentstyle=\color{gray},
+stringstyle=\color{red},
+breaklines=true,
+frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Chapter 7: Support Vector Machines}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Support Vector Machines}
+    Support Vector Machines (SVM) are a powerful class of supervised learning algorithms primarily used for classification tasks in machine learning. 
+    Their ability to create non-linear decision boundaries by transforming input feature spaces makes them particularly powerful in tackling complex datasets.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of SVM}
+    \begin{itemize}
+        \item \textbf{Classification:} Assigning categories to data points based on labeled training data, aiming to find the optimal boundary (hyperplane) that separates classes.
+        
+        \item \textbf{Hyperplane:} The decision boundary separating different classes in the feature space. In 2D, it is a line; in 3D, it is a plane; in higher dimensions, it is a hyperplane.
+        
+        \item \textbf{Support Vectors:} Data points closest to the hyperplane, crucial for determining its position. Removing a support vector alters the hyperplane, while non-support vectors do not.
+        
+        \item \textbf{Margin:} The distance from the hyperplane to the nearest data point of each class. SVMs maximize this margin to reduce classification errors.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustration and Example}
+    Imagine two classes of data points represented as circles and squares on a 2D graph. The SVM finds the best line (hyperplane) separating these classes while maximizing the distance to the nearest points (support vectors).
+
+    \begin{block}{Example}
+        Consider a dataset of emails classified as spam (1) or not spam (0). 
+        An SVM analyzes features (e.g., word frequency) and determines the optimal hyperplane to classify new emails based on their features.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Formulas}
+    \begin{itemize}
+        \item \textbf{Linear vs. Non-Linear Classification:} 
+        SVM performs both types using kernel functions that map input features to higher-dimensional spaces.
+        
+        \item \textbf{Kernel Trick:} 
+        Enables SVMs to work in higher-dimensional spaces without directly computing coordinates, enhancing flexibility.
+    \end{itemize}
+
+    The optimization problem for SVM can be expressed mathematically as:
+    \begin{equation}
+        \text{minimize } \frac{1}{2} ||\mathbf{w}||^2 \quad \text{subject to } y_i (\mathbf{w} \cdot \mathbf{x}_i + b) \geq 1 \text{ for all } i
+    \end{equation}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    Support Vector Machines are potent tools in machine learning that excel in classifying data across fields like text classification, image recognition, and bioinformatics. By effectively utilizing support vectors and ensuring maximum margin, SVMs deliver accurate and reliable predictions.
+    
+    This introductory slide sets the foundation for deeper exploration into the theoretical background of SVMs in the next slides.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Theoretical Background - Overview}
+    \begin{block}{Overview of Support Vector Machines (SVM)}
+        Support Vector Machines (SVM) are powerful supervised learning models commonly used for classification tasks. 
+        The core of SVM revolves around the notion of hyperplanes and the concept of maximizing margin between classes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Theoretical Background - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Hyperplane}:
+            \begin{itemize}
+                \item A flat affine subspace in higher-dimensional space.
+                \item In 2D, it is a line that separates classes; in 3D, it is a plane; in n-dimensional space, it is an (n-1)-dimensional subspace.
+                \item Mathematically represented as:
+                \begin{equation}
+                    w^T x + b = 0
+                \end{equation}
+                where \( w \) is the weight vector, \( b \) is the bias, and \( x \) is the feature vector.
+            \end{itemize}
+        
+        \item \textbf{Margin}:
+            \begin{itemize}
+                \item The distance between the hyperplane and the nearest data points from either class, known as support vectors.
+                \item The objective of SVM is to maximize this margin.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Theoretical Background - Illustration}
+    \begin{block}{Illustration}
+        \textbf{2D Space Example:}
+        \begin{center}
+            \text{Class A: } $\circ \circ \circ \circ$ \hspace{0.5cm} 
+            \text{Class B: } $\blacksquare\blacksquare\blacksquare\blacksquare$
+        \end{center}
+        \begin{center}
+            \text{--------------------------} \\
+            \text{Optimal Hyperplane}
+        \end{center}
+        \begin{center}
+            \text{Class A: } $\circ \circ \circ \circ$ \hspace{0.5cm} 
+            \text{Class B: } $\blacksquare\blacksquare\blacksquare\blacksquare$
+        \end{center}
+    \end{block}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item **Support Vectors**: Points closest to the hyperplane that influence its position.
+            \item **Maximizing Margin**: A larger margin implies better generalization on unseen data.
+            \item **Decision Boundary**: The hyperplane acts as a decision boundary for class allocation.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Theoretical Background - Conclusion}
+    \begin{block}{Conclusion}
+        The foundational concepts of hyperplanes and margins form the groundwork for understanding how SVMs operate. 
+        They set the stage for the mathematical intricacies and algorithmic procedures to be discussed in subsequent slides.
+    \end{block}
+    \begin{block}{Example Formula}
+        The optimal hyperplane can be found by solving the following quadratic optimization problem:
+        \begin{equation}
+            \min \frac{1}{2} ||w||^2, \quad \text{subject to } y_i(w^T x_i + b) \geq 1 \text{ for all } i,
+        \end{equation}
+        where \( y_i \) is the class label (1 or -1).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How SVM Works - Overview}
+    \begin{block}{Step-by-Step Explanation of the SVM Algorithm}
+        1. Understanding the Data
+        \begin{itemize}
+            \item Start with a dataset containing input features and target labels.
+            \item Visualize data points in multi-dimensional feature space.
+            \item Example: In a two-dimensional space, we can have points representing different classes (e.g., Class A and Class B).
+        \end{itemize}
+
+        2. Identify Hyperplanes
+        \begin{itemize}
+            \item A hyperplane separates feature space into distinct regions for each class.
+            \item For two dimensions, a hyperplane is a line.
+            \item SVM aims to find the optimal hyperplane.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How SVM Works - Maximizing the Margin}
+    \begin{block}{Maximizing the Margin}
+        3. Maximizing the Margin
+        \begin{itemize}
+            \item Margin is the distance between hyperplane and nearest data points from each class.
+            \item SVM maximizes this margin to enhance class separation.
+            \item Key Concept: Larger margin reduces misclassification likelihood on new data.
+        \end{itemize}
+
+        4. Support Vectors
+        \begin{itemize}
+            \item Support Vectors are points closest to the hyperplane, critical for its definition.
+            \item Only support vectors influence hyperplane's location.
+            \item Example: Close points from Class A and Class B are support vectors.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How SVM Works - Optimization and Classification}
+    \begin{block}{Formulating the Optimization Problem}
+        5. Optimization Problem
+        \begin{itemize}
+            \item SVM formulates finding the optimal hyperplane as a constrained optimization problem.
+            \item Objective: Minimize the norm of the weight vector while ensuring correct classification.
+            \item This leads to:
+            \[
+            \text{Minimize } \frac{1}{2} ||w||^2
+            \]
+            \[
+            \text{subject to } y_i (w \cdot x_i + b) \geq 1, \text{ for all } i
+            \]
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Solving the Problem}
+        6. Solving the Optimization Problem
+        \begin{itemize}
+            \item SVM uses techniques like Quadratic Programming to determine parameters \( w \) and \( b \).
+        \end{itemize}
+
+        7. Classification of New Data Points
+        \begin{itemize}
+            \item Classify new points by evaluating their position relative to the hyperplane:
+            \item If \( w \cdot x + b > 0 \), classify as Class A; otherwise, Class B.
+        \end{itemize}
+    
+        \textbf{Key Points to Emphasize:}
+        \begin{itemize}
+            \item Importance of Support Vectors.
+            \item Maximization of the margin.
+            \item Mathematical robustness of SVM through optimization.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Linear vs. Non-Linear SVM}
+    \begin{block}{Overview}
+        Support Vector Machines (SVM) are powerful supervised learning algorithms used for classification tasks. 
+        They seek to identify the hyperplane that maximizes the margin between different classes.
+    \end{block}
+    \begin{block}{Importance}
+        Understanding the difference between Linear and Non-Linear SVM is crucial for effectively applying this algorithm to various datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Linear SVM}
+    \begin{block}{Definition}
+        Linear SVM is used when the data can be separably classified with a straight line (or hyperplane in higher dimensions). 
+        Classes are linearly separable, meaning that a linear boundary can distinctly separate the classes.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Hyperplane:} The linear decision boundary defined by:
+        \begin{equation}
+            w \cdot x + b = 0
+        \end{equation}
+        where \(w\) is the weight vector and \(b\) is the bias term.
+        
+        \item \textbf{Support Vectors:} The data points closest to the hyperplane that influence its position.
+    \end{itemize}
+    \begin{block}{Example}
+        A Linear SVM finds a straight line that separates two classes in a simple dataset with two features while maximizing the margin.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Non-Linear SVM}
+    \begin{block}{Definition}
+        Non-Linear SVM is used when the data cannot be effectively separated by a linear hyperplane. 
+        It employs kernel methods to map the original feature space into a higher-dimensional space for linear separation.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Kernel Trick:} Transforms data into a higher-dimensional space where linear separation is possible.
+        
+        \item \textbf{Common Kernels:}
+        \begin{itemize}
+            \item \textbf{Polynomial Kernel:} \((x \cdot y + c)^d\)
+            \item \textbf{Radial Basis Function (RBF) Kernel:} \(e^{-\gamma ||x - y||^2}\)
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Example}
+        Visualize a dataset in a circular pattern. A Linear SVM fails, but applying the RBF Kernel transforms the data, allowing a hyperplane to effectively separate the classes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Linear SVM:} Suitable for linearly separable data; simpler and faster.
+        \item \textbf{Non-Linear SVM:} Uses kernel methods for complex datasets that are not linearly separable; more versatile.
+        \item \textbf{Support Vectors:} Critical for both types, defining the boundaries of classification.
+    \end{itemize}
+    \begin{block}{Visual Aid Suggestion}
+        Consider including an illustration comparing Linear SVM and Non-Linear SVM, showing decision boundaries and support vectors.
+    \end{block}
+    \begin{block}{Conclusion}
+        Understanding the distinction between Linear and Non-Linear SVMs helps choose the right approach, improving model performance and accuracy.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Kernel Functions - Introduction}
+    \begin{itemize}
+        \item \textbf{Definition}: Kernel functions enable non-linear classification in Support Vector Machines (SVMs) by implicitly transforming data into higher-dimensional spaces.
+        \item \textbf{Purpose}: They help SVMs find hyperplanes that effectively separate classes even when they are not linearly separable in the original input space.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Kernel Functions - How They Work}
+    \begin{enumerate}
+        \item \textbf{Mapping to Higher Dimensions}:
+            \begin{itemize}
+                \item Kernel functions map input features into higher-dimensional feature spaces without explicit computation of new coordinates.
+                \item This allows for linear separation of complex data distributions.
+            \end{itemize}
+        \item \textbf{Mathematical Representation}:
+            \begin{equation}
+                K(x_i, x_j) = \phi(x_i) \cdot \phi(x_j)
+            \end{equation}
+            \noindent \textit{Where } \( K \) is the kernel function, \( x_i \) and \( x_j \) are input vectors, and \( \phi \) is the mapping function.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Kernel Functions - Types}
+    \begin{itemize}
+        \item \textbf{Linear Kernel}: 
+            \begin{equation}
+                K(x_i, x_j) = x_i \cdot x_j
+            \end{equation}
+            \noindent Use case: Data that is linearly separable.
+            
+        \item \textbf{Polynomial Kernel}:
+            \begin{equation}
+                K(x_i, x_j) = (\alpha x_i \cdot x_j + c)^d
+            \end{equation}
+            \noindent Where \( \alpha \) is a coefficient, \( c \) a constant, and \( d \) the degree of the polynomial.
+            
+        \item \textbf{Radial Basis Function (RBF) Kernel}:
+            \begin{equation}
+                K(x_i, x_j) = \exp(-\gamma ||x_i - x_j||^2)
+            \end{equation}
+            \noindent \textit{Use case: Effective for non-linear data.}
+            
+        \item \textbf{Sigmoid Kernel}:
+            \begin{equation}
+                K(x_i, x_j) = \tanh(\alpha x_i \cdot x_j + c)
+            \end{equation}
+            \noindent \textit{Use case: Common in neural networks.}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Kernel Functions - Applications}
+    \begin{itemize}
+        \item \textbf{Visualizing Classification}:
+            \begin{itemize}
+                \item By applying an RBF kernel, SVM can create non-linear decision boundaries to separate classes that are not linearly separable.
+            \end{itemize}
+        \item \textbf{Real-World Use}:
+            \begin{itemize}
+                \item Applications include image classification, text categorization, and bioinformatics, where non-linear relationships often exist.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Support Vector Machines (SVM)}
+    \begin{block}{Introduction}
+        Support Vector Machines (SVM) are powerful supervised learning models primarily used for classification tasks. 
+        They offer several advantages, particularly in high-dimensional data scenarios.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Advantages of SVM - Part 1}
+    \begin{enumerate}
+        \item \textbf{Robustness Against Overfitting}
+        \begin{itemize}
+            \item SVM minimizes the risk of overfitting by maximizing the margin between support vectors.
+            \item Focuses on support vectors avoids overly complex decision boundaries.
+        \end{itemize}
+        
+        \item \textbf{Effective in High-Dimensional Spaces}
+        \begin{itemize}
+            \item SVM is ideal for datasets with many features compared to observations.
+            \item Example: It is useful in text classification where each word can represent a feature.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Advantages of SVM - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Flexibility with Kernel Trick}
+        \begin{itemize}
+            \item The kernel trick allows SVM to handle non-linearly separable data.
+            \item It operates in higher-dimensional spaces without explicit mapping.
+        \end{itemize}
+
+        \item \textbf{Versatile Applications}
+        \begin{itemize}
+            \item Can be used in various domains: image recognition, bioinformatics, etc.
+            \item Example: Distinguishing malignant from benign tumors based on imaging data.
+        \end{itemize}
+
+        \item \textbf{Good Performance on Unbalanced Data}
+        \begin{itemize}
+            \item Focus on informative support vectors aids performance in imbalanced scenarios.
+            \item Example: In fraud detection, it maintains classification accuracy despite class imbalance.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Next Steps}
+    \begin{block}{Conclusion}
+        SVM stands out as a powerful classification tool due to its robustness and adaptability.
+        Understanding its advantages aids in choosing the appropriate classification technique for high-dimensional data.
+    \end{block}
+
+    \begin{block}{Next Slide}
+        Limitations of SVM - Discuss potential drawbacks, including computational cost and sensitivity to noise.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Limitations of Support Vector Machines (SVM)}
+    \begin{block}{Introduction to Limitations}
+        While Support Vector Machines (SVM) are powerful tools for classification tasks, they do come with certain limitations. Understanding these drawbacks is essential for choosing the right model for specific applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Limitations of SVM - Computational Cost}
+    \begin{itemize}
+        \item \textbf{High Complexity:} 
+        \begin{itemize}
+            \item Training an SVM model is computationally expensive, especially for large datasets.
+            \item Time complexity approximately \(O(n^2 \cdot d)\), where \(n\) is the number of samples and \(d\) is the number of features.
+        \end{itemize}
+        \item \textbf{Kernel Trick:} 
+        \begin{itemize}
+            \item Allows SVMs to handle non-linear data, but increases computational burden. 
+            \item Requires calculating kernel functions for each pair of data points.
+        \end{itemize}
+        \item \textbf{Example:} In a dataset with a million samples, calculating pairwise similarities could take considerable time and resources.
+    \end{itemize}
+    
+    \begin{block}{Key Point}
+        The effectiveness of SVM may come at the cost of feasibility when dealing with large-scale datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Limitations of SVM - Sensitivity to Noise}
+    \begin{itemize}
+        \item \textbf{Impact of Outliers:}
+        \begin{itemize}
+            \item SVMs are sensitive to noise and outliers in the training data.
+            \item Outliers can significantly affect the decision boundary, leading to poorer generalization.
+        \end{itemize}
+        \item \textbf{Soft Margin SVMs:}
+        \begin{itemize}
+            \item Can handle some noise via soft margins, but too many misclassifications can degrade performance.
+        \end{itemize}
+        \item \textbf{Illustration:} 
+        \begin{itemize}
+            \item Points: 
+            \begin{itemize}
+                \item Class 1: ● ● ● ● ● ● 
+                \item Class 2: ○ ○ ○ ○ ● (red circle - outlier)
+            \end{itemize}
+            \item Decision boundary changes significantly due to the presence of outliers.
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{Key Point}
+        The regularization parameter \(C\) in SVMs can control the trade-off between maximizing the margin and minimizing classification error.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Limitations of SVM - Choice of Kernel}
+    \begin{itemize}
+        \item \textbf{Kernel Selection:} 
+        \begin{itemize}
+            \item Choosing the right kernel function is crucial; often based on experimentation and domain knowledge.
+            \item An inappropriate kernel may lead to inferior model performance.
+        \end{itemize}
+        \item \textbf{Example:} 
+        \begin{itemize}
+            \item A linear kernel may perform poorly on non-linear data, while an RBF kernel could overfit with sparse data.
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{Key Point}
+        Ensuring the optimal choice of kernel and hyperparameters via cross-validation is critical but adds complexity to SVM models.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of SVM Limitations}
+    \begin{block}{Summary}
+        While SVMs are powerful and versatile classifiers, it is crucial to consider:
+        \begin{itemize}
+            \item Computational costs
+            \item Sensitivity to noise
+            \item The need for careful kernel and parameter selection
+        \end{itemize}
+        Awareness of these limitations helps practitioners make informed decisions and anticipate challenges in model deployment.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of SVM - Overview}
+    \begin{block}{Overview of Applications}
+        Support Vector Machines (SVM) are powerful supervised learning algorithms widely used for classification and regression tasks. Their effectiveness in high-dimensional spaces and their ability to model complex decision boundaries make them suitable for various real-world applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of SVM - Bioinformatics}
+    \begin{enumerate}
+        \item \textbf{Bioinformatics}
+        \begin{itemize}
+            \item \textbf{Gene Classification:} SVMs can classify genes based on expression profiles, distinguishing cancerous from non-cancerous tissue samples.
+            \item \textbf{Protein Structure Prediction:} SVMs assist in predicting protein configurations, aiding in drug discovery by inferring the 3D structures of new proteins.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of SVM - Finance and Image Recognition}
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Finance}
+        \begin{itemize}
+            \item \textbf{Credit Scoring:} Financial institutions use SVMs to evaluate credit applications and classify applicants into risk categories.
+            \item \textbf{Fraud Detection:} SVMs identify fraudulent transactions by detecting anomalies in transaction data, recognizing unusual spending patterns.
+        \end{itemize}
+        
+        \item \textbf{Image Recognition}
+        \begin{itemize}
+            \item \textbf{Facial Recognition:} SVMs help classify images in facial recognition systems, finding hyperplanes to separate data points.
+            \item \textbf{Object Detection:} SVMs are used to classify objects within images, aiding autonomous vehicles in detecting pedestrians and traffic signs.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of SVM - Key Points and Code Example}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Versatility:} SVMs can be applied across various domains, illustrating their flexibility in solving diverse problems.
+            \item \textbf{High-Dimensional Data:} They perform exceptionally in high-dimensional datasets, such as text classification and image processing.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Code Snippet Example}
+    \begin{lstlisting}[language=Python]
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn import svm
+
+# Load dataset
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create SVM classifier and fit the model
+classifier = svm.SVC(kernel='linear')
+classifier.fit(X_train, y_train)
+
+# Predict on the test set
+predictions = classifier.predict(X_test)
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of SVM - Conclusion}
+    \begin{block}{Conclusion}
+        Support Vector Machines demonstrate significant applicability in diverse sectors, from healthcare to finance and technology. Their ability to create effective models in complex environments makes them invaluable tools for data analysis and decision-making.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Implementation - Overview}
+    Support Vector Machines (SVMs) are powerful tools for classification and regression tasks in machine learning. They operate by identifying the hyperplane that best separates different classes within the feature space.
+    
+    This presentation will cover the implementation of SVM using the popular Python library, Scikit-learn.
+    
+    \begin{itemize}
+        \item \textbf{SVM Basics}: Optimal separating hyperplane that maximizes the margin.
+        \item \textbf{Kernel Trick}: Handling non-linear data via kernel functions (e.g., linear, polynomial, RBF).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Implementation - Steps}
+    Here are the steps to implement SVM using Scikit-learn in Python:
+
+    \begin{enumerate}
+        \item \textbf{Import Necessary Libraries}
+            \begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.svm import SVC
+from sklearn.metrics import classification_report, confusion_matrix
+            \end{lstlisting}
+
+        \item \textbf{Load the Dataset} (e.g., Iris dataset)
+            \begin{lstlisting}[language=Python]
+iris = datasets.load_iris()
+X = iris.data[:, :2]  # First two features for visualization
+y = iris.target
+            \end{lstlisting}
+
+        \item \textbf{Split the Dataset}
+            \begin{lstlisting}[language=Python]
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+            \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Implementation - Model Creation}
+    Continuing with the SVM implementation steps:
+
+    \begin{enumerate}[resume]
+        \item \textbf{Create the SVM Model}
+            \begin{lstlisting}[language=Python]
+model = SVC(kernel='linear')  # Other options: 'rbf', 'poly', etc.
+            \end{lstlisting}
+
+        \item \textbf{Fit the Model to the Training Data}
+            \begin{lstlisting}[language=Python]
+model.fit(X_train, y_train)
+            \end{lstlisting}
+
+        \item \textbf{Make Predictions}
+            \begin{lstlisting}[language=Python]
+y_pred = model.predict(X_test)
+            \end{lstlisting}
+
+        \item \textbf{Evaluate the Model}
+            \begin{lstlisting}[language=Python]
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+            \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Takeaways}
+    
+    \begin{enumerate}
+        \item \textbf{Definition and Purpose}:
+        Support Vector Machines (SVM) are supervised learning algorithms used for classification and regression by finding the optimal hyperplane in feature space.
+        
+        \item \textbf{Core Concepts}:
+        \begin{itemize}
+            \item \textbf{Hyperplane}: The optimal decision boundary that maximizes the margin between classes.
+            \item \textbf{Support Vectors}: The data points closest to the hyperplane that influence its position and orientation.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Advantages and Kernel Trick}
+
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Advantages of SVM}:
+        \begin{itemize}
+            \item Effective in high dimensions.
+            \item Versatile for both linear and non-linear classification.
+            \item Robust against overfitting with clear margin separation.
+        \end{itemize}
+
+        \item \textbf{Kernel Trick}: 
+        Transforms original feature space into higher-dimensional space for non-linear boundaries.
+        \begin{itemize}
+            \item \textbf{Linear Kernel}: \( K(x, y) = x^T y \)
+            \item \textbf{Polynomial Kernel}: \( K(x, y) = (x^T y + c)^d \)
+            \item \textbf{RBF Kernel}: \( K(x, y) = e^{-\gamma ||x - y||^2} \)
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Applications and Implementation}
+
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Applications}:
+        SVMs are applied in various fields such as:
+        \begin{itemize}
+            \item Image recognition
+            \item Text classification (spam detection)
+            \item Bioinformatics (gene classification)
+        \end{itemize}
+
+        \item \textbf{Implementation and Tools}:
+        Popular libraries like \textbf{Scikit-learn} make SVM implementation straightforward. 
+        A sample implementation in Python:
+        
+        \begin{lstlisting}[language=Python]
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn import svm
+
+# Load dataset
+iris = datasets.load_iris()
+X, y = iris.data, iris.target
+
+# Split the dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create SVM classifier
+classifier = svm.SVC(kernel='linear')
+classifier.fit(X_train, y_train)
+
+# Predict
+predictions = classifier.predict(X_test)
+        \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Final Summary}
+
+    Support Vector Machines are essential tools in machine learning, providing robust performance across diverse applications. 
+    Their ability to classify data effectively in both linear and non-linear spaces, combined with a strong mathematical foundation, solidifies their significance in the field of data science.
+\end{frame}
+
+
+\end{document}

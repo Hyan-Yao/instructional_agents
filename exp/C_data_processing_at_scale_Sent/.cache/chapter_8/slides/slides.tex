@@ -1,0 +1,795 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+basicstyle=\ttfamily\small,
+keywordstyle=\color{blue},
+commentstyle=\color{gray},
+stringstyle=\color{red},
+breaklines=true,
+frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Week 8: Performance and Optimization Techniques}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Performance and Optimization Techniques}
+    \begin{block}{Overview}
+        In big data processing frameworks like Apache Spark and Hadoop, \textbf{performance and optimization} techniques are essential for swift and efficient data operations. These frameworks handle massive volumes of data, and improved performance can save resources, reduce costs, and enhance the speed of insights.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Performance and Optimization}
+    \begin{enumerate}
+        \item \textbf{Efficiency}:
+            \begin{itemize}
+                \item Optimizing algorithms and code can significantly reduce execution time and resource consumption.
+                \item \textit{Example}: A poorly written Spark job may take hours, while an optimized version could run in a fraction of that time.
+            \end{itemize}
+        \item \textbf{Scalability}:
+            \begin{itemize}
+                \item Performance must maintain effectiveness as data volume increases.
+                \item \textit{Illustration}: A Hadoop job handling 1TB in one hour could take ten times longer with 10TB of data without optimization.
+            \end{itemize}
+        \item \textbf{Throughput}:
+            \begin{itemize}
+                \item The amount of data processed in a given timeframe is a critical performance metric.
+                \item \textit{Example}: Increasing the number of partitions in Spark can boost throughput by enabling more parallel processing.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Performance Optimization}
+    \begin{itemize}
+        \item \textbf{Data Locality}: Optimizing task placement by processing data near the storage location to minimize transfer time.
+        \item \textbf{Memory Management}: Effective use of memory can lead to significant gains; tuning Spark's memory can enhance execution speed.
+        \item \textbf{Parallel Processing}: Utilizing distributed computing in both Hadoop and Spark to split tasks across nodes improves processing times exponentially.
+        \item \textbf{Caching}: In Spark, caching frequently accessed data in memory reduces computation time for iterative algorithms.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Optimizing performance is about creating a balanced ecosystem where resource efficiency, scalability, and throughput are maximized.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Performance Optimization - Scalability}
+    
+    \begin{block}{Scalability}
+        \begin{itemize}
+            \item \textbf{Definition:} Ability of a system to handle growing workloads as user demands or data volume increases.
+            \item \textbf{Types of Scalability:}
+            \begin{itemize}
+                \item \textbf{Vertical Scalability (Scaling Up):} 
+                \begin{itemize}
+                    \item Increasing resources of a single machine (e.g., upgrading RAM).
+                \end{itemize}
+                \item \textbf{Horizontal Scalability (Scaling Out):} 
+                \begin{itemize}
+                    \item Adding more machines to distribute workloads (e.g., adding nodes to a cluster).
+                \end{itemize}
+            \end{itemize}
+            \item \textbf{Key Point:} Crucial for handling large datasets without performance degradation.
+        \end{itemize}
+    \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Performance Optimization - Efficiency}
+
+    \begin{block}{Efficiency}
+        \begin{itemize}
+            \item \textbf{Definition:} How well a system uses resources for computations while minimizing consumption.
+            \item \textbf{Measuring Efficiency:} 
+            \begin{itemize}
+                \item Evaluated through resource utilization and execution time.
+            \end{itemize}
+            \item \textbf{Example:}
+            \begin{equation}
+                \text{Efficiency} = \frac{\text{Data Processed}}{\text{Resource Usage} \times \text{Time}} = \frac{1 \text{ TB}}{10 \text{ CPUs} \times 1 \text{ hr}} = 0.1 \frac{\text{TB}}{\text{CPU hr}}
+            \end{equation}
+            \item \textbf{Key Point:} High efficiency signifies a well-optimized system.
+        \end{itemize}
+    \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Performance Optimization - Throughput}
+
+    \begin{block}{Throughput}
+        \begin{itemize}
+            \item \textbf{Definition:} Amount of work done in a specific time frame, often measured in transactions or data processed.
+            \item \textbf{Units:} Operations/second or bytes/second (e.g., MB/s).
+            \item \textbf{Example:}
+            \begin{equation}
+                \text{Throughput} = \frac{100 \text{ GB}}{2 \text{ hr}} = 50 \text{ GB/hr}
+            \end{equation}
+            \item \textbf{Key Point:} Higher throughput indicates better performance.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Summary of Key Points}
+        \begin{itemize}
+            \item \textbf{Scalability:} Allows growth and workload handling.
+            \item \textbf{Efficiency:} Maximizes resource utilization.
+            \item \textbf{Throughput:} Measures data processing speed.
+        \end{itemize}
+    \end{block}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Spark and Hadoop Architecture}
+    \begin{block}{Overview of Distributed Data Processing}
+        Distributed data processing involves manipulating large datasets across a network of machines to enhance:
+        \begin{itemize}
+            \item Performance
+            \item Scalability
+            \item Reliability
+        \end{itemize}
+        Both Hadoop and Spark facilitate this by dividing tasks and data, efficiently utilizing cluster resources.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hadoop Architecture}
+    \begin{block}{Core Components}
+        \begin{enumerate}
+            \item \textbf{Hadoop Distributed File System (HDFS):}
+                \begin{itemize}
+                    \item Scalable and fault-tolerant file storage.
+                    \item Breaks large files into blocks (default: 128 MB).
+                    \item Replicates blocks (default: 3 copies).
+                \end{itemize}
+            \item \textbf{YARN (Yet Another Resource Negotiator):}
+                \begin{itemize}
+                    \item Manages resources and job scheduling.
+                    \item Consists of Resource Manager and Node Managers.
+                \end{itemize}
+            \item \textbf{MapReduce:}
+                \begin{itemize}
+                    \item Programming model for processing data.
+                    \item \textit{Map Phase:} Filters and sorts data.
+                    \item \textit{Reduce Phase:} Aggregates results.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hadoop Example Use Case}
+    \begin{block}{Analyzing Web Logs}
+        \begin{itemize}
+            \item \textbf{Map:} Each log file is processed to create key-value pairs (e.g., date → user ID).
+            \item \textbf{Reduce:} Total user interactions counted by date.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Hadoop Architecture Diagram}
+        \begin{verbatim}
+        [Client] → (HDFS) → {Data Block 1 (Node 1)}
+                              {Data Block 2 (Node 2)}
+                              {Data Block 3 (Node 3)}
+                   |
+                   +→ (YARN)
+                   |
+                   +→ (MapReduce) → (Output)
+        \end{verbatim}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Spark Architecture}
+    \begin{block}{Core Components}
+        \begin{enumerate}
+            \item \textbf{Resilient Distributed Datasets (RDDs):}
+                \begin{itemize}
+                    \item Primary data structure in Spark; immutable collections.
+                    \item Supports in-memory processing for high-speed access.
+                \end{itemize}
+            \item \textbf{Spark Driver:}
+                \begin{itemize}
+                    \item Coordinates workers and executes jobs.
+                \end{itemize}
+            \item \textbf{Cluster Manager:}
+                \begin{itemize}
+                    \item Can be standalone, Mesos, or YARN; allocates resources.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Spark Example Use Case}
+    \begin{block}{Real-time Streaming Analytics}
+        \begin{itemize}
+            \item Data ingested and processed in RDDs.
+            \item In-memory calculations allow for faster updates and results.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Spark Architecture Diagram}
+        \begin{verbatim}
+        [Spark Driver] ➔ {RDD1 (Node 1)}
+                          {RDD2 (Node 2)}
+                          {RDD3 (Node 3)}
+        \end{verbatim}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Fault Tolerance:} HDFS uses replication; Spark can recompute lost data from lineage.
+        \item \textbf{Performance:} Spark's in-memory processing is faster than Hadoop's disk-based model.
+        \item \textbf{Ease of Use:} Spark offers high-level APIs in Java, Scala, and Python, making it accessible.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Resource Management Strategies - Overview}
+    \begin{block}{Overview}
+        Effective resource management is crucial in distributed computing frameworks like Apache Spark and Hadoop. These strategies ensure optimal utilization of computational resources, leading to better performance and lower costs.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Resource Management Strategies - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Cluster Configuration}
+        \begin{itemize}
+            \item Adjust settings to optimize resource use.
+            \item Consider CPU cores, memory limits, and storage capacity.
+            \item Configure YARN ResourceManager and NodeManager in Hadoop, or Spark's cluster manager (Standalone, Mesos, Kubernetes).
+        \end{itemize}
+
+        \item \textbf{Resource Allocation}
+        \begin{itemize}
+            \item Allocate resources based on workload requirements.
+            \item Use dynamic allocation in Spark to adjust resources in real-time based on current job needs, allowing efficient scaling during execution.
+            \begin{lstlisting}[language=Python]
+spark.conf.set("spark.dynamicAllocation.enabled", "true")
+            \end{lstlisting}
+        \end{itemize}
+
+        \item \textbf{Task Scheduling}
+        \begin{itemize}
+            \item Understand scheduling strategies (FIFO, Fair, Capacity).
+            \item Fair scheduling in Hadoop allows equally shared resources among jobs, promoting workload balance.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Resource Management Strategies - Memory and Data Locality}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Memory Management}
+        \begin{itemize}
+            \item Optimize memory allocation using configurations.
+            \item In Spark, control memory through settings like
+            \begin{lstlisting}[language=Python]
+spark.executor.memory = "4g"
+            \end{lstlisting}
+            to ensure sufficient resources without spilling to disk.
+        \end{itemize}
+
+        \item \textbf{Data Locality}
+        \begin{itemize}
+            \item Aim to execute tasks close to data to reduce latency.
+            \item Utilize HDFS's block placement strategy for improved performance.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Resource Management Strategies - Summary and Next Steps}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Balance between resource allocation and performance.
+            \item Monitoring tools (Spark UI, Hadoop metrics) can analyze resource usage and identify bottlenecks.
+            \item Continuous evaluation and tuning are key to maintaining an optimized environment.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Summary}
+        By applying these resource management strategies in Spark and Hadoop, you can facilitate smoother processing, quicker data analysis, and scalable architectures. Focus on application-specific needs and make adjustments based on ongoing performance metrics.
+    \end{block}
+
+    \begin{block}{Next Steps}
+        Prepare for data partitioning techniques, which directly influence how efficiently resources can be managed in distributed environments.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Partitioning Techniques - Introduction}
+    \begin{block}{Definition}
+        Data partitioning is a strategy used in distributed computing environments to enhance performance and manageability by dividing a large dataset into smaller segments (partitions) that can be processed independently across multiple nodes.
+    \end{block}
+    
+    \begin{block}{Importance}
+        \begin{itemize}
+            \item \textbf{Performance Improvement:} Parallel data processing reduces overall processing time.
+            \item \textbf{Load Balancing:} Prevents bottlenecks by distributing loads evenly across nodes.
+            \item \textbf{Scalability:} Facilitates efficient handling of larger datasets by adding nodes without performance degradation.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Partitioning Techniques - Types}
+    \begin{enumerate}
+        \item \textbf{Horizontal Partitioning:}
+            \begin{itemize}
+                \item Divides rows across partitions.
+                \item Example: Partitioning customer data by region.
+            \end{itemize}
+
+        \item \textbf{Vertical Partitioning:}
+            \begin{itemize}
+                \item Divides columns across partitions.
+                \item Example: Splitting essential customer attributes into one partition.
+            \end{itemize}
+        
+        \item \textbf{Hash Partitioning:}
+            \begin{itemize}
+                \item Uses a hash function to assign data based on key columns.
+                \item Example: User data distributed by user ID hash values.
+            \end{itemize}
+
+        \item \textbf{Range Partitioning:}
+            \begin{itemize}
+                \item Distributes data based on specified ranges of a key.
+                \item Example: Sales data partitioned by date ranges.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Partitioning Techniques - Impact and Conclusion}
+    \begin{block}{Impact on Performance}
+        \begin{itemize}
+            \item \textbf{Reduced Data Movement:} Minimizes data transfers during queries, enhancing execution speed.
+            \item \textbf{Efficient Resource Utilization:} Each partition uses different nodes, optimizing resource usage.
+            \item \textbf{Improved Data Locality:} Co-locating data with computation reduces latency.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Data partitioning significantly improves data processing efficiency in distributed environments. Selecting the appropriate strategy aligns data distribution with cluster processing capabilities, thus enhancing performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Indexing for Faster Data Access}
+    \begin{block}{Overview of Indexing Techniques in Spark and Hadoop}
+        Indexing optimizes data retrieval in distributed systems like Spark and Hadoop, allowing for faster access to specific points in large datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Indexing?}
+    \begin{itemize}
+        \item Indexing serves as a roadmap for quick data access.
+        \item Enables systems to bypass scanning entire datasets.
+        \item Key Concepts:
+        \begin{itemize}
+            \item \textbf{Index Structure}: Maps keys to dataset locations.
+            \item \textbf{Metadata}: Information that speeds up searches.
+            \item \textbf{Types of Indices}: Includes B-trees, hash indexes, and bitmap indexes.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Indexing Works in Spark}
+    \begin{itemize}
+        \item \textbf{Partition Index}: Maps data partitions to locations, enhancing access speed.
+        \item \textbf{DataFrame Indexing}: Automatically creates indices for operations based on column selection.
+    \end{itemize}
+
+    \begin{block}{Example in Spark}
+        \begin{lstlisting}[language=Python]
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("IndexExample").getOrCreate()
+df = spark.read.csv("data.csv")
+
+# Creating a temporary view
+df.createOrReplaceTempView("data_table")
+
+# Querying indexed columns
+result = spark.sql("SELECT * FROM data_table WHERE indexed_column = 'value'")
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Indexing Works in Hadoop}
+    \begin{itemize}
+        \item \textbf{HBase}: Uses automatic indexing for efficient handling of large datasets.
+        \item \textbf{Apache Hive}: Allows the creation of secondary indexes to expedite queries.
+    \end{itemize}
+
+    \begin{block}{Example in Hive}
+        \begin{lstlisting}[language=SQL]
+CREATE INDEX idx_column ON my_table (column_name) 
+AS 'org.apache.hadoop.hive.ql.index.compound.CompoundIndexHandler';
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Benefits of Indexing}
+    \begin{itemize}
+        \item \textbf{Reduced Data Scan Time}: Quickly navigates to required records.
+        \item \textbf{Improved Query Performance}: Faster execution for queries on indexed columns.
+        \item \textbf{Optimized Resource Utilization}: Less processing power required, crucial in resource-constrained environments.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Know Your Data}: Choose the appropriate index type based on data characteristics.
+        \item \textbf{Balance}: Consider the trade-off between retrieval speed and write performance.
+        \item \textbf{Monitor Performance}: Utilize monitoring tools to assess the effectiveness of indexing strategies.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Summary}
+        Indexing enhances data access speeds in Spark and Hadoop. Effective techniques improve retrieval efficiency and overall performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Next Steps}
+    \begin{block}{Monitoring and Benchmarking Performance}
+        Understanding how to monitor and evaluate the benefits of indexing is crucial. This will be discussed in the next slide.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monitoring and Benchmarking Performance - Introduction}
+    \begin{block}{Overview}
+        In distributed computing frameworks like Spark and Hadoop, monitoring and benchmarking performance are crucial for identifying bottlenecks, optimizing resource allocation, and ensuring efficient data processing.
+    \end{block}
+
+    \begin{block}{Importance}
+        Understanding how to effectively monitor and benchmark these applications can lead to significant improvements in overall performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monitoring and Benchmarking Performance - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Monitoring}
+            \begin{itemize}
+                \item \textbf{Definition}: Continuously observing the system to collect metrics related to performance, resource usage, and job execution.
+                \item \textbf{Purpose}: Identify performance issues, system failures, and resource bottlenecks in real-time.
+            \end{itemize}
+          
+        \item \textbf{Benchmarking}
+            \begin{itemize}
+                \item \textbf{Definition}: Testing and measuring the performance of a system against defined metrics or benchmarks.
+                \item \textbf{Purpose}: Evaluate application performance and determine the impact of changes made within the system.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Methods for Monitoring Performance}
+    \begin{enumerate}
+        \item \textbf{Spark UI}
+            \begin{itemize}
+                \item \textbf{Overview}: Web-based interface for insights into Spark jobs, stages, and storage usage.
+                \item \textbf{Key Features}:
+                    \begin{itemize}
+                        \item Visualize job execution timelines.
+                        \item Monitor task-level metrics, such as duration and input/output sizes.
+                    \end{itemize}
+                \item \textbf{Example}: Access at \texttt{http://<driver-node>:4040} to analyze performance in real time.
+            \end{itemize}
+
+        \item \textbf{Ganglia}
+            \begin{itemize}
+                \item \textbf{Overview}: Scalable distributed monitoring system for high-performance computing.
+                \item \textbf{Key Features}: Visualizes metrics on cluster performance, tracks CPU load and memory usage.
+                \item \textbf{Integration}: Can be integrated with Hadoop for node monitoring.
+            \end{itemize}
+
+        \item \textbf{Prometheus and Grafana}
+            \begin{itemize}
+                \item \textbf{Prometheus}: Open-source monitoring and alerting toolkit.
+                \item \textbf{Grafana}: Visualization tool displaying metrics collected by Prometheus.
+                \item \textbf{Use Case}: Set up alerts based on predefined thresholds for cluster health monitoring.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Tools for Benchmarking Performance}
+    \begin{itemize}
+        \item \textbf{Apache Spark Benchmarking Tools}
+            \begin{itemize}
+                \item \textbf{SparkBench}: Suite for benchmarking Spark applications with various workloads.
+                \item \textbf{Terasort}: Measures sorting capabilities of Spark and Hadoop.
+            \end{itemize}
+            
+        \item \textbf{Hadoop's Apache Benchmark}
+            \begin{itemize}
+                \item \textbf{Overview}: Benchmarks different performance aspects of Hadoop clusters.
+                \item \textbf{Common Benchmarks}:
+                    \begin{itemize}
+                        \item TeraGen
+                        \item TeraSort
+                        \item TeraValidate
+                    \end{itemize}
+                \item \textbf{Example}: Running TeraSort can help compare Hadoop performance across configurations.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Summary}
+    \begin{itemize}
+        \item Monitoring is essential for proactive performance management to identify issues before they affect users.
+        \item Benchmarking provides a baseline to evaluate improvements or regressions in performance.
+        \item Choose appropriate tools and methods based on specific needs for effective performance analysis.
+    \end{itemize}
+
+    \begin{block}{Final Thoughts}
+        Effective monitoring and benchmarking optimize resource usage and improve application performance, leading to faster data processing and better user experiences.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Optimization Techniques in Spark}
+    \begin{block}{Introduction}
+        Apache Spark is a powerful distributed computing framework that allows for fast data processing. 
+        To fully leverage Spark's capabilities, applying specific optimization techniques is crucial. 
+    \end{block}
+    \begin{itemize}
+        \item Memory management
+        \item Execution plan tuning
+        \item Data serialization
+        \item Join optimization
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Memory Management}
+    Effective memory management can significantly improve the performance of Spark applications. 
+    Spark utilizes a unified memory model, divided into execution and storage.
+
+    \begin{itemize}
+        \item \textbf{Memory Allocation:} Tune settings based on your workload.
+        \begin{lstlisting}
+spark.executor.memory = "4g"  # Allocates 4 GB to each executor
+spark.memory.fraction = 0.6     # 60% of executor memory
+        \end{lstlisting}
+        
+        \item \textbf{Broadcast Variables:} Share large read-only data efficiently.
+        \begin{lstlisting}[language=Python]
+from pyspark import SparkContext
+sc = SparkContext("local", "Broadcast Variables Example")
+large_variable = sc.broadcast([1, 2, 3, 4, 5])
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Execution Plan Tuning}
+    Spark utilizes Catalyst, a query optimizer, to convert logical plans into optimized physical plans.
+
+    \begin{itemize}
+        \item \textbf{Analyze Query Plans:} Use the \texttt{explain()} method.
+        \begin{lstlisting}[language=Python]
+df.explain()
+        \end{lstlisting}
+
+        \item \textbf{Use Caching:} Persist intermediate DataFrames.
+        \begin{lstlisting}[language=Python]
+df.cache()  # Caches the DataFrame in memory
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Serialization and Join Optimization}
+    \begin{itemize}
+        \item \textbf{Data Serialization:}
+        \begin{lstlisting}
+spark.serializer = "org.apache.spark.serializer.KryoSerializer"
+        \end{lstlisting}
+        
+        \item \textbf{Join Optimization:}
+        Use broadcast joins for smaller DataFrames.
+        \begin{lstlisting}[language=Python]
+from pyspark.sql import functions as F
+
+df1 = spark.read.parquet("large_data.parquet")
+df2 = spark.read.parquet("small_data.parquet")
+result = df1.join(F.broadcast(df2), "key")
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points to Emphasize}
+    \begin{enumerate}
+        \item Optimize memory allocation between execution and storage.
+        \item Regularly analyze execution plans to identify inefficiencies.
+        \item Use caching to avoid redundant computations.
+        \item Choose appropriate joining strategies based on data size.
+    \end{enumerate}
+
+    By implementing these techniques, you can enhance Spark application performance and improve resource utilization.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques in Hadoop - Introduction}
+    \begin{itemize}
+        \item Hadoop: An open-source framework for processing large data sets.
+        \item Importance of optimization for efficiency.
+        \item Focus areas: Job configuration and resource tuning.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques in Hadoop - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Job Configuration Optimization}
+        \begin{itemize}
+            \item Set memory for mappers: \texttt{mapreduce.map.memory.mb}
+            \item Set memory for reducers: \texttt{mapreduce.reduce.memory.mb}
+            \item Use compression for intermediate data.
+        \end{itemize}
+      
+        \item \textbf{Resource Tuning}
+        \begin{itemize}
+            \item Manage resources with YARN: \texttt{yarn.nodemanager.resource.memory-mb}
+            \item Fine-tune container sizes for mappers and reducers.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques in Hadoop - Examples}
+    \begin{block}{Example Configuration Snippet}
+    \begin{lstlisting}[language=bash]
+    set mapreduce.map.memory.mb=2048
+    set mapreduce.reduce.memory.mb=2048
+    set mapreduce.map.output.compress=true
+    \end{lstlisting}
+    \end{block}
+
+    \begin{block}{YARN Configuration Example}
+    \begin{lstlisting}[language=bash]
+    yarn.nodemanager.resource.memory-mb=64000
+    yarn.scheduler.maximum-allocation-mb=8192
+    \end{lstlisting}
+    \end{block}
+
+    \begin{itemize}
+        \item Data locality and proper distribution enhance efficiency.
+        \item Combiner functions reduce data shuffled to reducers.
+        \item Custom partitioners minimize shuffle time.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques in Hadoop - Conclusion}
+    \begin{itemize}
+        \item Tailor configuration settings based on job requirements.
+        \item Leverage data locality for improved performance.
+        \item Implement optimization techniques for better resource utilization and reduced job latency.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Studies and Best Practices - Overview}
+    This section presents real-world case studies that illustrate performance optimization strategies in Apache Spark and Hadoop. 
+    By analyzing these case studies, we can extract valuable insights and best practices to enhance data processing performance.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 1: E-Commerce Recommendation System using Spark}
+    
+    \textbf{Background:} An e-commerce platform processed millions of transactions daily. 
+    Optimization was needed due to slow performance in delivering recommendations.
+
+    \textbf{Optimization Strategies:}
+    \begin{enumerate}
+        \item \textbf{In-Memory Computation:} Leveraged Spark’s in-memory data processing to reduce computation time.
+        \item \textbf{Data Partitioning:} Partitioned data by user IDs to minimize shuffling in join operations.
+    \end{enumerate}
+
+    \textbf{Results:}
+    \begin{itemize}
+        \item 70\% decrease in time to generate personalized recommendations.
+        \item System handled a 200\% increase in user interactions without degradation.
+    \end{itemize}
+
+    \textbf{Key Takeaway:} Use in-memory processing and optimal data partitioning for significant gains in real-time applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 2: Financial Fraud Detection with Hadoop}
+    
+    \textbf{Background:} A financial institution faced high latency in fraud detection from large transaction volumes.
+
+    \textbf{Optimization Strategies:}
+    \begin{enumerate}
+        \item \textbf{Data Locality:} Stored data close to compute nodes using HDFS for lower network latency.
+        \item \textbf{Tuning MapReduce Jobs:} Adjusted number of reducers based on data volume to align with workload.
+        \item \textbf{Incremental Processing:} Shifted to incremental processing from batch processing for continuous analysis.
+    \end{enumerate}
+
+    \textbf{Results:}
+    \begin{itemize}
+        \item Improved fraud detection speed from hours to real-time analysis.
+        \item Resource consumption reduced by 40\% through efficient job configuration.
+    \end{itemize}
+
+    \textbf{Key Takeaway:} Data locality and job tuning are vital for performance improvements in latency-sensitive applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Optimization}
+    To achieve optimal performance in Spark and Hadoop environments, consider the following best practices:
+    
+    \begin{enumerate}
+        \item \textbf{Profile Your Workload:} Identify bottlenecks through profiling applications.
+        \item \textbf{Choose the Right Data Format:} Use optimized formats like Parquet or ORC for better compression and faster I/O.
+        \item \textbf{Monitoring Tools:} Employ frameworks such as Spark's UI or Hadoop's ResourceManager for continuous monitoring.
+        \item \textbf{Use Cache Wisely:} In Spark, cache frequently accessed RDDs to reduce recalculations and I/O delays.
+    \end{enumerate}
+
+    \textbf{Conclusion:} Learning from case studies helps in developing best practices for real-world data processing scenarios.
+\end{frame}
+
+
+\end{document}

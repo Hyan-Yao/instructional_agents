@@ -1,0 +1,1058 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Data Processing with Spark]{Week 5: Data Processing with Spark}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Data Processing with Spark}
+    \begin{block}{Importance of Data Processing}
+        - Big Data refers to datasets that are too large or complex for traditional processing applications.\\
+        - Effective data processing enables organizations to:
+        \begin{itemize}
+            \item Extract valuable insights from large datasets.
+            \item Improve decision-making with data-driven strategies.
+            \item Enhance operational efficiency and customer experiences.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Considerations in Data Processing}
+    \begin{itemize}
+        \item \textbf{Volume:} The scale of data processed.
+        \item \textbf{Velocity:} The speed at which data is generated and processed.
+        \item \textbf{Variety:} The diverse types of data (structured, unstructured, semi-structured).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Apache Spark}
+    \begin{block}{What is Apache Spark?}
+        - An open-source cluster-computing framework designed for fast and general-purpose data processing.
+        - It provides an interface for programming entire clusters with implicit data parallelism and fault tolerance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Features of Spark}
+    \begin{enumerate}
+        \item \textbf{Speed:}
+        \begin{itemize}
+            \item Processes data in-memory, dramatically speeding up workloads.
+            \item Benchmark tests indicate Spark can be up to 100 times faster than Hadoop MapReduce.
+        \end{itemize}
+        
+        \item \textbf{Ease of Use:}
+        \begin{itemize}
+            \item Supports languages such as Python, Scala, Java, and R.
+            \item Offers high-level APIs and SparkSQL for handling structured data easily.
+        \end{itemize}
+        
+        \item \textbf{Unified Engine:}
+        \begin{itemize}
+            \item Supports batch processing, streaming, machine learning, and graph processing.
+        \end{itemize}
+        
+        \item \textbf{Advanced Analytics:}
+        \begin{itemize}
+            \item Built-in libraries for machine learning (MLlib), streaming (Spark Streaming), and graph processing (GraphX).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Use Case: Retail Analytics}
+    \begin{block}{Scenario}
+        A retail company collects transaction data from millions of sales daily.
+    \end{block}
+    Using Spark, they can:
+    \begin{itemize}
+        \item Analyze sales trends quickly.
+        \item Personalize customer recommendations using machine learning.
+        \item Streamline inventory management by analyzing product movement in real-time.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Data processing is crucial for leveraging the power of big data.
+        \item Apache Spark is notable due to its speed, versatility, and ease of use.
+        \item Real-world applications of Spark illustrate its significance across various domains.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Apache Spark has revolutionized the way organizations process large datasets, making data analytics faster and more efficient, which ultimately leads to better insights and decision-making in real-time.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Data Processing Concepts}
+    \begin{block}{Overview}
+        Introduction to key concepts in Apache Spark: RDDs, DataFrames, and Datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding RDDs}
+    \begin{itemize}
+        \item \textbf{Resilient Distributed Datasets (RDDs)}: 
+        \begin{itemize}
+            \item Immutable distributed collection of objects.
+            \item Enables parallel processing.
+            \item Fault-tolerant through lineage tracking.
+        \end{itemize}
+        \item \textbf{Example:}
+        \begin{lstlisting}[language=Python]
+from pyspark import SparkContext
+
+sc = SparkContext("local", "Example RDD")  # Initialize Spark Context
+data = [1, 2, 3, 4]
+rdd = sc.parallelize(data)  # Create RDD from a list
+square_rdd = rdd.map(lambda x: x ** 2)  # Squares each element
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{DataFrames and Datasets}
+    \begin{itemize}
+        \item \textbf{DataFrames:}
+        \begin{itemize}
+            \item Distributed collection organized into named columns.
+            \item Schema-aware and optimized for query processing.
+        \end{itemize}
+        \item \textbf{Example:}
+        \begin{lstlisting}[language=Python]
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("Example DataFrame").getOrCreate()
+df = spark.read.json("data.json")  # Load data into DataFrame from JSON
+df.show()  # Display DataFrame content
+        \end{lstlisting}
+        
+        \item \textbf{Datasets:}
+        \begin{itemize}
+            \item Combines benefits of RDDs and DataFrames with compile-time type safety.
+        \end{itemize}
+        \item \textbf{Example:}
+        \begin{lstlisting}[language=Scala]
+import org.apache.spark.sql.SparkSession
+
+case class Person(name: String, age: Int)  // Case class to define schema
+val spark = SparkSession.builder.appName("Example Dataset").getOrCreate()
+import spark.implicits._
+val people = Seq(Person("Alice", 28), Person("Bob", 36))
+val ds = spark.createDataset(people)
+ds.show()
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding RDDs - Definition}
+    \begin{block}{Definition}
+        A Resilient Distributed Dataset (RDD) is a fundamental data structure in Apache Spark designed for fault-tolerant and parallel processing of large datasets. An RDD is an immutable collection of objects that can be partitioned across a cluster of machines and processed in parallel.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding RDDs - Properties}
+    \begin{enumerate}
+        \item \textbf{Immutable}: Once created, you cannot change the RDD. Instead, you create a new RDD from an existing one.
+        
+        \item \textbf{Distributed}: Data is stored across multiple nodes in a cluster, enabling horizontal scaling.
+        
+        \item \textbf{Fault Tolerance}: RDDs automatically recover from node failures using lineage graphs, which track how RDDs are derived from one another.
+        
+        \item \textbf{Lazy Evaluation}: Transformations on RDDs (e.g., \texttt{map}, \texttt{filter}) are not executed immediately. They are only evaluated when an action (like \texttt{count} or \texttt{collect}) is called.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding RDDs - Use Cases and Advantages}
+    \begin{block}{Use Cases}
+        \begin{itemize}
+            \item Data Processing: Ingesting, transforming, and analyzing large datasets in distributed environments.
+            \item Batch Processing: Handling large volumes of data (e.g., logs, transactions) efficiently over time.
+            \item Machine Learning Applications: Preprocessing data for training models using iterative algorithms that require repeated passes over a dataset.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Advantages of Using RDDs}
+        \begin{itemize}
+            \item Fault Tolerance: Recompute lost data using lineage information.
+            \item Parallel Processing: Simultaneous data processing across multiple nodes.
+            \item In-memory Computation: Cache RDDs to expedite iterative processes common in machine learning.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code Snippet}
+    \begin{lstlisting}[language=Python]
+from pyspark import SparkContext
+
+# Create a SparkContext
+sc = SparkContext("local", "RDD Example")
+
+# Create an RDD from a text file
+rdd = sc.textFile("hdfs://path/to/input.txt")
+
+# Transform: Split each line into words
+words = rdd.flatMap(lambda line: line.split(" "))
+
+# Action: Count the number of words
+word_count = words.count()
+print(f"Total Words: {word_count}") 
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding RDDs - Key Points}
+    \begin{itemize}
+        \item RDDs are foundational for data processing in Spark and represent a powerful abstraction for distributed data management.
+        \item Understanding RDDs prepares you for more advanced Spark concepts like DataFrames and Datasets.
+        \item Usage of RDDs should be strategically considered, especially for scenarios requiring fault tolerance and complex transformations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Exploring DataFrames}
+    \begin{block}{Introduction to DataFrames}
+        A DataFrame is a distributed data structure in Apache Spark similar to a table in a relational database or a data frame in R and Python (Pandas).
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{What is a DataFrame?}
+    \begin{itemize}
+        \item **Structure**: 
+            \begin{itemize}
+                \item Named columns holding different data types (e.g., integers, strings, dates).
+                \item Each DataFrame has a schema defining column names and data types.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Advantages of DataFrames over RDDs}
+    \begin{enumerate}
+        \item **Ease of Use**:
+            \begin{itemize}
+                \item SQL-like syntax for querying data.
+                \item Example: `df.select()`, `df.filter()`.
+            \end{itemize}
+        \item **Optimized Execution**:
+            \begin{itemize}
+                \item Supports Catalyst Optimizer for query optimization.
+                \item Faster than RDDs which require manual optimization.
+            \end{itemize}
+        \item **Unified Data Processing**:
+            \begin{itemize}
+                \item Supports both structured and semi-structured data sources.
+            \end{itemize}
+        \item **Built-in Functions**:
+            \begin{itemize}
+                \item Enables aggregations, joins, and transformations with minimal code.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Supported Data Operations with DataFrames}
+    \begin{itemize}
+        \item **Creation**: 
+        \begin{lstlisting}[language=Python]
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("example").getOrCreate()
+df = spark.read.csv("data.csv", header=True, inferSchema=True)
+        \end{lstlisting}
+        \item **Transformations**: 
+        \begin{itemize}
+            \item `filter()`, `select()`, `groupBy()`, `agg()`, and more.
+        \end{itemize}
+        \item **Actions**: 
+        \begin{itemize}
+            \item `show()`, `collect()`, `count()`, `write()`.
+        \end{itemize}
+        \item **SQL Queries**: You can run SQL queries directly against a DataFrame.
+        \begin{lstlisting}[language=Python]
+df.createOrReplaceTempView("table")
+result = spark.sql("SELECT * FROM table WHERE column_name > value")
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item DataFrames are more user-friendly and efficient than RDDs.
+        \item They enable sophisticated data operations with minimal code and optimal performance.
+        \item Integration of SQL empowers data analysis capabilities.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Understanding DataFrames in Spark is crucial for efficient data processing while leveraging Spark’s optimization capabilities.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Working with Datasets - What are Datasets?}
+    \begin{block}{Definition}
+        Datasets are a distributed collection of data in Spark that provide a higher-level abstraction than RDDs, combining the benefits of RDDs and DataFrames.
+    \end{block}
+    \begin{itemize}
+        \item Combines efficiency of execution and ease of use.
+        \item Enables compile-time type safety for strong typing in languages like Java and Scala.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Working with Datasets - Key Features}
+    \begin{enumerate}
+        \item \textbf{Typed API:} Strongly-typed, enabling compile-time error checking.
+        \item \textbf{Optimized Execution:} Utilizes Catalyst optimizer and Tungsten execution engine.
+        \item \textbf{Interoperability:} Interacts seamlessly with DataFrames (a DataFrame is a Dataset of `Row` type).
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Working with Datasets - Benefits}
+    \begin{itemize}
+        \item \textbf{Type Safety:} Reduces run-time errors with compile-time checks.
+        \item \textbf{Expressiveness:} Use both functional transformations and SQL-like queries.
+        \item \textbf{Performance:} Leverages Spark's optimized execution plans for faster computations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Working with Datasets - Differences with RDDs and DataFrames}
+    \begin{itemize}
+        \item \textbf{Abstraction Level:}
+            \begin{itemize}
+                \item RDDs: Low-level abstraction with no schema.
+                \item DataFrames: Higher-level abstraction with named columns and schema.
+                \item Datasets: Enrich DataFrames with type safety.
+            \end{itemize}
+        \item \textbf{Type Safety:}
+            \begin{itemize}
+                \item RDDs: No type safety, errors caught at runtime.
+                \item DataFrames: No compile-time type safety.
+                \item Datasets: Strongly typed, errors caught at compile time.
+            \end{itemize}
+        \item \textbf{Performance:}
+            \begin{itemize}
+                \item RDDs: Limited optimization capabilities.
+                \item DataFrames: Optimized using Catalyst.
+                \item Datasets: Benefits from both optimizations.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Working with Datasets - Example Usage (Scala)}
+    \begin{block}{Scala Code Example}
+    \begin{lstlisting}[language=Scala]
+    // Creating a case class for strong typing
+    case class Employee(id: Int, name: String, age: Int)
+
+    // Creating a Dataset from a sequence of Employees
+    val employeeData = Seq(Employee(1, "John", 30), Employee(2, "Jane", 25))
+    val employeeDS: Dataset[Employee] = spark.createDataset(employeeData)
+
+    // Performing operations
+    employeeDS.filter(emp => emp.age > 28).show()
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Working with Datasets - Key Points & Summary}
+    \begin{itemize}
+        \item Datasets combine the best features of RDDs and DataFrames.
+        \item Provide type safety and optimizations that improve performance.
+        \item Ideal for scenarios requiring both functional transformations and structural queries.
+    \end{itemize}
+    \begin{block}{Summary}
+        Datasets in Spark enhance data processing capabilities by delivering advantages such as compile-time type safety and optimized execution. They enable a powerful programming paradigm for extensive data transformations and analysis.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Comparative Analysis: RDDs, DataFrames, and Datasets}
+    \begin{block}{Introduction}
+        In Apache Spark, three major abstractions are commonly used for data processing: Resilient Distributed Datasets (RDDs), DataFrames, and Datasets. Understanding the differences between them is crucial for optimizing performance and improving usability in data analytics and machine learning tasks.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Resilient Distributed Datasets (RDDs)}
+    \begin{itemize}
+        \item \textbf{Definition:} Fundamental data structure in Spark, immutable distributed collection of objects.
+        \item \textbf{Performance:} Low-level functionality; requires manual optimization.
+        \item \textbf{Usability:} Flexible but complex; requires more programming effort.
+        \item \textbf{Functionalities:}
+            \begin{itemize}
+                \item Supports transformations (e.g., \texttt{map}, \texttt{filter}) and actions (e.g., \texttt{count}, \texttt{collect}).
+                \item Suitable for unstructured and semi-structured data.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. DataFrames}
+    \begin{itemize}
+        \item \textbf{Definition:} Distributed collection of data organized into named columns, similar to a table in a relational database.
+        \item \textbf{Performance:} Benefits from Spark’s Catalyst optimizer for optimized execution plans.
+        \item \textbf{Usability:} More user-friendly; high-level APIs and interoperability with various data sources.
+        \item \textbf{Functionalities:}
+            \begin{itemize}
+                \item Supports SQL-like queries via DataFrame API (e.g., \texttt{df.select("columnName")}).
+                \item Provides built-in functions for complex aggregations and manipulations.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Datasets}
+    \begin{itemize}
+        \item \textbf{Definition:} Combines benefits of RDDs and DataFrames; provides a type-safe, object-oriented programming interface.
+        \item \textbf{Performance:} Higher level of optimization than RDDs; comparable performance to DataFrames.
+        \item \textbf{Usability:} Type safety eases error detection at compile time.
+        \item \textbf{Functionalities:}
+            \begin{itemize}
+                \item Supports both functional and relational API operations.
+                \item Enables type-safe transformations and compile-time checking of data structures.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Comparative Summary Table}
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Feature} & \textbf{RDDs} & \textbf{DataFrames} & \textbf{Datasets} \\
+            \hline
+            \textbf{Type Safety} & No & No & Yes \\
+            \hline
+            \textbf{Execution} & Low-level, manual optimization & Optimized through Catalyst & Optimized, compile-time checking \\
+            \hline
+            \textbf{Usability} & Low & Medium & High \\
+            \hline
+            \textbf{Data Sources} & Unstructured \& Semi-structured & Structured & Structured \& Semi-structured \\
+            \hline
+            \textbf{Performance} & High for complex operations & Higher due to optimizations & Comparable to DataFrames \\
+            \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item Use RDDs when you need detailed control over data processing, especially for complex transformations.
+        \item Use DataFrames for ease of use and performance in SQL operations.
+        \item Use Datasets when you need the combined power of type safety and optimization, particularly in typed languages like Scala.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippets}
+    \begin{block}{RDD Creation}
+        \begin{lstlisting}[language=Scala]
+val rdd = sc.parallelize(Seq(1, 2, 3, 4, 5))
+        \end{lstlisting}
+    \end{block}
+    
+    \begin{block}{DataFrame Creation}
+        \begin{lstlisting}[language=Scala]
+val df = spark.read.json("file.json")
+        \end{lstlisting}
+    \end{block}
+
+    \begin{block}{Dataset Creation}
+        \begin{lstlisting}[language=Scala]
+case class Person(name: String, age: Int)
+val ds = Seq(Person("Alice", 25), Person("Bob", 30)).toDS()
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    Selecting the right abstraction for data processing in Spark is key to achieving optimal performance and usability. Understanding the differences between RDDs, DataFrames, and Datasets empowers you to use Spark more effectively in your data processing tasks.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Transformations and Actions in Spark - Overview}
+    \begin{block}{Understanding Transformations and Actions}
+        In Apache Spark, **Transformations** and **Actions** are fundamental operations on RDDs (Resilient Distributed Datasets) and DataFrames.
+        \begin{itemize}
+            \item Transformations create new datasets lazily.
+            \item Actions trigger computations and return values or store data.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Transformations}
+    \begin{block}{Key Characteristics}
+        \begin{itemize}
+            \item **Immutable:** Original dataset remains unchanged.
+            \item **Lazy Evaluation:** Execution is deferred until actions are called.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Common Transformations}
+        \begin{enumerate}
+            \item **map(func):** Transforms each element.
+            \item **filter(func):** Filters elements based on a condition.
+            \item **flatMap(func):** Produces zero or more output elements.
+            \item **union(otherRDD):** Merges two RDDs.
+            \item **groupBy(func):** Groups elements based on a specified function.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Actions}
+    \begin{block}{Key Characteristics}
+        Actions trigger computations and return results.
+    \end{block}
+    
+    \begin{block}{Common Actions}
+        \begin{enumerate}
+            \item **collect():** Returns all elements to the driver.
+            \item **count():** Returns the number of elements.
+            \item **take(n):** Returns the first \( n \) elements.
+            \item **saveAsTextFile(path):** Saves dataset to an external path.
+            \item **foreach(func):** Executes a function on each element.
+        \end{enumerate}
+    \end{block}    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustrative Example Code}
+    \begin{lstlisting}[language=Python]
+from pyspark import SparkContext
+
+sc = SparkContext("local", "Transformations and Actions Example")
+
+# Create an RDD
+data = [1, 2, 3, 4, 5]
+rdd = sc.parallelize(data)
+
+# Transformation: doubling the numbers
+transformed_rdd = rdd.map(lambda x: x * 2)
+
+# Action: Collecting results
+results = transformed_rdd.collect()
+print(results)  # Output: [2, 4, 6, 8, 10]
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding transformations and actions is essential for effective data processing in Spark.
+    \begin{itemize}
+        \item Transformations are lazy and do not modify the original dataset.
+        \item Actions are eager and execute transformations to produce output.
+    \end{itemize}
+    Familiarize yourself with these concepts for optimized Spark applications!
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques - Introduction}
+    \begin{itemize}
+        \item Optimizing Spark jobs is crucial for performance and efficiency.
+        \item Key techniques discussed:
+        \begin{itemize}
+            \item Partitioning
+            \item Caching
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques - Partitioning}
+    \begin{block}{Definition}
+        Partitioning is the process of dividing a large dataset into smaller, manageable chunks called partitions. Each partition is processed independently.
+    \end{block}
+    
+    \begin{block}{Importance}
+        \begin{itemize}
+            \item Enhances parallelism, allowing simultaneous processing of multiple partitions.
+            \item Reduces shuffling (data transfer between nodes), minimizing performance bottlenecks.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example}
+        Imagine a dataset of 1 billion records, which can be divided into 100 partitions, enabling efficient utilization of 100 worker nodes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques - Partitioning Code}
+    \begin{block}{Code Snippet}
+    \begin{lstlisting}[language=python]
+# Assuming 'df' is your DataFrame
+df = df.repartition(100)  # Repartitions df into 100 partitions
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques - Caching}
+    \begin{block}{Definition}
+        Caching involves storing intermediate data results in memory for quick access, preventing recomputation in subsequent actions.
+    \end{block}
+
+    \begin{block}{Importance}
+        \begin{itemize}
+            \item Improves performance of iterative algorithms accessing the same dataset multiple times.
+            \item Saves time by avoiding expensive disk I/O operations.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example}
+        If you run a machine learning algorithm using the same dataset over multiple iterations, caching reduces the need for repeated calculations.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques - Caching Code}
+    \begin{block}{Code Snippet}
+    \begin{lstlisting}[language=python]
+# Assuming 'df' is your DataFrame
+df.cache()  # Caches the DataFrame in memory
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Techniques - Key Points and Conclusion}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Choose the right number of partitions: Too few can lead to resource underutilization, while too many can cause overhead.
+            \item Cache strategically: Only cache datasets that are reused multiple times to avoid excessive memory usage.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Optimizing Spark jobs through effective partitioning and caching is essential for achieving high performance in data processing tasks, leading to faster processing times and reduced computational costs.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Use Cases of Spark in Industry - Introduction}
+    \begin{block}{Overview}
+        Apache Spark is a robust open-source unified analytics engine designed for big data processing. Its ability to handle large volumes of data swiftly makes it a preferred choice across various industries. This slide explores real-world applications of Spark, emphasizing its impact on big data use cases and the benefits it provides.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Use Cases of Spark in Industry - Key Applications}
+    \begin{enumerate}
+        \item \textbf{Data Analytics in Retail}
+            \begin{itemize}
+                \item \textbf{Use Case:} Personalization and Recommendation Engines
+                \item \textbf{Example:} Amazon's recommendation system enhances sales through tailored product suggestions.
+                \item \textbf{Benefits:} Enhanced customer experience and targeted marketing.
+            \end{itemize}
+        
+        \item \textbf{Financial Services and Fraud Detection}
+            \begin{itemize}
+                \item \textbf{Use Case:} Real-Time Fraud Detection
+                \item \textbf{Example:} PayPal analyzes transaction patterns for fraud detection.
+                \item \textbf{Benefits:} Reduced financial losses and improved customer security.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Use Cases of Spark in Industry - Continued}
+    \begin{enumerate}
+        \setcounter{enumi}{2}  % Continue numbering
+        \item \textbf{Healthcare Analytics}
+            \begin{itemize}
+                \item \textbf{Use Case:} Predictive Analytics for Patient Care
+                \item \textbf{Example:} Partners HealthCare uses Spark to predict hospital readmissions.
+                \item \textbf{Benefits:} Enhanced patient outcomes and reduced healthcare costs.
+            \end{itemize}
+
+        \item \textbf{Telecommunications}
+            \begin{itemize}
+                \item \textbf{Use Case:} Network Performance Insight
+                \item \textbf{Example:} Verizon analyzes call data records for network optimization.
+                \item \textbf{Benefits:} Improved service quality and customer satisfaction.
+            \end{itemize}
+
+        \item \textbf{Manufacturing and Supply Chain Management}
+            \begin{itemize}
+                \item \textbf{Use Case:} Predictive Maintenance
+                \item \textbf{Example:} General Electric utilizes Spark for minimizing machinery downtime.
+                \item \textbf{Benefits:} Reduced maintenance costs and enhanced operational efficiency.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Performance Metrics and Evaluation - Overview}
+  \begin{block}{Importance of Performance Metrics}
+    Performance metrics are crucial for evaluating the efficiency and scalability of data processing strategies in Apache Spark. Understanding these metrics helps in optimizing Spark applications to handle large datasets effectively.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Performance Metrics}
+  \begin{enumerate}
+    \item \textbf{Execution Time}
+      \begin{itemize}
+        \item \textbf{Definition}: Time taken by a Spark job to complete.
+        \item \textbf{Example}: A job processing 1 TB in 10 minutes shows speed of handling data.
+      \end{itemize}
+
+    \item \textbf{Throughput}
+      \begin{itemize}
+        \item \textbf{Definition}: Data processed per unit of time (records or bytes).
+        \item \textbf{Example}: Processing 500,000 records in 5 seconds results in 100,000 records/second.
+      \end{itemize}
+
+    \item \textbf{Scaling Efficiency}
+      \begin{itemize}
+        \item \textbf{Definition}: Performance increase with added resources, assessed across cluster configurations.
+        \item \textbf{Example}: A job running in 10 minutes on 4 nodes vs. 5 minutes on 8 nodes shows efficiency.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Performance Metrics (cont.)}
+  \begin{enumerate}
+    \setcounter{enumi}{3}
+    \item \textbf{Resource Utilization}
+      \begin{itemize}
+        \item \textbf{Definition}: Percentage of resources (CPU, memory, I/O) used during execution.
+        \item \textbf{Example}: 85\% CPU and 75\% memory utilization indicates high efficiency.
+      \end{itemize}
+
+    \item \textbf{Spark-specific Metrics}
+      \begin{itemize}
+        \item \textbf{Shuffle Read/Write Metrics}: Efficiency of data movement; high times may require tuning.
+        \item \textbf{Task Distribution Metrics}: Insights into load balancing; uneven distribution increases execution time.
+      \end{itemize}
+  \end{enumerate}
+  \begin{block}{Key Points to Emphasize}
+    - Regularly monitor metrics to optimize jobs.
+    - Test various cluster sizes for scalability.
+    - Good metrics lead to time and resource savings.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Illustrative Example: Spark Job Execution}
+  \begin{lstlisting}[language=Python]
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder.appName("PerformanceMetricsExample").getOrCreate()
+
+# Load data
+data = spark.read.csv("large_dataset.csv")
+
+# Perform transformations and actions
+results = data.groupBy("category").count().collect()
+  \end{lstlisting}
+  \begin{block}{Evaluation}
+    - Measure execution time using Spark's UI or logging.
+    - Calculate throughput as $\text{total\_records} / \text{execution\_time}$.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Group Project Overview}
+    This presentation covers the objectives, deliverables, and application of Spark in addressing real-world data processing challenges.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Objectives of the Group Project}
+    The primary aim of this project is to collaboratively explore and apply Apache Spark to tackle real-world data processing challenges. Key objectives include:
+    \begin{itemize}
+        \item Understand Spark's architecture and its components.
+        \item Gain hands-on experience in utilizing Spark for large-scale data analytics.
+        \item Develop skills in data manipulation, transformation, and aggregation using Spark frameworks.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Deliverables}
+    By the end of this project, each group will produce:
+    \begin{enumerate}
+        \item \textbf{Project Proposal}:
+            \begin{itemize}
+                \item Business context of the challenge.
+                \item Objectives and expected outcomes.
+                \item Data sources and preliminary analysis.
+            \end{itemize}
+        \item \textbf{Data Processing Pipeline}:
+            \begin{itemize}
+                \item Implementation of Spark jobs for dataset processing.
+                \item Code snippets to illustrate RDD transformations and DataFrame operations.
+            \end{itemize}
+        \item \textbf{Final Report}:
+            \begin{itemize}
+                \item Methodology, insights, and visual summaries.
+                \item Performance metrics of the Spark jobs.
+            \end{itemize}
+        \item \textbf{Presentation}:
+            \begin{itemize}
+                \item Summary of project objectives, findings, and challenges faced.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Application of Spark in Real-World Challenges}
+    \textbf{Example Scenario: Analyzing Customer Purchase Behavior}
+    \begin{itemize}
+        \item \textbf{Challenge}: Retail company aims to optimize marketing by understanding customer behaviors.
+        \item \textbf{Approach Using Spark}:
+            \begin{itemize}
+                \item \textbf{Data Collection}: Gather data from sales transactions and customer interactions.
+                \item \textbf{Data Processing}:
+                    \begin{itemize}
+                        \item Data Cleaning: Remove duplicates with \texttt{df.dropDuplicates()}.
+                        \item Aggregation: Use \texttt{groupBy()} and \texttt{agg()} for total purchases per customer.
+                        \item Transformation: Create trending columns for analysis.
+                    \end{itemize}
+                \item \textbf{Machine Learning Integration}: Use MLlib for predictive modeling of future purchases.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet Example}
+    \begin{lstlisting}[language=Python]
+# Sample Spark data processing in Python
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder.appName("CustomerAnalysis").getOrCreate()
+data = spark.read.csv("sales_data.csv", header=True, inferSchema=True)
+
+# Data cleaning by dropping duplicates
+cleaned_data = data.dropDuplicates()
+
+# Aggregation to find total purchases per customer
+customer_spending = cleaned_data.groupBy("customerId").agg({"amount": "sum"})
+customer_spending.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    This group project serves as an opportunity to apply theoretical knowledge in practice. 
+    \begin{itemize}
+        \item Embrace collaboration to learn from diverse insights and experiences.
+        \item Navigate through complex data challenges in a dynamic environment like Apache Spark.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion: Spark's Capabilities in Data Processing}
+    
+    Apache Spark has revolutionized the field of big data processing through its high-speed data handling, advanced analytics support, and ease of use. 
+
+    \begin{block}{Key Capabilities of Apache Spark}
+        \begin{enumerate}
+            \item \textbf{Speed and Performance:}
+            \begin{itemize}
+                \item Processes data in-memory, significantly faster than traditional methods.
+                \item Example: Large datasets processed in minutes vs. hours with Spark.
+            \end{itemize}
+
+            \item \textbf{Unified Engine:}
+            \begin{itemize}
+                \item Supports batch, stream, machine learning, and graph processing.
+                \item Example: Build an ETL pipeline and perform predictive analytics with Spark libraries.
+            \end{itemize}
+
+            \item \textbf{Ease of Use:}
+            \begin{itemize}
+                \item Accessible interfaces in Python, Scala, Java, and R.
+                \item Example: Data analysts can use PySpark without extensive programming experience.
+            \end{itemize}
+
+            \item \textbf{Scalability:}
+            \begin{itemize}
+                \item Efficiently scales from single computers to large clusters.
+                \item Example: Organizations can expand their infrastructure as data grows.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Trends in Big Data Technologies}
+    
+    As we look towards the future, several trends are emerging that will shape the landscape of big data technologies:
+
+    \begin{itemize}
+        \item \textbf{Real-time Data Processing:}
+        \begin{itemize}
+            \item Growing demand for instantaneous insights.
+            \item Example: Streaming analytics in financial institutions to detect fraud.
+        \end{itemize}
+
+        \item \textbf{Machine Learning and AI Integration:}
+        \begin{itemize}
+            \item Integration of AI for predictive analytics.
+            \item Example: Anomaly detection in network security with Spark models.
+        \end{itemize}
+        
+        \item \textbf{Serverless Architectures:}
+        \begin{itemize}
+            \item Cost-efficient data processing solutions.
+            \item Example: Using AWS Lambda with Apache Spark for analytics.
+        \end{itemize}
+
+        \item \textbf{Data Governance and Privacy:}
+        \begin{itemize}
+            \item Stricter regulations leading to improved compliance tools.
+            \item Example: Using Spark to anonymize sensitive data.
+        \end{itemize}
+        
+        \item \textbf{Multi-cloud Strategies:}
+        \begin{itemize}
+            \item Adoption of multi-cloud architectures for flexibility and cost optimization.
+            \item Example: Deploying Spark on both AWS and Google Cloud.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+
+    \begin{itemize}
+        \item Apache Spark is integral to modern data processing, offering speed, flexibility, and a broad range of capabilities.
+        \item Keeping an eye on emerging trends helps stakeholders in the big data ecosystem to remain innovative and competitive.
+        \item Future developments will focus on AI integration, real-time processing, and enhancing data governance.
+    \end{itemize}
+
+    \vspace{0.5cm}
+    \begin{block}{Visual Enhancement}
+        Incorporation of supporting diagrams and visual representations of Spark’s ecosystem and recent statistics on big data trends will further enhance understanding and engagement.
+    \end{block}
+\end{frame}
+
+
+\end{document}

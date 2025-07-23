@@ -1,0 +1,1291 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Decision Trees]{Week 5: Supervised Learning - Decision Trees}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Decision Trees}
+    \begin{block}{Overview of Decision Trees}
+        Decision trees are supervised learning algorithms used for classification and regression tasks.
+        They break down complex decisions into a series of simpler decisions through a tree-like structure.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Purpose of Decision Trees}
+    \begin{itemize}
+        \item Classify data points or predict outcomes based on input features.
+        \item Create a model that predicts the value of a target variable.
+        \item Learn simple decision rules inferred from the features of the data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components of Decision Trees}
+    \begin{enumerate}
+        \item \textbf{Nodes}: Represents a feature or attribute used for decision-making.
+        \item \textbf{Branches}: Represents the outcome of a decision, leading to further nodes or leaf nodes.
+        \item \textbf{Leaves}: The final output of the model, denoting predicted class labels or values.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Decision Trees}
+    \begin{itemize}
+        \item \textbf{Healthcare}: Predicting patient outcomes based on symptoms and medical history.
+        \item \textbf{Finance}: Assisting in credit scoring to determine the likelihood of loan defaults.
+        \item \textbf{Marketing}: Helping in customer segmentation for tailored marketing strategies.
+        \item \textbf{E-commerce}: Predicting customer purchasing behavior to enhance sales tactics.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of a Simple Decision Tree}
+    \begin{itemize}
+        \item \textbf{Node 1:} Age < 30?
+        \begin{itemize}
+            \item Yes: Next decision
+            \item No: Next decision
+        \end{itemize}
+        \item \textbf{Node 2:} Income > \$50,000?
+        \begin{itemize}
+            \item Yes: Purchase (Leaf Node)
+            \item No: No Purchase (Leaf Node)
+        \end{itemize}
+    \end{itemize}
+    This tree illustrates how simple questions lead to final predictions, aiding interpretability.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points}
+    \begin{itemize}
+        \item Easily interpretable, requiring no extensive data preprocessing.
+        \item Can handle both categorical and numerical data types.
+        \item Prone to overfitting; techniques like pruning improve generalization.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Simple Code Snippet (Python using Scikit-Learn)}
+    \begin{lstlisting}[language=Python]
+from sklearn.tree import DecisionTreeClassifier
+
+# Sample Data
+X = [[0, 0], [1, 1], [1, 0], [0, 1]]
+y = [0, 1, 1, 0]
+
+# Create Decision Tree Classifier
+clf = DecisionTreeClassifier()
+clf.fit(X, y)
+
+# Making a Prediction
+print(clf.predict([[0.5, 0.5]]))  # Output will be 0 or 1
+    \end{lstlisting}
+    This snippet demonstrates creating a decision tree classifier and making predictions.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Decision trees represent a foundational concept in supervised learning with broad applicability. Their intuitive structure and ease of use make them a favorable choice for both beginners and experienced practitioners in the field of machine learning.
+\end{frame}
+
+\begin{frame}[fragile]{What is a Decision Tree? - Definition}
+    \begin{block}{Definition}
+        A Decision Tree is a supervised learning algorithm used for both classification and regression tasks. It models decisions and their possible consequences visually, resembling a tree structure.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What is a Decision Tree? - Components}
+    \begin{block}{Components of a Decision Tree}
+        \begin{enumerate}
+            \item \textbf{Root Node:}
+                \begin{itemize}
+                    \item The starting point of the tree, representing the entire dataset.
+                    \item It is the topmost node from which all branches originate.
+                \end{itemize}
+                
+            \item \textbf{Decision Nodes:}
+                \begin{itemize}
+                    \item Internal nodes where a decision needs to be made based on a feature.
+                    \item Each decision node divides the data based on a specific attribute.
+                    \item Example: If "Weather" is the feature, decisions could include "Sunny," "Rainy," or "Overcast."
+                \end{itemize}
+                
+            \item \textbf{Branches:}
+                \begin{itemize}
+                    \item Edges that connect nodes, representing a possible outcome of a decision.
+                    \item Example: A branch from "Weather" pointing to "Sunny."
+                \end{itemize}
+                
+            \item \textbf{Leaf Nodes (Terminal Nodes):}
+                \begin{itemize}
+                    \item Endpoints of the branches showing the final outcome or prediction of a decision tree.
+                    \item Example: A leaf node labeled "Play Tennis" suggests action under certain conditions.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What is a Decision Tree? - Key Points and Applications}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item \textbf{Interpretability:} Clear visualization of the decision-making process.
+            \item \textbf{Feature Importance:} Highlights which features are most important based on usage for data splitting.
+            \item \textbf{Flexibility:} Capable of handling both numerical and categorical data.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Applications}
+        Used in various domains for:
+        \begin{itemize}
+            \item Risk analysis in finance
+            \item Patient diagnosis in healthcare
+            \item Customer segmentation in marketing
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Decision Trees are a powerful tool in machine learning, providing an intuitive and interpretable approach to decision-making problems. In the next slide, we will explore how decision trees work in practice through feature splitting.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Working of Decision Trees - Overview}
+  Decision trees are powerful tools in supervised learning, used for:
+  \begin{itemize}
+    \item Classification tasks
+    \item Regression tasks
+  \end{itemize}
+  They break down complex datasets into simpler parts using feature splitting:
+  \begin{itemize}
+    \item Makes learning from data possible
+    \item Enables predictive choices
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Working of Decision Trees - Key Concepts}
+  \begin{enumerate}
+    \item \textbf{Nodes}:
+    \begin{itemize}
+      \item \textbf{Root Node}: Topmost node representing the entire dataset.
+      \item \textbf{Internal Nodes}: Represent decisions made based on feature values.
+      \item \textbf{Leaf Nodes}: Terminal nodes providing the prediction.
+    \end{itemize}
+    
+    \item \textbf{Feature Splitting}:
+    \begin{itemize}
+      \item A core mechanism dividing the dataset into subsets based on feature values.
+      \item Aims to improve the purity of the subsets.
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Decision Tree Decisions - Steps and Example}
+  \textbf{How Decision Trees Make Decisions:}
+  \begin{enumerate}
+    \item \textbf{Choosing the Best Feature}:
+    \begin{itemize}
+      \item Methods include:
+      \begin{itemize}
+        \item Gini Impurity
+        \item Entropy
+        \item Mean Squared Error (MSE)
+      \end{itemize}
+    \end{itemize}
+  
+    \item \textbf{Splitting the Data}:
+    \begin{itemize}
+      \item Split based on distinct values of the chosen feature.
+    \end{itemize}
+  
+    \item \textbf{Recursive Partitioning}:
+    \begin{itemize}
+      \item Repeat until reaching leaf nodes or max depth.
+    \end{itemize}
+  \end{enumerate}
+
+  \textbf{Example:}
+  \begin{itemize}
+    \item Predicting customer purchase based on \textbf{Age} and \textbf{Income}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Benefits of Decision Trees - Overview}
+  \begin{block}{Overview}
+    Decision Trees are a powerful and versatile method for both classification and regression tasks in supervised learning. 
+    Their intuitive nature allows for easy understanding and interpretation, making them a popular choice among data scientists and analysts.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Benefits of Decision Trees - Key Benefits}
+  \begin{enumerate}
+    \item \textbf{Simplicity and Interpretability}
+      \begin{itemize}
+        \item Mimics human decision-making, easily understood.
+        \item Example: A Decision Tree for predicting car purchases based on age, income, and marital status.
+      \end{itemize}
+      
+    \item \textbf{No Requirement for Feature Scaling}
+      \begin{itemize}
+        \item No normalization or scaling needed.
+        \item Handles continuous and categorical variables directly.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Benefits of Decision Trees - Continued}
+  \begin{enumerate}
+    \setcounter{enumi}{2} % Continue numbering from previous frame
+    \item \textbf{Versatile with Data Types}
+      \begin{itemize}
+        \item Applicable for both categorical and continuous variables.
+        \item Used across various fields such as healthcare, finance, and marketing.
+      \end{itemize}
+
+    \item \textbf{Non-Parametric Nature}
+      \begin{itemize}
+        \item No assumptions about underlying data distribution.
+        \item Flexible modeling of complex relationships.
+      \end{itemize}
+
+    \item \textbf{Robust to Outliers}
+      \begin{itemize}
+        \item Less sensitive to outliers than linear models.
+        \item Suitable for real-world datasets with noise.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Benefits of Decision Trees - Final Thoughts}
+  \begin{enumerate}
+    \setcounter{enumi}{5} % Continue numbering from previous frame
+    \item \textbf{Can Handle Missing Values}
+      \begin{itemize}
+        \item Effectively deals with missing data while making splits.
+        \item Example: Decision-making possible even with missing income data.
+      \end{itemize}
+      
+    \item \textbf{Feature Importance}
+      \begin{itemize}
+        \item Provides insights into the significance of features.
+        \item Helps in feature selection and understanding variable influence.
+      \end{itemize}
+  \end{enumerate}
+  \begin{block}{Conclusion}
+    Decision Trees offer numerous advantages that make them a valuable choice for various prediction tasks. 
+    Their ability to interpret and handle diverse data types is supplemented by specific strengths that need to be balanced against the potential for overfitting, which will be discussed next.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Understanding Overfitting}
+  \begin{block}{Definition of Overfitting}
+    Overfitting occurs when a machine learning model, such as a decision tree, learns not only the underlying patterns in the training data but also the noise and outliers. This leads to a model that performs exceptionally well on the training dataset but poorly on unseen or test data.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Impact on Model Performance}
+  \begin{itemize}
+    \item \textbf{High Training Accuracy:} An overfitted model achieves high accuracy during training because it memorizes the training data.
+    \item \textbf{Poor Generalization:} When exposed to new data, the model is unable to generalize effectively, resulting in low accuracy and high error rates.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example Illustration}
+  Consider the following \textbf{two scenarios} with a decision tree model:
+  \begin{itemize}
+    \item \textbf{Scenario A:} The tree is \textbf{optimized}—it splits the data based on significant features, capturing the true patterns. When tested with new data, it performs well, showing a balanced accuracy.
+    \item \textbf{Scenario B:} The tree is \textbf{overfitted}—it creates an excessive number of branches to perfectly classify the training set, including noise and outliers. When this model faces new data, it struggles to make accurate predictions.
+  \end{itemize}
+  \begin{block}{Illustration}
+    *(Include a diagram showing a complex decision tree in Scenario B that partitions the data too finely.)*
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points to Emphasize}
+  \begin{itemize}
+    \item Overfitting leads to a decrease in model effectiveness on real-world data.
+    \item It is crucial to balance model complexity with the ability to generalize.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Common Signs of Overfitting}
+  \begin{itemize}
+    \item Significant difference between training accuracy and testing accuracy.
+    \item A tree that's too deep with many branches (high complexity).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Prevention Techniques}
+  \begin{enumerate}
+    \item \textbf{Pruning:} Simplifying the decision tree by removing nodes that provide little value.
+    \item \textbf{Setting Maximum Depth:} Limiting the depth of the tree to ensure it doesn’t capture noise.
+    \item \textbf{Using Cross-Validation:} Helps assess model performance on unseen data and prevent overfitting during training.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  Understanding overfitting is key to building robust decision tree models that not only fit the training data well but also maintain high performance on new, unseen data. By employing strategies to mitigate overfitting, we can enhance model generalization and reliability.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{How Overfitting Happens - Understanding Overfitting in Decision Trees}
+  
+  \begin{block}{Definition of Overfitting}
+      Overfitting occurs when a model learns the noise and outliers in the training data in addition to the underlying patterns. This results in high performance on training data but poor generalization to unseen data.
+  \end{block}
+  
+  \begin{itemize}
+      \item Decision trees are prone to overfitting due to their potential for complexity.
+      \item They can create intricate structures, capturing training patterns but failing to generalize.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{How Overfitting Happens - Key Concepts}
+
+  \begin{itemize}
+      \item \textbf{Complexity of Decision Trees}:
+      \begin{itemize}
+          \item Can grow very deep, creating multiple splits.
+          \item May memorize training data rather than generalizing.
+      \end{itemize}
+      
+      \item \textbf{Illustrative Scenario}:
+      \begin{itemize}
+          \item A small dataset with few samples and many features can lead to excessive tree depth.
+          \item For example, splits based on unique conditions of individual samples can cause overfitting.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{How Overfitting Happens - Scenarios and Mitigation}
+
+  \textbf{Scenarios of Overfitting:}
+  \begin{enumerate}
+      \item Limited training data amplifies overfitting.
+      \item High feature count compared to sample size increases complexity.
+      \item Lack of noise handling leads to erroneous splits from outliers.
+  \end{enumerate}
+  
+  \begin{block}{Key Points to Emphasize}
+      \begin{itemize}
+          \item Overfitting results in high training accuracy but low test accuracy.
+          \item Visualizing training vs. validation error is essential.
+      \end{itemize}
+  \end{block}
+
+  \textbf{Strategies to Mitigate Overfitting:}
+  \begin{itemize}
+      \item Pruning techniques to simplify the model after creation.
+      \item Setting maximum depth or minimum samples to qualify splits.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{How Overfitting Happens - Example Code Snippet}
+
+  \texttt{Example Code Snippet (Python with Scikit-learn):}
+  \begin{lstlisting}[language=Python]
+from sklearn.tree import DecisionTreeClassifier
+
+# Create Decision Tree Classifier with maximum depth
+clf = DecisionTreeClassifier(max_depth=3)
+clf.fit(X_train, y_train)
+
+# Predict using the model
+predictions = clf.predict(X_test)
+  \end{lstlisting}
+
+  \begin{block}{Conclusion}
+      Understanding overfitting in decision trees helps in designing models that generalize well, leading to more reliable predictions on new data.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pruning Techniques - Overview}
+  \begin{block}{What is Pruning?}
+    Pruning is a critical technique in decision tree design aimed at enhancing generalization capabilities by removing sections of the tree that provide little predictive power.
+  \end{block}
+
+  \begin{block}{Why Prune?}
+    \begin{itemize}
+      \item \textbf{Overfitting Reduction:} Helps mitigate overfitting by simplifying the model.
+      \item \textbf{Improved Performance:} Leads to better performance on unseen data, increasing model accuracy and reliability.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pruning Techniques - Types}
+  \begin{block}{Types of Pruning Techniques}
+    \begin{enumerate}
+      \item \textbf{Pre-Pruning (Early Stopping)}: Stops tree growth based on conditions.
+      \begin{itemize}
+        \item Maximum depth of the tree.
+        \item Minimum samples required to split a node.
+        \item Minimum impurity decrease required for a split.
+        \item \textit{Example:} If a node has fewer than 10 samples, it may not split further.
+      \end{itemize}
+      
+      \item \textbf{Post-Pruning:} Removes branches from a fully grown tree that do not benefit predictive accuracy.
+      \begin{itemize}
+        \item Cost Complexity Pruning: Balances tree size against predictive accuracy.
+        \item \textit{Example:} Some branches that do not contribute to accuracy on a validation set could be pruned back.
+      \end{itemize}
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Pruning Techniques - Key Points and Code Example}
+  \begin{block}{Key Points to Emphasize}
+    \begin{itemize}
+      \item Pruning is essential for enhancing decision tree models and making them robust.
+      \item Both pre-pruning and post-pruning improve accuracy and reduce complexity.
+      \item Effective pruning leads to better generalization and decreases computational cost.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Code Snippet: Cost Complexity Pruning}
+    \begin{lstlisting}[language=Python]
+from sklearn.tree import DecisionTreeClassifier
+
+# Instantiate a Decision Tree Classifier
+clf = DecisionTreeClassifier(ccp_alpha=0.01)  # Set alpha to adjust pruning level
+clf.fit(X_train, y_train)
+    \end{lstlisting}
+  \end{block}
+
+  \begin{block}{Closing Note}
+    Pruning is a foundational aspect of maintaining decision trees' robustness, crucial for mastering supervised learning techniques!
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Pruning - Overview}
+    \begin{block}{Overview of Pruning}
+        Pruning is crucial in decision trees to reduce overfitting, where the model learns noise instead of the actual signal.
+        We will focus on two primary types of pruning:
+        \begin{itemize}
+            \item Pre-Pruning (Early Stopping)
+            \item Post-Pruning
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Pruning - Pre-Pruning}
+    \begin{block}{1. Pre-Pruning (Early Stopping)}
+        \textbf{Definition:} Halting the growth of a decision tree before it fully develops to avoid complexity.
+        
+        \textbf{Mechanism:} Evaluate potential gains when splitting nodes. Stop splitting if below a threshold.
+        
+        \textbf{Key Criteria:}
+        \begin{itemize}
+            \item Minimum number of samples required to split a node
+            \item Minimum information gain threshold
+            \item Maximum depth of the tree
+        \end{itemize}
+        
+        \textbf{Example:} In a binary classification to predict earning based on age and education, stop splitting if no significant gain is found.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Pruning - Post-Pruning}
+    \begin{block}{2. Post-Pruning}
+        \textbf{Definition:} Creating a fully grown tree and then removing nodes that offer low predictive power.
+        
+        \textbf{Mechanism:} Analyze subtrees against performance using a validation dataset. Remove nodes with minimal predictive benefit.
+        
+        \textbf{Common Techniques:}
+        \begin{itemize}
+            \item Cost Complexity Pruning
+            \item Reduced Error Pruning
+        \end{itemize}
+        
+        \textbf{Example:} Evaluate an overly specific decision tree and remove branches that do not enhance accuracy.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Diagram}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Pre-pruning prevents excessive complexity; post-pruning simplifies the model.
+            \item Both methods improve generalization to new data by reducing overfitting.
+            \item The optimal pruning strategy depends on the dataset and task. 
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Illustrative Diagram}
+        \textit{Pre-Pruning:} \\
+        Node A $\rightarrow$ Split (Gain < Threshold) $\rightarrow$ Leaf Node \\
+
+        \textit{Post-Pruning:} \\
+        Fully Grown Tree $\rightarrow$ Node B (Evaluate) $\rightarrow$ Remove Node B (if no performance gain)
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Implementing Decision Trees - Overview}
+    In this section, we will guide you through the process of building a decision tree model step-by-step. 
+    Decision trees are widely used in supervised learning for their intuitive structure and ease of interpretation.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing Decision Trees - Step 1: Choose a Dataset}
+    \begin{enumerate}
+        \item \textbf{Choose a Dataset}
+        \begin{itemize}
+            \item Select a relevant dataset. 
+            \item Example: The classic Iris dataset, which contains measurements of different iris flowers along with their species labels.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing Decision Trees - Steps 2 to 4: Import Libraries, Load and Preprocess the Data}
+    \begin{enumerate}
+        \item \textbf{Import Libraries and Tools}
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report
+        \end{lstlisting}
+
+        \item \textbf{Load the Dataset}
+        \begin{lstlisting}[language=Python]
+data = pd.read_csv('iris.csv')  # Replace 'iris.csv' with your dataset path
+        \end{lstlisting}
+        
+        \item \textbf{Preprocess the Data}
+        \begin{itemize}
+            \item Check for missing values and handle them (if any).
+            \item Convert categorical features to numerical values if needed.
+            \begin{lstlisting}[language=Python]
+data.isnull().sum()  # Check for missing values
+data['species'] = data['species'].astype('category').cat.codes  # Convert species to numeric
+            \end{lstlisting}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing Decision Trees - Steps 5 to 8: Data Splitting, Model Creation, Predictions, and Evaluation}
+    \begin{enumerate}
+        \item \textbf{Split the Data}
+        \begin{lstlisting}[language=Python]
+X = data.drop('species', axis=1)  # Features
+y = data['species']  # Target variable
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)  # 70\% train, 30\% test
+        \end{lstlisting}
+
+        \item \textbf{Create the Decision Tree Model}
+        \begin{lstlisting}[language=Python]
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+        \end{lstlisting}
+
+        \item \textbf{Make Predictions}
+        \begin{lstlisting}[language=Python]
+y_pred = model.predict(X_test)
+        \end{lstlisting}
+
+        \item \textbf{Evaluate the Model}
+        \begin{lstlisting}[language=Python]
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Accuracy: {accuracy}')
+print(classification_report(y_test, y_pred))
+        \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Implementing Decision Trees - Key Points and Summary}
+    \begin{itemize}
+        \item \textbf{Interpretability:} 
+        Decision trees visually represent decisions and their potential consequences, making them easy to interpret.
+        
+        \item \textbf{Overfitting:} 
+        Be cautious of overfitting, especially with deeper trees. Consider employing pruning techniques.
+        
+        \item \textbf{Real-World Applications:} 
+        Commonly applied in finance (credit scoring), healthcare (diagnostics), and marketing (customer segmentation).
+    \end{itemize}
+
+    \textbf{Summary:} Building a decision tree involves selecting an appropriate dataset, preprocessing the data, splitting it into training and testing sets, and evaluating the model's performance.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Decision Trees - Overview}
+    \begin{block}{Overview}
+        Evaluating decision tree models involves using specific metrics to assess their performance in predicting outcomes. 
+        The primary metrics we consider are \textbf{accuracy}, \textbf{precision}, and \textbf{recall}. 
+        Understanding these metrics helps us interpret how well our model is performing and where it may be lacking.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Decision Trees - Key Metrics}
+    \begin{enumerate}
+        \item \textbf{Accuracy}
+            \begin{itemize}
+                \item \textbf{Definition}: The ratio of correctly predicted observations to the total observations.
+                \item \textbf{Formula}:
+                    \begin{equation}
+                        \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+                    \end{equation}
+                    Where:
+                    \begin{itemize}
+                        \item TP = True Positives
+                        \item TN = True Negatives
+                        \item FP = False Positives
+                        \item FN = False Negatives
+                    \end{itemize}
+                \item \textbf{Example}: If a model makes 70 correct predictions out of 100 instances, the accuracy = 70\%.
+            \end{itemize}
+        
+        \item \textbf{Precision}
+            \begin{itemize}
+                \item \textbf{Definition}: The ratio of correctly predicted positive observations to the total predicted positives.
+                \item \textbf{Formula}:
+                    \begin{equation}
+                        \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+                    \end{equation}
+                \item \textbf{Example}: If 30 out of 40 predicted positives are true positives, the precision = \( \frac{30}{40} = 0.75 \) or 75\%.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Decision Trees - Key Metrics (cont'd)}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Recall (Sensitivity)}
+            \begin{itemize}
+                \item \textbf{Definition}: The ratio of correctly predicted positive observations to all actual positives.
+                \item \textbf{Formula}:
+                    \begin{equation}
+                        \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+                    \end{equation}
+                \item \textbf{Example}: If there are 50 actual positive cases and the model predicts 30 of them correctly, the recall = \( \frac{30}{50} = 0.6 \) or 60\%.
+            \end{itemize}
+    \end{enumerate}
+    
+    \begin{block}{Importance of Evaluating Metrics}
+        \begin{itemize}
+            \item \textbf{Trade-offs}: High accuracy does not always indicate a good model, especially in imbalanced datasets.
+            \item \textbf{Model Improvement}: Understanding where your model is lacking can guide you in making adjustments.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Comparison - Overview}
+    
+    \begin{block}{Introduction to Model Comparison}
+        When it comes to supervised learning, multiple algorithms can be leveraged to make predictions or classifications. This slide will compare Decision Trees with other prominent supervised learning methods: Logistic Regression and Random Forests.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Comparison - Decision Trees}
+
+    \begin{block}{1. Decision Trees}
+        \begin{itemize}
+            \item \textbf{Definition}: A decision tree is a predictive model that uses a flowchart-like structure to make decisions based on feature values.
+            \item \textbf{Strengths}:
+                \begin{itemize}
+                    \item Intuitive and easy to understand.
+                    \item Handles both numerical and categorical data.
+                    \item Requires little data preparation.
+                \end{itemize}
+            \item \textbf{Weaknesses}:
+                \begin{itemize}
+                    \item Prone to overfitting, especially with deep trees.
+                    \item Sensitive to noisy data.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Comparison - Logistic Regression and Random Forests}
+
+    \begin{block}{2. Logistic Regression}
+        \begin{itemize}
+            \item \textbf{Definition}: A statistical model used primarily for binary classification.
+            \item \textbf{Strengths}:
+                \begin{itemize}
+                    \item Simple and efficient for binary outcomes.
+                    \item Outputs probabilities, making it interpretable.
+                \end{itemize}
+            \item \textbf{Weaknesses}:
+                \begin{itemize}
+                    \item Assumes a linear relationship.
+                    \item Performance may degrade with non-linearity.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{3. Random Forests}
+        \begin{itemize}
+            \item \textbf{Definition}: An ensemble learning method that constructs multiple decision trees.
+            \item \textbf{Strengths}:
+                \begin{itemize}
+                    \item Generally more accurate.
+                    \item Robust to overfitting due to averaging.
+                \end{itemize}
+            \item \textbf{Weaknesses}:
+                \begin{itemize}
+                    \item More complex and less interpretable.
+                    \item Requires more computation and memory.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Comparison - Summary and Key Takeaways}
+
+    \begin{block}{Comparison Table}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Feature} & \textbf{Decision Trees} & \textbf{Logistic Regression} & \textbf{Random Forests} \\
+            \hline
+            Interpretability & Highly interpretable & Very interpretable & Less interpretable \\
+            \hline
+            Handling of data & Both numerical and categorical & Primarily numerical & Both numerical and categorical \\
+            \hline
+            Performance with noise & Prone to overfitting & Robust with preprocessing & Less prone to overfitting \\
+            \hline
+            Computation & Fast & Fast & Slower due to ensemble nature \\
+            \hline
+            Complexity & Simple & Simple & Complex \\
+            \hline
+        \end{tabular}
+    \end{block}
+
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Decision Trees are excellent for simplicity and interpretability but may struggle with overfitting.
+            \item Logistic Regression is ideal for linear relationships and binary classification.
+            \item Random Forests enhance accuracy and robustness but with increased complexity.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Comparison - Examples in Code}
+
+    \begin{block}{Python Code Examples}
+        \begin{lstlisting}[language=Python]
+# Decision Tree Example
+from sklearn.tree import DecisionTreeClassifier
+
+model_dt = DecisionTreeClassifier(max_depth=3)
+model_dt.fit(X_train, y_train)
+
+# Logistic Regression Example
+from sklearn.linear_model import LogisticRegression
+
+model_lr = LogisticRegression()
+model_lr.fit(X_train, y_train)
+
+# Random Forest Example
+from sklearn.ensemble import RandomForestClassifier
+
+model_rf = RandomForestClassifier(n_estimators=100)
+model_rf.fit(X_train, y_train)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Decision Trees - Introduction}
+    \begin{itemize}
+        \item Decision trees: Powerful supervised learning algorithms.
+        \item Widely used for classification and regression tasks.
+        \item Intuitive structure aids in easy interpretation and visualization.
+        \item Effective in various industries as showcased below.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Decision Trees - Healthcare and Finance}
+    \begin{block}{Healthcare: Patient Diagnosis}
+        \begin{itemize}
+            \item Analyzes medical history, symptoms, and test results.
+            \item Example: Classifying diabetes based on age, BMI, blood pressure, and family history.
+            \item \textbf{Key Point:} Assists doctors in evidence-based decisions and improves outcomes.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Finance: Credit Scoring}
+        \begin{itemize}
+            \item Evaluates the creditworthiness of applicants.
+            \item Example: Classifying applicants as "Low Risk," "Medium Risk," or "High Risk" using income and credit history.
+            \item \textbf{Key Point:} Provides transparency in lending decisions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Decision Trees - Marketing, Retail, and Agriculture}
+    \begin{block}{Marketing: Customer Segmentation}
+        \begin{itemize}
+            \item Identifies distinct customer groups for targeted campaigns.
+            \item Example: Segmenting customers based on demographics and purchase history.
+            \item \textbf{Key Point:} Enhances marketing efficiency and increases conversion rates.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Retail: Inventory Management}
+        \begin{itemize}
+            \item Predicts product demand based on past data.
+            \item Example: Guiding restocking decisions by analyzing factors like seasonality and promotions.
+            \item \textbf{Key Point:} Optimizes inventory levels and minimizes costs.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Agriculture: Yield Prediction}
+        \begin{itemize}
+            \item Predicts crop yields based on variables such as soil quality and weather.
+            \item Example: Classifying yields into high, medium, or low based on data.
+            \item \textbf{Key Point:} Supports better planning and resource allocation.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Decision Trees - Conclusion}
+    \begin{itemize}
+        \item Versatile tools addressing a multitude of real-world problems.
+        \item Clear logic aids stakeholders in understanding decision-making processes.
+        \item Valuable for both statistical analysis and practical applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Common Libraries for Decision Trees - Overview}
+    \begin{block}{Overview}
+        When working with Decision Trees in supervised learning, leveraging the right programming libraries can speed up development and allow for more sophisticated data analysis. This slide will introduce some of the most commonly used libraries, with Scikit-learn as a primary focus.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Libraries for Decision Trees - Key Libraries}
+    \begin{enumerate}
+        \item \textbf{Scikit-learn}
+        \begin{itemize}
+            \item \textbf{Description:} A powerful and widely-used Python library for machine learning offering efficient tools for data mining and analysis.
+            \item \textbf{Key Features:}
+            \begin{itemize}
+                \item Implements Decision Trees and ensembles (Random Forests, Gradient Boosting).
+                \item User-friendly interface suitable for all experience levels.
+                \item Extensive documentation and community support.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Scikit-learn - Example Code}
+    \begin{lstlisting}[language=Python]
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
+
+# Load dataset
+iris = load_iris()
+X, y = iris.data, iris.target
+
+# Split data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a decision tree classifier
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+
+# Make predictions
+predictions = clf.predict(X_test)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Libraries for Decision Trees - Continued}
+    \begin{enumerate}
+        \setcounter{enumi}{1} % Continue the numbering from the previous frame
+        \item \textbf{XGBoost}
+        \begin{itemize}
+            \item \textbf{Description:} An optimized gradient boosting library for high efficiency, flexibility, and portability.
+            \item \textbf{Key Features:}
+            \begin{itemize}
+                \item High performance and speed for large datasets.
+                \item Supports regularization to reduce overfitting.
+                \item Popular in data competitions.
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{TensorFlow and Keras}
+        \begin{itemize}
+            \item \textbf{Description:} Primarily focused on deep learning but allow building advanced Decision Tree models.
+            \item \textbf{Key Features:}
+            \begin{itemize}
+                \item Integration with neural networks for hybrid models.
+                \item Various tools for model building, training, and evaluation.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Selection of Library:} Choose based on project needs; Scikit-learn for beginners, XGBoost for competitive scenarios.
+            \item \textbf{Documentation Matters:} Extensive resources available for troubleshooting.
+            \item \textbf{Interoperability:} Libraries can often work together; e.g., use Scikit-learn for preprocessing and XGBoost for modeling.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Understanding and utilizing these libraries effectively can significantly enhance your ability to implement Decision Tree models in machine learning, leading to better performance and insights.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Hands-On Lab: Building a Decision Tree}
+    \begin{block}{Overview}
+        In this interactive lab session, you will construct a decision tree classifier using provided datasets. You'll learn the practical application of decision trees, including training, evaluation, and optimization processes. This hands-on experience is crucial for understanding how decision trees work in a supervised learning context.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Objectives}
+    \begin{itemize}
+        \item To familiarize yourself with the process of building a decision tree model.
+        \item To understand how to train and evaluate the model using metrics such as accuracy and confusion matrix.
+        \item To gain experience with coding libraries such as Scikit-learn.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Steps to Build a Decision Tree}
+    \begin{enumerate}
+        \item \textbf{Dataset Loading}
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+dataset = pd.read_csv('dataset.csv')
+        \end{lstlisting}
+        
+        \item \textbf{Data Preprocessing}
+        \begin{lstlisting}[language=Python]
+# Example: Encode categorical variables
+dataset['category'] = dataset['category'].astype('category').cat.codes
+features = dataset.drop('target', axis=1)
+target = dataset['target']
+        \end{lstlisting}
+        
+        \item \textbf{Splitting the Dataset}
+        \begin{lstlisting}[language=Python]
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.3, random_state=42)
+        \end{lstlisting}
+        
+        \item \textbf{Building the Decision Tree}
+        \begin{lstlisting}[language=Python]
+from sklearn.tree import DecisionTreeClassifier
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)
+        \end{lstlisting}
+        
+        \item \textbf{Making Predictions}
+        \begin{lstlisting}[language=Python]
+predictions = model.predict(X_test)
+        \end{lstlisting}
+        
+        \item \textbf{Model Evaluation}
+        \begin{lstlisting}[language=Python]
+from sklearn.metrics import accuracy_score, confusion_matrix
+accuracy = accuracy_score(y_test, predictions)
+conf_matrix = confusion_matrix(y_test, predictions)
+        \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Interpretability}: Decision trees are easy to visualize and understand, revealing how decisions are made.
+        \item \textbf{Feature Importance}: The model can indicate the significance of individual features in predicting the target variable.
+        \item \textbf{Overfitting Awareness}: Discuss strategies to avoid overfitting, such as pruning the tree or setting a maximum depth.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    This lab will provide you with a foundational grasp of decision trees, preparing you for real-world applications in predictive modeling. Remember to save your code and results for discussion in the next class!
+
+    Feel free to ask questions during the lab or if you run into any issues building your decision tree model! Happy coding!
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Ethical Considerations in Decision Trees}
+  \begin{block}{Understanding Ethical Issues}
+    Ethical issues in decision tree modeling primarily revolve around two areas:
+    \begin{itemize}
+      \item Data Privacy
+      \item Bias in Decision Making
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Data Privacy}
+  \begin{block}{Definition}
+    Data privacy pertains to how data is collected, shared, and used, ensuring individuals’ personal information is protected.
+  \end{block}
+  \begin{itemize}
+    \item **Concerns**: Sensitive data (e.g., personal identifiers, health records) can be misused or exposed.
+    \item **Example**: Using customer transaction data for lending decisions may reveal sensitive financial patterns.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Bias in Decision Making}
+  \begin{block}{Definition}
+    Bias occurs when a model produces unfair outcomes due to prejudiced data or flawed algorithms.
+  \end{block}
+  \begin{itemize}
+    \item **Concerns**: Decision trees can reflect and perpetuate biases based on historical data.
+    \item **Example**: A hiring model trained on skewed data may prioritize certain demographic profiles over others.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points to Emphasize}
+  \begin{itemize}
+    \item **Transparency**: Models must be interpretable to allow for scrutiny regarding biases and privacy violations.
+    \item **Accountability**: Organizations should bear responsibility for model outcomes with mechanisms for review.
+    \item **Ethical Data Usage**: Data should be anonymized, and informed consent is essential for all individuals involved.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Illustrative Example}
+  \begin{block}{Scenario}
+    A decision tree model predicts patient outcomes in a hospital based on treatment options.
+  \end{block}
+  \begin{itemize}
+    \item **Considerations**: Ensure diverse data inclusion to avoid bias; protect patient identities through anonymization.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  By addressing ethical considerations such as data privacy and bias, we can create fairer decision tree models. This ensures they serve intended purposes without harming individuals or communities.
+  
+  \begin{block}{Discussion Prompt}
+    Let's discuss specific cases of ethical issues in machine learning and brainstorm strategies for responsible AI development.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Next Steps - Recap of Key Points}
+    
+    \begin{enumerate}
+        \item \textbf{What are Decision Trees?}
+        \begin{itemize}
+            \item A supervised learning technique used for classification and regression tasks.
+            \item Models decisions and their consequences, including chance events and resource costs.
+        \end{itemize}
+        
+        \item \textbf{How Decision Trees Work:}
+        \begin{itemize}
+            \item Tree-like structure where each node is a feature, and branches represent decision rules.
+            \item Example: Splitting data by smoking status and age to predict disease risk.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Next Steps - Key Characteristics and Performance Metrics}
+
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue numbering from previous frame
+        \item \textbf{Key Characteristics:}
+        \begin{itemize}
+            \item Easy to understand and interpret.
+            \item Little data preprocessing needed; no normalization required.
+            \item Handles both numerical and categorical data.
+        \end{itemize}
+
+        \item \textbf{Performance Metrics:}
+        \begin{itemize}
+            \item Evaluated using Accuracy, Precision, Recall, F1-score for classification.
+            \item For regression, metrics like Mean Squared Error (MSE) are used.
+            \item \textbf{Accuracy Formula:}
+            \begin{equation}
+                \text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Predictions}} \times 100\%
+            \end{equation}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Next Steps - Challenges, Ethical Considerations, and Future Topics}
+
+    \begin{enumerate}
+        \setcounter{enumi}{5} % Continue numbering from previous frame
+        \item \textbf{Challenges:}
+        \begin{itemize}
+            \item Prone to overfitting; can use techniques like pruning.
+            \item Sensitive to data changes; small variations can alter tree structure.
+        \end{itemize}
+
+        \item \textbf{Ethical Considerations:}
+        \begin{itemize}
+            \item Need to consider data privacy, training data biases, and decision implications.
+        \end{itemize}
+
+        \item \textbf{Next Steps:}
+        \begin{itemize}
+            \item Further exploration of Random Forests and Gradient Boosting.
+            \item Practical applications in projects with real-world datasets.
+            \item Discussion session on ethical implications and challenges.
+        \end{itemize}
+        
+        \item \textbf{Key Takeaway:}
+        \begin{itemize}
+            \item Building robust models requires technical skills and a strong ethical framework.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,1187 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+\title[Week 4: Data Handling and Transformation]{Week 4: Data Handling and Transformation}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Data Handling and Transformation - Overview}
+    \begin{block}{Data Handling}
+        Data handling is the systematic process of collecting, storing, organizing, and analyzing data. 
+        In a digital age, working with data effectively is crucial for extracting insights and driving decision-making processes.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Data Collection:} Gathering raw data from various sources, such as databases, CSV files, or APIs.
+        \item \textbf{Data Storage:} Keeping data secure and accessible through databases or data lakes.
+        \item \textbf{Data Processing:} Executing operations to clean, organize, and prepare data for analysis.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Data Handling and Transformation - Importance of Data Transformation}
+    \begin{block}{Data Transformation}
+        Transformation is the process of changing the format, structure, or values of the data. It is vital in Spark due to the diversity and volume of big data.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Standardization:} Ensures consistency in data formats (e.g., date formats) across datasets.
+        \item \textbf{Cleaning:} Deals with missing values or outliers that can skew analysis results.
+        \item \textbf{Aggregation:} Summarizes data at a higher level (e.g., daily sales from hourly data).
+        \item \textbf{Filtering:} Selects relevant data for specific analyses to enhance processing efficiency.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Transformation Operations in Spark SQL and DataFrames}
+    \begin{block}{Examples of Data Transformation}
+        \begin{enumerate}
+            \item \textbf{Changing Data Types:}
+            \begin{lstlisting}[language=Python]
+from pyspark.sql.functions import col
+df = df.withColumn("age", col("age").cast("integer"))
+            \end{lstlisting}
+            
+            \item \textbf{Renaming Columns:}
+            \begin{lstlisting}[language=Python]
+df = df.withColumnRenamed("oldName", "newName")
+            \end{lstlisting}
+
+            \item \textbf{Filtering Data:}
+            \begin{lstlisting}[language=Python]
+df_filtered = df.filter(df.age > 18)
+            \end{lstlisting}
+            
+            \item \textbf{Aggregation:}
+            \begin{lstlisting}[language=Python]
+df_aggregated = df.groupBy("country").agg({"sales": "sum"})
+            \end{lstlisting}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Data handling and transformation are fundamental for ensuring accuracy and relevance in analysis.
+        \item Spark SQL and DataFrame operations simplify complex data transformations with optimized performance.
+        \item Understanding transformation techniques empowers data professionals to derive actionable insights efficiently.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        By mastering data handling and transformation, students will enhance their capabilities in data analytics and pave the way for effective decision-making processes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Why Data Transformation Matters}
+    \begin{block}{Discussion}
+        This slide discusses the necessity of data transformation for effective data analysis and insights extraction.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Understanding Data Transformation}
+    \begin{block}{Definition}
+        \textbf{Data transformation} is the process of converting data from its original format or structure into a format more appropriate for analysis.
+    \end{block}
+    
+    \begin{block}{Importance}
+        This is a crucial step, especially with large and complex datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Reasons for Data Transformation}
+    \begin{enumerate}
+        \item \textbf{Data Quality Improvement}
+            \begin{itemize}
+                \item Raw data often contains errors, inconsistencies, or missing values.
+                \item Example: Replacing null values with the median in numerical columns.
+            \end{itemize}
+
+        \item \textbf{Enhanced Data Usability}
+            \begin{itemize}
+                \item Original data may not be suitable for analysis.
+                \item Example: Converting gender to numeric form (Male = 0, Female = 1).
+            \end{itemize}
+
+        \item \textbf{Facilitating Better Insights}
+            \begin{itemize}
+                \item Properly transformed data enables uncovering trends and relationships.
+                \item Example: Aggregating monthly sales data to observe seasonal trends.
+            \end{itemize}
+
+        \item \textbf{Integration of Multiple Data Sources}
+            \begin{itemize}
+                \item Transformation ensures compatibility among different formats.
+                \item Example: Merging CRM data with sales records.
+            \end{itemize}
+
+        \item \textbf{Preparing Data for Machine Learning}
+            \begin{itemize}
+                \item Required formats for machine learning models necessitate preprocessing.
+                \item Example: Z-score standardization for feature scaling.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Common Data Transformation Techniques}
+    \begin{itemize}
+        \item \textbf{Normalization}: Adjust values to a common scale.
+        \item \textbf{Aggregation}: Summarize data for simplified analysis (e.g., monthly sales).
+        \item \textbf{Encoding}: Convert categorical variables to numerical format (e.g., one-hot encoding).
+        \item \textbf{Filtering}: Remove low-quality or irrelevant data points.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion}
+    \begin{block}{Summary}
+        Data transformation is essential for effective \textbf{data analysis} and \textbf{insight extraction}.
+    \end{block}
+    \begin{block}{Key Takeaway}
+        Consider how transformation can enhance data quality and utility. 
+        Without proper transformation, data analysis can lead to misleading conclusions and ineffective strategies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Example Code Snippet}
+    \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Sample data
+data = {'Name': ['Alice', 'Bob', None], 'Sales': [300, None, 500]}
+
+# Creating DataFrame
+df = pd.DataFrame(data)
+
+# Data Transformation - Filling missing values
+df['Sales'].fillna(df['Sales'].mean(), inplace=True)
+print(df)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Spark SQL - Introduction}
+    \begin{itemize}
+        \item \textbf{What is Spark SQL?}
+            \begin{itemize}
+                \item A component of Apache Spark.
+                \item Runs SQL queries alongside data processing.
+                \item Integrates relational data with functional programming capabilities.
+            \end{itemize}
+
+        \item \textbf{Role in Big Data}
+            \begin{itemize}
+                \item Address challenges of processing vast data efficiently:
+                \begin{itemize}
+                    \item \textbf{Scalability:} Handles large datasets across clusters.
+                    \item \textbf{Performance:} Utilizes cost-based optimizer and adaptive execution.
+                \end{itemize}
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Spark SQL - Enhancing Querying Capabilities}
+    \begin{itemize}
+        \item \textbf{Unified Data Access}
+            \begin{itemize}
+                \item Queries structured and semi-structured data.
+                \item Access data from sources like HDFS, Apache Hive, and HBase.
+                \item Flexible querying via SQL or DataFrame API.
+            \end{itemize}
+
+        \item \textbf{Example: Writing a Spark SQL Query}
+        \begin{lstlisting}[language=Python]
+# Sample Spark SQL query to count entries in a DataFrame
+# Assuming 'df' is a DataFrame containing user data
+
+df.createOrReplaceTempView("users")
+result = spark.sql("SELECT COUNT(*) FROM users WHERE age > 30")
+result.show()
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Spark SQL - Key Features}
+    \begin{enumerate}
+        \item \textbf{DataFrames:} 
+            \begin{itemize}
+                \item Distributed collection organized into named columns.
+                \item Benefits include type safety and performance optimizations.
+            \end{itemize}
+
+        \item \textbf{Catalyst Optimizer:}
+            \begin{itemize}
+                \item Query optimization framework with rule and cost-based techniques.
+                \item Example: Reordering predicates to minimize shuffling.
+            \end{itemize}
+
+        \item \textbf{Support for Standard Connectivity:}
+            \begin{itemize}
+                \item Connects to various data sources via JDBC.
+                \item Execute SQL queries directly on databases.
+            \end{itemize}
+
+        \item \textbf{Interoperability:}
+            \begin{itemize}
+                \item Integrates seamlessly with BI tools and JDBC clients.
+                \item Enables data analysts to use familiar SQL interfaces.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{DataFrames and Their Importance}
+    \begin{block}{What is a DataFrame?}
+        A \textbf{DataFrame} in Spark is a distributed collection of data organized into named columns. 
+        It is similar to a table in a relational database or a data frame in R/Python.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of a DataFrame}
+    \begin{itemize}
+        \item \textbf{Rows}: Each row represents a record in the dataset.
+        \item \textbf{Columns}: Each column corresponds to a specific attribute or feature of the records.
+        \item \textbf{Schema}: Contains metadata about the data structure, detailing column names and data types.
+    \end{itemize}
+    \begin{center}
+        Example Structure: \\
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Name} & \textbf{Age} & \textbf{City} \\
+            \hline
+            John Doe & 28 & New York \\
+            Jane Doe & 32 & Los Angeles \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of DataFrames}
+    \begin{enumerate}
+        \item \textbf{Ease of Use}: Higher-level abstraction for data manipulation, simpler than RDDs.
+        \item \textbf{Optimized Execution}: Utilizes Catalyst optimization for improved performance.
+        \item \textbf{Interoperability}: Easily read/write from various data sources (JSON, CSV, etc.).
+        \item \textbf{Integration with Spark SQL}: Can be queried using SQL syntax.
+        \item \textbf{Handling Large Datasets}: Facilitates processing datasets larger than memory across a cluster.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code Snippet}
+    Here’s a simple code example to create a DataFrame from a JSON file in Spark:
+    \begin{lstlisting}[language=Python]
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("DataFrame Example") \
+    .getOrCreate()
+
+# Create DataFrame from JSON file
+df = spark.read.json("path/to/file.json")
+
+# Show DataFrame
+df.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Creating DataFrames in Spark}
+    \begin{block}{Introduction to DataFrames}
+        \begin{itemize}
+            \item A DataFrame is a distributed collection of data organized into named columns, resembling a table in a relational database.
+            \item It allows for easy and efficient data manipulation.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Reasons to Use DataFrames}
+    \begin{itemize}
+        \item \textbf{Structured Data Handling:} Capable of processing structured and semi-structured data.
+        \item \textbf{Optimized Queries:} Spark’s Catalyst optimizer improves the performance of query execution.
+        \item \textbf{Interoperability:} Can be seamlessly used with various data sources such as JSON, Parquet, CSV, and databases.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Step-by-Step Guide to Creating DataFrames}
+    \begin{enumerate}
+        \item \textbf{Set Up Your Spark Environment}
+        \begin{lstlisting}[language=Python]
+from pyspark.sql import SparkSession
+
+spark = SparkSession.builder \
+    .appName("DataFrame Example") \
+    .getOrCreate()
+        \end{lstlisting}
+
+        \item \textbf{Creating DataFrames from Different Sources}
+        \begin{itemize}
+            \item \textbf{From RDDs:}
+            \begin{lstlisting}[language=Python]
+from pyspark.sql import Row
+
+data = [Row(name='Alice', age=30), Row(name='Bob', age=45)]
+rdd = spark.sparkContext.parallelize(data)
+df = spark.createDataFrame(rdd)
+df.show()
+            \end{lstlisting}
+            
+            \item \textbf{From CSV Files:}
+            \begin{lstlisting}[language=Python]
+df_csv = spark.read.csv("path/to/file.csv", header=True, inferSchema=True)
+df_csv.show()
+            \end{lstlisting}
+            
+            \item \textbf{From JSON Files:}
+            \begin{lstlisting}[language=Python]
+df_json = spark.read.json("path/to/file.json")
+df_json.show()
+            \end{lstlisting}
+            
+            \item \textbf{From Database Tables:}
+            \begin{lstlisting}[language=Python]
+df_db = spark.read.format("jdbc").options(
+    url="jdbc:postgresql://dbserver",
+    dbtable="schema.tablename",
+    user="username",
+    password="password"
+).load()
+df_db.show()
+            \end{lstlisting}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Creating DataFrames with Schemas}
+    \begin{itemize}
+        \item Define the schema if you need to ensure data types.
+        \begin{lstlisting}[language=Python]
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+
+schema = StructType([
+    StructField("name", StringType(), True),
+    StructField("age", IntegerType(), True)
+])
+df_with_schema = spark.createDataFrame(data, schema)
+df_with_schema.show()
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Flexibility in Data Sources:} DataFrames can handle various data formats effortlessly.
+        \item \textbf{Efficiency in Data Handling:} Utilizing Spark’s partitioning and distributed computation.
+        \item \textbf{Schema Definition:} Important for ensuring data integrity and proper type handling.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Data Manipulation Techniques}
+    \begin{block}{Overview}
+        Data manipulation is essential when working with large datasets in Apache Spark. 
+        It involves transforming and analyzing data to gain insights and prepare it for further analysis.
+        This slide covers key data manipulation methods: filtering, grouping, and joining DataFrames.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts - Filtering Data}
+    \begin{itemize}
+        \item \textbf{Filtering Data:}
+        \begin{itemize}
+            \item \textbf{Definition:} Subset a DataFrame based on specific criteria, focusing on rows that meet certain conditions.
+            \item \textbf{Example:} Filtering for sales over $1000 from a DataFrame $df$:
+            \begin{lstlisting}
+filtered_df = df.filter(df['sales'] > 1000)
+            \end{lstlisting}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts - Grouping and Joining Data}
+    \begin{itemize}
+        \item \textbf{Grouping Data:}
+        \begin{itemize}
+            \item \textbf{Definition:} Organizes DataFrame rows into groups based on columns for aggregation.
+            \item \textbf{Example:} Grouping by 'product' to find total sales:
+            \begin{lstlisting}
+grouped_df = df.groupBy('product').agg({'sales': 'sum'})
+            \end{lstlisting}
+            \item \textbf{Key Functions:} Common aggregation functions include \texttt{count()}, \texttt{sum()}, \texttt{avg()}, \texttt{max()}, and \texttt{min()}.
+        \end{itemize}
+        
+        \item \textbf{Joining DataFrames:}
+        \begin{itemize}
+            \item \textbf{Definition:} Combines two DataFrames based on a common key to enrich your data.
+            \item \textbf{Types of Joins:}
+            \begin{itemize}
+                \item Inner Join: Matches records in both DataFrames.
+                \item Outer Join: All matching records from both DataFrames.
+                \item Left Join: All records from left DataFrame; matched records from right.
+                \item Right Join: All records from right DataFrame; matched records from left.
+            \end{itemize}
+            \item \textbf{Example:} Joining two DataFrames $df1$ and $df2$ on 'id':
+            \begin{lstlisting}
+joined_df = df1.join(df2, on='id', how='inner')
+            \end{lstlisting}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Summary}
+    \begin{itemize}
+        \item \textbf{Efficiency:} Spark optimizes operations across distributed data, making them efficient for large datasets.
+        \item \textbf{Chaining Operations:} Enables building complex queries while maintaining readability.
+        \item \textbf{Lazy Evaluation:} Operations are executed only when an action (e.g., \texttt{show()}, \texttt{count()}) is invoked.
+    \end{itemize}
+    \begin{block}{Summary}
+        Understanding data manipulation techniques is crucial for effective data analysis in Spark, 
+        enabling exploration and deriving meaningful insights from large volumes of data. 
+        This sets the stage for advanced analysis in later lessons.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Data Transformation Functions}
+    \begin{block}{Introduction}
+        Data transformation functions in Spark are essential for manipulating and modifying datasets to derive insights and prepare data for analysis. These functions allow you to perform various operations on collections, such as mapping, filtering, and aggregating data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Transformation Functions - Part 1}
+    \begin{enumerate}
+        \item \textbf{map()} 
+        \begin{itemize}
+            \item \textbf{Description}: Applies a function to each element and returns a new dataset.
+            \item \textbf{Syntax}: \texttt{dataSet.map(func)}
+            \item \textbf{Example}:
+            \begin{lstlisting}
+val nums = Seq(1, 2, 3, 4)
+val squares = nums.map(x => x * x) // Result: Seq(1, 4, 9, 16)
+            \end{lstlisting}
+        \end{itemize}
+
+        \item \textbf{flatMap()*}
+        \begin{itemize}
+            \item \textbf{Description}: Similar to \texttt{map()}, but returns multiple elements and flattens the result.
+            \item \textbf{Syntax}: \texttt{dataSet.flatMap(func)}
+            \item \textbf{Example}:
+            \begin{lstlisting}
+val words = Seq("Hello World", "Spark is great")
+val flatWords = words.flatMap(sentence => sentence.split(" ")) // Result: Seq("Hello", "World", "Spark", "is", "great")
+            \end{lstlisting}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Transformation Functions - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue the enumeration from the previous frame
+        \item \textbf{filter()}
+        \begin{itemize}
+            \item \textbf{Description}: Filters out elements that do not meet a specified condition.
+            \item \textbf{Syntax}: \texttt{dataSet.filter(conditionFunc)}
+            \item \textbf{Example}:
+            \begin{lstlisting}
+val numbers = Seq(1, 2, 3, 4, 5)
+val evens = numbers.filter(x => x % 2 == 0) // Result: Seq(2, 4)
+            \end{lstlisting}
+        \end{itemize}
+
+        \item \textbf{aggregate()}
+        \begin{itemize}
+            \item \textbf{Description}: Combines elements using a specified function, requiring an initial value and two combine functions.
+            \item \textbf{Syntax}: \texttt{dataSet.aggregate(zeroValue)(seqOp, combOp)}
+            \item \textbf{Example}:
+            \begin{lstlisting}
+val numbers = Seq(1, 2, 3, 4)
+val sum = numbers.aggregate(0)(_ + _, _ + _) // Result: 10
+            \end{lstlisting}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points and Summary}
+    \begin{itemize}
+        \item \textbf{Transformation vs. Action}: Transformations create new datasets and only execute upon calling an action (like \texttt{collect()} or \texttt{count()}).
+        \item \textbf{Immutability}: Spark operations return new datasets rather than modifying existing ones, adhering to functional programming principles.
+        \item \textbf{Use Cases}: Understanding each function's strengths and applicable contexts is crucial for effective data analysis.
+    \end{itemize}
+    
+    \begin{block}{Summary}
+        Mastering \texttt{map()}, \texttt{flatMap()}, \texttt{filter()}, and \texttt{aggregate()} is essential for efficient data manipulation in Spark.
+        Practice using these functions with various datasets to deepen your understanding!
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Working with SQL Functions}
+    \begin{block}{Overview}
+        In this slide, we will explore how to utilize SQL functions within Spark. This includes both aggregate functions and window functions that can help in handling and transforming data efficiently.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{SQL Functions in Spark - Aggregate Functions}
+    \begin{block}{Aggregate Functions}
+        Aggregate functions perform calculations on a set of values and return a single value. These are essential for summarizing data trends and insights.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{COUNT}: Counts the number of rows in a dataset.
+        \item \textbf{SUM}: Calculates the total sum of a numeric column.
+        \item \textbf{AVG}: Returns the average of numeric values.
+        \item \textbf{MIN}: Finds the minimum value in a dataset.
+        \item \textbf{MAX}: Finds the maximum value in a dataset.
+    \end{itemize}
+    \begin{block}{Example}
+        \begin{lstlisting}[language=SQL]
+SELECT COUNT(*), AVG(salary), MIN(hire_date) 
+FROM employees 
+WHERE department = 'Sales';
+        \end{lstlisting}
+    \end{block}
+    This query returns the total number of employees, the average salary, and the earliest hire date in the Sales department.
+\end{frame}
+
+\begin{frame}
+    \frametitle{SQL Functions in Spark - Window Functions}
+    \begin{block}{Window Functions}
+        Window functions allow for performing calculations across a set of rows related to the current row. Unlike aggregate functions, they do not reduce the number of rows returned.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{ROW\_NUMBER()}: Assigns a unique number to each row within a partition.
+        \item \textbf{RANK()}: Gives a rank to each row but can assign the same rank to ties.
+        \item \textbf{DENSE\_RANK()}: Similar to RANK() but without gaps in ranking.
+        \item \textbf{SUM() OVER()}: Calculates the sum over a specified window of data.
+    \end{itemize}
+    \begin{block}{Example}
+        \begin{lstlisting}[language=SQL]
+SELECT employee_id, 
+       salary, 
+       RANK() OVER (PARTITION BY department ORDER BY salary DESC) as salary_rank 
+FROM employees;
+        \end{lstlisting}
+    \end{block}
+    This query ranks employees within their department based on salary, allowing us to see how each employee compares to their peers.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points and Summary}
+    \begin{itemize}
+        \item \textbf{Use of Aggregate Functions}: Perfect for summarizing data from larger datasets.
+        \item \textbf{Advantage of Window Functions}: Provides more analytical power by allowing complex data evaluations without summarizing the dataset.
+        \item \textbf{Combining Functions}: SQL allows the use of multiple functions in a single query for enhanced data analysis.
+    \end{itemize}
+    \begin{block}{Summary}
+        Understanding how to work with SQL functions in Spark is crucial for effective data analysis. Mastering both aggregate and window functions enables you to extract deeper insights from your data.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Next Steps}
+    In our next slide, we will discuss optimizing queries in Spark SQL, including strategies to improve performance such as indexing and caching. By integrating these SQL functionalities into your workflow, you can more effectively handle, transform, and analyze your datasets.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimizing Queries in Spark SQL}
+  \begin{block}{Introduction to Query Optimization}
+    Optimizing queries in Spark SQL is essential for improving performance and efficiency in data processing tasks. Inefficient queries can lead to longer processing times and increased resource consumption.
+  \end{block}
+  \begin{block}{Key Strategies}
+    Focus on the following key strategies for optimizing Spark SQL queries:
+    \begin{itemize}
+      \item Caching
+      \item Indexing (Partitioning)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Caching Strategies}
+  Caching is a technique used to improve query performance by storing intermediate results in memory. This is crucial when the same dataset is accessed multiple times.
+  
+  \begin{block}{Benefits of Caching}
+    \begin{itemize}
+      \item Reduces repetitive computation by storing DataFrames or tables in memory.
+      \item Decreases access time for frequently accessed data.
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Implementing Caching}
+    You can cache a DataFrame using:
+    \begin{lstlisting}[language=Scala]
+val df = spark.read.format("csv").load("data.csv")
+df.cache() // Caches the DataFrame in memory
+    \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example of Caching}
+  Caching a DataFrame before running multiple aggregations can significantly speed up the queries:
+  
+  \begin{lstlisting}[language=Scala]
+df.cache()
+df.groupBy("product").agg(sum("sales"))
+df.groupBy("region").agg(avg("profit"))
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Indexing Strategies}
+  Indexing helps to speed up query times by creating a mapping of keys to their corresponding data locations. While Spark SQL does not support traditional indexes, you can utilize partitioning as an indexing-like mechanism.
+  
+  \begin{block}{Benefits of Partitioning}
+    \begin{itemize}
+      \item Improves query performance by allowing Spark to skip irrelevant partitions.
+      \item Reduces data shuffling in distributed environments.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Implementing Partitioning}
+    You can partition your DataFrame or table when writing it:
+    \begin{lstlisting}[language=Scala]
+df.write.partitionBy("year", "month").parquet("output/path")
+    \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example of Partitioning}
+  Consider analyzing logs by date. Partitioning by `date` allows the query engine to only read the necessary partitions:
+  
+  \begin{lstlisting}[language=Scala]
+val logsDF = spark.read.parquet("logs/path").filter("date='2023-01-01'")
+  \end{lstlisting}
+  
+  This approach leads to faster execution as only the relevant partition for January 1, 2023, will be accessed.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Key Points to Remember}
+  \begin{itemize}
+    \item Cache DataFrames that are accessed multiple times to reduce computation time.
+    \item Use partitioning wisely to optimize data access patterns.
+    \item Regularly monitor query performance and tune configurations based on observed workloads.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  Optimizing queries in Spark SQL enhances data processing efficiency. By leveraging caching and partitioning strategies, developers can significantly improve query performance in big data contexts.
+  
+  \begin{block}{Remember}
+    \begin{itemize}
+      \item Test and monitor your SQL queries to evaluate impact.
+      \item Focus optimization efforts on critical and frequently run queries to maximize performance improvements.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Real-world Applications of Data Handling and Transformation Using Spark SQL}
+  \begin{block}{Introduction}
+    Data handling and transformation are crucial for extracting insights from big data across various industries. 
+    Spark SQL allows users to perform SQL-like queries on large datasets efficiently.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Real-world Applications - Healthcare Sector}
+  \begin{itemize}
+    \item \textbf{Use Case:} Patient Data Management
+    \item \textbf{Scenario:} Hospitals utilize Spark SQL to analyze electronic health records (EHRs) for improved patient outcomes.
+    \item \textbf{Transformation Example:}
+  \end{itemize}
+  \begin{lstlisting}[language=SQL]
+SELECT patient_id, AVG(blood_pressure) AS avg_BP
+FROM patient_records
+WHERE diagnosis = 'Hypertension'
+GROUP BY patient_id
+  \end{lstlisting}
+  \begin{itemize}
+    \item \textbf{Benefit:} Identifying patients needing intervention aids in proactive healthcare management.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Real-world Applications - Retail Industry}
+  \begin{itemize}
+    \item \textbf{Use Case:} Customer Behavior Analysis
+    \item \textbf{Scenario:} Retail companies process customer transaction data to tailor marketing strategies.
+    \item \textbf{Transformation Example:}
+  \end{itemize}
+  \begin{lstlisting}[language=SQL]
+SELECT customer_id, COUNT(order_id) AS total_orders
+FROM transactions
+WHERE purchase_date >= '2023-01-01'
+GROUP BY customer_id
+HAVING total_orders > 5
+  \end{lstlisting}
+  \begin{itemize}
+    \item \textbf{Benefit:} Enables personalized recommendations, increasing customer retention.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Real-world Applications - Finance and Telecommunications}
+  \begin{itemize}
+    \item \textbf{Finance: Fraud Detection}
+      \begin{itemize}
+        \item \textbf{Scenario:} Financial institutions analyze transaction data to identify suspicious activities.
+        \item \textbf{Transformation Example:}
+      \end{itemize}
+      \begin{lstlisting}[language=SQL]
+SELECT account_id, SUM(amount) AS total_spent
+FROM transactions
+WHERE transaction_date >= '2023-01-01'
+GROUP BY account_id
+HAVING total_spent > 10000
+      \end{lstlisting}
+      \item \textbf{Benefit:} Early detection of potential frauds protects both the organization and its customers.
+    
+    \item \textbf{Telecommunications: Network Performance Optimization}
+      \begin{itemize}
+        \item \textbf{Scenario:} Telecom companies monitor call data records (CDRs) to analyze and optimize network usage.
+        \item \textbf{Transformation Example:}
+      \end{itemize}
+      \begin{lstlisting}[language=SQL]
+SELECT cell_tower_id, AVG(call_duration) AS avg_call_duration
+FROM call_records
+GROUP BY cell_tower_id
+ORDER BY avg_call_duration DESC
+      \end{lstlisting}
+      \item \textbf{Benefit:} Enhanced network efficiency leads to better service quality and customer satisfaction.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Key Points and Conclusion}
+  \begin{itemize}
+    \item \textbf{Scalability:} Spark SQL handles large datasets seamlessly, suitable for big data applications.
+    \item \textbf{Real-time Processing:} Enables quick decision-making in dynamic environments.
+    \item \textbf{Integration:} Works with various data sources like HDFS, MySQL, and Cassandra, providing flexibility.
+  \end{itemize}
+  \begin{block}{Conclusion}
+    Real-world applications showcase Spark SQL’s versatility in managing and transforming data across industries, enabling actionable insights and improved customer experiences.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Next Slide Preview}
+  \begin{block}{Upcoming Topic}
+    In the upcoming slide, we will discuss \textbf{Best Practices for Data Handling}, focusing on maintaining data integrity and compliance across processes.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{Introduction to Data Handling Best Practices}
+    \begin{itemize}
+        \item Data handling and transformation are critical in data-driven organizations.
+        \item Ensuring data integrity and compliance protects company interests and builds stakeholder trust.
+        \item This presentation outlines various best practices for effective data handling.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Best Practices - Validation and Cleaning}
+    \begin{enumerate}
+        \item \textbf{Data Validation}
+        \begin{itemize}
+            \item Ensures accuracy and acceptable parameters of collected data.
+            \item \textit{Example}: Email format checks and range validation for numeric entries.
+        \end{itemize}
+
+        \item \textbf{Data Cleaning}
+        \begin{itemize}
+            \item Identifying and correcting irregularities enhances data quality.
+            \item \textit{Example}: Removing duplicates and filling missing values.
+            \item \textbf{Code Snippet:}
+            \begin{lstlisting}[language=Python]
+# Sample code to remove duplicates in a DataFrame
+df = df.drop_duplicates()
+            \end{lstlisting}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Best Practices - Consistency, Documentation, and Security}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Consistent Data Formats}
+        \begin{itemize}
+            \item Ensure standardized formats across systems (e.g., YYYY-MM-DD).
+            \item Inconsistent formats can lead to errors in analysis.
+        \end{itemize}
+
+        \item \textbf{Documentation}
+        \begin{itemize}
+            \item Document data sources, transformations, and anomalies.
+            \item Crucial for maintaining data lineage and compliance audits.
+        \end{itemize}
+
+        \item \textbf{Data Security}
+        \begin{itemize}
+            \item Protect data from unauthorized access and breaches.
+            \item \textit{Example}: Implementing encryption protocols like AES-256.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Best Practices - Backups and Compliance}
+    \begin{enumerate}
+        \setcounter{enumi}{5}
+        \item \textbf{Regular Backups}
+        \begin{itemize}
+            \item Schedule backups to prevent data loss from hardware failures.
+            \item Establish a routine that fits organizational needs.
+        \end{itemize}
+
+        \item \textbf{Compliance with Regulations}
+        \begin{itemize}
+            \item Stay updated with data protection laws (e.g., GDPR, HIPAA).
+            \item Regularly review policies for obtaining user consent before processing data.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Summary and Key Points}
+    \begin{itemize}
+        \item Implementing best practices enhances data quality and reliability.
+        \item Promotes a culture of compliance and ethical data use.
+        \item Teams can effectively manage data, fostering better decision-making and customer trust.
+    \end{itemize}
+    
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Validate, clean, and maintain consistent formats for data.
+            \item Document all data sources and processes.
+            \item Secure data and back it up regularly.
+            \item Comply with legal regulations governing data handling.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations in Data Transformation}
+    \begin{block}{Overview of Ethical Dilemmas}
+        Data transformation is crucial for data handling, involving the manipulation of data to improve usability. However, ethical dilemmas may arise, particularly regarding privacy, consent, and data integrity.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Ethical Considerations}
+    \begin{enumerate}
+        \item \textbf{Data Privacy}
+            \begin{itemize}
+                \item Proper handling and protection of personal information is essential.
+                \item \textbf{Example:} Aggregating health data into broader categories to maintain anonymity.
+            \end{itemize}
+        
+        \item \textbf{Informed Consent}
+            \begin{itemize}
+                \item Participants should be aware of how their data will be transformed.
+                \item \textbf{Illustration:} Surveys should inform participants that their responses may be shared in aggregated form.
+            \end{itemize}
+        
+        \item \textbf{Compliance with Privacy Laws}
+            \begin{itemize}
+                \item Adherence to regulations like GDPR and CCPA is crucial.
+                \item \textbf{Key Point:} Non-compliance can lead to fines and reputational damage.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Examples of Ethical Dilemmas}
+    \begin{itemize}
+        \item \textbf{Anonymization vs. Re-identification:} Risks of re-identification when combining datasets after anonymization.
+        \item \textbf{Data Bias in Transformation:} Biases may be introduced during data modification, affecting certain groups disproportionately.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ensuring Ethical Data Transformation}
+    \begin{itemize}
+        \item \textbf{Implement Data Minimization:} Use only necessary data for analysis to limit exposure.
+        \item \textbf{Regular Audits and Evaluations:} Conduct ethical audits to ensure compliance with standards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Ethical considerations in data transformation are crucial. Understanding privacy, consent, and compliance allows data professionals to navigate data manipulation responsibly, fostering trust and contributing to the integrity of data-driven decisions.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Project Overview - Introduction}
+    \begin{block}{Introduction to the Final Project}
+        This week, we will embark on a hands-on final project that allows you to apply the data transformation techniques you've learned throughout this course. 
+        This project will reinforce your understanding of data handling, manipulation, and the practical application of theories in real-world situations.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Project Overview - Objectives}
+    \begin{block}{Objectives of the Project}
+        You will engage with the following objectives:
+        \begin{enumerate}
+            \item \textbf{Application of Techniques:} You will apply various data transformation methods, including:
+            \begin{itemize}
+                \item Data Cleaning
+                \item Data Restructuring 
+                \item Data Integration
+            \end{itemize}
+            \item \textbf{Data Exploration:} Analyze and interpret the dataset of your choice to uncover insights, patterns, and relationships.
+            \item \textbf{Ethical Considerations:} Reflect on ethical practices in data transformation, including adherence to privacy laws discussed previously.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Selecting Your Dataset}
+    \begin{block}{Steps for Dataset Selection}
+        \begin{enumerate}
+            \item \textbf{Dataset Selection:}
+                Choose a dataset of interest. Potential sources include:
+                \begin{itemize}
+                    \item Kaggle
+                    \item UCI Machine Learning Repository
+                    \item Your own collected data or open government datasets
+                \end{itemize}
+
+            \item \textbf{Ensure Variety:} 
+                Select a dataset featuring diverse data types (numerical, categorical, textual) for effective application of transformation techniques.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Transformation Techniques to Utilize}
+    \begin{block}{Key Transformation Techniques}
+        \begin{itemize}
+            \item \textbf{Data Cleaning:} Handling missing values through methods such as:
+            \begin{itemize}
+                \item Mean/median imputation
+                \item Removing rows/columns
+            \end{itemize}
+
+            \item \textbf{Data Restructuring:} Techniques like:
+            \begin{itemize}
+                \item Pivoting data frames to create a new layout
+                \item Merging datasets for comprehensive analysis
+            \end{itemize}
+
+            \item \textbf{Feature Engineering:} Create new variables that may enhance model performance, such as:
+            \begin{itemize}
+                \item Log transformations for skewed data
+                \item Binning continuous variables into categorical ones
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Sample Code Snippet}
+    \begin{block}{Python Code for Data Cleaning}
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Load dataset
+data = pd.read_csv('your_dataset.csv')
+
+# Check for missing values
+missing_values = data.isnull().sum()
+
+# Fill missing values with mean
+data.fillna(data.mean(), inplace=True)
+
+# Drop duplicate entries
+data.drop_duplicates(inplace=True)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Ensure data transformations adhere to ethical standards.
+            \item Document each transformation step for your final presentation.
+            \item Be prepared to discuss your dataset, transformation methods, and insights from the analysis.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        This project allows you to showcase your mastery of data transformation techniques. Approach it creatively and rigorously, and enjoy the process!
+        We will review your progress in the next class and clarify any questions you may have.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Next Slide Preview}
+    We will conclude our chapter in the upcoming slide and open the floor for questions and discussions regarding your project, along with key takeaways from today's content.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Q\&A: Key Takeaways - Part 1}
+  \begin{enumerate}
+    \item \textbf{Understanding Data Types:}
+      \begin{itemize}
+        \item Importance of data types (e.g., categorical, numerical, ordinal) in data analysis.
+        \item Example: Categorical variables like 'Gender' can be encoded as integers for model inputs.
+      \end{itemize}
+
+    \item \textbf{Data Cleaning Techniques:}
+      \begin{itemize}
+        \item Necessary to ensure accuracy of data.
+        \item Key techniques:
+          \begin{itemize}
+            \item \textbf{Handling Missing Values}: Filling or removing missing data based on context.
+            \item \textbf{De-duplication}: Identifying and removing duplicate records.
+          \end{itemize}
+        \item Example: 
+        \begin{lstlisting}[language=Python]
+        df.drop_duplicates(inplace=True)
+        \end{lstlisting}
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Q\&A: Key Takeaways - Part 2}
+  \begin{enumerate}
+    \setcounter{enumi}{3} % Continue numbering
+    \item \textbf{Data Transformation Methods:}
+      \begin{itemize}
+        \item \textbf{Normalization vs. Standardization}:
+          \begin{itemize}
+            \item Normalization: Scales data between 0 and 1.
+            \item Standardization: Centers data around the mean with unit variance.
+          \end{itemize}
+        \item Example: 
+        \begin{lstlisting}[language=Python]
+        from sklearn.preprocessing import StandardScaler
+        scaler = StandardScaler()
+        scaled_data = scaler.fit_transform(data)
+        \end{lstlisting}
+      \end{itemize}
+
+    \item \textbf{Feature Engineering:}
+      \begin{itemize}
+        \item Importance of creating new features to improve model performance.
+        \item Techniques:
+          \begin{itemize}
+            \item \textbf{Log Transform}: Applies logarithm on skewed data.
+            \item \textbf{Binning}: Grouping continuous variables into discrete categories.
+          \end{itemize}
+        \item Example: 
+        \begin{lstlisting}[language=Python]
+        bins = [0, 18, 35, 65, 100]
+        labels = ['Child', 'Young Adult', 'Adult', 'Senior']
+        df['Age Group'] = pd.cut(df['Age'], bins=bins, labels=labels)
+        \end{lstlisting}
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Q\&A: Key Takeaways - Part 3}
+  \begin{enumerate}
+    \setcounter{enumi}{5} % Continue numbering
+    \item \textbf{Exploratory Data Analysis (EDA):}
+      \begin{itemize}
+        \item EDA helps visualize the dataset and discover patterns.
+        \item Effective visualization methods include histograms, scatter plots, and box plots.
+      \end{itemize}
+
+    \item \textbf{Encouraging Questions and Discussion:}
+      \begin{itemize}
+        \item Open floor for questions about the topics in this chapter.
+        \item Discuss challenges from hands-on data manipulation exercises and share project experiences.
+      \end{itemize}
+
+    \item \textbf{Next Steps:}
+      \begin{itemize}
+        \item Review your dataset to identify data cleaning and transformation needs.
+        \item Share questions or experiences in upcoming discussions for deeper understanding.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+
+\end{document}

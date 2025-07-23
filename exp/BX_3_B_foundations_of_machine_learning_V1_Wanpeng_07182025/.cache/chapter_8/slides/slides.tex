@@ -1,0 +1,1209 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Title Page Information
+\title[Chapter 8: Hyperparameter Tuning]{Hyperparameter Tuning}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \titlepage
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Hyperparameter Tuning}
+    \begin{block}{Overview}
+        Hyperparameter tuning refers to the process of optimizing the hyperparameters of a machine learning model. Unlike model parameters, which are learned during training, hyperparameters are set before training begins and influence the training process and model structure.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance in Machine Learning}
+    \begin{itemize}
+        \item \textbf{Model Performance:} 
+            \begin{itemize}
+                \item Proper hyperparameters enhance predictive performance.
+                \item Poor choices can lead to underfitting or overfitting.
+            \end{itemize}
+        
+        \item \textbf{Efficiency:} 
+            \begin{itemize}
+                \item Optimal hyperparameters reduce computation time and resources.
+                \item Helps models converge faster without sacrificing performance.
+            \end{itemize}
+        
+        \item \textbf{Model Complexity:} 
+            \begin{itemize}
+                \item Tuning affects the complexity of the model (e.g., number of layers).
+                \item More complex models may require more training data to avoid overfitting.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Hyperparameters}
+    \begin{itemize}
+        \item \textbf{Learning Rate:} 
+            \begin{itemize}
+                \item Size of the steps during optimization.
+                \item A high learning rate may converge quickly, while a low rate may take longer.
+            \end{itemize}
+        
+        \item \textbf{Regularization Parameter:} 
+            \begin{itemize}
+                \item E.g., L2 regularization helps prevent overfitting by penalizing large coefficients.
+            \end{itemize}
+        
+        \item \textbf{Number of Trees (Random Forests):} 
+            \begin{itemize}
+                \item More trees can improve performance but increase computation time.
+            \end{itemize}
+        
+        \item \textbf{Kernel Type (SVM):} 
+            \begin{itemize}
+                \item Options like linear, polynomial, or RBF influence the model's ability to capture the data structure.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item Hyperparameter tuning is essential for optimizing machine learning model performance.
+        \item Common techniques include grid search, random search, and Bayesian optimization.
+        \item Validation sets are crucial to prevent overfitting.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Hyperparameter tuning is a critical step that impacts both the effectiveness and efficiency of machine learning models. As you continue, we will explore various hyperparameters, their implications, and effective tuning methods.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Metric}
+    \begin{equation}
+        \text{Performance Metric (e.g., Accuracy)} = f(\text{Hyperparameters})
+    \end{equation}
+    Where \text{Hyperparameters} = \{ \text{Learning Rate, Regularization Coefficient, etc.} \}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Hyperparameters?}
+    \begin{block}{Definition}
+        Hyperparameters are the configurations or settings used to control the learning process of a machine learning model. 
+        Unlike model parameters, which are learned from the training data, hyperparameters are specified before the learning process begins and can significantly influence the model's performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Role of Hyperparameters in Machine Learning Models}
+    \begin{itemize}
+        \item \textbf{Impact on Model Behavior}: Hyperparameters dictate how the model learns and affect how well it generalizes to unseen data.
+        \item \textbf{Examples of Hyperparameters}:
+        \begin{itemize}
+            \item \textbf{Learning Rate}: Controls how much to adjust the model weights with respect to the loss gradient.
+            \item \textbf{Number of Neighbors (k)}: Determines the number of neighboring points to consider in k-Nearest Neighbors.
+            \item \textbf{Number of Trees}: Dictates how many decision trees will be created in Random Forest.
+            \item \textbf{Dropout Rate}: The probability of dropping a unit during training in neural networks.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hyperparameter Tuning}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Hyperparameters are crucial for optimizing model performance and require thoughtful tuning.
+            \item They affect the balance between bias and variance, impacting model generalization.
+            \item Effective hyperparameter tuning methods:
+            \begin{itemize}
+                \item Grid Search
+                \item Random Search
+                \item Bayesian Optimization
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding the Learning Rate}
+    \begin{block}{Example}
+        \begin{itemize}
+            \item \textbf{Learning Rate Example}: 
+            \begin{itemize}
+                \item A learning rate of 0.1 may converge quickly but overshoot the optimal point.
+                \item A learning rate of 0.001 may lead to slower but more stable convergence.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Final Thoughts}
+        Understanding hyperparameters and their role in machine learning is essential for building robust models that generalize well to new data. 
+        Careful tuning of these settings can drastically improve the outcomes of a machine learning project.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Difference Between Hyperparameters and Parameters}
+    \begin{block}{Key Concepts}
+        \begin{itemize}
+            \item \textbf{Parameters}: Internal components learned from training data.
+            \item \textbf{Hyperparameters}: External settings configured before training.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Parameters}
+    \begin{block}{Definition}
+        Parameters are values that the model learns from the data.
+    \end{block}
+    \begin{block}{Example}
+        In linear regression: 
+        \[
+        Y = mX + b
+        \]
+        where $m$ is the slope and $b$ is the intercept.
+    \end{block}
+    \begin{block}{Characteristics}
+        \begin{itemize}
+            \item Adjusted during training via optimization algorithms such as Gradient Descent.
+            \item Number of parameters can increase with model complexity.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hyperparameters}
+    \begin{block}{Definition}
+        Hyperparameters are configurations set before training that influence the training process.
+    \end{block}
+    \begin{block}{Examples}
+        \begin{itemize}
+            \item \textbf{Learning Rate}: Determines the step size during optimization.
+            \item \textbf{Number of Epochs}: Total iterations over the training dataset.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Typical Hyperparameters}
+        \begin{itemize}
+            \item \textbf{Decision Trees}: Maximum depth, minimum samples split.
+            \item \textbf{Neural Networks}: Number of layers, batch size, activation functions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison Table}
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Aspect} & \textbf{Parameters} & \textbf{Hyperparameters} \\ \hline
+            Definition & Learned from training data & Set before training \\ \hline
+            Adjustment & Learned via training process & Manually configured and fixed \\ \hline
+            Examples & Weights, biases & Learning rate, number of epochs \\ \hline
+            Optimization & Via algorithms (e.g., Gradient Descent) & Tuning techniques (e.g., Grid Search) \\ \hline
+        \end{tabular}
+        \caption{Comparison of Parameters and Hyperparameters}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points}
+    \begin{itemize}
+        \item Proper tuning of hyperparameters is essential for optimal performance.
+        \item Understanding the distinction between parameters and hyperparameters aids in model training.
+        \item Visualization of hyperparameters can illustrate their impact on model performance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Hyperparameter Tuning}
+    \begin{block}{What are Hyperparameters?}
+        \begin{itemize}
+            \item \textbf{Definition:} Configuration settings that control the learning process of a machine learning model.
+            \item \textbf{Examples:} 
+            \begin{itemize}
+                \item Learning rate
+                \item Number of trees in a random forest
+                \item Dropout rate in neural networks
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Hyperparameter Tuning - Performance}
+    \begin{block}{Why is Hyperparameter Tuning Important?}
+        \begin{itemize}
+            \item \textbf{Maximizes Model Performance:} Properly tuned hyperparameters enhance accuracy and prevent convergence issues.
+            \item \textbf{Reduces Overfitting and Underfitting:}
+            \begin{itemize}
+                \item \textbf{Overfitting:} Learning noise rather than patterns; mitigated by tuning (e.g., setting regularization strength).
+                \item \textbf{Underfitting:} Model too simple for the data; addressed by increasing model complexity or features.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Hyperparameter Tuning}
+    \begin{block}{Example: Learning Rate}
+        \begin{itemize}
+            \item If the learning rate is too high, the model may oscillate and fail to converge.
+            \item If too low, convergence might be excessively slow, increasing training times.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Possible Solutions:}
+        \begin{itemize}
+            \item Use techniques like grid search or random search to find optimal values.
+            \item Implement adaptive learning strategies (e.g., learning rate schedules, Adam optimizer).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize:}
+        \begin{itemize}
+            \item \textbf{Performance Impact:} Significant improvements in model accuracy can be achieved through tuning.
+            \item \textbf{Training Time:} Proper tuning leads to faster training by improving convergence rates.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Conclusion}
+        Investing in hyperparameter tuning is essential to unlock your model's potential. This critical step converts an average model into a high-performing one.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Evaluation}
+    The impact of hyperparameter tuning can be evaluated using various metrics:
+    \begin{equation}
+        Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+    \end{equation}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet for Hyperparameter Tuning}
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+
+# Define the model
+model = RandomForestClassifier()
+
+# Define the parameters and their values to be searched
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10]
+}
+
+# Implement Grid Search
+grid_search = GridSearchCV(estimator=model, param_grid=param_grid, scoring='accuracy', cv=3)
+grid_search.fit(X_train, y_train)
+
+# View the best parameters
+print(grid_search.best_params_)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Hyperparameters in Machine Learning Models - Overview}
+    \begin{block}{Overview}
+        Hyperparameters are crucial settings that define the behavior and performance of machine learning algorithms. 
+        Unlike regular parameters that are learned from the training data, hyperparameters must be set 
+        before the learning process begins. Tuning these hyperparameters effectively can significantly enhance 
+        model accuracy and generalization.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Hyperparameters}
+    \begin{enumerate}
+        \item \textbf{Learning Rate ($\alpha$)}
+        \begin{itemize}
+            \item \textbf{Definition}: Controls how much to change the model in response to the estimated error each time the model weights are updated.
+            \item \textbf{Typical Values}: Commonly set to values like 0.01, 0.001, or 0.1.
+            \item \textbf{Impact}:
+            \begin{itemize}
+                \item Too High: May cause the model to converge too quickly to a suboptimal solution.
+                \item Too Low: Can slow down convergence or lead to getting stuck in local minima.
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Regularization Strength ($\lambda$)}
+        \begin{itemize}
+            \item \textbf{Definition}: A penalty added to the loss function to reduce overfitting by discouraging complex models.
+            \item \textbf{Typical Values}: Values may range from 0 (no regularization) to higher values based on the model and data complexity.
+            \item \textbf{Impact}:
+            \begin{itemize}
+                \item Low $\lambda$: Models may suffer from overfitting.
+                \item High $\lambda$: Models may be underfitted and unable to capture underlying data patterns.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Hyperparameters - Continued}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue numbering from the previous frame
+        \item \textbf{Number of Trees ($n_{\text{estimators}}$)}
+        \begin{itemize}
+            \item \textbf{Applicable to}: Ensemble methods like Random Forests and Gradient Boosting.
+            \item \textbf{Definition}: Refers to the number of trees in the model which can help improve accuracy but also increases computation time.
+            \item \textbf{Typical Values}: Usually ranges from 100 to 1000 trees depending on the dataset size and problem complexity.
+            \item \textbf{Impact}:
+            \begin{itemize}
+                \item Too Few Trees: May lead to underfitting.
+                \item Too Many Trees: Can increase training time and lead to overfitting.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Hyperparameter tuning is essential for optimizing model performance.
+            \item Each algorithm may have specific hyperparameters that need tuning; understanding their impact is crucial.
+            \item Experimentation with different values is often necessary to find the best parameter settings (will be explored in the next slide).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hyperparameter Tuning Methods - Introduction}
+    \begin{block}{Overview}
+        Hyperparameter tuning is a crucial step in the machine learning model development process. Optimizing the hyperparameters can significantly improve model performance.
+    \end{block}
+    This presentation covers three prominent methods for hyperparameter optimization:
+    \begin{itemize}
+        \item Grid Search
+        \item Random Search
+        \item Bayesian Optimization
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hyperparameter Tuning Methods - Techniques}
+    \begin{block}{1. Grid Search}
+        \begin{itemize}
+            \item \textbf{Definition:} A systematic method that exhaustively searches through specified hyperparameters.
+            \item \textbf{How it Works:}
+            \begin{enumerate}
+                \item Define a parameter grid with hyperparameters and their possible values.
+                \item Evaluate all combinations using cross-validation.
+            \end{enumerate}
+            \item \textbf{Example:} 
+            \begin{itemize}
+                \item Tuning `learning\_rate`: [0.01, 0.1, 1] and `num\_trees`: [50, 100, 150]
+                \item Evaluates all 9 combinations.
+            \end{itemize}
+            \item \textbf{Advantages:} Comprehensive exploration of hyperparameter space.
+            \item \textbf{Limitations:} Computationally expensive and may miss optimal settings.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hyperparameter Tuning Methods - Techniques (cont.)}
+    \begin{block}{2. Random Search}
+        \begin{itemize}
+            \item \textbf{Definition:} Selects random combinations of hyperparameters to evaluate.
+            \item \textbf{How it Works:}
+            \begin{enumerate}
+                \item Specify the number of iterations and ranges for hyperparameters.
+                \item Randomly select combinations and evaluate their performance.
+            \end{enumerate}
+            \item \textbf{Example:} 
+            \begin{itemize}
+                \item Performs 5 random evaluations like: 
+                \begin{itemize}
+                    \item (learning\_rate = 0.1, num\_trees = 50)
+                    \item (learning\_rate = 0.01, num\_trees = 150)
+                \end{itemize}
+            \end{itemize}
+            \item \textbf{Advantages:} Faster, often finds optimal hyperparameters more effectively.
+            \item \textbf{Limitations:} Less comprehensive, risk of missing good options.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{3. Bayesian Optimization}
+        \begin{itemize}
+            \item \textbf{Definition:} Builds a probabilistic model of hyperparameter mapping to model performance.
+            \item \textbf{How it Works:}
+            \begin{enumerate}
+                \item Initialize with random samples and create a surrogate model.
+                \item Balance between exploration and exploitation to sample new points.
+            \end{enumerate}
+            \item \textbf{Advantages:} Efficient exploration of hyperparameter space, adaptable to complex areas.
+            \item \textbf{Limitations:} Complexity in understanding the probabilistic models and computational intensity.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hyperparameter Tuning Methods - Code Snippet}
+    \begin{block}{Random Search Example using Scikit-learn}
+        \begin{lstlisting}[language=Python]
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.ensemble import GradientBoostingClassifier
+
+# Define model and parameter distribution
+model = GradientBoostingClassifier()
+param_dist = {
+    'learning_rate': [0.01, 0.1, 1],
+    'n_estimators': [50, 100, 150]
+}
+
+# Random search
+random_search = RandomizedSearchCV(model, param_distributions=param_dist, n_iter=5, cv=5)
+random_search.fit(X_train, y_train)
+
+print("Best parameters:", random_search.best_params_)
+        \end{lstlisting}
+    \end{block}
+    By using appropriate hyperparameter tuning methods, model performance can be effectively enhanced.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Grid Search}
+    % Overview of Grid Search
+    \begin{block}{What is Grid Search?}
+        Grid Search is a systematic method for hyperparameter tuning where you define a set of hyperparameters to test across a specified range of values. It exhaustively evaluates every possible combination of hyperparameters within a pre-defined grid.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Grid Search Works}
+    % Explanation of the Grid Search Process
+    \begin{enumerate}
+        \item \textbf{Select Hyperparameters}: Identify which hyperparameters to optimize (e.g., learning rate, batch size).
+        \item \textbf{Define Parameter Grid}: Create a grid of possible values for each hyperparameter.
+        \item \textbf{Evaluate Models}: Train a model on each combination and evaluate its performance using a specific metric.
+        \item \textbf{Select the Best Model}: Choose the hyperparameter combination that yields the best performance.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example and Code Snippet}
+    % Example of Grid Search with SVM and Code Snippet
+    \begin{block}{Example}
+        Consider tuning hyperparameters for a Support Vector Machine (SVM):
+        \begin{itemize}
+            \item Selected hyperparameters: 
+            \begin{itemize}
+                \item C (regularization parameter): [0.1, 1, 10]
+                \item Kernel: ['linear', 'rbf']
+            \end{itemize}
+            \item Grid Search evaluates combinations like:
+            \begin{itemize}
+                \item Model 1: C=0.1, Kernel=linear
+                \item Model 2: C=0.1, Kernel=rbf
+                \item \ldots
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Code Snippet}
+        \begin{lstlisting}[language=Python]
+from sklearn.model_selection import GridSearchCV
+from sklearn.svm import SVC
+
+# Define SVM model
+model = SVC()
+
+# Define the grid of hyperparameters
+param_grid = {
+    'C': [0.1, 1, 10],
+    'kernel': ['linear', 'rbf']
+}
+
+# Setup Grid Search
+grid_search = GridSearchCV(model, param_grid, scoring='accuracy', cv=5)
+
+# Fit Grid Search
+grid_search.fit(X_train, y_train)
+
+# Best parameters
+print("Best parameters found: ", grid_search.best_params_)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Random Search}
+    \begin{block}{Understanding Random Search}
+        Random Search is a hyperparameter optimization technique that randomly samples from parameter combinations within a specified distribution. It is generally more efficient than Grid Search, which evaluates all combinations in a defined grid.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Random Search Works}
+    \begin{enumerate}
+        \item \textbf{Parameter Distribution Definition}: Define the hyperparameter space, specifying ranges or distributions for each parameter (e.g., uniform, logarithmic).
+        \item \textbf{Sample Generation}: Randomly select a predefined number of configurations within these ranges.
+        \item \textbf{Model Evaluation}: Train a model for each sampled configuration and evaluate using a validation set.
+        \item \textbf{Selection}: Record the performance of each configuration and select the best-performing model.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Illustration}
+    \begin{block}{Hyperparameters to Tune}
+        \begin{itemize}
+            \item Learning Rate: 0.001 to 0.1
+            \item Number of Hidden Layers: 1 to 5
+            \item Batch Size: 16, 32, 64
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Comparison}
+        \begin{itemize}
+            \item \textbf{Grid Search}: Exhaustively evaluates every combination (e.g., 10 learning rates × 5 layers × 3 batch sizes = 150 models).
+            \item \textbf{Random Search}: Randomly samples a limited number of configurations, e.g. 20 configurations such as:
+            \begin{itemize}
+                \item Learning Rate: 0.01, Hidden Layers: 3, Batch Size: 32
+                \item Learning Rate: 0.05, Hidden Layers: 1, Batch Size: 64
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points}
+    \begin{itemize}
+        \item \textbf{Efficiency}: Broader coverage of parameter space and fewer iterations needed.
+        \item \textbf{Scalability}: More pronounced benefits with high-dimensional hyperparameter spaces.
+        \item \textbf{Computational Resources}: Lower resource requirements compared to exhaustive methods.
+        \item \textbf{Good Enough Solutions}: Quickly identifies optimal hyperparameters without exhaustive search.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison to Grid Search}
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Feature} & \textbf{Grid Search} & \textbf{Random Search} \\ \hline
+        Approach & Exhaustive evaluation & Random sampling of configurations \\ \hline
+        Coverage & Systematic but potentially redundant & Broad and less redundant \\ \hline
+        Computational Cost & Higher, especially with many parameters & Lower, optimal for high dimensions \\ \hline
+        Best Used For & Smaller, well-defined parameter spaces & Larger, complex hyperparameter spaces \\ \hline
+    \end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Random Search offers a more efficient alternative to Grid Search by sampling from the hyperparameter space, helping to quickly find good configurations in high-dimensional tuning scenarios.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet Example}
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.ensemble import RandomForestClassifier
+
+param_dist = {
+    'n_estimators': [10, 50, 100, 200],
+    'max_depth': [None, 10, 20, 30, 40],
+    'min_samples_split': [2, 5, 10],
+}
+
+rf = RandomForestClassifier()
+random_search = RandomizedSearchCV(rf, param_distributions=param_dist, n_iter=10)
+random_search.fit(X_train, y_train)
+
+print("Best parameters found: ", random_search.best_params_)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Bayesian Optimization}
+    \begin{block}{Introduction}
+        Bayesian Optimization (BO) is a powerful, probabilistic approach used for hyperparameter tuning in machine learning.
+        Unlike traditional methods like Grid Search and Random Search, BO effectively models the performance of a machine learning model and focuses on promising areas of the hyperparameter space.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{itemize}
+        \item \textbf{Probabilistic Model}: 
+        BO builds a surrogate model (often a Gaussian Process) that approximates the objective function (e.g., model accuracy) based on previous evaluations, capturing uncertainty in predictions.
+        
+        \item \textbf{Acquisition Function}: 
+        This function guides the search for optimal hyperparameters by balancing exploration and exploitation. Common acquisition functions include Expected Improvement (EI) and Upper Confidence Bound (UCB).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Process of Bayesian Optimization}
+    \begin{enumerate}
+        \item \textbf{Initialization}: 
+        Start with a small set of random hyperparameter values and compute the corresponding model performance.
+        
+        \item \textbf{Surrogate Model Construction}: 
+        Fit a statistical model (e.g., Gaussian Process) to the initial data points to predict the performance across the hyperparameter space.
+        
+        \item \textbf{Select Next Point}: 
+        Use the acquisition function to determine the next hyperparameters to evaluate by maximizing it.
+        
+        \item \textbf{Evaluate}: 
+        Evaluate the model with the selected hyperparameters and update the dataset.
+        
+        \item \textbf{Iterate}: 
+        Repeat steps 2-4 until a predetermined budget or convergence criterion is met.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Scenario}
+    Consider tuning the hyperparameters of a Support Vector Machine (SVM) classifier: 
+    \begin{enumerate}
+        \item \textbf{Initial Points}: 
+        Evaluate SVM with random C and $\gamma$ values such as (1, 0.01), (10, 0.1).
+        
+        \item \textbf{Surrogate Model}: 
+        Create a Gaussian Process to estimate accuracies across the parameter space.
+        
+        \item \textbf{Acquisition Function}: 
+        Apply Expected Improvement to select the next (C, $\gamma$) combination to evaluate.
+        
+        \item \textbf{Evaluation and Iteration}: 
+        Continue the process, refining the model until optimal hyperparameters are found.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Efficiency}: 
+        Bayesian Optimization is more efficient than random search as it uses past evaluations to make future decisions.
+        
+        \item \textbf{Effective for Expensive Evaluations}: 
+        It minimizes the number of evaluations needed, making it particularly beneficial for models where each evaluation is costly.
+        
+        \item \textbf{Trade-offs}: 
+        Balances exploration and exploitation to avoid missing better hyperparameters.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    \begin{block}{Conclusion}
+        Bayesian Optimization is an efficient strategy for hyperparameter tuning. By leveraging probabilistic models to intelligently navigate the search space, it utilizes an acquisition function to make informed decisions, leading to better optimization with fewer iterations.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - Introduction}
+    \begin{block}{Introduction to Evaluation Metrics}
+        When optimizing machine learning models through hyperparameter tuning, it is crucial to evaluate the model's performance effectively. Proper assessment helps ascertain whether the tuning efforts yield improvements and ensures the model is suitable for deployment in practical scenarios.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - Key Metrics}
+    \begin{enumerate}
+        \item \textbf{Accuracy}:
+        \begin{itemize}
+            \item \textit{Definition}: Measures the proportion of correct predictions made by the model relative to the total number of predictions.
+            \item \textit{Formula}: 
+            \[
+            \text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Predictions}}
+            \]
+            \item \textit{Use Case}: Particularly useful for balanced datasets.
+        \end{itemize}
+
+        \item \textbf{Precision}:
+        \begin{itemize}
+            \item \textit{Definition}: Indicates the accuracy of positive predictions, measuring the ratio of true positives to the total predicted positives.
+            \item \textit{Formula}:
+            \[
+            \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+            \]
+            \item \textit{Use Case}: Important in scenarios where false positives are costly (e.g., cancer diagnosis).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - More Metrics}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Recall (Sensitivity)}:
+        \begin{itemize}
+            \item \textit{Definition}: Measures the model’s ability to identify all relevant cases, defined as the ratio of true positives to the actual positives.
+            \item \textit{Formula}:
+            \[
+            \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+            \]
+            \item \textit{Use Case}: Critical in situations where false negatives are a concern (e.g., fraud detection).
+        \end{itemize}
+
+        \item \textbf{F1 Score}:
+        \begin{itemize}
+            \item \textit{Definition}: The harmonic mean of precision and recall, providing a single score to balance both metrics.
+            \item \textit{Formula}:
+            \[
+            \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+            \]
+            \item \textit{Use Case}: Useful when dealing with imbalanced datasets, giving a better measure of the incorrectly classified cases.
+        \end{itemize}
+
+        \item \textbf{AUC-ROC}:
+        \begin{itemize}
+            \item \textit{Definition}: AUC-ROC evaluates the trade-off between true positive rate and false positive rate across different threshold values.
+            \item \textit{Use Case}: Ideal for binary classification problems; higher AUC indicates better model performance.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - Example}
+    \begin{block}{Example: Model Performance Improvements}
+        Suppose we have a model with the following metrics before and after hyperparameter tuning:
+
+        \begin{table}[h]
+            \centering
+            \begin{tabular}{|c|c|c|}
+                \hline
+                \textbf{Metric} & \textbf{Before Tuning} & \textbf{After Tuning} \\
+                \hline
+                Accuracy & 80\% & 85\% \\
+                Precision & 75\% & 78\% \\
+                Recall & 70\% & 82\% \\
+                F1 Score & 72\% & 80\% \\
+                AUC & 0.78 & 0.85 \\
+                \hline
+            \end{tabular}
+        \end{table}
+        
+        This comparison shows that hyperparameter tuning positively impacted the model's performance across multiple metrics.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - Key Takeaways}
+    \begin{itemize}
+        \item Selecting the appropriate evaluation metric depends on the specific problem context and business goals.
+        \item A combination of metrics should be used to provide a comprehensive view of model performance.
+        \item Continuous evaluation and tuning are essential for maintaining model efficacy as data and requirements evolve.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Practical Examples of Hyperparameter Tuning}
+    \begin{block}{Understanding Hyperparameter Tuning}
+        Hyperparameter tuning refers to optimizing the parameters that govern the learning process of models but are not directly learned from the training data. 
+    \end{block}
+    
+    \begin{itemize}
+        \item Improves model performance
+        \item Helps in avoiding overfitting and underfitting
+        \item Essential for achieving optimal results from machine learning algorithms
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Real-World Applications}
+    \begin{enumerate}
+        \item \textbf{Image Classification with CNNs}
+            \begin{itemize}
+                \item \textit{Scenario}: Classifying images of handwritten digits (e.g., MNIST dataset)
+                \item \textit{Challenges}:
+                    \begin{itemize}
+                        \item Tuning the learning rate for effective convergence
+                        \item Experimenting with activation functions and filter sizes
+                    \end{itemize}
+                \item \textit{Example Tuning}: Learning rate of 0.001 with ReLU and 32 filters improves accuracy by 8\%
+            \end{itemize}
+        
+        \item \textbf{NLP with Transformers}
+            \begin{itemize}
+                \item \textit{Scenario}: Building a transformer model for sentiment analysis
+                \item \textit{Challenges}:
+                    \begin{itemize}
+                        \item Tuning number of attention heads and drop-out rate
+                    \end{itemize}
+                \item \textit{Example Tuning}: Increasing attention heads from 8 to 12 and dropout from 0.1 to 0.2 improves F1 score from 0.85 to 0.89
+            \end{itemize}
+        
+        \item \textbf{Reinforcement Learning in Game Development}
+            \begin{itemize}
+                \item \textit{Scenario}: Using Q-learning to develop an AI player
+                \item \textit{Challenges}:
+                    \begin{itemize}
+                        \item Balancing exploration vs. exploitation
+                    \end{itemize}
+                \item \textit{Example Tuning}: Adjusting discount factors and learning rates leads to 20\% increase in win rates
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code Snippet: Using Grid Search}
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+
+# Define the model
+model = RandomForestClassifier()
+
+# Define the parameter grid to be searched
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10]
+}
+
+# Create Grid Search
+grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5)
+
+# Fit the model
+grid_search.fit(X_train, y_train)
+
+# Best parameters
+print("Best Parameters:", grid_search.best_params_)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Hyperparameter tuning is iterative and resource-intensive.
+            \item Different machine learning problems may require distinct tuning approaches.
+            \item Tools like Grid Search and Bayesian Optimization can automate hyperparameter search processes.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Importance of Hyperparameter Tuning}
+        Maximizing machine learning model performance requires understanding challenges and using effective tuning strategies for superior outcomes.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Practices for Hyperparameter Tuning}
+    \begin{itemize}
+        \item Hyperparameter tuning is crucial for model performance.
+        \item Key guidelines for effective tuning include:
+        \begin{enumerate}
+            \item Understanding hyperparameters
+            \item Using a validation set
+            \item Exploring automated tuning techniques
+            \item Considering early stopping
+            \item Regularizing your model
+            \item Utilizing cross-validation
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{1. Understand Your Hyperparameters}
+    \begin{itemize}
+        \item \textbf{Definition}: Settings that control the training process (e.g., learning rate, regularization).
+        \item \textbf{Types}:
+        \begin{itemize}
+            \item Continuous (e.g., learning rate)
+            \item Discrete (e.g., number of layers)
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Example}
+        For a random forest model:
+        \begin{itemize}
+            \item \texttt{n\_estimators}: Number of trees
+            \item \texttt{max\_depth}: Maximum depth of each tree
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Use a Validation Set}
+    \begin{itemize}
+        \item \textbf{Why}: Evaluate hyperparameter performance.
+        \item \textbf{How}: Split data into training, validation, and test sets:
+        \begin{itemize}
+            \item Training Set: Model training
+            \item Validation Set: Hyperparameter evaluation
+            \item Test Set: Final model assessment
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Key Point}
+        Keep the test set separate until the final evaluation to avoid overfitting.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Automated Hyperparameter Tuning Techniques}
+    \begin{itemize}
+        \item \textbf{Grid Search}: Systematic exploration of hyperparameters.
+        \item \textbf{Random Search}: Randomly samples combinations.
+        \item \textbf{Bayesian Optimization}: Uses prior evaluations to suggest better hyperparameters.
+    \end{itemize}
+    \begin{block}{Example Code (Grid Search)}
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+
+param_grid = {
+    'n_estimators': [50, 100, 200],
+    'max_depth': [None, 10, 20, 30]
+}
+
+rf = RandomForestClassifier()
+grid_search = GridSearchCV(estimator=rf, param_grid=param_grid, scoring='accuracy', cv=5)
+grid_search.fit(X_train, y_train)
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{4. Consider Early Stopping}
+    \begin{itemize}
+        \item \textbf{What}: Monitor validation performance and stop when no improvement.
+        \item \textbf{Why}: Saves computation time and prevents overfitting.
+    \end{itemize}
+    \begin{block}{Implementation Tip}
+        Use callbacks in frameworks like TensorFlow or PyTorch for early stopping.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{5. Regularize Your Model}
+    \begin{itemize}
+        \item \textbf{Purpose}: Prevent overfitting.
+        \item \textbf{Techniques}:
+        \begin{itemize}
+            \item L1 Regularization (Lasso)
+            \item L2 Regularization (Ridge)
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Key Point}
+        Regularization strength can be a hyperparameter that requires tuning.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{6. Use Cross-Validation}
+    \begin{itemize}
+        \item \textbf{Why}: For reliable model performance estimates.
+        \item \textbf{Method}: $k$-Fold Cross-Validation, where the dataset is split into $k$ subsets.
+    \end{itemize}
+    \begin{block}{Example}
+        With 5-fold cross-validation:
+        \begin{itemize}
+            \item Split data into 5 parts.
+            \item Train on 4 and validate on 1 part, rotating through all parts.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item Adhering to these practices enhances hyperparameter tuning effectiveness.
+        \item Promote robust and accurate machine learning models.
+        \item Document findings and remain adaptable in approaches.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Takeaways}
+    \begin{enumerate}
+        \item \textbf{Definition and Importance}:
+        \begin{itemize}
+            \item Hyperparameter tuning optimizes parameters guiding the learning process.
+            \item Proper tuning can significantly improve model accuracy and generalization.
+        \end{itemize}
+        
+        \item \textbf{Impact on Model Performance}:
+        \begin{itemize}
+            \item Adjusting hyperparameters affects model complexity and performance.
+            \item Example: Learning rate impacts convergence speed and solution quality.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Common Hyperparameters}
+    \begin{itemize}
+        \item \textbf{Learning Rate}: Step size during optimization.
+        \item \textbf{Regularization Strength}: Prevents overfitting.
+        \item \textbf{Number of Trees in Random Forest}: Influences training time and performance.
+    \end{itemize}
+    \begin{block}{Note}
+    Each hyperparameter can drastically change model behavior, emphasizing careful selection.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Tuning Methods and Best Practices}
+    \begin{enumerate}
+        \item \textbf{Tuning Methods}:
+        \begin{itemize}
+            \item Techniques such as \textbf{Grid Search} and \textbf{Random Search}.
+            \item Automated methods like \textbf{Hyperopt} provide effective tuning strategies.
+        \end{itemize}
+        
+        \item \textbf{Performance Evaluation}:
+        \begin{itemize}
+            \item Use cross-validation to avoid overfitting.
+            \item Evaluate model performance using metrics like accuracy or F1 score.
+        \end{itemize}
+        
+        \item \textbf{Best Practices}:
+        \begin{itemize}
+            \item Start simple and progressively increase complexity.
+            \item Document experiments for tracking successful hyperparameter configurations.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Real-World Application and Summary}
+    \begin{itemize}
+        \item Hyperparameter tuning enhances applications from image classification to recommendation systems.
+        \item Example: Improving deep learning model accuracy in medical diagnosis can save lives.
+    \end{itemize}
+    \begin{block}{In Summary}
+    Hyperparameter tuning is essential for building effective models. Adjusting parameters systematically optimizes performance for specific needs.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Next Steps}
+    \begin{itemize}
+        \item Prepare for a discussion on hyperparameter tuning.
+        \item Bring any questions or insights you have to the next slide!
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Questions and Discussion - Overview of Hyperparameter Tuning}
+  
+  \begin{block}{Definition}
+  Hyperparameter tuning involves refining the parameters of a machine learning model set before the learning process. These parameters are manually chosen and significantly impact model performance.
+  \end{block}
+  
+  \begin{itemize}
+    \item \textbf{Goals}:
+    \begin{itemize}
+      \item Enhance model accuracy.
+      \item Improve generalization to unseen data.
+      \item Optimize training and evaluation times.
+    \end{itemize}
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Questions and Discussion - Key Concepts}
+  
+  \begin{enumerate}
+    \item \textbf{Types of Hyperparameters}:
+    \begin{itemize}
+      \item \textbf{Model-specific}: e.g., number of layers in a neural network.
+      \item \textbf{Algorithm-specific}: e.g., learning rate for gradient descent.
+    \end{itemize}
+    
+    \item \textbf{Tuning Methods}:
+    \begin{itemize}
+      \item \textbf{Grid Search}: Systematic trials of every possible combination of parameters.
+      \item \textbf{Random Search}: Randomly sampling parameter values for efficiency.
+      \item \textbf{Bayesian Optimization}: A probabilistic approach to choose hyperparameters based on past results.
+    \end{itemize}
+    
+    \item \textbf{Evaluation Metrics}:
+    \begin{itemize}
+      \item Accuracy: Proportion of correct predictions.
+      \item F1 Score: Balances precision and recall.
+      \item ROC-AUC Score: Measures the model's ability to distinguish between classes.
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Questions and Discussion - Engagement Activity}
+  
+  \begin{block}{Discussion Points}
+  \begin{itemize}
+    \item What challenges have you faced when tuning hyperparameters?
+    \item Which tuning methods do you find most effective, and why?
+    \item How do hyperparameters influence bias-variance trade-offs?
+    \item Can you share any best practices or tools you've used for hyperparameter optimization?
+  \end{itemize}
+  \end{block}
+  
+  \begin{block}{Engagement Activity}
+    Consider a model you've worked with:
+    \begin{enumerate}
+      \item Identify two hyperparameters you tinkered with.
+      \item Share the impact on model performance with a classmate.
+    \end{enumerate}
+  
+    Feel free to raise any questions or share experiences related to hyperparameter tuning. Your thoughts and insights can deepen our understanding of this pivotal aspect of machine learning!
+  \end{block}
+\end{frame}
+
+
+\end{document}

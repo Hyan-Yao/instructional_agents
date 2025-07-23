@@ -1,0 +1,945 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Temporal Difference Learning]{Week 5: Temporal Difference Learning}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Temporal Difference Learning}
+    \begin{block}{Overview of Reinforcement Learning (RL)}
+        Reinforcement Learning is a branch of machine learning where an agent learns to make decisions by interacting with an environment.
+    \end{block}
+    \begin{block}{Key Components of Reinforcement Learning}
+        \begin{itemize}
+            \item \textbf{Agent}: The learner or decision-maker (e.g., a robot, a game-playing program).
+            \item \textbf{Environment}: Everything the agent interacts with (e.g., a game board, a simulation).
+            \item \textbf{Action}: The choices made by the agent (e.g., move left, pick up an object).
+            \item \textbf{State}: A representation of the current situation of the agent within the environment (e.g., position on a game board).
+            \item \textbf{Reward}: Feedback received from the environment after performing an action (e.g., +1 for collecting treasure, -1 for hitting a wall).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Temporal Difference Learning: Significance and Concept}
+    \begin{block}{Overview}
+        Temporal Difference Learning (TD Learning) is a fundamental technique within RL, bridging the gap between Monte Carlo methods and dynamic programming.
+    \end{block}
+    \begin{block}{Key Features of TD Learning}
+        \begin{itemize}
+            \item \textbf{Bootstrapping}: TD updates estimates based on other learned estimates, rather than waiting for a final outcome.
+            \item \textbf{Online Learning}: Updates the value of the current state in real-time, beneficial for immediate adjustments.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How TD Learning Works}
+    \begin{enumerate}
+        \item \textbf{Value Estimation}
+        \begin{equation}
+        V(s) \gets V(s) + \alpha \left( R + \gamma V(s') - V(s) \right)
+        \end{equation}
+        where:
+        \begin{itemize}
+            \item $V(s)$: Estimated value of the current state $s$
+            \item $R$: Reward received after taking action
+            \item $\gamma$: Discount factor (0 ≤ $\gamma$ < 1)
+            \item $\alpha$: Learning rate (0 < $\alpha$ ≤ 1)
+        \end{itemize}
+
+        \item \textbf{Learning from Experience}: Continuously updates value estimates through various episodes.
+        \item \textbf{Convergence}: With sufficient exploration, TD Learning converges to the optimal value function.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Application of TD Learning}
+    Imagine a chess-playing AI using TD Learning:
+    \begin{itemize}
+        \item Evaluates the position (state) of chess pieces.
+        \item Updates value estimates based on wins/losses (rewards).
+        \item Learns which positions lead to wins, enhancing its strategy for better decision-making.
+    \end{itemize}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Essential for efficient RL in dynamic environments.
+            \item Combines value estimations and real-time learning adjustments.
+            \item Crucial for developing agents that can adapt to complex tasks.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Overview - Definition}
+    \begin{block}{Definition of Reinforcement Learning}
+        Reinforcement Learning (RL) is a subfield of machine learning where an agent learns to make decisions by interacting with an environment. The key goal is to optimize a cumulative reward signal through trial-and-error learning, differentiating it from supervised learning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Overview - Key Components}
+    \begin{itemize}
+        \item \textbf{Agent}: The decision-maker aiming to maximize rewards.
+        \item \textbf{Environment}: The system the agent interacts with.
+        \item \textbf{Action (A)}: Possible moves the agent can make.
+        \item \textbf{State (S)}: Current situation of the agent.
+        \item \textbf{Reward (R)}: Feedback signal received after an action.
+        \item \textbf{Policy ($\pi$)}: Strategy for selecting actions based on state.
+        \item \textbf{Value Function (V)}: Estimates expected return of a state.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Overview - Differences}
+    \begin{block}{Comparison with Other Machine Learning Paradigms}
+        \begin{itemize}
+            \item \textbf{Supervised Learning}: Trained on labeled datasets for passive learning.
+            \item \textbf{Unsupervised Learning}: Finds patterns in data without feedback.
+            \item \textbf{Reinforcement Learning}: Actively learns through exploration and feedback.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Overview - Example and Key Points}
+    \textbf{Illustrative Example: Robot in a Maze}
+    \begin{itemize}
+        \item \textbf{States}: Each position in the maze.
+        \item \textbf{Actions}: Move left, right, up, or down.
+        \item \textbf{Rewards}: Positive for exit, negative for hitting walls.
+        \item \textbf{Policy}: Rules for making moves based on position.
+    \end{itemize}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item RL learns from interactions, unlike static datasets.
+            \item Balancing exploration and exploitation is crucial.
+            \item Temporal Difference Learning aids in value function updates.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Overview - Conclusion and Formula}
+    \begin{block}{Conclusion}
+        Reinforcement Learning offers a powerful approach to dynamic environments, essential for advancing in AI and machine learning.
+    \end{block}
+    
+    \textbf{Value Update Formula:}
+    \begin{equation}
+        V(s) \leftarrow V(s) + \alpha \left( R + \gamma V(s') - V(s) \right)
+    \end{equation}
+    \textit{Where:} $ \alpha $ is the learning rate, $ \gamma $ is the discount factor.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Temporal Difference Learning - Overview}
+    % Brief introduction to Temporal Difference Learning
+    Temporal Difference (TD) Learning is a fundamental concept in reinforcement learning that merges strategies from both dynamic programming and Monte Carlo methods. 
+    It is primarily utilized for estimating the value of states or actions based on the agent's ongoing experiences.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Temporal Difference Learning - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Value Function}: Represents the expected return (cumulative future rewards) from a given state or state-action pair.
+        \item \textbf{Bootstrapping}: TD Learning updates estimates by leveraging other learned estimates, avoiding the wait for the final outcome seen in Monte Carlo methods.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Temporal Difference Learning - Purpose and Functionality}
+    \begin{itemize}
+        \item The purpose of TD Learning is to enable agents to enhance their decision-making by learning from experiences daily.
+        \item It facilitates more efficient learning and allows for faster convergence to optimal policies.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How TD Learning Works}
+    \begin{enumerate}
+        \item \textbf{Experience Sampling}: The agent interacts with the environment to obtain rewards and transitions between states.
+        \item \textbf{Update Mechanism}: Updates the value function using the current state estimate, received reward, and value of the next state.
+        \item \textbf{TD Error}: Calculated using:
+        \begin{equation}
+        \delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)
+        \end{equation}
+        \item \textbf{Value Update}: The current state's value is updated with:
+        \begin{equation}
+        V(s_t) \leftarrow V(s_t) + \alpha \delta_t
+        \end{equation}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of TD Learning}
+    % An illustrative example of TD Learning
+    Consider a grid world where an agent aims to reach a goal state:
+    \begin{itemize}
+        \item The agent moves through states (grid cells) getting rewards for reaching goals and penalties for traps.
+        \item By applying TD Learning, it updates value estimates based on experienced rewards and expected future values, refining its strategy over time.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item TD Learning allows for adaptive learning directly from ongoing experiences.
+        \item It balances exploration (trying new actions) and exploitation (choosing known good actions).
+        \item Core algorithms include \textbf{Q-learning} and \textbf{SARSA (State-Action-Reward-State-Action)} that build on TD principles.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning - Overview}
+    \begin{block}{What is Q-Learning?}
+        Q-Learning is a model-free reinforcement learning algorithm that enables an agent to learn optimal decision-making by estimating the action-value function, denoted as \( Q \), for each state.
+    \end{block}
+    \begin{itemize}
+        \item It allows the agent to maximize long-term rewards.
+        \item The core components include the agent, environment, state, action, reward, and Q-value.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Agent:} The learner or decision-maker interacting with the environment.
+        \item \textbf{Environment:} The scenario wherein the agent operates.
+        \item \textbf{State (s):} Specific situations the agent can experience.
+        \item \textbf{Action (a):} Decisions made by the agent.
+        \item \textbf{Reward (r):} Feedback received from the environment.
+        \item \textbf{Q-Value \( Q(s, a) \):} Expected future rewards from state \( s \) by taking action \( a \).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning - Update Formula}
+    \begin{block}{Q-Value Update Formula}
+        \[
+        Q(s, a) \gets Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+        \]
+    \end{block}
+    \begin{itemize}
+        \item \( \alpha \): Learning rate (0 < \( \alpha \) ≤ 1)
+        \item \( r \): Reward after taking action \( a \) in state \( s \)
+        \item \( \gamma \): Discount factor (0 ≤ \( \gamma \) < 1)
+        \item \( s' \): New state resulting from action taken
+        \item \( \max_{a'} Q(s', a') \): Maximum predicted Q-value for the next state
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning - Example Scenario}
+    \begin{enumerate}
+        \item The agent starts in state \( s \) and selects action \( a \).
+        \item It transitions to new state \( s' \) and receives reward \( r \).
+        \item The Q-value for state-action pair \( (s, a) \) is updated based on received rewards.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning - Significance}
+    \begin{itemize}
+        \item **Exploration vs. Exploitation:** Balancing new actions with known rewarding actions.
+        \item **Convergence:** Q-learning converges towards optimal Q-values leading to an optimal policy.
+    \end{itemize}
+    \begin{block}{Takeaway}
+        Q-Learning formulates decision-making in uncertain environments based on received rewards, enabling effective learning strategies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning Algorithm Steps - Introduction}
+    \begin{block}{What is Q-Learning?}
+        Q-Learning is a model-free reinforcement learning algorithm used to learn the value of an action in a specific state. It improves decision-making policies through exploration and exploitation in uncertain environments.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning Algorithm Steps - Main Steps}
+    \begin{enumerate}
+        \item \textbf{Initialize Q-Values:}
+        \begin{itemize}
+            \item Start with arbitrary Q-values for all state-action pairs (often to zero):
+            \begin{lstlisting}
+Q[state][action] = 0
+            \end{lstlisting}
+        \end{itemize}
+
+        \item \textbf{Observe the Current State:}
+        \begin{itemize}
+            \item Begin by observing the initial state of the environment, denoted as \(S\).
+        \end{itemize}
+
+        \item \textbf{Choose Action:}
+        \begin{itemize}
+            \item Select an action \(A\) using a policy from the Q-values (e.g., $\epsilon$-greedy):
+            \begin{itemize}
+                \item With probability $\epsilon$, choose a random action (exploration).
+                \item With probability \(1-\epsilon\), choose the action with the highest Q-value (exploitation).
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning Algorithm Steps - Continuation}
+    \begin{enumerate}[resume]
+        \item \textbf{Take Action and Observe Reward and Next State:}
+        \begin{itemize}
+            \item Execute action \(A\), receive reward \(R\), and observe next state \(S'\).
+        \end{itemize}
+
+        \item \textbf{Update Q-Values:}
+        \begin{itemize}
+            \item Update the Q-value for the state-action pair using the formula:
+            \begin{equation}
+                Q(S, A) \leftarrow Q(S, A) + \alpha \left[R + \gamma \max_{A'} Q(S', A') - Q(S, A)\right]
+            \end{equation}
+            Where:
+            \begin{itemize}
+                \item \( \alpha \): Learning rate (0 < $\alpha$ ≤ 1)
+                \item \( R \): Reward received after action \(A\)
+                \item \( \gamma \): Discount factor (0 ≤ $\gamma$ < 1)
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Transition to the Next State:}
+        \begin{itemize}
+            \item Update current state to the next:
+            \begin{equation}
+                S \leftarrow S'
+            \end{equation}
+        \end{itemize}
+
+        \item \textbf{Termination Condition:}
+        \begin{itemize}
+            \item Repeat steps 3 to 6 until a termination condition is met.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Sample Pseudo-code Implementation}
+    \begin{lstlisting}
+# Q-Learning Pseudo-code
+Initialize Q-table with zeros
+For each episode:
+    Initialize state S
+    For each step in the episode:
+        Choose action A from state S using ε-greedy policy
+        Take action A, observe reward R and next state S'
+        Update Q-value:
+        Q[S, A] = Q[S, A] + α * (R + γ * max(Q[S', :]) - Q[S, A])
+        S = S'  # Transition to the next state
+    End for
+End for
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Q-Learning - Introduction}
+    Q-Learning is a significant reinforcement learning algorithm that allows agents to learn optimal decision-making strategies within an environment to maximize cumulative rewards.
+    \begin{itemize}
+        \item Off-policy learning flexibility
+        \item Robust convergence properties
+        \item Efficiency in sample collection
+        \item Scalability to larger state spaces
+        \item Simplicity and ease of implementation
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Q-Learning - Off-Policy Learning}
+    \begin{block}{Off-Policy Learning}
+        - **Definition:** Q-Learning learns from actions taken by a different policy, providing flexibility in learning experiences.
+        
+        - **Example:** 
+        If an agent explores states randomly, it can update Q-values based on another policy's actions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Q-Learning - Convergence and Efficiency}
+    \begin{block}{Convergence Guarantees}
+        - Q-Learning guarantees convergence to the optimal action-value function \( Q^* \) with sufficient exploration.
+        
+        - **Key Property:** Convergence occurs regardless of the underlying policy.
+        
+        - \textbf{Mathematical Update Rule:}
+        \begin{equation}
+            Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item \( s \) = current state
+            \item \( a \) = action taken
+            \item \( r \) = reward received
+            \item \( s' \) = new state
+            \item \( \alpha \) = learning rate
+            \item \( \gamma \) = discount factor
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Efficiency in Sample Collection}
+        - Experience replay allows learning from diverse states repeatedly, enhancing learning efficiency.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Q-Learning - Scalability and Implementation}
+    \begin{block}{Scalability}
+        - Q-Learning is scalable through function approximation methods such as Deep Q-Networks (DQN), enabling effective handling of high-dimensional problems.
+    \end{block}
+
+    \begin{block}{Simplicity and Implementation}
+        - Conceptually straightforward, making Q-Learning easier to implement relative to other algorithms.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Q-Learning - Conclusion}
+    Q-Learning's off-policy nature, convergence guarantees, and ease of implementation, combined with its capacity for large and complex environments, contribute to its popularity as a reinforcement learning algorithm.
+    \begin{itemize}
+        \item Flexibility: Learn from diverse policies.
+        \item Robustness: Guaranteed convergence to the optimal policy.
+        \item Efficiency: Learning from past experiences and effective scaling.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SARSA (State-Action-Reward-State-Action)}
+    \begin{block}{Introduction to SARSA}
+        SARSA (State-Action-Reward-State-Action) is an on-policy reinforcement learning algorithm that estimates the action-value function, \( Q(s, a) \).
+        Unlike Q-learning, SARSA is sensitive to the behavior of the agent's learning policy.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of SARSA}
+    \begin{itemize}
+        \item \textbf{On-Policy Learning:} 
+        \begin{itemize}
+            \item SARSA learns values based on the action taken from the current policy.
+            \item The update uses the action derived from the current policy applied in the next state.
+        \end{itemize}
+        \item \textbf{State-Action Pair:}
+        \begin{itemize}
+            \item Updates the value of state-action pairs based directly on the policy being followed.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SARSA Update Rule}
+    The update rule for SARSA is given by:
+    \begin{equation}
+        Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma Q(s', a') - Q(s, a) \right)
+    \end{equation}
+    \begin{itemize}
+        \item \( Q(s, a) \): Current estimate of the action value.
+        \item \( r \): Reward received after taking action \( a \) in state \( s \).
+        \item \( \gamma \): Discount factor (0 ≤ \( \gamma \) < 1).
+        \item \( s' \): Next state following action \( a \).
+        \item \( a' \): Next action taken in state \( s' \) as per the policy.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Scenario}
+    Consider an agent in a grid world:
+    \begin{enumerate}
+        \item \textbf{Current State (s):} (2, 3)
+        \item \textbf{Action Taken (a):} Move Right
+        \item \textbf{Reward Received (r):} +1 for reaching a goal
+        \item \textbf{Next State (s'):} (2, 4) – the goal
+        \item \textbf{Next Action (a'):} According to the policy.
+    \end{enumerate}
+    
+    \textit{Using the SARSA update rule, the action-value for (2, 3, Right) is updated based on the reward and future actions.}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison to Q-Learning}
+    \begin{itemize}
+        \item \textbf{Learning Approach:}
+        \begin{itemize}
+            \item SARSA updates \( Q(s, a) \) based on the action taken by the policy in the next state \( s' \).
+            \item Q-learning uses the maximum action value from the next state \( s' \) regardless of the action taken.
+        \end{itemize}
+        \item \textbf{Policy Behavior:}
+        \begin{itemize}
+            \item SARSA is more conservative as it considers the current policy, potentially leading to different strategies.
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item SARSA is an on-policy algorithm, influencing the learning process.
+            \item Exploration vs. exploitation is integral to the algorithm.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SARSA Algorithm Steps - Overview}
+    The SARSA (State-Action-Reward-State-Action) algorithm is an on-policy reinforcement learning method. It updates the action-value function based on the action taken in the current state and the subsequent action taken in the next state.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SARSA Algorithm Steps - Initialization}
+    \begin{enumerate}
+        \item \textbf{Initialization}
+        \begin{itemize}
+            \item Initialize the action-value function \( Q(s, a) \) for all state-action pairs \( (s, a) \) with arbitrary values, typically zeros.
+            \item Set the parameters: learning rate \( \alpha \) (0 < \( \alpha \) ≤ 1) and exploration rate \( \epsilon \) for the ε-greedy policy.
+        \end{itemize}
+        \item \textbf{Choose an Initial State}
+        \begin{itemize}
+            \item Select the initial state \( s_0 \) from the environment.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SARSA Algorithm Steps - Execution Loop}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Choose an Action}
+        \begin{itemize}
+            \item Select an action \( a_0 \) using the ε-greedy policy:
+            \begin{itemize}
+                \item With probability \( \epsilon \), choose a random action.
+                \item With probability \( 1 - \epsilon \), choose the action that maximizes \( Q(s_0, a) \).
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Loop Through Episodes}
+        \begin{itemize}
+            \item For each episode, repeat until a terminal state is reached:
+            \begin{enumerate}
+                \item \textbf{Take Action:} Execute action \( a \) and observe the reward \( r \) and the next state \( s' \).
+                \item \textbf{Choose Next Action:} Select the next action \( a' \) using the ε-greedy policy based on state \( s' \).
+                \item \textbf{Update Q-Values:}
+                \begin{equation}
+                    Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma Q(s', a') - Q(s, a) \right)
+                \end{equation}
+                \item \textbf{Move to Next State:} Set \( s \leftarrow s' \) and \( a \leftarrow a' \).
+            \end{enumerate}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pseudo-Code for SARSA}
+    \begin{lstlisting}
+Initialize Q(s, a) arbitrarily for all state-action pairs
+For each episode:
+    Initialize state s
+    Choose action a from s using ε-greedy policy
+    While s is not terminal:
+        Take action a, observe reward r and next state s'
+        Choose action a' from s' using ε-greedy policy
+        Update Q(s, a) using the formula:
+            Q(s, a) ← Q(s, a) + α[r + γQ(s', a') - Q(s, a)]
+        s ← s'
+        a ← a'
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points}
+    \begin{itemize}
+        \item \textbf{On-Policy Learning:} SARSA updates depend on the actions taken, allowing reflection of the policy's performance.
+        \item \textbf{Exploration vs. Exploitation:} The ε-greedy policy balances exploring new actions while exploiting known rewards.
+        \item \textbf{Updating Mechanism:} The update rule incorporates immediate rewards and expected future rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Q-Learning and SARSA - Overview}
+    \begin{itemize}
+        \item Q-Learning and SARSA are popular Temporal Difference (TD) learning algorithms in reinforcement learning.
+        \item Both methods aim to learn optimal action-value functions to maximize cumulative rewards.
+        \item They differ in learning patterns and practical applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Q-Learning and SARSA - Key Differences}
+    \begin{enumerate}
+        \item \textbf{Learning Approach}:
+            \begin{itemize}
+                \item \textbf{Q-Learning}:
+                    \begin{equation}
+                    Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+                    \end{equation}
+                    \item Off-policy: Learns the value of the optimal policy independently of the actions taken.
+                \item \textbf{SARSA}:
+                    \begin{equation}
+                    Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma Q(s', a') - Q(s, a) \right)
+                    \end{equation}
+                    \item On-policy: Learns the value of the current policy including exploration actions.
+            \end{itemize}
+        \item \textbf{Exploration vs. Exploitation}:
+            \begin{itemize}
+                \item Q-Learning prioritizes exploitation.
+                \item SARSA balances exploration and exploitation.
+            \end{itemize}
+        \item \textbf{Convergence}:
+            \begin{itemize}
+                \item Q-Learning converges to the optimal policy under certain conditions.
+                \item SARSA converges to the policy being followed, which may not be optimal.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Q-Learning and SARSA - Applications and Key Points}
+    \begin{block}{Practical Applications}
+        \begin{itemize}
+            \item \textbf{Q-Learning}:
+                \begin{itemize}
+                    \item Suitable for environments where optimal policy is critical (e.g., game playing, robotics).
+                \end{itemize}
+            \item \textbf{SARSA}:
+                \begin{itemize}
+                    \item Ideally used in environments with safety concerns (e.g., self-driving vehicles).
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Algorithm Type: Q-Learning (off-policy) vs. SARSA (on-policy).
+            \item Learning Update Rule Differences: Impact of future states in updates.
+            \item Exploration Strategies: Influences on algorithm choice based on application.
+            \item Application Context: Tailoring algorithms based on risk and requirements.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Temporal Difference Learning - Overview}
+    Temporal Difference (TD) Learning, particularly through Q-learning and SARSA, has been effectively applied in various fields. Here, we explore several case studies illustrating the impact of TD learning techniques.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Temporal Difference Learning - Robotics and Game Playing}
+    \begin{block}{1. Robotics}
+        \begin{itemize}
+            \item \textbf{Example:} Robot Navigation
+            \item \textbf{Scenario:} Autonomous robots use Q-learning to navigate complex environments by learning the value of actions in given states.
+            \item \textbf{Results:} Enhanced efficiency in tasks like delivery and search-and-rescue missions.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{2. Game Playing}
+        \begin{itemize}
+            \item \textbf{Example:} AlphaGo
+            \item \textbf{Scenario:} Utilized deep reinforcement learning, incorporating Q-learning to master Go.
+            \item \textbf{Results:} Defeated a world champion in 2016, demonstrating effectiveness in strategic decision-making.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Temporal Difference Learning - Finance and Healthcare}
+    \begin{block}{3. Finance}
+        \begin{itemize}
+            \item \textbf{Example:} Trading Algorithms
+            \item \textbf{Scenario:} Q-learning for decision-making based on market states.
+            \item \textbf{Results:} Adaptation to market fluctuations, improving profitability.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{4. Healthcare}
+        \begin{itemize}
+            \item \textbf{Example:} Personalized Treatment Plans
+            \item \textbf{Scenario:} SARSA optimizes treatment recommendations based on patient responses.
+            \item \textbf{Results:} Enhanced patient outcomes through real-time feedback.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Temporal Difference Learning - NLP and Key Points}
+    \begin{block}{5. Natural Language Processing (NLP)}
+        \begin{itemize}
+            \item \textbf{Example:} Chatbot Development
+            \item \textbf{Scenario:} Uses TD learning to predict appropriate responses based on history.
+            \item \textbf{Results:} Improved user satisfaction and engagement.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Adaptability:} Suitable for dynamic environments.
+            \item \textbf{Feedback Utilization:} Leverages immediate feedback for continuous learning.
+            \item \textbf{Scalability:} Applicable from simple tasks to complex systems.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formulas for Temporal Difference Learning}
+    \begin{block}{Q-Learning Update Rule}
+        \begin{equation}
+        Q(s, a) \gets Q(s, a) + \alpha \left( r + \gamma \max_a Q(s', a) - Q(s, a) \right)
+        \end{equation}
+        where \( Q(s, a) \) is the action-value function, \( \alpha \) is the learning rate, \( r \) is the reward, \( \gamma \) is the discount factor, and \( s' \) is the new state.
+    \end{block}
+
+    \begin{block}{SARSA Update Rule}
+        \begin{equation}
+        Q(s, a) \gets Q(s, a) + \alpha \left( r + \gamma Q(s', a') - Q(s, a) \right)
+        \end{equation}
+        where \( a' \) is the action taken in state \( s' \).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    The applications of Temporal Difference Learning, especially through Q-learning and SARSA, span various industries. They drive innovations in robotics, gaming, finance, healthcare, and NLP, showcasing the power and adaptability of reinforcement learning to solve real-world challenges.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions - Key Points}
+    \begin{itemize}
+        \item \textbf{Temporal Difference Learning (TD Learning)} combines dynamic programming and Monte Carlo methods, allowing agents to learn from incomplete episodes.
+        \item \textbf{Key Methods}:
+            \begin{itemize}
+                \item \textbf{Q-Learning} and \textbf{SARSA} both update value functions based on predicted vs actual rewards.
+            \end{itemize}
+        \item \textbf{Exploration vs. Exploitation}: Balancing exploration of new actions and exploiting known rewarding actions is crucial.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions - Impact on Reinforcement Learning}
+    \begin{itemize}
+        \item \textbf{Efficiency}: TD Learning enhances reinforcement learning by enabling online learning from experience.
+        \item \textbf{Convergence}: Theoretical foundations ensure convergence to optimal policies under specific conditions.
+        \item \textbf{Real-World Applications}: Widely used in areas such as robotics and game playing (e.g., AlphaGo).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions - Future Research Areas}
+    \begin{enumerate}
+        \item \textbf{Deep Reinforcement Learning}: Integrating TD Learning with deep learning for complex environments.
+        \item \textbf{Variational Methods}: Exploring variational inference to enhance exploration strategies.
+        \item \textbf{Multi-Agent Systems}: Adapting TD Learning for cooperation/competition among agents.
+        \item \textbf{Transfer Learning}: Facilitating knowledge transfer to speed up learning in new tasks.
+        \item \textbf{Meta-Reinforcement Learning}: Developing algorithms to optimize learning efficiency in TD Learning approaches.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions - Final Thoughts}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item TD Learning is a foundational aspect of reinforcement learning.
+            \item Balancing exploration and exploitation remains essential.
+            \item Future research can lead to innovations in learning architectures and multi-agent collaboration.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Directions - Notation}
+    \begin{equation}
+        Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+    \end{equation}
+    \begin{equation}
+        Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma Q(s', a') - Q(s, a) \right)
+    \end{equation}
+    where:
+    \begin{itemize}
+        \item \( Q(s, a) \) is the current estimate of the action value.
+        \item \( r \) is the observed reward.
+        \item \( \gamma \) is the discount factor.
+        \item \( \alpha \) is the learning rate.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q\&A Session}
+    % An interactive session designed for discussion
+    This is an interactive session designed to foster discussion and clarify concepts related to Temporal Difference (TD) Learning. Please share your questions or topics for further exploration.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts to Consider}
+    \begin{enumerate}
+        \item \textbf{Temporal Difference Learning (TD Learning)}:
+            \begin{itemize}
+                \item Reinforcement learning technique that updates the value of the current state based on the estimated value of the next state.
+                \item Blends ideas from Monte Carlo methods and dynamic programming.
+            \end{itemize}
+        
+        \item \textbf{Connections to Reinforcement Learning}:
+            \begin{itemize}
+                \item TD Learning is fundamental in training agents to learn optimal policies by balancing exploration and exploitation.
+                \item Applications include games, robotics, and AI decision-making.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples for Discussion}
+    \begin{itemize}
+        \item \textbf{TD(0) Algorithm}:
+            \begin{equation}
+            V(s) \leftarrow V(s) + \alpha \left( R + \gamma V(s') - V(s) \right)
+            \end{equation}
+            \begin{itemize}
+                \item Where:
+                \begin{itemize}
+                    \item $V(s)$ = Value of current state
+                    \item $R$ = Reward received after transitioning
+                    \item $\gamma$ = Discount factor (0 < $\gamma$ < 1)
+                    \item $s'$ = Next state
+                \end{itemize}
+                \item \textbf{Discussion Point}: How does changing the learning rate $\alpha$ affect convergence?
+            \end{itemize}
+        
+        \item \textbf{Q-Learning}:
+            \begin{equation}
+            Q(s, a) \leftarrow Q(s, a) + \alpha \left( R + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+            \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Questions to Ponder}
+    \begin{itemize}
+        \item How does TD Learning compare to other methods like Monte Carlo or Dynamic Programming?
+        \item Can you think of real-world applications where TD Learning improves decision-making?
+        \item What challenges might arise when implementing TD Learning in large state spaces?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Encouraging Participation}
+    \begin{itemize}
+        \item Invite students to share their thoughts on the strengths and weaknesses of TD Learning.
+        \item Prompt questions about practical implementations: “Have you ever encountered TD Learning in machine learning projects?”
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    % Aim to consolidate learning through Q&A
+    This session aims to consolidate learning by allowing students to voice uncertainties and curiosities about Temporal Difference Learning. Use this opportunity to enhance your understanding by exploring applications, theoretical underpinnings, and future possibilities in the field of reinforcement learning.
+\end{frame}
+
+
+\end{document}

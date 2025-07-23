@@ -1,0 +1,732 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+basicstyle=\ttfamily\small,
+keywordstyle=\color{blue},
+commentstyle=\color{gray},
+stringstyle=\color{red},
+breaklines=true,
+frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Chapter 3: Asymmetric Cryptography}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Asymmetric Cryptography}
+    \begin{block}{Overview}
+        A brief overview of asymmetric cryptography and its importance in modern security.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Asymmetric Cryptography?}
+    \begin{itemize}
+        \item Also known as public-key cryptography.
+        \item Utilizes a pair of keys: public key and private key. 
+        \item Enables secure communication without prior shared secrets.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{itemize}
+        \item \textbf{Public Key}: 
+        \begin{itemize}
+            \item Available to anyone for encrypting messages.
+            \item Cannot decrypt the data it encrypts.
+        \end{itemize}
+        
+        \item \textbf{Private Key}: 
+        \begin{itemize}
+            \item Kept secret by the owner.
+            \item Used to decrypt messages encrypted with the corresponding public key.
+        \end{itemize}
+        
+        \item \textbf{Key Pair}: 
+        \begin{itemize}
+            \item Unique pairing of a public and private key.
+            \item Mathematically related, allowing encryption and decryption processes.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance in Modern Security}
+    \begin{enumerate}
+        \item \textbf{Secure Communication}:
+            Essential for email encryption, HTTPS, and digital signatures.
+        
+        \item \textbf{Authentication}:
+            Verifies identities of users or systems.
+        
+        \item \textbf{Data Integrity}:
+            Digital signatures can confirm data has not been altered.
+        
+        \item \textbf{Scalability}:
+            Allows secure message sending using only the recipient's public key.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Asymmetric Cryptography}
+    \begin{itemize}
+        \item Consider Alice and Bob who want to communicate securely:
+        \begin{enumerate}
+            \item Bob generates his key pair (public key and private key).
+            \item Bob shares his public key with Alice.
+            \item Alice uses Bob's public key to encrypt a message.
+            \item Only Bob can use his private key to decrypt the message from Alice.
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Non-Repudiation}: Parties cannot deny their participation due to unique key pairs.
+        
+        \item \textbf{Mathematical Security}: Relies on complex problems like factoring large numbers.
+        
+        \item \textbf{Common Algorithms}: Examples include RSA, DSA (Digital Signature Algorithm), and ECC (Elliptic Curve Cryptography).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Understanding Asymmetric Cryptography}
+        - It plays a critical role in securing digital communications and protecting sensitive information in today’s digitally-driven world.
+    \end{block}
+    \begin{block}{Next Topic}
+        \textit{In the following slide, we will dive deeper into how the RSA algorithm exemplifies these principles of asymmetric cryptography and its applications in secure data transmission.}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is RSA?}
+    % Overview of RSA Algorithm
+    \begin{block}{Overview}
+        RSA (Rivest-Shamir-Adleman) is one of the most widely used asymmetric cryptographic algorithms, securing data transmission using the mathematical properties of large prime numbers.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of RSA}
+    % Structure of RSA
+    \begin{enumerate}
+        \item \textbf{Key Pair}:
+        \begin{itemize}
+            \item \textbf{Public Key}: Shared for encryption.
+            \item \textbf{Private Key}: Secret for decryption.
+        \end{itemize}
+        
+        \item \textbf{Key Components}:
+        \begin{itemize}
+            \item Two large prime numbers: \( p \) and \( q \)
+            \item Modulus: \( n = p \times q \)
+            \item Totient: \( \phi(n) = (p-1) \times (q-1) \)
+            \item Public Exponent: \( e \) (typically 65537)
+            \item Private Exponent: \( d \) (modular inverse of \( e \mod \phi(n) \))
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How RSA Works}
+    % How RSA Works
+    \begin{enumerate}
+        \item \textbf{Key Generation}:
+        \begin{itemize}
+            \item Choose two distinct large prime numbers, \( p \) and \( q \).
+            \item Compute \( n = p \times q \).
+            \item Calculate \( \phi(n) = (p-1)(q-1) \).
+            \item Choose \( e \) such that \( 1 < e < \phi(n) \) and \( \text{gcd}(e, \phi(n)) = 1 \).
+            \item Compute private exponent \( d \) such that \( d \equiv e^{-1} \mod \phi(n) \).
+        \end{itemize}
+
+        \item \textbf{Encryption}:
+        \[
+        C \equiv M^e \mod n
+        \]
+        
+        \item \textbf{Decryption}:
+        \[
+        M \equiv C^d \mod n
+        \]
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RSA Example}
+    % Example of RSA
+    Consider \( p = 61 \) and \( q = 53 \):
+    \begin{itemize}
+        \item Compute \( n = 61 \times 53 = 3233 \)
+        \item Calculate \( \phi(n) = (61-1)(53-1) = 3120 \)
+        \item Choose \( e = 17 \) (common choice since it is coprime to 3120)
+        \item Determine \( d \): using Extended Euclidean Algorithm, \( d = 2753 \).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance of RSA}
+    % Significance of RSA
+    \begin{itemize}
+        \item \textbf{Data Integrity}: Ensures data remains unchanged during transmission.
+        \item \textbf{Confidentiality}: Only intended recipients can decrypt messages.
+        \item \textbf{Authentication}: Verifies sender's identity via digital signatures.
+    \end{itemize}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item RSA relies on the difficulty of factoring large integers.
+            \item Foundational for securing modern communication (e.g., HTTPS).
+            \item Security increases with larger key sizes (2048 to 4096 bits commonly used).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RSA Key Generation - Overview}
+    \begin{block}{What is RSA?}
+        RSA (Rivest-Shamir-Adleman) is a widely used asymmetric cryptographic algorithm that relies on two keys: 
+        a public key for encryption and a private key for decryption. 
+        The security of RSA is based on the mathematical difficulty of factoring large prime numbers.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RSA Key Generation - Key Steps}
+    \begin{enumerate}
+        \item **Choose Two Prime Numbers (p and q)**:
+        \begin{itemize}
+            \item Select two distinct large random prime numbers, \( p \) and \( q \).
+            \item Example: Let \( p = 61 \) and \( q = 53 \).
+        \end{itemize}
+
+        \item **Calculate \( n \)**:
+        \begin{itemize}
+            \item Compute \( n = p \times q \).
+            \item Example: 
+            \[
+            n = 61 \times 53 = 3233
+            \]
+        \end{itemize}
+
+        \item **Calculate Euler's Totient Function \( \phi(n) \)**:
+        \begin{itemize}
+            \item \( \phi(n) = (p-1) \times (q-1) \).
+            \item Example:
+            \[
+            \phi(n) = (61 - 1) \times (53 - 1) = 60 \times 52 = 3120
+            \]
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RSA Key Generation - Completing the Process}
+    \begin{enumerate}[resume]
+        \item **Choose the Public Exponent \( e \)**:
+        \begin{itemize}
+            \item Choose an integer \( e \) such that \( 1 < e < \phi(n) \) and \( e \) is coprime to \( \phi(n) \). 
+            \item Example: Let \( e = 17 \).
+        \end{itemize}
+
+        \item **Calculate the Private Exponent \( d \)**:
+        \begin{itemize}
+            \item Determine \( d \) as the modular multiplicative inverse of \( e \) modulo \( \phi(n) \).
+            \item Use the Extended Euclidean Algorithm to find \( d \).
+            \item Example: \( d = 2753 \).
+        \end{itemize}
+
+        \item **Form the Key Pairs**:
+        \begin{itemize}
+            \item **Public Key**: \( (e, n) \) - Example: \( (17, 3233) \)
+            \item **Private Key**: \( (d, n) \) - Example: \( (2753, 3233) \)
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RSA Key Generation - Key Points and Summary}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item The security of RSA is based on the difficulty of factoring the product of two large primes.
+            \item It's computationally infeasible to derive the private key from the public key.
+            \item Choose \( p \) and \( q \) large enough to ensure security against factoring attacks.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Summary}
+        RSA key generation is essential for asymmetric cryptography. 
+        Understanding this process is crucial for secure communication over insecure channels, with implications for 
+        RSA encryption and decryption methods.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RSA Encryption and Decryption - Overview}
+    \begin{block}{Overview of RSA Processes}
+        RSA (Rivest–Shamir–Adleman) is a widely used public-key cryptosystem, 
+        known for its security derived from the difficulty of factoring large prime numbers.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Public Key (e)}: Used for encryption, openly shared.
+        \item \textbf{Private Key (d)}: Used for decryption, kept confidential.
+        \item \textbf{Modulus (n)}: Product of two large prime numbers (p and q).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RSA - Mathematical Foundations}
+    \begin{enumerate}
+        \item Choose two prime numbers:
+            \begin{itemize}
+                \item \( p = 61 \), \( q = 53 \)
+                \item Compute \( n = p \times q = 61 \times 53 = 3233 \)
+            \end{itemize}
+        \item Compute Euler's Totient Function:
+            \[
+            \phi(n) = (p-1)(q-1) = (61-1)(53-1) = 60 \times 52 = 3120
+            \]
+        \item Select public exponent \( e \):
+            \begin{itemize}
+                \item Choose \( e = 17 \) (common choices include 3, 17, 65537)
+            \end{itemize}
+        \item Calculate private exponent \( d \):
+            \[
+            d \times e \equiv 1 \mod \phi(n)
+            \]
+            \item Result: \( d = 2753 \)
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RSA - Encryption and Decryption}
+    \textbf{Encryption Process:}
+    1. Convert plaintext \( M \) to an integer (e.g., \( M = 65 \)).
+    2. Calculate ciphertext \( C \):
+    \[
+    C = M^e \mod n
+    \]
+    \[
+    C = 65^{17} \mod 3233 = 2790
+    \]
+
+    \textbf{Decryption Process:}
+    1. Calculate original message \( M \):
+    \[
+    M = C^d \mod n
+    \]
+    \[
+    M = 2790^{2753} \mod 3233 = 65
+    \]
+    2. Convert \( M \) back to character representation (e.g., "A").
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Security Features of RSA - Overview}
+    \begin{block}{Overview of RSA Security}
+        RSA (Rivest-Shamir-Adleman) is an asymmetric cryptographic algorithm widely used for secure data transmission. Its security is founded on the mathematical properties of prime factorization, making it essential to analyze its strengths and vulnerabilities.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Security Features of RSA - Key Strengths}
+    \begin{itemize}
+        \item \textbf{Foundation in Mathematical Complexity:}
+        \begin{itemize}
+            \item RSA relies on the difficulty of factoring large integers into their prime components, a problem known to be computationally hard.
+            \item Example: Multiplying two large primes (e.g., 61 and 53) is easy; however, factoring 3233 back into these primes is significantly more challenging for larger numbers.
+        \end{itemize}
+        \item \textbf{Public/Private Key Pair:}
+        \begin{itemize}
+            \item RSA employs a pair of keys: a public key for encryption and a private key for decryption.
+            \item The security of the private key is maintained even if the public key is publicly available.
+        \end{itemize}
+        \item \textbf{Digital Signatures:}
+        \begin{itemize}
+            \item RSA can authenticate messages via digital signatures, where a message is signed with a private key and verified with the public key.
+            \item This process ensures the integrity and authenticity of data.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Security Features of RSA - Key Vulnerabilities}
+    \begin{itemize}
+        \item \textbf{Key Size and Strength:}
+        \begin{itemize}
+            \item Security increases with key size; commonly used sizes are 2048 bits and 3072 bits.
+            \item Smaller keys (e.g., 1024 bits) are increasingly vulnerable due to advances in computational power.
+            \item Example: As of 2023, 1024-bit keys are susceptible to sophisticated factoring techniques like the General Number Field Sieve (GNFS).
+        \end{itemize}
+        \item \textbf{Timing Attacks:}
+        \begin{itemize}
+            \item RSA is susceptible to side-channel attacks, including timing attacks where computation time variations are exploited to deduce information about the private key.
+            \item Implementing constant-time algorithms mitigates such risks.
+        \end{itemize}
+        \item \textbf{Padding Schemes:}
+        \begin{itemize}
+            \item Improper padding schemes (e.g., PKCS#1 v1.5) can lead to chosen ciphertext attacks.
+            \item It is crucial to use secure padding mechanisms (e.g., OAEP) to ensure the security of underlying messages.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Security Features of RSA - Summary and Conclusion}
+    \begin{block}{Summary of RSA Security Features}
+        \begin{itemize}
+            \item \textbf{Strengths:} Based on hard mathematical problems, uses public/private keys for secure communication, supports digital signatures.
+            \item \textbf{Vulnerabilities:} Dependent on key size, susceptible to timing and side-channel attacks, sensitive to padding schemes.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Although RSA remains a cornerstone of modern cryptography due to its solid theoretical foundation and practical applications, developers must be vigilant about proper implementation practices and evolving cryptographic standards to maintain security against emerging threats.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Security Features of RSA - Code Snippet Example}
+    \begin{lstlisting}[language=Python]
+from Crypto.PublicKey import RSA
+
+# Generate RSA Keys
+key = RSA.generate(2048)
+private_key = key.export_key()
+public_key = key.publickey().export_key()
+print("Private Key:")
+print(private_key.decode())
+print("Public Key:")
+print(public_key.decode())
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is ECC? - Introduction}
+    \begin{block}{Definition}
+        Elliptic Curve Cryptography (ECC) is a public key cryptographic method based on the algebraic structure of elliptic curves over finite fields. It provides secure communication and data encryption while using smaller keys compared to traditional methods like RSA.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is ECC? - Structure}
+    \begin{itemize}
+        \item \textbf{Elliptic Curve Equation:} The general form of an elliptic curve equation is:
+        \[
+        y^2 = x^3 + ax + b
+        \]
+        where \(4a^3 + 27b^2 \neq 0\). Here, \(a\) and \(b\) are constants determining the shape of the curve.
+        
+        \item \textbf{Finite Fields:} ECC operates within a finite field, typically denoted as \(GF(p)\) (for prime \(p\)) or \(GF(2^m)\) (for binary fields).
+        
+        \item \textbf{Points on the Curve:} An elliptic curve consists of points (x, y) that satisfy the curve's equation and a special point at infinity, which acts as the identity element for elliptic curve operations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is ECC? - Advantages and Use Cases}
+    \begin{block}{Advantages of ECC over RSA}
+        \begin{enumerate}
+            \item \textbf{Smaller Key Sizes:} A 256-bit key in ECC provides the same security as a 3072-bit key in RSA.
+            \item \textbf{Faster Computations:} ECC operations are computationally less intensive than RSA.
+            \item \textbf{Lower Resource Utilization:} ECC is suitable for mobile and IoT devices due to requiring fewer resources.
+            \item \textbf{Scalability:} ECC can achieve higher security levels with smaller key sizes as security requirements increase.
+        \end{enumerate}
+    \end{block}
+    
+    \begin{block}{Example Use Cases}
+        \begin{itemize}
+            \item \textbf{Digital Signatures:} Commonly used in ECDSA for data integrity.
+            \item \textbf{Key Exchange:} Facilitates secure key exchange protocols like ECDH.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ECC Key Generation - Overview}
+    \begin{block}{Understanding ECC Key Generation}
+        Elliptic Curve Cryptography (ECC) relies on the mathematics of elliptic curves to generate secure cryptographic keys. The key generation process is fundamental for ensuring the security of ECC-based encryption and decryption methods.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ECC Key Generation - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Public and Private Keys}:
+        \begin{itemize}
+            \item \textbf{Private Key}: A randomly selected integer, which must remain confidential.
+            \item \textbf{Public Key}: A point on the elliptic curve derived from the private key, shared openly.
+        \end{itemize}
+        
+        \item \textbf{Elliptic Curves}:
+        \begin{itemize}
+            \item Defined by the equation:
+            \begin{equation}
+                y^2 = x^3 + ax + b
+            \end{equation}
+            \item The choice of parameters \(a\) and \(b\) determines the curve's shape and properties.
+        \end{itemize}
+        
+        \item \textbf{Finite Fields}: ECC operates over finite fields (commonly \(GF(p)\), where \(p\) is a prime number).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ECC Key Generation - Process and Example}
+    \begin{block}{Key Generation Process}
+        \begin{enumerate}
+            \item \textbf{Select an Elliptic Curve}: Choose a curve and a base point \(G\).
+            \item \textbf{Choose a Private Key}: Randomly select a private key \(d\) from \([1, n-1]\), where \(n\) is the order of \(G\).
+            \item \textbf{Calculate the Public Key}: Compute \(Q = d \cdot G\).
+        \end{enumerate}
+    \end{block}
+
+    \begin{block}{Example}
+        \begin{itemize}
+            \item Curve parameters: \(a = 2\), \(b = 3\) over \(GF(97)\), base point \(G = (3, 6)\).
+            \item Private Key: Randomly select \(d = 10\).
+            \item Public Key Calculation: \(Q = 10 \cdot G\) (involves elliptic curve point addition).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ECC Encryption and Decryption}
+    \begin{block}{Overview}
+        Elliptic Curve Cryptography (ECC) is an asymmetric key encryption technology that utilizes the mathematics of elliptic curves to secure data transmission. 
+        ECC offers equivalent security to traditional systems like RSA but uses significantly smaller key sizes.
+    \end{block}
+    
+    \begin{block}{Key Concepts}
+        \begin{itemize}
+            \item **Elliptic Curve**: Defined by the equation $y^2 = x^3 + ax + b$ with constants $a$ and $b$.
+            \item **Finite Fields**: Operates over finite fields ($\mathbb{F}_p$ or $\mathbb{F}_{2^m}$).
+            \item **Key Pair Generation**: Private key $d$ and public key $P = d \times G$.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ECC Encryption Process}
+    \begin{block}{Encryption Steps}
+        \begin{enumerate}
+            \item Select an elliptic curve over a finite field and generate a key pair.
+            \item For plaintext message $M$, convert it into a point on the curve.
+            \item Choose a random integer $k$ and compute:
+                \begin{itemize}
+                    \item $C_1 = k \times G$ (the ephemeral public key)
+                    \item $C_2 = M + k \times P$ (the ciphertext)
+                \end{itemize}
+        \end{enumerate}
+        The ciphertext consists of $(C_1, C_2)$.
+    \end{block}
+
+    \begin{block}{Example}
+        Let’s say $G$ is known; after calculating $C_1$ and $C_2$, the transmitted ciphertext will be:
+        \[
+        \text{Ciphertext: } (C_1, C_2)
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ECC Decryption Process}
+    \begin{block}{Decryption Steps}
+        \begin{enumerate}
+            \item Receive the ciphertext $(C_1, C_2)$.
+            \item Use the private key $d$ to compute:
+                \[
+                M' = C_2 - d \times C_1
+                \]
+                where $M'$ is the decrypted plaintext point.
+            \item Convert the point $M'$ back to the plaintext message $M$.
+        \end{enumerate}
+    \end{block}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item ECC uses smaller key sizes than RSA, resulting in faster computations.
+            \item Security is based on the difficulty of the Elliptic Curve Discrete Logarithm Problem (ECDLP).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Security Features of ECC - Introduction}
+    \begin{block}{Understanding ECC (Elliptic Curve Cryptography)}
+        Elliptic Curve Cryptography (ECC) is an asymmetric cryptography approach that utilizes the mathematics of elliptic curves over finite fields, providing unique security advantages over traditional methods like RSA.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Security Features of ECC - Benefits}
+    \begin{block}{Security Benefits of ECC}
+        \begin{enumerate}
+            \item \textbf{High Security with Smaller Keys}:
+            \begin{itemize}
+                \item ECC can achieve security comparable to RSA with significantly smaller key sizes.
+                \item Example: A 256-bit ECC key offers similar security to a 3072-bit RSA key.
+                \item \textit{Implication:} This leads to lower computational load, faster encryption/decryption, and reduced storage requirements.
+            \end{itemize}
+            
+            \item \textbf{Resistance to Cryptanalysis}:
+            \begin{itemize}
+                \item ECC is based on the difficulty of the Elliptic Curve Discrete Logarithm Problem (ECDLP), which is considered harder to solve than the integer factorization problem used in RSA.
+                \item \textit{Key Insight:} ECC is believed to be more secure against future quantum attacks.
+            \end{itemize}
+
+            \item \textbf{Customizable Security}:
+            \begin{itemize}
+                \item Different curves with standardized parameters (e.g., NIST P-256) can be selected for specific security levels.
+                \item \textit{Example:} Specific curves can enhance performance in constrained environments like IoT devices.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Security Features of ECC - Drawbacks and Conclusion}
+    \begin{block}{Potential Drawbacks of ECC}
+        \begin{enumerate}
+            \item \textbf{Complex Implementation}:
+            \begin{itemize}
+                \item The complexity of ECC's mathematics increases the likelihood of implementation errors.
+            \end{itemize}
+
+            \item \textbf{Limited Adoption and Standardization}:
+            \begin{itemize}
+                \item ECC's adoption is not yet as widespread as RSA, leading to potential compatibility challenges.
+            \end{itemize}
+          
+            \item \textbf{Need for Specialized Knowledge}:
+            \begin{itemize}
+                \item Developers must be well-versed in ECC concepts, presenting a steeper learning curve.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+    
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item \textbf{Efficiency}: Smaller keys for the same level of security result in higher efficiency.
+            \item \textbf{Robustness}: Resistance to current and future threats highlights ECC's advantages.
+            \item \textbf{Implementation Care}: Caution is needed during implementation due to its complexity.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        ECC provides a modern, efficient solution for asymmetric cryptography while balancing robust security and practical performance, emphasizing careful implementation and understanding.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of RSA and ECC - Overview}
+    \begin{block}{Overview of Asymmetric Cryptography}
+        Asymmetric cryptography uses a pair of keys—a public key for encryption and a private key for decryption. RSA (Rivest-Shamir-Adleman) and ECC (Elliptic Curve Cryptography) are two widely-used asymmetric algorithms.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of RSA and ECC - Key Points}
+    \begin{itemize}
+        \item \textbf{Key Size:}
+        \begin{itemize}
+            \item RSA requires larger keys (2048 bits recommended) for similar security levels.
+            \item ECC uses much shorter keys (256 bits can provide equivalent security to 3072-bit RSA).
+        \end{itemize}
+        
+        \item \textbf{Performance:}
+        \begin{itemize}
+            \item RSA is slower and more resource-intensive due to larger key sizes.
+            \item ECC is faster and less resource-heavy, suitable for devices with limited processing power.
+        \end{itemize}
+        
+        \item \textbf{Security Level:}
+        \begin{itemize}
+            \item RSA's security is based on factoring large prime numbers, making it vulnerable to quantum computing.
+            \item ECC's security relies on the Elliptic Curve Discrete Logarithm Problem (ECDLP), offering stronger security with shorter keys.
+        \end{itemize}
+        
+        \item \textbf{Use Cases:}
+        \begin{itemize}
+            \item RSA: Secure communication, digital signatures, certificate authorities.
+            \item ECC: Mobile applications, IoT devices, environments with limited power and bandwidth.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of RSA and ECC - Applications and Security}
+    \begin{itemize}
+        \item \textbf{Applications:}
+        \begin{itemize}
+            \item RSA is extensively used for secure web transmission (HTTPS), signing software, and email protection.
+            \item ECC is preferred in mobile and wireless communications due to efficiency; examples include IoT device security and modern VPNs.
+        \end{itemize}
+        
+        \item \textbf{Performance Illustration:}
+        \begin{enumerate}
+            \item RSA: \( C \equiv M^e \mod n \)
+            \item ECC: \( C = k \cdot P \quad \text{(where } k \text{ is a randomly chosen integer and } P \text{ is a point on the curve)} \)
+        \end{enumerate}
+
+        \item \textbf{Security Comparison:}
+        \begin{itemize}
+            \item RSA security depends on integer factorization, whereas ECC offers stronger security with smaller keys due to ECDLP complexity.
+            \item ECC better withstands quantum computing threats, making it a choice for future-proof applications.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion on RSA and ECC}
+    Both RSA and ECC have their respective strengths and weaknesses. 
+    \begin{itemize}
+        \item RSA is well-established, synonymous with secure communications.
+        \item ECC provides efficient performance and stronger security for modern cryptographic needs.
+    \end{itemize}
+    Understanding these differences is crucial for selecting the appropriate cryptographic method in various contexts.
+\end{frame}
+
+
+\end{document}

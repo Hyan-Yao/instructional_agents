@@ -1,0 +1,829 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    breaklines=true,
+    frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Week 3: Data Ingestion Techniques}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Data Ingestion Techniques}
+    \begin{block}{Understanding Data Ingestion}
+        Data ingestion is a critical process in data processing frameworks that involves collecting, importing, and processing data from various sources to a storage system where it can be analyzed and utilized. 
+    \end{block}
+    
+    \begin{block}{Importance of Data Ingestion}
+        Effective data ingestion techniques enable organizations to streamline their data workflows, ensuring that high volumes of data can be efficiently handled and transformed into actionable insights.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Data Ingestion}
+    \begin{enumerate}
+        \item \textbf{Foundation for Data Analytics}:
+            \begin{itemize}
+                \item Serves as the first step in the data lifecycle.
+                \item Inadequate methods can lead to delays and inaccuracies.
+            \end{itemize}
+        \item \textbf{Handling Large Datasets}:
+            \begin{itemize}
+                \item Requires sophisticated ingestion methods to manage data.
+                \item Ensures scalability without sacrificing performance.
+            \end{itemize}
+        \item \textbf{Real-time and Batch Processing}:
+            \begin{itemize}
+                \item Necessary for both real-time and batch capabilities.
+                \item Choosing the right method (e.g., Apache Kafka vs. traditional ETL) is essential.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Techniques in Data Ingestion}
+    \begin{enumerate}
+        \item \textbf{Batch Ingestion}:
+            \begin{itemize}
+                \item Data is collected over a period and processed as a batch.
+                \item \textit{Example:} End-of-day sales data from a retail store processed nightly.
+            \end{itemize}
+        \item \textbf{Stream Ingestion}:
+            \begin{itemize}
+                \item Data ingested in real-time as it is generated.
+                \item \textit{Example:} Continuous monitoring of website user activity.
+            \end{itemize}
+    \end{enumerate}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Scalability: Ingestion methods must grow with incoming data.
+            \item Flexibility: Choosing between batch and stream based on requirements is critical.
+            \item Performance: Optimal methods reduce latency and ensure accuracy.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Data Ingestion - Definition}
+    \begin{block}{Definition of Data Ingestion}
+        Data ingestion is the process of obtaining and importing data for immediate use or storage in a database. 
+        It is a critical step in the data lifecycle as it enables organizations to collect data from diverse sources, making it available for analysis and decision-making.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Data Ingestion - Role in the Data Lifecycle}
+    \begin{enumerate}
+        \item \textbf{Collection:} Data is gathered from various sources such as databases, sensors, APIs, and file systems.
+        \item \textbf{Storage:} Ingested data is stored in data repositories like data lakes, warehouses, and databases.
+        \item \textbf{Processing:} Data can then be transformed and analyzed to extract meaningful insights.
+        \item \textbf{Consumption:} Users or applications can access, visualize, and utilize the processed data for strategic purposes.
+    \end{enumerate}
+    \begin{block}{Key Point}
+        Data ingestion is essential for ensuring seamless transitions and operations across different stages of the data lifecycle.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Data Ingestion}
+    \begin{enumerate}
+        \item \textbf{Batch Ingestion:}
+        \begin{itemize}
+            \item \textbf{Definition:} Collecting and processing data in large chunks or batches at scheduled intervals.
+            \item \textbf{Characteristics:}
+            \begin{itemize}
+                \item Lower resource consumption as it processes data at set times.
+                \item Suitable for historical data analysis and reporting.
+                \item Typically involves higher latency due to the scheduled nature of ingestion.
+            \end{itemize}
+            \item \textbf{Examples:}
+            \begin{itemize}
+                \item End-of-day sales reports collected every 24 hours.
+                \item Financial transactions processed every hour.
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Stream Ingestion:}
+        \begin{itemize}
+            \item \textbf{Definition:} Ingestion of data in real-time and processing it continuously as it arrives.
+            \item \textbf{Characteristics:}
+            \begin{itemize}
+                \item Immediate data availability, reducing latency.
+                \item Ideal for time-sensitive applications such as online transaction processing.
+            \end{itemize}
+            \item \textbf{Examples:}
+            \begin{itemize}
+                \item Monitoring social media feeds for brand mentions.
+                \item Real-time fraud detection systems analyzing transactions as they occur.
+            \end{itemize}
+        \end{itemize}        
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Batch vs. Stream Ingestion - Summary Table}
+    \begin{table}[]
+        \centering
+        \begin{tabular}{|l|l|l|}
+            \hline
+            \textbf{Feature}          & \textbf{Batch Ingestion}          & \textbf{Stream Ingestion}        \\ \hline
+            \textbf{Process Type}     & Scheduled batches                 & Continuous stream                 \\ \hline
+            \textbf{Latency}          & Higher (depends on schedule)      & Lower (real-time)                 \\ \hline
+            \textbf{Use Case}         & Historical analysis                & Real-time analytics               \\ \hline
+            \textbf{Resource Consumption} & Optimized per batch            & Ongoing processing                \\ \hline
+        \end{tabular}
+        \caption{Comparison of Batch and Stream Ingestion}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Data Ingestion - Conclusion}
+    \begin{block}{Conclusion}
+        Data ingestion is not just a technical necessity; it is a strategic component of data-driven decision-making. Understanding its various techniques empowers practitioners to optimize data workflows and harness the full potential of their data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Ingestion Methods - Overview}
+    \begin{block}{What is Data Ingestion?}
+        Data ingestion is the process of obtaining and importing data for immediate use or storage in a database. 
+        Understanding the various methods of data ingestion is crucial for ensuring that data is acquired efficiently and effectively.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Ingestion Methods - API-Based Ingestion}
+    \begin{itemize}
+        \item \textbf{Definition}: Using RESTful or SOAP APIs to retrieve data.
+        \item \textbf{Use Cases}: Ideal for real-time data access and integration with third-party services, e.g., fetching social media metrics.
+        \item \textbf{Example}:
+        \begin{lstlisting}[language=Python]
+import requests
+
+response = requests.get('https://api.example.com/customers')
+data = response.json()
+        \end{lstlisting}
+        \item \textbf{Benefits}:
+        \begin{itemize}
+            \item Enables real-time data updates
+            \item Reduces the need for manual uploads
+            \item Ensures data is always current
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Ingestion Methods - Message Brokers and Direct File Uploads}
+    \begin{enumerate}
+        \item \textbf{Message Brokers}
+        \begin{itemize}
+            \item \textbf{Definition}: Middleware for exchanging data between applications.
+            \item \textbf{Popular Tools}: Apache Kafka, RabbitMQ.
+            \item \textbf{Use Cases}: High-throughput data ingestion, telemetry data from IoT devices.
+            \item \textbf{Benefits}:
+            \begin{itemize}
+                \item Guarantees decoupling of services
+                \item Buffers incoming messages
+                \item Scalable to handle large datasets
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Direct File Uploads}
+        \begin{itemize}
+            \item \textbf{Definition}: Manually or programmatically uploading data files (e.g., CSV, JSON).
+            \item \textbf{Use Cases}: Ideal for batch processing and scheduled uploads.
+            \item \textbf{Benefits}:
+            \begin{itemize}
+                \item Simple implementation
+                \item Supports large file uploads
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Ingestion Methods - Key Points}
+    \begin{itemize}
+        \item \textbf{Flexibility}: Each method serves different operational needs.
+        \item \textbf{Integration}: Critical for seamless ETL (Extract, Transform, Load) processes and analytics.
+        \item \textbf{Choosing the Right Method}: Consider data volume, velocity, and freshness requirements.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Tools for Data Ingestion}
+    \begin{block}{Introduction to Data Ingestion Tools}
+        Data ingestion is a critical step in data processing, enabling organizations to bring in data from various sources for analysis and storage. 
+        This slide discusses three prominent tools:
+        \begin{itemize}
+            \item \textbf{Apache Kafka}
+            \item \textbf{Apache NiFi}
+            \item \textbf{AWS Glue}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Apache Kafka}
+    \begin{block}{Description}
+        \begin{itemize}
+            \item Kafka is a distributed streaming platform designed for building real-time data pipelines and streaming applications.
+            \item It allows applications to publish and subscribe to streams of records, similar to a message queue or enterprise messaging system.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Use Cases}
+        \begin{itemize}
+            \item Real-time data processing (e.g., monitoring website clicks).
+            \item Log aggregation from different services.
+            \item Stream processing and event sourcing.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Benefits}
+        \begin{itemize}
+            \item High throughput and low latency.
+            \item Fault-tolerant and scalable infrastructure.
+            \item Extensive ecosystem with support for various programming languages.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Apache NiFi and AWS Glue}
+    \begin{block}{Apache NiFi}
+        \begin{itemize}
+            \item NiFi is designed for automating the flow of data between systems, allowing data routing, transformation, and mediation.
+        \end{itemize}
+        
+        \begin{block}{Use Cases}
+            \begin{itemize}
+                \item Data ingestion from IoT devices.
+                \item ETL tasks for data transformation.
+                \item Data provenance and monitoring.
+            \end{itemize}
+        \end{block}
+        
+        \begin{block}{Benefits}
+            \begin{itemize}
+                \item User-friendly interface with drag-and-drop capabilities.
+                \item Data lineage tracking for auditing and debugging.
+                \item Support for various protocols and data formats.
+            \end{itemize}
+        \end{block}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{AWS Glue}
+    \begin{block}{Description}
+        AWS Glue is a fully managed ETL service that automates the discovery, preparation, and transformation of data for analytics.
+    \end{block}
+
+    \begin{block}{Use Cases}
+        \begin{itemize}
+            \item Data cataloging and data lake management.
+            \item Integrating data from multiple AWS services and external sources.
+            \item Transforming data using serverless computing.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Benefits}
+        \begin{itemize}
+            \item Serverless architecture reduces infrastructure management.
+            \item Integrated with AWS ecosystem (S3, RDS, etc.).
+            \item Cost-effective with pay-as-you-go pricing.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Choose the right tool based on specific ingestion needs (streaming vs. batch processing).
+            \item Scalability and reliability are essential for handling large data volumes.
+            \item Integration capabilities with existing systems are crucial for seamless data flow.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Understanding the strengths and use cases of these data ingestion tools enables organizations to optimize their data pipeline architectures, ensuring that they can handle increasing data demands efficiently.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing ETL Processes - Overview}
+    ETL stands for \textbf{Extract}, \textbf{Transform}, and \textbf{Load}. This process is crucial in data ingestion as it prepares raw data for analysis and ensures it is structured, clean, and valuable for decision-making.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing ETL Processes - Extract}
+    \begin{block}{1. Extract}
+        \begin{itemize}
+            \item \textbf{Definition}: This phase involves retrieving data from various sources, such as databases, APIs, or flat files.
+            \item \textbf{Examples}:
+                \begin{itemize}
+                    \item Pulling customer data from a CRM system.
+                    \item Fetching sales data from an e-commerce platform.
+                \end{itemize}
+            \item \textbf{Key Points}:
+                \begin{itemize}
+                    \item Sources can be structured (SQL databases) or unstructured (CSV files).
+                    \item It may require handling data in real time or batch mode.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing ETL Processes - Transform}
+    \begin{block}{2. Transform}
+        \begin{itemize}
+            \item \textbf{Definition}: In this phase, data undergoes necessary processing to convert it into a useful format.
+            \item \textbf{Examples of Transformations}:
+                \begin{itemize}
+                    \item \textit{Data Cleaning}: Removing duplicates and correcting inconsistencies.
+                    \item \textit{Data Enrichment}: Adding additional data fields, such as geographic information to customer records.
+                    \item \textit{Aggregation}: Summarizing data, like calculating total sales per month.
+                \end{itemize}
+            \item \textbf{Key Points}:
+                \begin{itemize}
+                    \item Transformations can involve complex operations, such as joining data from multiple sources.
+                    \item Maintains data integrity and prepares datasets for analysis.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing ETL Processes - Load}
+    \begin{block}{3. Load}
+        \begin{itemize}
+            \item \textbf{Definition}: The final phase of the ETL process where transformed data is moved to a target system, typically a data warehouse or data mart.
+            \item \textbf{Example}:
+                \begin{itemize}
+                    \item Loading processed sales data into Amazon Redshift for analytical queries.
+                \end{itemize}
+            \item \textbf{Key Points}:
+                \begin{itemize}
+                    \item Strategies can include \textit{full load} (moving all data) or \textit{incremental load} (moving only new or updated data).
+                    \item Ensures data is accessible for business intelligence tools and analytics.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing ETL Processes - Key Insights}
+    \begin{block}{Integration with Data Ingestion}
+        \begin{itemize}
+            \item ETL acts as a backbone for efficient data pipelines, allowing for systematic movement of data. 
+            \item Data ingestion tools (such as Apache Kafka or AWS Glue) often integrate ETL processes within their workflows to streamline data processing.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Benefits of ETL}
+        \begin{itemize}
+            \item Ensures data accuracy and quality.
+            \item Facilitates timely and efficient data analysis.
+            \item Supports decision-making with clean and structured datasets.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Scalability in Data Ingestion}
+    \begin{block}{Understanding Scalability}
+        Scalability in data ingestion refers to the ability of a system to handle increasing amounts of data efficiently without compromising performance. 
+        As organizations accumulate vast volumes of data, ensuring that your ingestion processes can scale effectively becomes crucial.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Challenges in Data Ingestion}
+    \begin{enumerate}
+        \item \textbf{Volume Growth:}
+        \begin{itemize}
+            \item Managing higher throughput without latency.
+            \item Example: A financial analytics company processing millions of transactions per second.
+        \end{itemize}
+        \item \textbf{Diverse Data Sources:}
+        \begin{itemize}
+            \item Ingesting data from various sources (APIs, databases, IoT devices).
+            \item Ensuring uniformity and efficiency across the pipeline.
+        \end{itemize}
+        \item \textbf{Latency Requirements:}
+        \begin{itemize}
+            \item Real-time data ingestion for applications like fraud detection.
+            \item Complexity in scaling real-time systems.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Strategies for Scalability}
+    \begin{enumerate}
+        \item \textbf{Horizontal Scaling}
+        \begin{itemize}
+            \item \textit{Definition:} Adding more machines (nodes) to distribute the data ingestion load.
+            \item \textit{Example:} A web application using multiple servers to collect user behavior data.
+            \item \textit{Execution:} Opt for a distributed architecture like Apache Kafka.
+        \end{itemize}
+        
+        \item \textbf{Fault-Tolerant Architecture}
+        \begin{itemize}
+            \item \textit{Definition:} Design ensuring system reliability and availability.
+            \item \textit{Example:} A data pipeline replicating data across nodes to handle failures.
+            \item \textit{Implementation:} Use technologies like Apache Flink or Apache Spark for fault tolerance.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Design for Growth:} Plan for future increases in data volume and variety.
+        \item \textbf{Monitor and Optimize:} Regularly assess and fine-tune the ingestion architecture.
+        \item \textbf{Leverage Cloud Solutions:} Consider cloud services (e.g., AWS Kinesis, Google Cloud Pub/Sub) for scalability features.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conceptual Diagram for Horizontal Scaling}
+    \begin{figure}
+        \centering
+        % Placeholder for Conceptual Diagram
+        \includegraphics[width=0.8\textwidth]{path_to_diagram} % Update with actual path
+        \caption{Architecture diagram showing basic horizontal scaling.}
+        \label{fig:horizontal_scaling}
+    \end{figure}
+    \begin{block}{Diagram Overview}
+        Data Sources $\rightarrow$ Load Balancer $\rightarrow$ Multiple Ingestion Nodes (with Fault Tolerance) $\rightarrow$ Data Storage/Processing Layer
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Ingestion Patterns}
+    \begin{block}{Overview}
+        Data ingestion is the process of collecting and importing data for immediate use or storage in a data repository. Understanding the different patterns of data ingestion is critical for building efficient data pipelines. This slide explores three common data ingestion patterns: 
+        \begin{itemize}
+            \item Change Data Capture (CDC) 
+            \item Event-Driven Ingestion 
+            \item Scheduled Ingestion
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Change Data Capture (CDC)}
+    \begin{block}{Description}
+        Change Data Capture (CDC) captures changes made to data in a database and propagates these changes to downstream systems, essential for keeping data synchronized.
+    \end{block}
+    
+    \begin{block}{How It Works}
+        \begin{itemize}
+            \item Monitors database logs for insertions, updates, or deletions.
+            \item Transmits only changed records, reducing load on network and storage.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example}
+        As soon as an order is shipped in an e-commerce application, CDC captures and sends this change to analytics databases for real-time visibility into order statuses.
+    \end{block}
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Real-time Updates
+            \item Efficiency in data transfer
+            \item Common Use Cases: Data warehousing and analytics
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Event-Driven Ingestion}
+    \begin{block}{Description}
+        Event-driven ingestion ingests data in response to real-time events and is useful for applications requiring immediate processing.
+    \end{block}
+    
+    \begin{block}{How It Works}
+        \begin{itemize}
+            \item Data producers generate events (e.g., IoT devices).
+            \item An event bus (like Apache Kafka) processes these events for further action.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example}
+        In a stock trading platform, each trade generates an event that triggers algorithms for real-time analytics.
+    \end{block}
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Immediate Processing
+            \item Scalability
+            \item Common Use Cases: Real-time analytics and alerts
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Scheduled Ingestion}
+    \begin{block}{Description}
+        Scheduled ingestion collects data at regular intervals, useful when real-time ingestion is impractical.
+    \end{block}
+    
+    \begin{block}{How It Works}
+        \begin{itemize}
+            \item A scheduling tool orchestrates data pulls at defined intervals (e.g., hourly, daily).
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example}
+        A financial institution aggregates daily transaction data overnight for next-day reporting.
+    \end{block}
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Predictable Loads
+            \item Efficient for batch processing
+            \item Common Use Cases: Reporting and backups
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Data Ingestion Patterns}
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Ingestion Pattern} & \textbf{Key Characteristics} & \textbf{Use Cases} \\
+        \hline
+        Change Data Capture       & Real-time, efficient, syncs changes & Data warehousing, replication \\
+        \hline
+        Event-Driven Ingestion    & Immediate, responds to events & Real-time analytics, notifications \\
+        \hline
+        Scheduled Ingestion        & Regular intervals, batch processing & Reporting, backups \\
+        \hline
+    \end{tabular}
+    
+    Understanding these ingestion patterns helps organizations choose suitable methodologies based on data requirements and system performance.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Examples of Data Ingestion Techniques - Overview}
+    Data ingestion is a crucial step in data processing and analytics.  
+    Successful organizations leverage various techniques to streamline their data pipelines, ensuring efficient and timely access to data.  
+    Below are case studies highlighting different data ingestion techniques and their impactful results.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 1: Spotify – Event-Driven Ingestion}
+    
+    \textbf{Context:}  
+    Spotify saves, processes, and analyzes billions of user actions daily (e.g., plays, skips).  
+    
+    \textbf{Technique:}  
+    \begin{itemize}
+        \item \textbf{Event-Driven Ingestion:}  
+        Spotify uses an event-driven architecture to capture real-time user interactions, employing message brokers (like Kafka) to stream data continuously.
+    \end{itemize}
+    
+    \textbf{Outcome:}  
+    \begin{itemize}
+        \item Real-time analytics capabilities enable instantaneous recommendations for songs and playlists based on user behavior.
+        \item Increases user engagement by personalizing content and enhancing the user experience.
+    \end{itemize}
+    
+    \textbf{Key Takeaway:}  
+    Emphasizes the power of event-driven ingestion for real-time data analysis and user engagement.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 2: Netflix – Change Data Capture (CDC)}
+    
+    \textbf{Context:}  
+    Netflix streams millions of videos and handles vast amounts of data from multiple regions.  
+    
+    \textbf{Technique:}  
+    \begin{itemize}
+        \item \textbf{Change Data Capture (CDC):}  
+        CDC is implemented to track changes in data sources (e.g., user preferences, content updates) without needing a full data refresh.
+    \end{itemize}
+    
+    \textbf{Outcome:}  
+    \begin{itemize}
+        \item Improved efficiency of data updates, reducing latency for up-to-date recommendations.
+        \item Elevated performance in scaling their data architecture by ingesting only changes instead of full datasets.
+    \end{itemize}
+    
+    \textbf{Key Takeaway:}  
+    Showcases the effectiveness of CDC in maintaining data integrity while minimizing resource consumption during ingestion.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 3: Target – Scheduled Ingestion}
+    
+    \textbf{Context:}  
+    Target needs to manage inventory and sales data across thousands of stores in real-time.  
+    
+    \textbf{Technique:}  
+    \begin{itemize}
+        \item \textbf{Scheduled Ingestion:}  
+        Target employs batch processes to ingest data from sales and inventory databases at regular intervals (e.g., every hour).
+    \end{itemize}
+    
+    \textbf{Outcome:}  
+    \begin{itemize}
+        \item Ensures data is up to date for inventory management and sales analytics.
+        \item Efficiently handles large datasets during off-peak hours, optimizing resource usage.
+    \end{itemize}
+    
+    \textbf{Key Takeaway:}  
+    Highlights the importance of scheduled ingestion for organizations dealing with predictable data loads while ensuring timely data analysis.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Techniques}
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Technique} & \textbf{Description} & \textbf{Primary Benefit} \\ \hline
+        Event-Driven & Continuous collection of real-time data events & Maximizes user engagement and responsiveness \\ \hline
+        Change Data Capture & Tracks and ingests only data changes & Reduces resource usage, increases efficiency \\ \hline
+        Scheduled Ingestion & Regularly timed data capture & Optimizes resource management for large datasets \\ \hline
+    \end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    The case studies demonstrate how organizations can significantly enhance their data ingestion processes using tailored techniques.  
+    By adopting the right strategy, companies can optimize their analytics, improve user experiences, and maintain a competitive edge in their respective markets.  
+    Understand which technique best suits your data environment to maximize efficiency and outcomes.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Governance and Ingestion}
+    \begin{block}{Understanding Data Governance in Ingestion Practices}
+        Data governance refers to the overall management of data availability, usability, integrity, and security in an organization. As data ingestion involves the process of collecting and importing data for immediate use or storage, establishing effective data governance is critical to ensure that data is handled responsibly and ethically.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Aspects of Data Governance in Ingestion}
+    \begin{enumerate}
+        \item \textbf{Data Security}
+            \begin{itemize}
+                \item \textit{Definition}: Protecting data from unauthorized access and breaches.
+                \item \textit{Importance}: Ingested data often includes sensitive information (e.g., personal data, financial records).
+                \item \textit{Example}: Implementing encryption during data transfer, such as using HTTPS for APIs to protect data in transit.
+            \end{itemize}
+        \item \textbf{Compliance}
+            \begin{itemize}
+                \item \textit{Definition}: Adhering to regulations and standards governing data use.
+                \item \textit{Importance}: Organizations must comply with laws (e.g., GDPR, HIPAA) to avoid penalties.
+                \item \textit{Example}: A healthcare organization ingesting patient data must ensure they are compliant with HIPAA regulations.
+            \end{itemize}
+        \item \textbf{Ethical Considerations}
+            \begin{itemize}
+                \item \textit{Definition}: Ensuring data usage adheres to moral principles.
+                \item \textit{Importance}: Ethical ingestion practices contribute to consumer trust and brand integrity.
+                \item \textit{Example}: Providing clear opt-in choices respects user autonomy and builds trust.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Holistic Approach}: Data governance should encompass all stages of data ingestion—from collection to storage and access.
+        \item \textbf{Collaborative Effort}: Involves stakeholders across IT, legal, and operations teams to ensure a comprehensive governance framework.
+        \item \textbf{Continuous Monitoring}: Regularly review and update governance policies to adapt to evolving regulatory landscapes.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Effective data governance is vital for secure, compliant, and ethical data ingestion. Organizations that prioritize these aspects not only protect their data assets but also secure user confidence and facilitate better decision-making processes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Governance Framework}
+    \centering
+    \includegraphics[width=0.8\textwidth]{data_governance_framework.png} % Placeholder for a diagram
+    \captionof{figure}{Data Governance Framework}
+    \begin{itemize}
+        \item \textbf{Data Ingestion}
+        \item \textbf{Data Security}
+        \item \textbf{Compliance}
+        \item \textbf{Ethical Use}
+    \end{itemize}
+    Use this diagram to illustrate critical pillars supporting data ingestion practices.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Wrap-Up and Key Takeaways - Overview}
+    In this chapter, we explored various data ingestion techniques crucial for efficient data handling and processing. 
+    These methods play a vital role in the data lifecycle, influencing how we collect, store, and utilize data for analysis and decision-making. 
+    Let’s revisit the key points discussed:
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Wrap-Up and Key Takeaways - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Definition of Data Ingestion}:
+        \begin{itemize}
+            \item The process of obtaining and importing data for immediate use or storage in a database.
+        \end{itemize}
+        
+        \item \textbf{Types of Data Ingestion}:
+        \begin{itemize}
+            \item \textbf{Batch Ingestion}: Collecting data in batches at scheduled intervals (e.g., nightly uploads).
+            \item \textbf{Real-time Streaming}: Continuous data ingestion from sources as it becomes available.
+        \end{itemize}
+        
+        \item \textbf{Techniques and Tools}:
+        \begin{itemize}
+            \item ETL (Extract, Transform, Load)
+            \item ELT (Extract, Load, Transform)
+            \item Change Data Capture (CDC)
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Wrap-Up and Key Takeaways - Considerations}
+    \textbf{Considerations for Choosing Ingestion Techniques}:
+    \begin{itemize}
+        \item \textbf{Data Volume}: Understanding the scale of data impacts the choice of method.
+        \item \textbf{Timeliness}: Real-time needs prompt different approaches compared to non-urgent data.
+        \item \textbf{Data Variety}: Different formats and sources necessitate varied strategies.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Wrap-Up and Key Takeaways - Practical Applications}
+    As we wrap up this chapter, consider how these data ingestion techniques can be applied to real-world scenarios:
+    
+    \begin{itemize}
+        \item \textbf{Business Intelligence}: Implementing batch processing for end-of-month reports vs. real-time dashboards for sales trends.
+        \item \textbf{Data Pipelines}: Designing efficient data integration pipelines that utilize both batch and streaming for comprehensive insights.
+    \end{itemize}
+    
+    \textbf{Reflection Questions}:
+    \begin{itemize}
+        \item How might your current or future projects benefit from these techniques?
+        \item Which ingestion method aligns best with your organization’s data strategy and objectives?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Wrap-Up and Key Takeaways - Final Thoughts}
+    \textbf{Final Thoughts}:
+    Data ingestion is a foundational step in data management and directly impacts the quality and availability of data for analysis. 
+    Mastering these techniques will empower you to handle data more effectively in your professional endeavors.
+    
+    This wrap-up synthesizes the chapter's core insights while prompting critical thinking about the practical applications of data ingestion techniques. 
+    As you advance in your understanding, keep these takeaways in mind for your future projects involving data management.
+\end{frame}
+
+
+\end{document}

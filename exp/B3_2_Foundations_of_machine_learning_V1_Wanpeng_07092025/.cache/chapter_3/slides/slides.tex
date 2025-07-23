@@ -1,0 +1,1399 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Feature Engineering]{Week 3: Feature Engineering}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Feature Engineering}
+    \begin{block}{Overview}
+        Feature Engineering is the process of selecting, modifying, or creating features that enhance the performance of machine learning algorithms.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Feature Engineering?}
+    \begin{itemize}
+        \item Process using domain knowledge to create effective features.
+        \item Quality and relevance of features greatly influence model performance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Feature Engineering}
+    \begin{enumerate}
+        \item \textbf{Improves Model Accuracy}:
+            \begin{itemize}
+                \item Better features lead to better predictions.
+                \item Example: square footage, number of bedrooms, and proximity lead to more accurate house price models.
+            \end{itemize}
+        \item \textbf{Reduces Model Complexity}:
+            \begin{itemize}
+                \item Eliminates irrelevant features, simplifying models.
+            \end{itemize}
+        \item \textbf{Enables Model Generalization}:
+            \begin{itemize}
+                \item Helps models generalize better on unseen data and reduces overfitting.
+            \end{itemize}
+        \item \textbf{Facilitates Data Integration}:
+            \begin{itemize}
+                \item Aggregates data from multiple sources to enhance learning.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques in Feature Engineering}
+    \begin{enumerate}
+        \item \textbf{Feature Selection}:
+            \begin{itemize}
+                \item Filter Methods: Statistical tests for feature-target relationships.
+                \item Wrapper Methods: Specific ML models evaluate feature subsets.
+                \item Embedded Methods: Feature selection during model training (e.g., LASSO).
+            \end{itemize}
+        \item \textbf{Feature Transformation}:
+            \begin{itemize}
+                \item Normalization: Scaling features (e.g., Min-Max Scaling).
+                \item Log Transformation: Reducing skewness.
+                \item Polynomial Features: Capturing nonlinear relationships.
+            \end{itemize}
+        \item \textbf{Feature Creation}:
+            \begin{itemize}
+                \item Date/Time Features: Extracting trends from timestamps.
+                \item Aggregation: Summarizing records (e.g., total sales per customer).
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: Feature Engineering Process}
+    \begin{block}{Scenario}
+        Predicting Customer Churn for a Subscription Service
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Initial Features}: 
+        \begin{itemize}
+            \item Age, Subscription Duration, Monthly Spend.
+        \end{itemize}
+        \item \textbf{Feature Engineering Steps}:
+        \begin{itemize}
+            \item Feature Creation: Churn score from usage frequency.
+            \item Feature Transformation: Normalize monthly spend.
+            \item Feature Selection: Use LASSO for impactful features.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Learning Objectives - Overview}
+    \begin{block}{Overview}
+        This week, we will delve into the concept of \textbf{Feature Engineering}, a critical stage in the machine learning pipeline that directly influences model performance. By the end of this week, you will gain essential skills and understanding in the following areas:
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Learning Objectives - Understanding Feature Engineering}
+    \begin{enumerate}
+        \item \textbf{Understanding Feature Engineering}
+            \begin{itemize}
+                \item \textbf{Definition}: Grasp the meaning of feature engineering and its significance in transforming raw data into formats that are better suited for machine learning algorithms.
+                \item \textbf{Key Point}: The right features can improve accuracy and reduce overfitting.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Learning Objectives - Feature Identification and Creation}
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Identifying Relevant Features}
+            \begin{itemize}
+                \item \textbf{Skill Development}: Learn methods to identify and select the most relevant features from your datasets.
+                \item \textbf{Example}: In a dataset predicting house prices, relevant features might include square footage, number of bedrooms, and neighborhood quality.
+                \item \textbf{Key Point}: Use domain knowledge and exploratory data analysis (EDA) to guide feature selection.
+            \end{itemize}
+        
+        \item \textbf{Creating New Features}
+            \begin{itemize}
+                \item \textbf{Techniques}: Explore techniques like:
+                \begin{itemize}
+                    \item \textbf{Polynomial Features}: Creating new features by adding powers of existing features (e.g., $x^2$ for linear regression).
+                    \item \textbf{Interaction Features}: Combining two or more features to capture interactions (e.g., price per square foot = Price / Square Footage).
+                \end{itemize}
+                \item \textbf{Key Point}: New features can significantly enhance model capability.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Learning Objectives - Handling Missing Values and Encoding}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Handling Missing Values}
+            \begin{itemize}
+                \item \textbf{Strategies}: Discover methods for addressing missing data, such as:
+                \begin{itemize}
+                    \item \textbf{Imputation}: Replacing missing values with mean/median/mode.
+                    \item \textbf{Removing Rows/Columns}: When appropriate, eliminate incomplete data.
+                \end{itemize}
+                \item \textbf{Example}: A dataset with missing entries for certain houses may need those rows removed or filled based on the most common neighborhood price.
+                \item \textbf{Key Point}: Proper handling of missing data is crucial for avoiding biased predictions.
+            \end{itemize}
+        
+        \item \textbf{Encoding Categorical Variables}
+            \begin{itemize}
+                \item \textbf{Concept}: Understand how to convert categorical variables into numeric formats.
+                \begin{itemize}
+                    \item \textbf{One-Hot Encoding}: Creating binary columns for every category (e.g., for a 'Color' feature: Red, Green, Blue).
+                    \item \textbf{Label Encoding}: Assigning integers to categories directly.
+                \end{itemize}
+                \item \textbf{Key Point}: Choosing the right encoding technique is essential for preserving data integrity.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Learning Objectives - Feature Scaling and Conclusion}
+    \begin{enumerate}
+        \setcounter{enumi}{5}
+        \item \textbf{Feature Scaling}
+            \begin{itemize}
+                \item \textbf{Importance}: Learn about scaling features to ensure equal weight in distance-based algorithms.
+                \item \textbf{Methods}:
+                    \begin{itemize}
+                        \item \textbf{Standardization}: Rescaling features to have a mean of 0 and standard deviation of 1.
+                            \begin{equation}
+                            x' = \frac{x - \mu}{\sigma}
+                            \end{equation}
+                        \item \textbf{Normalization}: Scaling features to a range of [0, 1].
+                    \end{itemize}
+                \item \textbf{Key Point}: Proper scaling can prevent certain features from dominating the learning process.
+            \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Conclusion}
+        By achieving these objectives, you will be equipped with the foundational skills necessary for effective feature engineering, setting the stage for building more robust and accurate machine learning models. Remember, the quality of your features often dictates the accuracy and robustness of your model’s predictions!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Data Features}
+    \begin{block}{Definition of Data Features}
+        \textbf{Data Features} are individual measurable properties or characteristics of the phenomena being observed in a dataset. 
+        They serve as input variables for machine learning models and play a critical role in determining the model’s performance and predictive capabilities.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Role in Machine Learning Models}
+    \begin{enumerate}
+        \item \textbf{Input for Models}: Features are the inputs that machine learning algorithms use to learn patterns and make predictions. The algorithms process these features to identify relationships within the data.
+        
+        \item \textbf{Influence on Outcomes}: The quality and relevance of features directly impact the accuracy of the model’s predictions. Proper feature selection can enhance model performance.
+        
+        \item \textbf{Feature Importance}: Different features can have varying levels of importance in predicting the target variable. Understanding these can help in refining the model and selecting the most informative features.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Data Features}
+    \begin{itemize}
+        \item \textbf{Numerical Feature}: \\
+            \textit{Example}: Age, Salary, Temperature \\
+            \textbf{Explanation}: Numeric features can be integer or floating-point values. They allow for mathematical operations.
+        
+        \item \textbf{Categorical Feature}: \\
+            \textit{Example}: Gender, Color, City \\
+            \textbf{Explanation}: These features represent categories and can be encoded numerically, often using techniques like one-hot encoding.
+        
+        \item \textbf{Temporal Feature}: \\
+            \textit{Example}: Date of Birth, Purchase Date \\
+            \textbf{Explanation}: Time-related features can capture trends and seasonality in the data, playing a critical role in time series forecasting.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Feature Quality}: High-quality features lead to better models. Poor features can result in skewed predictions.
+        
+        \item \textbf{Feature Engineering}: The process of transforming raw data into meaningful features that improve model performance, including creation, selection, and extraction of features.
+        
+        \item \textbf{Iterative Process}: Understanding and refining features is often iterative; continuous testing and validation are essential to optimizing feature sets.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formulas and Code Snippets}
+    \begin{block}{Feature Scaling (Standardization Example)}
+        Standardization transforms features to a common scale:
+        \begin{equation}
+            Z = \frac{(X - \mu)}{\sigma}
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item \( Z \) is the standardized value,
+            \item \( X \) is the original value,
+            \item \( \mu \) is the mean,
+            \item \( \sigma \) is the standard deviation.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Python Code Example for One-Hot Encoding}
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Sample Data
+data = {'Color': ['Red', 'Blue', 'Green']}
+df = pd.DataFrame(data)
+
+# One-Hot Encoding
+encoded_df = pd.get_dummies(df, columns=['Color'])
+print(encoded_df)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Next Steps}
+    Understanding data features is vital for machine learning success. 
+    As we move forward, we'll explore the different \textbf{types of features} and their specific roles, setting the foundation for effective feature engineering.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Features - Overview}
+    \begin{block}{Understanding Feature Types in Machine Learning}
+        In feature engineering, understanding feature types is crucial for effective machine learning models. Features can be categorized into three primary types:
+        \begin{itemize}
+            \item Categorical
+            \item Numerical
+            \item Temporal
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Features - Categorical}
+    \begin{block}{1. Categorical Features}
+        \begin{itemize}
+            \item \textbf{Definition}: Discrete categories or groups that describe characteristics.
+            \item \textbf{Examples}:
+            \begin{itemize}
+                \item Gender: Male, Female, Other
+                \item Country: USA, Canada, UK
+                \item Education Level: High School, Bachelor's, Master's, Ph.D.
+            \end{itemize}
+            \item \textbf{Encoding Methods}:
+            \begin{itemize}
+                \item \textbf{Label Encoding}: Assigning integers to categories (e.g., Male=0, Female=1).
+                \item \textbf{One-Hot Encoding}: Creating binary columns for each category.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Features - Numerical and Temporal}
+    \begin{block}{2. Numerical Features}
+        \begin{itemize}
+            \item \textbf{Definition}: Represent quantifiable data, can be discrete (countable) or continuous (measurable).
+            \item \textbf{Examples}:
+            \begin{itemize}
+                \item Age: Number of years
+                \item Income: Annual earnings
+                \item Temperature: Degrees in Celsius
+            \end{itemize}
+            \item \textbf{Operations}: Allow addition, subtraction, averaging, etc.
+            \item \textbf{Visualization}: Use histograms or box plots to visualize data distribution.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{3. Temporal Features}
+        \begin{itemize}
+            \item \textbf{Definition}: Capture time-related information, essential for time-series analysis.
+            \item \textbf{Examples}:
+            \begin{itemize}
+                \item Date of Birth
+                \item Transaction Date
+                \item Event Timestamp
+            \end{itemize}
+            \item \textbf{Extracting Components}:
+            \begin{itemize}
+                \item Year, Month, Day
+                \item Day of the Week for pattern analysis
+            \end{itemize}
+            \item \textbf{Formulas}:
+            \begin{equation}
+                \text{Age} = \text{Current Year} - \text{Birth Year}
+            \end{equation}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Selection - Overview}
+    Feature Selection is a critical step in the data preprocessing process of machine learning, aimed at selecting the most relevant features that contribute to model accuracy.
+    
+    \begin{block}{Importance of Feature Selection}
+        - **Improves Model Accuracy:** Relevant features help the model learn better patterns. \\
+        - **Reduces Overfitting:** Eliminating noisy or irrelevant features makes the model more generalizable. \\
+        - **Enhances Interpretability:** Fewer features allow for easier understanding of model predictions. \\
+        - **Decreases Complexity:** Reducing the number of features speeds up training and inference times.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Selection - Methods}
+    \begin{enumerate}
+        \item \textbf{Filter Methods:}
+        \begin{itemize}
+            \item \textit{Description:} Evaluate features using statistical tests independent of the model.
+            \item \textit{Example:} Using correlation coefficients to evaluate the linear relationship between features and target variables.
+            \item \textit{Key Point:} Fast and scalable but may miss interactions between features.
+        \end{itemize}
+        
+        \item \textbf{Wrapper Methods:}
+        \begin{itemize}
+            \item \textit{Description:} Use a predictive model to evaluate combinations of features. 
+            \item \textit{Example:} Recursive Feature Elimination (RFE).
+            \item \textit{Key Point:} Focuses on combinations of features but can be prone to overfitting.
+        \end{itemize}
+        
+        \item \textbf{Embedded Methods:}
+        \begin{itemize}
+            \item \textit{Description:} Perform feature selection as part of the model training process.
+            \item \textit{Example:} Lasso Regression (L1 Regularization).
+            \item \textit{Key Point:} Balances the trade-off between filter and wrapper methods for model building.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Selection - Example and Summary}
+    \begin{block}{Example of Feature Selection with Correlation Matrix}
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Load dataset
+data = pd.read_csv('dataset.csv')
+
+# Create correlation matrix
+correlation_matrix = data.corr()
+
+# Visualize the correlation matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
+plt.title('Correlation Matrix')
+plt.show()
+        \end{lstlisting}
+    \end{block}
+    
+    \begin{block}{Key Points}
+        - The choice of feature selection method may depend on the specific problem and dataset characteristics. \\
+        - Consider combining methods for best results. \\
+        - Always validate selected features using cross-validation.
+    \end{block}
+    
+    \begin{block}{Summary}
+        Feature selection is essential for building robust, efficient, and interpretable models. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Feature Selection Techniques - Overview}
+    Feature selection is a crucial step in the machine learning pipeline aimed at identifying and retaining the most relevant features for modeling.
+    
+    \begin{block}{Importance of Feature Selection}
+        - Improves model performance
+        - Reduces overfitting
+        - Decreases computation times
+    \end{block}
+
+    \begin{itemize}
+        \item Correlation Matrix
+        \item Recursive Feature Elimination (RFE)
+        \item Feature Importance from Models
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Feature Selection Techniques - Correlation Matrix}
+    A correlation matrix assesses the relationships between features, displaying the correlation coefficients between pairs of variables.
+
+    \begin{block}{Key Points}
+        - Correlation Coefficient ($r$) ranges from -1 to 1:
+            \begin{itemize}
+                \item $r$ close to 1: Strong positive correlation
+                \item $r$ close to -1: Strong negative correlation
+                \item $r$ around 0: No correlation
+            \end{itemize}
+    \end{block}
+
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{|l|l|l|l|}
+            \hline
+            Feature A & Feature B & Feature C \\ \hline
+            1 & 2 & 1.5 \\ \hline
+            2 & 4 & 2.9 \\ \hline
+            3 & 6 & 3.1 \\ \hline
+        \end{tabular}
+        \caption{Example data for correlation matrix}
+    \end{table}
+
+    \begin{block}{Interpretation}
+        If Feature A and Feature B have a high positive correlation, consider removing one to reduce redundancy.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Feature Selection Techniques - Recursive Feature Elimination (RFE)}
+    RFE is a wrapper method that iteratively removes the least important features based on model performance.
+
+    \begin{block}{Steps}
+        \begin{enumerate}
+            \item Train a model using all features.
+            \item Evaluate feature importance.
+            \item Remove the least significant feature.
+            \item Repeat until the desired number of features is reached.
+        \end{enumerate}
+    \end{block}
+
+    \begin{block}{Example}
+        After applying RFE on a dataset with 10 features, you may determine that only 4 features significantly impact the model's performance.
+    \end{block}
+
+    \begin{lstlisting}[language=Python]
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LogisticRegression
+
+model = LogisticRegression()
+rfe = RFE(model, n_features_to_select=4)
+fit = rfe.fit(X, y)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Feature Transformation}
+  \begin{block}{Explanation}
+    Feature transformation is a crucial step in the data preprocessing phase of machine learning. 
+    It involves altering the features in a dataset to make them more suitable for modeling, significantly improving model performance by addressing:
+    \begin{itemize}
+      \item Non-linearity
+      \item Variance
+      \item Different scales among features
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Why Transform Features?}
+  \begin{enumerate}
+    \item \textbf{Improve Model Accuracy:} 
+          Many algorithms assume a linear relationship. Transformation can help capture non-linear relationships.
+          
+    \item \textbf{Normalization of Scale:} 
+          Ensures features have equal weight in model training by standardizing units (e.g., height vs. weight).
+          
+    \item \textbf{Enhance Interpretability:} 
+          Certain transformations make relationships clearer (e.g., logarithmic transformations can stabilize distributions).
+          
+    \item \textbf{Handle Outliers:} 
+          Transformations can reduce the influence of outliers, such as using log transformations.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Examples of Feature Transformation Techniques}
+  \begin{itemize}
+    \item \textbf{Log Transformation:}
+          \begin{equation}
+          X_{\text{transformed}} = \log(X + 1)
+          \end{equation}
+    
+    \item \textbf{Square Root Transformation:}
+          \begin{equation}
+          X_{\text{transformed}} = \sqrt{X}
+          \end{equation}
+          
+    \item \textbf{Box-Cox Transformation:} 
+          Stabilizes variance and normalizes data (requires positive values).
+    
+    \item \textbf{Polynomial Features:}
+          \begin{lstlisting}[language=Python]
+          from sklearn.preprocessing import PolynomialFeatures
+          poly = PolynomialFeatures(degree=2)
+          poly_features = poly.fit_transform(X)
+          \end{lstlisting}
+    
+    \item \textbf{One-Hot Encoding:} 
+          Converts categorical variables into binary vectors for training.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points & Conclusion}
+  \begin{itemize}
+    \item \textbf{Choosing Methods:}
+          Transformation is not one-size-fits-all; select methods based on data distribution and algorithm.
+          
+    \item \textbf{Visual Inspection:}
+          Always visualize feature distributions before and after transformation.
+          
+    \item \textbf{Combining Techniques:}
+          Combining transformations may yield better results (e.g., scaling + polynomial features).
+  \end{itemize}
+  
+  \begin{block}{Conclusion}
+    Feature transformation is essential for optimizing model performance and effectively capturing underlying data patterns.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Normalization and Standardization - Overview}
+    \begin{block}{Overview}
+        Normalization and standardization are essential techniques in feature engineering that transform data to improve the performance of machine learning models. These methods ensure that different features contribute equally to the model’s learning process by addressing their scale and distribution.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Normalization}
+    \begin{block}{Definition}
+        Normalization, often called Min-Max scaling, adjusts the feature values to a common scale, typically between 0 and 1.
+    \end{block}
+
+    \begin{block}{Formula}
+        For a feature \( x \):
+        \[
+        x' = \frac{x - \text{min}(x)}{\text{max}(x) - \text{min}(x)}
+        \]
+    \end{block}
+
+    \begin{block}{Example}
+        \textbf{Original Values:} [30, 35, 40, 70, 100] \\
+        \textbf{Min:} 30, \textbf{Max:} 100 \\
+        \textbf{Normalized Values:} \\
+        \( (30 - 30) / (100 - 30) = 0 \) \\
+        \( (35 - 30) / (100 - 30) = 0.0714 \) \\
+        \( (40 - 30) / (100 - 30) = 0.1429 \) \\
+        \( (70 - 30) / (100 - 30) = 0.5714 \) \\
+        \( (100 - 30) / (100 - 30) = 1 \)
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Standardization}
+    \begin{block}{Definition}
+        Standardization, or Z-score normalization, transforms data to have a mean of 0 and a standard deviation of 1, creating a standard normal distribution.
+    \end{block}
+
+    \begin{block}{Formula}
+        For a feature \( x \):
+        \[
+        x' = \frac{x - \mu}{\sigma}
+        \]
+        where \( \mu \) is the mean and \( \sigma \) is the standard deviation.
+    \end{block}
+
+    \begin{block}{Example}
+        \textbf{Original Values:} [55, 60, 65, 70, 75] \\
+        \textbf{Mean (\( \mu \)):} 65, \textbf{Standard Deviation (\( \sigma \)):} 7.91 \\
+        \textbf{Standardized Values:} \\
+        \( (55 - 65) / 7.91 = -1.27 \) \\
+        \( (60 - 65) / 7.91 = -0.63 \) \\
+        \( (65 - 65) / 7.91 = 0 \) \\
+        \( (70 - 65) / 7.91 = 0.63 \) \\
+        \( (75 - 65) / 7.91 = 1.27 \)
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Application}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Both techniques can lead to improved accuracy in machine learning models.
+            \item The choice between normalization and standardization should be based on the distribution of the data and the model being used.
+            \item Always visualize data before and after transformation to understand the effects.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{When to Apply}
+        \begin{itemize}
+            \item Use normalization when features are on different scales (e.g., neural networks, k-NN).
+            \item Use standardization when data follows a Gaussian distribution (e.g., linear regression).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippets}
+    \begin{block}{Normalization in Python}
+        \begin{lstlisting}[language=Python]
+# Normalization in Python using MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler
+
+scaler = MinMaxScaler()
+normalized_data = scaler.fit_transform(data)
+        \end{lstlisting}
+    \end{block}
+
+    \begin{block}{Standardization in Python}
+        \begin{lstlisting}[language=Python]
+# Standardization in Python using StandardScaler
+from sklearn.preprocessing import StandardScaler
+
+scaler = StandardScaler()
+standardized_data = scaler.fit_transform(data)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Handling Categorical Data}
+    Introduce techniques such as one-hot encoding and label encoding for categorical data.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Introduction to Categorical Data}
+    \begin{itemize}
+        \item Categorical data refers to variables with a limited, fixed number of categories.
+        \item Examples include gender, color, and product type.
+        \item Such data cannot be directly used in most machine learning algorithms, which require numerical input.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Techniques for Encoding Categorical Data}
+    
+    \begin{block}{1. Label Encoding}
+        \begin{itemize}
+            \item \textbf{Definition}: Assigns a unique integer to each category.
+            \item \textbf{Use Case}: Suitable for ordinal categories (where order matters).
+            \item \textbf{Example}: 
+            \begin{itemize}
+                \item Categories: ['Red', 'Green', 'Blue']
+                \item Encoding: Red → 0, Green → 1, Blue → 2
+            \end{itemize}
+            \item \textbf{Limitations}: Implies a rank order among categories that may not exist.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Python Example}
+    \begin{lstlisting}[language=Python]
+from sklearn.preprocessing import LabelEncoder
+
+le = LabelEncoder()
+categories = ['Red', 'Green', 'Blue']
+encoded = le.fit_transform(categories)  # Output: [2, 1, 0]
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Techniques for Encoding Categorical Data (cont.)}
+    
+    \begin{block}{2. One-Hot Encoding}
+        \begin{itemize}
+            \item \textbf{Definition}: Transforms categorical variables into a set of binary variables (0 or 1).
+            \item \textbf{Use Case}: Ideal for nominal categories (no intrinsic ordering).
+            \item \textbf{Example}:
+            \begin{itemize}
+                \item Categories: ['Red', 'Green', 'Blue']
+                \item Encoding: Red → [1, 0, 0], Green → [0, 1, 0], Blue → [0, 0, 1]
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Python Example}
+    \begin{lstlisting}[language=Python]
+import pandas as pd
+
+df = pd.DataFrame({'Color': ['Red', 'Green', 'Blue']})
+one_hot_encoded_df = pd.get_dummies(df, columns=['Color'])  # Creates three binary columns
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Choose Encoding Wisely}: 
+        \begin{itemize}
+            \item Label vs. One-Hot encoding depends on data type (ordinal vs. nominal).
+            \item Incorrect usage can reduce model performance.
+        \end{itemize}
+        \item \textbf{Handle High Cardinality}: 
+        \begin{itemize}
+            \item One-hot encoding can lead to high dimensionality.
+            \item Consider alternatives such as frequency encoding or target encoding.
+        \end{itemize}
+        \item \textbf{Conclusion}: Proper encoding of categorical data is crucial for enhancing model performance. Consider the context when choosing a method.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Creating Interaction Features}
+  \begin{block}{What Are Interaction Features?}
+  Interaction features are new features created by combining two or more existing features in a dataset. They help capture relationships between variables that may not be evident when examining features in isolation. These relationships can be critical for improving the predictive performance of machine learning models.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Why Create Interaction Features?}
+  \begin{itemize}
+    \item \textbf{Increased complexity representation}: Many target outcomes depend on interactions between features. For example, the effect of one feature may change depending on the value of another feature.
+    \item \textbf{Enhanced model performance}: Including interaction features can significantly improve the performance of models, especially linear models where interaction effects are not inherently captured.
+    \item \textbf{Improved interpretability}: Understanding how features interact can provide insights into the data, making model results more interpretable.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{How to Create Interaction Features}
+  \begin{enumerate}
+    \item \textbf{Multiplicative Interaction}
+      \begin{itemize}
+        \item Combine features using multiplication.
+        \item Example: 
+        \begin{equation}
+          \text{Interactive\_Feature\_AB} = \text{Feature\_A} \times \text{Feature\_B}
+        \end{equation}
+      \end{itemize}
+    
+    \item \textbf{Additive Interaction}
+      \begin{itemize}
+        \item Combine features using addition.
+        \item Example:
+        \begin{equation}
+          \text{Interactive\_Feature\_AD} = \text{Price} + \text{Discount}
+        \end{equation}
+      \end{itemize}
+    
+    \item \textbf{Categorical Feature Interactions}
+      \begin{itemize}
+        \item Combine categorical features to capture joint effects.
+        \item Example:
+        \begin{equation}
+          \text{Interactive\_Feature\_RP} = \text{Region}\_\text{Product\_Type}
+        \end{equation}
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Examples and Key Points}
+  \begin{block}{Dataframe Example}
+  \begin{verbatim}
+  | Feature_A | Feature_B | Interactive_Feature_AB |
+  |-----------|-----------|-----------------------|
+  |    30     |    60     |           1800        |
+  |    25     |    50     |          1250         |
+  \end{verbatim}
+  \end{block}
+
+  \begin{itemize}
+    \item Interaction features can allow the model to learn more complex patterns and relationships within the data.
+    \item Not all combinations of features will yield beneficial interaction features.
+    \item While interaction features can improve model accuracy, they can also increase dimensionality, so careful selection is needed.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  Creating interaction features is a powerful feature engineering technique that can lead to enhanced model performance and greater insights into the underlying data relationships. When constructing your dataset, consider which features might interact meaningfully to benefit your predictive modeling efforts.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Code Snippet}
+  \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Sample DataFrame
+data = {'Feature_A': [30, 25], 'Feature_B': [60, 50]}
+df = pd.DataFrame(data)
+
+# Creating Interaction Feature
+df['Interactive_Feature_AB'] = df['Feature_A'] * df['Feature_B']
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dimensionality Reduction Techniques}
+    \begin{block}{Introduction to Dimensionality Reduction}
+        Dimensionality reduction is a crucial step in data preprocessing, especially when dealing with high-dimensional datasets. 
+        It helps alleviate issues such as overfitting and enhances model performance. 
+        Two prominent techniques are:
+        \begin{itemize}
+            \item Principal Component Analysis (PCA)
+            \item t-Distributed Stochastic Neighbor Embedding (t-SNE)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Principal Component Analysis (PCA)}
+    \begin{block}{What is PCA?}
+        PCA is a statistical technique that transforms the data into a new coordinate system where the greatest variance is on the first coordinates (principal components). It reduces dimensionality by identifying the directions of maximum variance.
+    \end{block}
+    
+    \begin{block}{How PCA Works:}
+        \begin{enumerate}
+            \item Standardize the dataset: 
+            \begin{equation}
+                Z = \frac{X - \mu}{\sigma}
+            \end{equation}
+            \item Compute the covariance matrix.
+            \item Calculate the eigenvalues and eigenvectors of the covariance matrix.
+            \item Sort eigenvalues and eigenvectors in descending order.
+            \item Select the top \(k\) eigenvectors as principal components.
+            \item Transform the original dataset using these components.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Other Dimensionality Reduction Techniques}
+    \begin{itemize}
+        \item \textbf{t-SNE:}
+        \begin{itemize}
+            \item Used for visualizing high-dimensional data.
+            \item Preserves local structures.
+            \item Projects data into 2 or 3 dimensions.
+        \end{itemize}
+        
+        \item \textbf{Linear Discriminant Analysis (LDA):}
+        \begin{itemize}
+            \item Supervised method maximizing class separation.
+            \item Effective for classification tasks.
+        \end{itemize}
+        
+        \item \textbf{Autoencoders:}
+        \begin{itemize}
+            \item Neural networks that perform efficient data encoding.
+            \item Contains encoder and decoder for dimensionality reduction.
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Dimensionality reduction simplifies models and improves efficiency.
+            \item PCA focuses on variance; t-SNE emphasizes local neighborhoods.
+            \item Technique choice depends on the use case (visualization vs. preprocessing).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Practical Examples - Introduction to Feature Engineering}
+  \begin{block}{What is Feature Engineering?}
+    Feature engineering is the process of using domain knowledge to extract useful features from raw data, which helps machine learning algorithms perform better. 
+  \end{block}
+  \begin{itemize}
+    \item Creating new input features
+    \item Transforming existing features
+    \item Improving accuracy and predictive power of models
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Practical Examples - Housing Price Prediction}
+  \begin{block}{Task}
+    Predict house prices based on features such as:
+  \end{block}
+  \begin{itemize}
+    \item Square footage
+    \item Number of bedrooms
+    \item Location
+  \end{itemize}
+  \begin{block}{Feature Engineering Techniques}
+    \begin{itemize}
+      \item \textbf{Log Transformation:} Normalize skewed distributions, e.g., \( \text{np.log(price)} \).
+      \item \textbf{Interaction Features:} E.g., creating a feature for \( \text{bedrooms} \times \text{bathrooms} \).
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Practical Examples - Customer Segmentation}
+  \begin{block}{Task}
+    Identify customer segments based on purchasing behavior.
+  \end{block}
+  \begin{block}{Feature Engineering Techniques}
+    \begin{itemize}
+      \item \textbf{RFM Metrics:} Features based on Recency, Frequency, and Monetary value.
+      \item \textbf{Categorical Encoding:} Transform categorical variables using One-Hot or Target Encoding.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Practical Examples - Sentiment Analysis of Reviews}
+  \begin{block}{Task}
+    Classify the sentiment of customer reviews as positive or negative.
+  \end{block}
+  \begin{block}{Feature Engineering Techniques}
+    \begin{itemize}
+      \item \textbf{Text Vectorization:} Use TF-IDF or Word Embeddings for text representation.
+      \item \textbf{Sentiment Scores:} Create features based on sentiment scores from individual words/phrases.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Practical Examples - Time Series Forecasting}
+  \begin{block}{Task}
+    Forecast future sales based on historical data.
+  \end{block}
+  \begin{block}{Feature Engineering Techniques}
+    \begin{itemize}
+      \item \textbf{Lag Features:} E.g., \( \text{sales\_lag\_1} = \text{sales.shift(1)} \).
+      \item \textbf{Rolling Statistics:} E.g., \( \text{rolling\_mean} = \text{sales.rolling(window=3).mean()} \).
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points to Emphasize}
+  \begin{itemize}
+    \item \textbf{Domain Knowledge:} Crucial for meaningful feature creation.
+    \item \textbf{Experimentation:} Not all features will improve model performance.
+    \item \textbf{Feature Scaling:} May be necessary after creating new features.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  \begin{block}{Importance of Feature Engineering}
+    Feature engineering is foundational to building robust machine learning models. By transforming raw data into a suitable format, practitioners can significantly enhance model efficiency and effectiveness.
+  \end{block}
+  \begin{block}{Application}
+    Using these examples in real-world contexts helps solidify the understanding of feature engineering in machine learning projects.
+  \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Practices in Feature Engineering}
+    \begin{block}{Introduction to Feature Engineering}
+        Feature engineering is the process of transforming raw data into meaningful features that better represent the underlying problem to predictive models. Good feature engineering can significantly enhance model performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Practices - Overview}
+    \begin{enumerate}
+        \item Understand Your Data
+        \item Feature Selection
+        \item Handle Missing Values
+        \item Feature Transformation
+        \item Creating New Features
+        \item Regularization Techniques
+        \item Evaluate and Iterate
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Practices - Understand Your Data}
+    \begin{itemize}
+        \item Explore the Data: Conduct thorough exploratory data analysis (EDA) to understand distributions, correlations, and potential outliers.
+        \item Visualization: Use plots such as histograms, scatter plots, and correlation heatmaps to visually inspect relationships within data.
+        \item \textbf{Example:} If you're working with housing data, visualize the relationship between house size and price to uncover patterns.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Practices - Feature Selection}
+    \begin{itemize}
+        \item Relevance: Choose features that have statistical relevance to the target variable.
+        \item Elimination: Remove redundant or irrelevant features to reduce noise and improve model interpretability.
+        \item \textbf{Technique:} Use tools like Recursive Feature Elimination (RFE) or feature importance from tree-based models (e.g., Random Forest).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices - Handle Missing Values}
+    \begin{itemize}
+        \item Imputation: Fill in missing values using mean, median, or more complex methods like K-Nearest Neighbors (KNN) imputation.
+        \item Flagging: Create binary features to indicate if a value was missing ("was\_missing") which can convey valuable information.
+        \item \textbf{Code Snippet:}
+        \begin{lstlisting}[language=Python]
+# Example of mean imputation
+from sklearn.impute import SimpleImputer
+imputer = SimpleImputer(strategy='mean')
+data['feature'] = imputer.fit_transform(data[['feature']])
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices - Feature Transformation}
+    \begin{itemize}
+        \item Scaling: Normalize or standardize features to bring them to a common scale, especially for algorithms sensitive to feature magnitude (e.g., SVM, K-Means).
+        \item Encoding: Convert categorical variables into numerical representations using techniques such as One-Hot Encoding or Label Encoding.
+        \item \textbf{Code Snippet:}
+        \begin{lstlisting}[language=Python]
+# One-Hot Encoding
+data = pd.get_dummies(data, columns=['categorical_feature'])
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Practices - Creating New Features}
+    \begin{itemize}
+        \item Polynomial Features: Generate interaction terms or polynomial combinations of existing features to capture non-linear relationships.
+        \item Domain-Specific Features: Leverage domain knowledge to create meaningful features (e.g., "age" from a "birth\_date" feature).
+        \item \textbf{Formula:}
+        \begin{equation}
+            \text{interaction} = x_1 \times x_2
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Practices - Regularization and Iteration}
+    \begin{itemize}
+        \item Regularization Techniques: Use techniques like Lasso or Ridge regression to mitigate the risk of overfitting caused by too many features.
+        \item Evaluate and Iterate:
+        \begin{itemize}
+            \item Cross-Validation: Employ cross-validation to assess the impact of engineered features on model performance.
+            \item Continuous Improvement: Iterate on feature engineering based on model outcomes and validation results.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item The quality of features significantly impacts model predictive capability.
+        \item Always align feature engineering efforts with the specific needs of the model and the problem domain.
+        \item Feature engineering is iterative; repeat steps to refine and improve feature set.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Next Steps}
+    By following these best practices, you will enhance the quality of your features and improve the performance of your machine learning models. With these strategies in hand, you'll be better prepared for the subsequent discussion on specific tools and libraries available for feature engineering.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Engineering Tools}
+    Feature engineering is a critical process in machine learning that involves selecting, modifying, or creating features to improve model performance. Various tools and libraries simplify this process.
+    
+    \begin{itemize}
+        \item Focus on two powerful libraries: \textbf{pandas} and \textbf{scikit-learn}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pandas - Overview}
+    \begin{block}{Overview}
+        \begin{itemize}
+            \item Pandas is essential for data manipulation and analysis, especially with tabular data.
+            \item It provides data structures like Series and DataFrame for easy handling of structured data.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Features}
+        \begin{itemize}
+            \item \textbf{Data Cleaning:} Handle missing values, duplicates, and erroneous entries.
+            \item \textbf{Data Transformation:} Use functionalities such as \texttt{groupby}, \texttt{apply}, and \texttt{pivot\_table}.
+            \item \textbf{Feature Engineering:} Create new features and convert categorical variables.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pandas - Example}
+    \begin{block}{Example}
+        Suppose we have a DataFrame with motor vehicle data. To calculate the 'age' of a vehicle based on its 'year' of manufacture:
+
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+# Sample DataFrame
+df = pd.DataFrame({'year': [2010, 2015, 2020]})
+# Adding a new feature 'age'
+current_year = 2023
+df['age'] = current_year - df['year']
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Scikit-learn - Overview}
+    \begin{block}{Overview}
+        \begin{itemize}
+            \item Scikit-learn is a popular library for machine learning, offering tools for data mining and analysis.
+            \item It provides utilities for preprocessing, model selection, and evaluation.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Features}
+        \begin{itemize}
+            \item \textbf{Feature Scaling:} Using \texttt{StandardScaler} and \texttt{MinMaxScaler}.
+            \item \textbf{Feature Selection:} Techniques like \texttt{SelectKBest} to choose significant features.
+            \item \textbf{Pipeline:} Streamline workflows by chaining preprocessing and modeling steps.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Scikit-learn - Example}
+    \begin{block}{Example}
+        To standardize a feature in a dataset using scikit-learn:
+
+        \begin{lstlisting}[language=Python]
+from sklearn.preprocessing import StandardScaler
+import numpy as np
+
+# Sample data
+data = np.array([[1, 2], [3, 4], [5, 6]])
+scaler = StandardScaler()
+standardized_data = scaler.fit_transform(data)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Integration:} Pandas and scikit-learn work seamlessly together for efficient workflows.
+        \item \textbf{Creativity in Feature Engineering:} Transform and combine features to reveal patterns.
+        \item \textbf{Evaluation of Features:} Use cross-validation to assess the impact of new features on model performance.
+    \end{itemize}
+    
+    \textbf{Conclusion:} Mastering tools like pandas and scikit-learn enhances feature engineering and model effectiveness!
+\end{frame}
+
+\begin{frame}
+    \frametitle{Challenges in Feature Engineering}
+    \begin{block}{Introduction to Feature Engineering Challenges}
+        Feature engineering is a crucial step in the machine learning workflow, where raw data is transformed into features that improve model performance. However, this process comes with several challenges that can impact model effectiveness. Understanding these challenges is essential for successful feature engineering.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Common Challenges in Feature Engineering - Part 1}
+    \begin{enumerate}
+        \item \textbf{Data Quality Issues}
+            \begin{itemize}
+                \item Explanation: Data often contains noise, outliers, or missing values that can skew results.
+                \item Example: A dataset with customer ages might have incorrect values (e.g., negative ages).
+                \item Solution: Implement data cleaning techniques such as imputation for missing values and outlier detection methods.
+            \end{itemize}
+        
+        \item \textbf{Feature Selection}
+            \begin{itemize}
+                \item Explanation: Identifying the most relevant features while ignoring redundant or irrelevant ones can be complex.
+                \item Example: In a dataset predicting house prices, features like "number of bathrooms" might be essential, but "color of the house" is not.
+                \item Solution: Use techniques like Recursive Feature Elimination (RFE) or feature importance rankings from algorithms like Random Forests.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Common Challenges in Feature Engineering - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Dimensionality Reduction}
+            \begin{itemize}
+                \item Explanation: High-dimensional datasets can lead to overfitting and increased computational costs.
+                \item Example: An image classification task with thousands of pixel values (features) can be reduced using methods like PCA (Principal Component Analysis).
+                \item Solution: Apply dimensionality reduction techniques to minimize features while retaining essential information.
+            \end{itemize}
+        
+        \item \textbf{Feature Scaling}
+            \begin{itemize}
+                \item Explanation: Some algorithms require feature scaling to enable efficient performance.
+                \item Example: Gradient descent algorithms can converge faster if features are normalized (e.g., using Min-Max Scaling).
+                \item Solution: Standardize or normalize features before training.
+            \end{itemize}
+            \begin{block}{Sample Code for Min-Max Scaling}
+                \begin{lstlisting}[language=Python]
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+scaled_features = scaler.fit_transform(original_features)
+                \end{lstlisting}
+            \end{block}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Common Challenges in Feature Engineering - Part 3}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Feature Engineering for Different Models}
+            \begin{itemize}
+                \item Explanation: The choice of model affects the feature engineering approach used.
+                \item Example: Tree-based models can handle categorical features natively, while linear models may require one-hot encoding.
+                \item Solution: Tailor feature engineering processes to suit the selected algorithms.
+            \end{itemize}
+    \end{enumerate}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Always assess data quality before feature engineering.
+            \item Use automated feature selection techniques to enhance efficiency.
+            \item Dimensionality reduction should be performed judiciously.
+            \item Ensure features are appropriately scaled for the chosen machine learning model.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion and Additional Resources}
+    \begin{block}{Conclusion}
+        Being aware of challenges in feature engineering allows you to proactively address them, leading to better model performance and insights. In the next section, we will wrap up the key concepts covered and outline the learning path for the upcoming week.
+    \end{block}
+    
+    \begin{block}{Additional Resources}
+        \begin{itemize}
+            \item \textbf{Books}: "Feature Engineering for Machine Learning" by Alice Zheng \& Amanda Casari
+            \item \textbf{Online Courses}: Coursera and DataCamp offer specialized courses in feature engineering techniques.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Next Steps - Conclusion}
+  
+  Feature engineering plays a critical role in the performance of machine learning models. By transforming raw data into a format that better exposes the underlying patterns to the algorithms, effective feature engineering can significantly enhance model accuracy and predictive power.
+  
+  \begin{block}{Key Takeaways}
+    \begin{itemize}
+      \item \textbf{Understanding of Importance:} Feature engineering directly impacts the learning capacity of models and can address overfitting and underfitting.
+      \item \textbf{Common Techniques:} Techniques such as normalization, encoding categorical variables, and creating interaction features refine datasets for better training.
+      \item \textbf{Challenges:} Challenges during feature engineering include dealing with missing values and selecting relevant features. Overcoming these is essential for reliable models.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Next Steps - Examples}
+  
+  \begin{block}{Examples}
+    \begin{itemize}
+      \item \textbf{Normalization:} Scaling continuous features to a range of [0, 1] helps models converge more quickly during training.
+      \item \textbf{Encoding Categorical Variables:} Using one-hot encoding for a feature like "Color" (Red, Blue, Green) allows machine learning models to interpret the values correctly.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Next Steps - Next Steps}
+  
+  In the coming week, we will delve into \textbf{Model Selection and Evaluation}. Expect the following topics:
+  \begin{enumerate}
+    \item \textbf{Different Types of Models:} Examination of various machine learning algorithms including supervised and unsupervised methods.
+    \item \textbf{Model Evaluation Techniques:} Discussion of metrics such as accuracy, precision, recall, and F1 score.
+    \item \textbf{Cross-Validation:} Learning about strategies to ensure model generalization to unseen data, preventing overfitting.
+    \item \textbf{Practical Applications:} Applying feature engineering and model selection in hands-on exercises to solidify understanding.
+  \end{enumerate}
+  
+  \vspace{0.5cm}
+  \textit{Prepare for an engaging week filled with hands-on activities that translate learned concepts into concrete skills for real-world applications!}
+\end{frame}
+
+
+\end{document}

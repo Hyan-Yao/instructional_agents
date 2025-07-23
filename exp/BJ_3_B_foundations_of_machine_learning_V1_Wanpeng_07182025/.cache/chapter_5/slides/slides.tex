@@ -1,0 +1,723 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Model Evaluation Metrics}
+    \begin{block}{Overview}
+        Model evaluation metrics are critical tools in the machine learning lifecycle that assess how well a model performs. They help practitioners in understanding a model's strengths and weaknesses and inform decisions about model selection and improvement.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Evaluating Models}
+    \begin{enumerate}
+        \item \textbf{Performance Assessment}
+        \begin{itemize}
+            \item Quantifies model performance against criteria (e.g., accuracy, precision).
+            \item Identifies if the model meets business and operational objectives.
+        \end{itemize}
+        
+        \item \textbf{Model Comparison}
+        \begin{itemize}
+            \item Provides a basis for comparing different models or algorithms.
+            \item Facilitates informed choices on which model to deploy in production.
+        \end{itemize}
+        
+        \item \textbf{Understanding Model Behavior}
+        \begin{itemize}
+            \item Highlights biases and issues like overfitting or underfitting.
+            \item Points out areas for model improvement.
+        \end{itemize}
+        
+        \item \textbf{Stakeholder Communication}
+        \begin{itemize}
+            \item Enables clear communication of model performance.
+            \item Establishes trust and transparency with stakeholders.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Common Metrics}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Evaluating models is not just about finding the best performer, but also understanding limitations and operational readiness.
+            \item No single metric suffices for comprehensive evaluation; a combination is necessary for a complete picture.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Examples of Common Evaluation Metrics}
+        \begin{itemize}
+            \item \textbf{Accuracy}: 
+            \[
+            \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Instances}}
+            \]
+            \item \textbf{Precision}:
+            \[
+            \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+            \]
+            \item \textbf{Recall (Sensitivity)}:
+            \[
+            \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+            \]
+            \item \textbf{F1 Score}:
+            \[
+            F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+            \]
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Conclusion}
+        Evaluation metrics are indispensable for delivering reliable machine learning solutions. By effectively utilizing these metrics, we can ensure our models not only perform well on test datasets but also deliver real-world value.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Definition}
+    \begin{block}{Definition of Accuracy}
+        Accuracy is the proportion of correct predictions made by a model compared to the total predictions. It is essential for both binary and multiclass classification problems.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Significance}
+    \begin{itemize}
+        \item \textbf{Performance Indicator}: It provides a quick overview of model performance; higher accuracy indicates better model performance.
+        \item \textbf{Comprehensibility}: Easy to understand and communicate to stakeholders.
+        \item \textbf{Limitations}: May not be suitable for imbalanced datasets.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Calculation}
+    The formula for calculating accuracy is:
+
+    \begin{equation}
+        \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+    \end{equation}
+
+    Where:
+    \begin{itemize}
+        \item **TP (True Positives)**: Correct predictions of positive instances.
+        \item **TN (True Negatives)**: Correct predictions of negative instances.
+        \item **FP (False Positives)**: Incorrect predictions of positive instances.
+        \item **FN (False Negatives)**: Incorrect predictions of negative instances.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Example}
+    Consider a binary classification model predicting emails as spam (positive) or not spam (negative). Assume the confusion matrix is as follows:
+
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        & Predicted: Spam & Predicted: Not Spam \\
+        \hline
+        Actual: Spam & TP = 80 & FN = 20 \\
+        \hline
+        Actual: Not Spam & FP = 10 & TN = 90 \\
+        \hline
+    \end{tabular}
+    \end{center}
+
+    Using the formula:
+
+    \[
+    \begin{align*}
+    \text{Accuracy} & = \frac{TP + TN}{TP + TN + FP + FN} \\
+                    & = \frac{80 + 90}{80 + 90 + 10 + 20} \\
+                    & = \frac{170}{200} = 0.85
+    \end{align*}
+    \]
+
+    Thus, the accuracy of the model is 85\%.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Key Points}
+    \begin{itemize}
+        \item Accuracy is a simple and widely used metric for evaluating classification models.
+        \item Consider dataset context and balance when interpreting accuracy.
+        \item Use additional metrics like precision, recall, and F1-score for a comprehensive evaluation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Conclusion}
+    Understanding accuracy is crucial for assessing model performance. Always supplement it with additional metrics, particularly when managing imbalanced classes or cases where false positives and negatives have different implications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Definition}
+    \begin{block}{Definition of Precision}
+        Precision is a metric that quantifies the accuracy of positive predictions made by a classification model. It measures the proportion of true positive results to the total number of instances classified as positive (both true positives and false positives). 
+        \begin{itemize}
+            \item Precision tells us how many of the positive predictions made by our model are actually correct.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Importance}
+    \begin{block}{Why Precision is Crucial}
+        \begin{itemize}
+            \item \textbf{Critical Applications:} In applications where the cost of false positives is high (e.g., spam detection, disease diagnosis), precision becomes a vital measure.
+            \item A high precision indicates that when a model predicts a certain class, it is likely correct, minimizing unnecessary or harmful actions.
+            \item \textbf{Focus on Relevant Predictions:} By prioritizing precision, organizations can enhance the quality of their positive predictions, leading to better outcomes when accuracy for positive classes is more important than overall accuracy.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Calculation}
+    \begin{block}{Formula for Calculating Precision}
+        Precision is calculated using the following formula:
+        \begin{equation}
+            \text{Precision} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Positives (FP)}}
+        \end{equation}
+        \begin{itemize}
+            \item \textbf{True Positives (TP):} The number of correctly predicted positive instances.
+            \item \textbf{False Positives (FP):} The number of incorrectly predicted positive instances.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example}
+        Imagine a medical test for a disease: Out of 100 tested patients:
+        \begin{itemize}
+            \item 70 patients are actually sick (true positives)
+            \item 10 patients are healthy but tested positive (false positives)
+        \end{itemize}
+        Using the precision formula:
+        \begin{equation}
+            \text{Precision} = \frac{70}{70 + 10} = \frac{70}{80} = 0.875 \text{ or } 87.5\%
+        \end{equation}
+        This tells us that 87.5\% of patients the test identified as sick truly are sick.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recall - Definition}
+    \begin{block}{Definition of Recall}
+        \textbf{Recall} (also known as Sensitivity or True Positive Rate) measures the ability of a model to correctly identify all relevant instances within a dataset. Specifically, recall indicates the proportion of actual positive cases that are correctly predicted by the model.
+    \end{block}
+    
+    \begin{block}{Formula}
+        The formula for recall is given by:
+        \[
+        \text{Recall} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Negatives (FN)}}
+        \]
+        \begin{itemize}
+            \item \textbf{True Positives (TP)}: Correctly predicted positive instances.
+            \item \textbf{False Negatives (FN)}: Actual positive instances incorrectly predicted as negative.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recall - Relevance to Model Performance}
+    \begin{block}{Importance of Recall}
+        \begin{enumerate}
+            \item \textbf{Crucial in Certain Applications}: 
+            Recall is particularly important in scenarios where missing positive instances has significant consequences. For example, in disease screening, failing to identify a sick patient (false negative) can lead to serious health issues.
+            
+            \item \textbf{Trade-off with Precision}:
+            There is often a trade-off between recall and precision. Increasing recall may decrease precision, as a model that is very lenient in predicting positives might also classify more negatives incorrectly.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recall - Relationship with False Negatives}
+    \begin{block}{Understanding False Negatives}
+        A \textbf{false negative} occurs when a model incorrectly predicts a negative outcome for a positive instance. This directly influences the recall metric: the more false negatives, the lower the recall.
+    \end{block}
+
+    \begin{block}{Impact on Recall}
+        High false negative counts indicate that many relevant instances are being overlooked by the model, signaling poor performance in terms of recall.
+    \end{block}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Recall focuses on the model's ability to identify all relevant positives.
+            \item A low recall indicates that the model is missing many actual positive cases.
+            \item Precision and recall must be balanced based on the specific goals of the model.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recall - Example}
+    \begin{block}{Example Scenario}
+        Imagine a binary classification system designed to detect a rare disease:
+        \begin{itemize}
+            \item \textbf{True Positives (TP)}: 90 patients correctly identified as having the disease.
+            \item \textbf{False Negatives (FN)}: 10 patients who actually have the disease but were not identified by the model.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Recall Calculation}
+        Using the formula:
+        \[
+        \text{Recall} = \frac{90}{90 + 10} = \frac{90}{100} = 0.9 = 90\%
+        \]
+        This means the model successfully identified 90\% of the actual cases, highlighting a strong capability in recognizing the relevant positives.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1 Score - Introduction}
+    \begin{block}{What is the F1 Score?}
+        The F1 Score is a crucial metric for evaluating classification models, particularly in imbalanced scenarios. It is the harmonic mean of:
+        \begin{itemize}
+            \item \textbf{Precision}
+            \item \textbf{Recall}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision and Recall}
+    \begin{itemize}
+        \item \textbf{Precision}: Measures correctness of positive predictions:
+        \begin{equation}
+            \text{Precision} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Positives (FP)}}
+        \end{equation}
+        
+        \item \textbf{Recall}: Assesses ability to identify all relevant instances:
+        \begin{equation}
+            \text{Recall} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Negatives (FN)}}
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Calculating the F1 Score}
+    The F1 Score combines Precision and Recall:
+    \begin{equation}
+        \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+    \end{equation}
+    \begin{block}{Why Use F1 Score?}
+        - More informative than accuracy in imbalanced datasets.
+        - Example: In a disease detection model where 95\% are healthy, accuracy can be misleading.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Misleading Accuracy Example}
+    Consider a dataset with:
+    \begin{itemize}
+        \item 95\% healthy individuals (negative class)
+        \item 5\% individuals with disease (positive class)
+    \end{itemize}
+    If a model predicts all as healthy:
+    \begin{itemize}
+        \item Accuracy: 95\%
+        \item Precision: 0
+        \item Recall: 0
+        \item F1 Score: 0
+    \end{itemize}
+    \begin{block}{Conclusion}
+        The F1 Score gives a better understanding of performance where class distribution is imbalanced, focusing on both false positives and negatives.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item The F1 Score is critical in fields such as medical diagnostics and fraud detection.
+        \item Encapsulates false positives and negatives in a single metric.
+        \item A balanced model maximizes F1 Score, indicating better identification of positive instances.
+    \end{itemize}
+    \begin{block}{Takeaway}
+        Use the F1 Score to make informed decisions regarding your classification model's performance based on the specific problem at hand.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{ROC-AUC}
+  \begin{block}{Understanding ROC Curve and AUC}
+    \textbf{What is the ROC Curve?}
+    \begin{itemize}
+      \item The \textbf{Receiver Operating Characteristic (ROC)} curve is a graphical representation of a classification model's diagnostic ability at various threshold settings. 
+      \item The x-axis represents the \textbf{False Positive Rate (FPR)}, while the y-axis shows the \textbf{True Positive Rate (TPR)}, also known as Sensitivity or Recall.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{ROC-AUC - Key Terminology}
+  \begin{block}{Key Terminology}
+    \begin{itemize}
+      \item \textbf{True Positive (TP)}: The number of correct positive predictions.
+      \item \textbf{False Positive (FP)}: The number of incorrect positive predictions.
+      \item \textbf{True Negative (TN)}: The number of correct negative predictions.
+      \item \textbf{False Negative (FN)}: The number of incorrect negative predictions.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{The ROC Curve}
+    \begin{itemize}
+      \item Each point on the ROC curve corresponds to a different threshold used to classify a positive outcome.
+      \item As the threshold for positive predictions decreases, TPR usually increases, while FPR might also increase, creating an upward curve.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Significance of AUC}
+  \begin{block}{AUC Significance}
+    \begin{itemize}
+      \item \textbf{AUC} quantifies overall model performance across all classification thresholds.
+      \item An \textbf{AUC of 0.5} indicates no discrimination (similar to random guessing).
+      \item An \textbf{AUC of 1.0} signifies perfect classification (100\% true positive rate and 0\% false positive rate).
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Advantages of Using ROC-AUC}
+    \begin{itemize}
+      \item \textbf{Threshold Agnostic}: Evaluates model performance irrespective of the chosen discrimination threshold.
+      \item \textbf{Class Imbalance Handling}: Works well with unbalanced datasets, where traditional metrics like accuracy may be misleading.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example and Key Points}
+  \begin{block}{Example}
+    Imagine a model that predicts whether an email is spam:
+    \begin{itemize}
+      \item At a high threshold: Fewer FPs (lower FPR) but lower TPR (more FNs).
+      \item At a low threshold: TPR increases, but FPR also rises, demonstrating the trade-off on the ROC curve.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Key Points to Remember}
+    \begin{itemize}
+      \item The ROC curve illustrates the trade-off between TPR and FPR.
+      \item AUC serves as a single scalar value representing model performance.
+      \item Ideal models have AUC values nearer to 1, indicating better class distinction.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Formulas}
+    \begin{equation}
+      \text{TPR} = \frac{TP}{TP + FN}
+    \end{equation}
+    \begin{equation}
+      \text{FPR} = \frac{FP}{FP + TN}
+    \end{equation}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Metrics - Overview}
+    \begin{itemize}
+        \item Model evaluation metrics assess the performance of classification models.
+        \item Important metrics include: 
+        \textbf{Accuracy, Precision, Recall, F1 Score,} and \textbf{ROC-AUC}.
+        \item Understanding the context for choosing each metric is crucial for informed model selection.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Metrics - Accuracy}
+    \begin{block}{Definition}
+        The ratio of correctly predicted instances to the total instances.
+    \end{block}
+    
+    \begin{equation}
+        \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item TP = True Positives
+        \item TN = True Negatives
+        \item FP = False Positives
+        \item FN = False Negatives
+    \end{itemize}
+
+    \begin{block}{When to Use}
+        Best for balanced datasets. Misleading in imbalanced datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Metrics - Precision and Recall}
+    \begin{block}{Precision}
+        \begin{itemize}
+            \item Definition: The ratio of correctly predicted positive observations to total predicted positives.
+            \item Formula:
+            \begin{equation}
+                \text{Precision} = \frac{TP}{TP + FP}
+            \end{equation}
+            \item When to Use: Important in scenarios where false positives are costly (e.g., spam detection).
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Recall (Sensitivity)}
+        \begin{itemize}
+            \item Definition: The ratio of correctly predicted positive instances to all actual positives.
+            \item Formula:
+            \begin{equation}
+                \text{Recall} = \frac{TP}{TP + FN}
+            \end{equation}
+            \item When to Use: Crucial when false negatives are unacceptable (e.g., disease screening).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Metrics - F1 Score and ROC-AUC}
+    \begin{block}{F1 Score}
+        \begin{itemize}
+            \item Definition: The harmonic mean of precision and recall.
+            \item Formula:
+            \begin{equation}
+                \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+            \end{equation}
+            \item When to Use: Ideal for imbalanced datasets.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{ROC-AUC}
+        \begin{itemize}
+            \item Definition: The Area Under the Receiver Operating Characteristic Curve.
+            \item When to Use: Effective for assessing performance across various thresholds.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Metrics - Key Points}
+    \begin{itemize}
+        \item Context Matters: Choose metrics based on problem context (e.g., recall for fraud detection).
+        \item Combination of Metrics: Use multiple metrics (e.g., F1 Score) for comprehensive evaluation.
+        \item Balanced vs. Imbalanced Data: Accuracy can be deceptive; prefer precision, recall, and F1 Score in imbalanced datasets.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Metrics - Summary}
+    \begin{itemize}
+        \item Each metric has its strengths and weaknesses.
+        \item Understanding when to use each metric is essential for optimizing classifier performance.
+        \item Align metric choice with classification task priorities and implications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Applications - Overview}
+    \begin{block}{Introduction to Model Evaluation Metrics}
+        Model evaluation metrics provide crucial insights into the performance of machine learning models. Understanding how to apply these metrics in real-world scenarios facilitates better decision-making during the model selection process.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Evaluation Metrics}
+    \begin{enumerate}
+        \item \textbf{Accuracy}: The proportion of correctly predicted instances out of the total instances.
+        \begin{itemize}
+            \item \textit{Example}: In a binary classification of email spam detection, if a model correctly identifies 90 out of 100 emails, its accuracy is 90\%.
+        \end{itemize}
+
+        \item \textbf{Precision}: The ratio of true positive predictions to the total predicted positives. Vital when the cost of false positives is high.
+        \begin{itemize}
+            \item \textit{Example}: High precision is critical in medical diagnosis for rare diseases, ensuring only true positives are treated.
+        \end{itemize}
+        
+        \item \textbf{Recall (Sensitivity)}: The ratio of true positive predictions to the actual positives. Important when missing a positive instance is costly.
+        \begin{itemize}
+            \item \textit{Example}: In cancer screening, high recall ensures most cases are flagged for testing.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Evaluation Metrics (Continued)}
+    \begin{enumerate}
+        \setcounter{enumi}{3} % Continue from previous enumeration
+        \item \textbf{F1 Score}: The harmonic mean of precision and recall, useful in imbalanced datasets.
+        \begin{itemize}
+            \item \textit{Example}: In fraud detection, the F1 score balances catching fraud (recall) and minimizing false alarms (precision).
+        \end{itemize}
+        
+        \item \textbf{ROC-AUC}: The area under the ROC curve indicates the model’s ability to distinguish between classes. A value closer to 1 implies better performance.
+        \begin{itemize}
+            \item \textit{Example}: A high ROC-AUC score in credit scoring indicates effective separation between risky and non-risky borrowers.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Applications in Real-World Scenarios}
+    \begin{itemize}
+        \item \textbf{Healthcare}: High precision is needed to avoid false alarms, but high recall ensures no diseases are missed.
+        \item \textbf{Finance}: Anti-fraud systems prioritize precision to reduce losses from false positives; metrics like F1 Score are essential.
+        \item \textbf{Marketing}: ROC-AUC scores are crucial for predicting customer behaviors accurately, enhancing campaign effectiveness.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Influence on Decision-Making}
+    \begin{itemize}
+        \item \textbf{Model Selection}: Metrics guide the choice of models based on which best aligns with business goals (e.g., maximizing revenue vs. minimizing risk).
+        \item \textbf{Threshold Adjustment}: Metrics help adjust the decision threshold of classifiers to reduce false positives.
+        \item \textbf{Model Improvement}: Analyzing metrics across iterations enables identification of areas for feature engineering and model tuning.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding and applying model evaluation metrics in real-world applications empowers decision-makers to select and refine models aligned with their objectives while effectively managing risks. Metrics serve as the foundation of informed decision-making in machine learning.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Model Evaluation Metrics}
+    In this chapter, we explored essential evaluation metrics crucial in the development and assessment of machine learning models. 
+    A strong understanding of these metrics empowers data scientists to make informed decisions, enhancing model performance and reliability.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points Covered}
+    \begin{enumerate}
+        \item \textbf{Types of Evaluation Metrics}
+        \begin{itemize}
+            \item \textbf{Classification Metrics}:
+            \begin{itemize}
+                \item \textbf{Accuracy}: Ratio of correctly predicted instances to total instances.
+                \item \textbf{Precision}: True Positives / (True Positives + False Positives).
+                \item \textbf{Recall (Sensitivity)}: True Positives / (True Positives + False Negatives).
+                \item \textbf{F1 Score}: Harmonic mean of precision and recall.
+            \end{itemize}
+            \item \textbf{Regression Metrics}:
+            \begin{itemize}
+                \item \textbf{Mean Absolute Error (MAE)}: Average absolute differences between predicted and actual values.
+                \item \textbf{Mean Squared Error (MSE)}: Average of squared differences, emphasizes larger errors.
+                \item \textbf{R-squared}: Proportion of variance explained by the model.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Real-World Applications}:
+        Emphasizing metrics in practical scenarios helps in choosing the right model based on specific business requirements.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implications for Model Development}
+    \begin{itemize}
+        \item Understanding and selecting appropriate evaluation metrics is context-dependent.
+        \item Prioritizing certain metrics can improve alignment with business needs and user requirements.
+    \end{itemize}
+
+    \begin{block}{Example Overview}
+        \textbf{Example Scenario}: A credit scoring model prioritizes precision, while a fraud detection system focuses on recall.
+    \end{block}
+
+    \begin{block}{Summary Remarks}
+        Selecting and understanding evaluation metrics is fundamental in developing efficient machine learning models.
+        Metrics guide improvements and impact stakeholder trust, influencing deployment and project success.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Implementation}
+    \begin{block}{Reminder}
+        Engage with libraries such as \textbf{scikit-learn} for Python to streamline the evaluation process and solidify your understanding.
+    \end{block}
+
+    \begin{lstlisting}[language=Python]
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+
+# Assuming y_true and y_pred are predefined lists of true and predicted values
+accuracy = accuracy_score(y_true, y_pred)
+precision = precision_score(y_true, y_pred)
+recall = recall_score(y_true, y_pred)
+f1 = f1_score(y_true, y_pred)
+
+print(f'Accuracy: {accuracy:.2f}, Precision: {precision:.2f}, Recall: {recall:.2f}, F1 Score: {f1:.2f}')
+    \end{lstlisting}
+\end{frame}
+
+
+\end{document}

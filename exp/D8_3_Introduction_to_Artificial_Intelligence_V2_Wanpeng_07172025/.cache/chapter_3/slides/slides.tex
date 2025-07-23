@@ -1,0 +1,802 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Title Page Information
+\title[Week 3: Search Algorithms]{Week 3: Search Algorithms}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Search Algorithms}
+    \begin{block}{What Are Search Algorithms?}
+        Search algorithms are fundamental techniques used in artificial intelligence (AI) to solve problems by finding solutions within large datasets or state spaces. They explore potential solutions systematically until the desired outcome is achieved or all possibilities are exhausted.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance in Problem-Solving}
+    \begin{enumerate}
+        \item \textbf{Decision Making}: Aid in making informed decisions by exploring various options (e.g., pathfinding in navigation systems).
+        \item \textbf{Efficiency}: Optimize the search process, enabling AI systems to handle complex tasks (e.g., game-playing, robotic navigation).
+        \item \textbf{Automation}: Used in applications like recommendation systems and puzzle solvers to automate problem-solving tasks.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{itemize}
+        \item \textbf{State Space}: Set of all possible states or configurations in a problem. 
+        \item \textbf{Goal State}: The specific condition or solution you aim to achieve within the state space.
+        \item \textbf{Search Tree}: A tree where each node represents a state. The root is the initial state, and leaves represent solutions or end states.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: Navigating a Maze}
+    Imagine a robot trying to navigate a maze. The algorithm explores various paths (state space) from the starting point until it reaches the exit (goal state). It might use a systematic approach (like breadth-first search) to ensure all paths are explored before concluding the maze is unsolvable.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Types of Search Algorithms}: Familiarize yourself with Uninformed and Informed strategies.
+        \item \textbf{Complexity}: Consider the time and space complexity, which affects the practical usability of algorithms.
+        \item \textbf{Practical Applications}: Used in domains like web search engines, AI games, and optimization problems.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding search algorithms is crucial for anyone involved in AI and computer science. They are the backbone of problem-solving techniques in intelligent systems. Further exploration into various search strategies will be covered in upcoming sections.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Search Strategies - Introduction}
+    Search algorithms are fundamental techniques in Artificial Intelligence (AI) and computer science, used to navigate through problem spaces. 
+    They can be broadly classified into two categories:
+    \begin{itemize}
+        \item \textbf{Uninformed Search Strategies}
+        \item \textbf{Informed Search Strategies}
+    \end{itemize}
+    Understanding the distinctions between these two categories is crucial for efficiently solving problems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Search Strategies - Uninformed Search Strategies}
+    \begin{block}{Definition}
+        Uninformed search strategies, also known as blind search strategies, do not have additional information about the goal's location other than the problem definition itself.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Example Algorithms:}
+        \begin{itemize}
+            \item \textbf{Breadth-First Search (BFS)}
+                \begin{itemize}
+                    \item Explores all nodes at the present depth level before moving on to nodes at the next depth level.
+                    \item \textit{Characteristics:} Completeness, guarantees the shortest path in unweighted graphs.
+                    \item \textit{Use Case:} Finding the shortest path in maze navigation.
+                \end{itemize}
+            \item \textbf{Depth-First Search (DFS)}
+                \begin{itemize}
+                    \item Explores as far as possible along a branch before backtracking.
+                    \item \textit{Characteristics:} Space-efficient; can get stuck in deep or infinite branches.
+                    \item \textit{Use Case:} Puzzle solving, such as the N-Queens problem.
+                \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Search Strategies - Informed Search Strategies}
+    \begin{block}{Definition}
+        Informed search strategies, also known as heuristic search strategies, have additional information (heuristics) that estimates the cost from the current node to the goal.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Example Algorithms:}
+        \begin{itemize}
+            \item \textbf{A* Search}
+                \begin{itemize}
+                    \item Combines the cost to reach the node $g(n)$ and the estimated cost to the goal $h(n)$, optimizing the search.
+                    \item \textbf{Formula:} 
+                    \begin{equation}
+                    f(n) = g(n) + h(n)
+                    \end{equation}
+                    \item \textit{Characteristics:} Complete and optimal, given that the heuristic is admissible.
+                    \item \textit{Use Case:} Route finding in maps, such as GPS navigation.
+                \end{itemize}
+            \item \textbf{Greedy Best-First Search}
+                \begin{itemize}
+                    \item Expands the node that appears to be closest to the goal, according to a heuristic.
+                    \item \textit{Characteristics:} Faster but not guaranteed to find the optimal path.
+                    \item \textit{Use Case:} Games and puzzle-solving where a quick solution is preferred.
+                \end{itemize}
+        \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Search Strategies - Key Points}
+    \begin{itemize}
+        \item \textbf{Differences:}
+            \begin{itemize}
+                \item Uninformed strategies do not leverage information beyond the problem definition and can lead to inefficiencies.
+                \item Informed strategies utilize heuristics to improve efficiency and reduce search space by guiding the search towards the goal.
+            \end{itemize}
+        \item \textbf{When to Use:}
+            \begin{itemize}
+                \item Use uninformed strategies when no additional information is available.
+                \item Use informed strategies when you have heuristics that can optimize the search process.
+            \end{itemize}
+    \end{itemize}
+    Understanding these strategies will lay the groundwork for exploring specific algorithms in the following slides.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Uninformed Search Strategies - Overview}
+    \begin{block}{Overview}
+        Uninformed search strategies (blind search) explore the search space without knowledge of the goal's location. They do not use heuristics and rely on the problem's structure.
+    \end{block}
+    
+    \begin{itemize}
+        \item Fundamental to understanding search algorithms.
+        \item No heuristics used; explore based on problem structure.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Uninformed Search Strategies - BFS}
+    \begin{block}{Breadth-First Search (BFS)}
+        \textbf{Description:} Explores the search space layer by layer, expanding outward from the root node.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Completeness:} Yes, finds solution if exists.
+        \item \textbf{Time Complexity:} $O(b^d)$, where $b$ is the branching factor and $d$ is the depth of the shallowest solution.
+        \item \textbf{Space Complexity:} $O(b^d)$, stores all nodes at current depth.
+    \end{itemize}
+
+    \begin{block}{Example Illustration}
+        Consider the following tree structure:
+        \begin{verbatim}
+               A
+             / | \
+            B  C  D
+           / \
+          E   F
+        \end{verbatim}
+        BFS visits in order: 1. A 2. B, C, D 3. E, F
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Uninformed Search Strategies - DFS}
+    \begin{block}{Depth-First Search (DFS)}
+        \textbf{Description:} Explores as far down one branch as possible before backtracking.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Completeness:} No, may loop if cycles present.
+        \item \textbf{Time Complexity:} $O(b^m)$, where $m$ is the maximum depth of the search.
+        \item \textbf{Space Complexity:} $O(b*m)$, stores nodes along current path.
+    \end{itemize}
+
+    \begin{block}{Example Illustration}
+        Using the same tree:
+        DFS visits in order: 1. A 2. B 3. E 4. Backtrack to B, then F 5. Backtrack to A, visit C, then D
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of BFS and DFS}
+    \begin{tabular}{|l|c|c|}
+        \hline
+        Feature & Breadth-First Search & Depth-First Search \\
+        \hline
+        Completeness & Yes & No \\
+        Time Complexity & $O(b^d)$ & $O(b^m)$ \\
+        Space Complexity & $O(b^d)$ & $O(b*m)$ \\
+        Strategy of Search & Level by level & Deep into one branch \\
+        \hline
+    \end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet - BFS and DFS}
+    \begin{block}{Python Example}
+        \begin{lstlisting}[language=Python]
+from collections import deque
+
+# Breadth-First Search
+def bfs(root):
+    queue = deque([root])
+    while queue:
+        node = queue.popleft()
+        process(node)  # Define your processing logic
+        for child in node.children:
+            queue.append(child)
+
+# Depth-First Search
+def dfs(node):
+    process(node)  # Define your processing logic
+    for child in node.children:
+        dfs(child)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Conclusion}
+        Understanding uninformed search strategies like BFS and DFS is crucial for solving complex search problems effectively. 
+        These foundational techniques pave the way for more advanced informed search strategies, which will be explored next.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - Overview}
+    \begin{itemize}
+        \item Informed search strategies leverage domain-specific information.
+        \item Utilize heuristics, a function estimating costs to goals.
+        \item Two well-known strategies:
+        \begin{itemize}
+            \item \textbf{A* Search}
+            \item \textbf{Greedy Best-First Search}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - Key Concepts}
+    \begin{block}{Heuristic Function ($h(n)$)}
+        A function estimating minimum cost from node \( n \) to the goal. Must be admissible, never overestimating the true cost.
+    \end{block}
+    
+    \begin{block}{Evaluation Function ($f(n)$)}
+        Combines cost to reach node \( n \) (\( g(n) \)) and heuristic estimate (\( h(n) \)):
+        \begin{equation}
+            f(n) = g(n) + h(n)
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - A* Search}
+    \begin{itemize}
+        \item \textbf{Description}: Combines Dijkstra's Algorithm and Greedy Best-First Search; explores nodes based on lowest total cost \( f(n) \).
+        
+        \item \textbf{Properties}:
+        \begin{itemize}
+            \item Complete: Guarantees to find a solution if one exists.
+            \item Optimal: Guarantees least-cost solution if heuristic is admissible.
+        \end{itemize}
+        
+        \item \textbf{Algorithm Steps}:
+        \begin{enumerate}
+            \item Initialize open and closed lists.
+            \item Add start node to open list.
+            \item While open list is not empty:
+            \begin{itemize}
+                \item Select node with lowest \( f(n) \).
+                \item If goal node, reconstruct path and return.
+                \item Move it to closed list and explore neighbors.
+            \end{itemize}
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - Greedy Best-First Search}
+    \begin{itemize}
+        \item \textbf{Description}: Selects nodes solely based on heuristic value \( h(n) \).
+        
+        \item \textbf{Properties}:
+        \begin{itemize}
+            \item Not guaranteed to be optimal or complete; may get stuck in local minima.
+        \end{itemize}
+        
+        \item \textbf{Algorithm Steps}:
+        \begin{enumerate}
+            \item Initialize open list and add start node.
+            \item While open list is not empty:
+            \begin{itemize}
+                \item Select node with lowest \( h(n) \).
+                \item If goal node, reconstruct path and return.
+                \item Expand neighbors, adding to open list.
+            \end{itemize}
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - Applications}
+    \begin{itemize}
+        \item \textbf{Pathfinding in AI}: Heavily used in games and robotics.
+        \item \textbf{Planning Problems}: Aid in achieving sequences of actions for desired outcomes.
+        \item \textbf{Web Page Ranking}: Utilizes heuristics for ranking based on estimated page relevance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - Key Points}
+    \begin{itemize}
+        \item \textbf{Heuristics Matter}: Critical for the performance of these algorithms.
+        \item \textbf{Trade-offs}: A* is more reliable but computationally intense compared to Greedy Best-First Search.
+        \item \textbf{Contextual Choice}: Select the appropriate algorithm based on problem requirements (optimal vs. computational efficiency).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - Conclusions}
+    \begin{itemize}
+        \item Informed search strategies provide effective methods for searching leveraging insights about the problem domain.
+        \item Understanding A* and Greedy Best-First Search is essential for applying strategies across various real-world applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Search Algorithms in Practice - Introduction}
+    \begin{block}{Introduction to Search Algorithms in AI}
+        Search algorithms are fundamental to computer science and artificial intelligence (AI). 
+        They are used to find solutions or navigate through data spaces efficiently. 
+        These algorithms can be broadly categorized into 
+        \textbf{uninformed (blind)} search strategies and 
+        \textbf{informed (heuristic)} search strategies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Search Algorithms in Practice - Real-World Applications}
+    \begin{block}{Real-World Applications}
+        \begin{enumerate}
+            \item \textbf{Pathfinding in Robotics}
+                \begin{itemize}
+                    \item \textbf{Example}: Autonomous delivery drones use the A* Search algorithm to navigate considering obstacles and optimizing travel time.
+                    \item \textbf{Case Study}: Zipline employs drones to deliver medical supplies, utilizing A* for the safest and fastest route.
+                \end{itemize}
+
+            \item \textbf{Game Development}
+                \begin{itemize}
+                    \item \textbf{Example}: Video games use the Minimax algorithm with Alpha-Beta pruning to determine the best player move.
+                    \item \textbf{Case Study}: Chess engines like Stockfish apply Minimax to evaluate millions of possible moves.
+                \end{itemize}
+
+            \item \textbf{Internet Search Engines}
+                \begin{itemize}
+                    \item \textbf{Example}: Google's search algorithm indexes web pages using various strategies, including PageRank.
+                    \item \textbf{Case Study}: PageRank revolutionized web search by ranking pages based on link structures.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Search Algorithms in Practice - Healthcare & Speech Recognition}
+    \begin{block}{Continued Real-World Applications}
+        \begin{enumerate}
+            \setcounter{enumi}{3}  % Continue from the last number
+            \item \textbf{Artificial Intelligence in Healthcare}
+                \begin{itemize}
+                    \item \textbf{Example}: IBM Watson uses search algorithms to analyze clinical trial datasets for disease diagnosis.
+                    \item \textbf{Case Study}: Watson’s Oncology system recommends treatments by evaluating vast literature and patient data.
+                \end{itemize}
+
+            \item \textbf{Speech Recognition Systems}
+                \begin{itemize}
+                    \item \textbf{Example}: Voice-activated assistants like Siri use search algorithms to match spoken queries with database responses.
+                    \item \textbf{Case Study}: Google Assistant employs neural networks and search algorithms to enhance voice recognition accuracy.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Search Algorithms in Practice - Key Points & Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Search algorithms are integral across various industries, from logistics to healthcare and technology.
+            \item Understanding uninformed and informed search strategies is crucial for developing effective AI systems.
+            \item Innovations in AI often rely on sophisticated search algorithms to enhance efficiency and accuracy.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Search algorithms are not merely theoretical constructs but are actively reshaping multiple domains. 
+        Implementing appropriate search strategies significantly enhances performance and user experience in AI applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparative Analysis of Search Algorithms}
+    \begin{block}{Overview}
+        Search algorithms are essential components in artificial intelligence (AI) and computer science used for problem-solving and decision-making. They can be broadly categorized into two types: \textbf{Uninformed Search Strategies} and \textbf{Informed Search Strategies}.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Uninformed Search Strategies}
+    \begin{block}{Definition}
+        These strategies do not have any additional information about the goal's location. They explore the search space blindly.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Breadth-First Search (BFS):}
+        \begin{itemize}
+            \item Explores all nodes at the present depth before moving on to nodes at the next depth level.
+            \item \textbf{Use Case:} Finding the shortest path in unweighted graphs (e.g., social network connections).
+        \end{itemize}
+        \item \textbf{Depth-First Search (DFS):}
+        \begin{itemize}
+            \item Explores as far as possible along each branch before backtracking.
+            \item \textbf{Use Case:} Solving mazes or puzzles where depth needs to be prioritized.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Uninformed Search Strategies - Key Points}
+    \begin{itemize}
+        \item \textbf{Space Complexity:}
+        \begin{itemize}
+            \item BFS has high space requirements due to storing all nodes in the current layer.
+            \item DFS is more space-efficient but can lead to deep recursions.
+        \end{itemize}
+        \item \textbf{Performance:}
+            \begin{itemize}
+                \item Generally slower and less efficient in large or infinite search spaces, as they may explore irrelevant pathways.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies}
+    \begin{block}{Definition}
+        These strategies use heuristics or additional information to make more directed decisions about which nodes to explore.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{A* Search Algorithm:}
+        \begin{itemize}
+            \item Combines BFS and heuristic-driven searches by evaluating nodes based on cost and an estimated distance to the goal.
+            \item \textbf{Use Case:} GPS navigation systems that find the shortest route considering real-time traffic.
+        \end{itemize}
+        \item \textbf{Greedy Best-First Search:}
+        \begin{itemize}
+            \item Chooses the path that appears to lead most directly to the goal (best heuristic).
+            \item \textbf{Use Case:} Pathfinding in games where immediate next moves are prioritized for speed.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies - Key Points}
+    \begin{itemize}
+        \item \textbf{Efficiency:}
+            \begin{itemize}
+                \item Generally, more efficient than uninformed strategies due to reduced search space.
+            \end{itemize}
+        \item \textbf{Optimality:}
+            \begin{itemize}
+                \item A* Search is optimal if the heuristic is admissible (never overestimates the true cost).
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparative Summary}
+    \begin{center}
+        {\footnotesize
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Aspect} & \textbf{Uninformed Search} & \textbf{Informed Search} \\
+            \hline
+            Search Space & Explores blindly; may be large or infinite & Explores selectively; utilizes heuristics \\
+            \hline
+            Examples & BFS, DFS & A*, Greedy Best-First Search \\
+            \hline
+            Complexity & Higher time and space complexity in large spaces & Lower complexity with effective heuristics \\
+            \hline
+            Optimality & Not guaranteed (e.g., DFS) & Often optimal if heuristics are admissible \\
+            \hline
+        \end{tabular}
+        }
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding the comparative performance, efficiency, and appropriate use cases of both uninformed and informed search strategies enables developers and researchers to choose the right algorithm, optimizing solutions across various AI applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges and Limitations - Overview}
+    \begin{block}{Overview}
+        Search algorithms are fundamental to problem-solving in computer science and artificial intelligence. However, despite their efficacy, they face several challenges and limitations that can impact their performance and application in real-world scenarios.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges Faced by Search Algorithms}
+    \begin{enumerate}
+        \item \textbf{Search Space Complexity}
+        \begin{itemize}
+            \item The number of possible states or configurations can be enormous.
+            \item \textit{Example:} In chess, possible moves can grow exponentially.
+        \end{itemize}
+        
+        \item \textbf{Efficiency and Time Constraints}
+        \begin{itemize}
+            \item Varying time complexities can limit effectiveness.
+            \item \textit{Key Point:} DFS can be faster but may get trapped in deep paths.
+            \item \textit{Comparison:} Uniform-cost search guarantees the shortest path.
+        \end{itemize}
+        
+        \item \textbf{Heuristic Limitations}
+        \begin{itemize}
+            \item Poorly designed heuristics can lead to inefficient searches.
+            \item \textit{Example:} A* algorithm's performance may degrade with inaccurate heuristics.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{More Challenges and Key Limitations}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Optimality vs. Completeness}
+        \begin{itemize}
+            \item Some algorithms guarantee an optimal solution, while others may be complete but not optimal.
+            \item This presents a trade-off between finding the best solution and a reasonable time frame.
+        \end{itemize}
+        
+        \item \textbf{Dynamic Environments}
+        \begin{itemize}
+            \item Many algorithms designed for static environments can struggle when changes occur.
+            \item \textit{Example:} In robotics, blocked paths can cause failures.
+        \end{itemize}
+        
+        \item \textbf{Key Limitations}
+        \begin{itemize}
+            \item \textit{Memory Limitations:} Some algorithms may require significant memory resources.
+            \item \textit{Inability to Learn:} Traditional algorithms do not learn from previous searches.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Summary Points}
+    Understanding the challenges and limitations of search algorithms is essential for addressing their shortcomings and enhancing their functionality and performance.
+
+    \begin{block}{Summary Points}
+        \begin{itemize}
+            \item Complex search spaces can constrain algorithms' applicability.
+            \item Time efficiency varies significantly among different algorithms.
+            \item Heuristic quality directly influences informed search results.
+            \item Trade-offs exist between optimal and complete solutions.
+            \item Environmental dynamics pose a challenge for static algorithms.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Further Reading}
+        Consider exploring advancements in AI aimed at overcoming these limitations, which will be discussed in the next slide: \textbf{Future Trends in Search Algorithms}.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Trends in Search Algorithms}
+    % Description
+    This slide explores emerging trends and advancements in search algorithms within AI, addressing current challenges and highlighting the innovations transforming the field.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Emerging Trends}
+    As we advance in artificial intelligence (AI), search algorithms continually evolve to tackle complexities and enhance efficiency. Understanding these trends helps us prepare for innovations that improve problem-solving capabilities.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Trends in Search Algorithms}
+    \begin{itemize}
+        \item \textbf{A. Machine Learning Integration}
+        \begin{itemize}
+            \item Explanation: The integration of machine learning techniques into search algorithms allows for adaptive searches. 
+            \item Example: AlphaGo, which combines deep learning with tree search algorithms to outsmart human Go champions.
+        \end{itemize}
+        
+        \item \textbf{B. Heuristic Enhancements}
+        \begin{itemize}
+            \item Explanation: Modern algorithms use sophisticated heuristics that minimize search space and adaptively learn effectiveness.
+            \item Example: A* algorithm using learned heuristics to prioritize nodes dynamically based on previous experience.
+        \end{itemize}
+        
+        \item \textbf{C. Quantum Computing}
+        \begin{itemize}
+            \item Explanation: Quantum algorithms can potentially solve problems exponentially faster than classical algorithms.
+            \item Example: Future applications in cryptography and optimization problems that traditional search algorithms struggle with.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Addressing Current Challenges}
+    \begin{itemize}
+        \item \textbf{Scalability}: Leveraging distributed computing for efficient data handling through cloud-based solutions.
+        
+        \item \textbf{Complexity}: Evolving algorithms to process complex, non-linear datasets encountered in real-world applications.
+        
+        \item \textbf{Ethics and Bias}: Emphasizing fair and transparent algorithms to mitigate bias in critical areas such as AI in hiring.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Integration of ML enhances adaptability and efficiency.
+        \item Quantum computing may revolutionize search capabilities.
+        \item Focus on ethical considerations and fairness in algorithm design is paramount.
+        \item Heuristic improvements can provide substantial performance boosts.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    As technology progresses, remaining informed about these trends is crucial for leveraging search algorithms to solve complex problems and maximize AI's potential in diverse fields.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{References for Further Reading}
+    \begin{itemize}
+        \item Russell, S., \& Norvig, P. (2020). \textit{Artificial Intelligence: A Modern Approach}.
+        \item Grover's Algorithm and its applications in quantum computing.
+        \item Example case studies of ML in adaptive search.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Summary - Key Concepts Recap}
+    \begin{enumerate}
+        \item \textbf{Definition of Search Algorithms:}
+            Search algorithms are systematic methods used to explore problem spaces to find solutions or specific data. They play an essential role in Artificial Intelligence (AI) applications, enabling computers to make decisions based on data retrieval and analysis.
+
+        \item \textbf{Common Search Strategies:}
+            \begin{itemize}
+                \item \textbf{Uninformed Search:}
+                    \begin{itemize}
+                        \item \textit{Breadth-First Search (BFS):} Explores all nodes at the present depth before moving on to nodes at the next depth level.
+                        \item \textit{Depth-First Search (DFS):} Explores as far as possible along each branch before backtracking.
+                    \end{itemize}
+                \item \textbf{Informed Search:}
+                    \begin{itemize}
+                        \item \textit{A* Algorithm:} Combines DFS benefits with a heuristic function estimating the cost to reach the goal from the current node.
+                        \item \textit{Greedy Best-First Search:} Selects the path that appears to be the most promising based on heuristics.
+                    \end{itemize}
+            \end{itemize}
+
+        \item \textbf{Evaluating Search Algorithms:}
+            \begin{itemize}
+                \item \textbf{Time Complexity:} Analyzes the amount of time an algorithm takes based on input size (e.g., O(n), O(log n)).
+                \item \textbf{Space Complexity:} Considers how much memory an algorithm uses while running.
+            \end{itemize}
+    \end{enumerate}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Summary - Applications in AI Problem-Solving}
+    \begin{itemize}
+        \item Search algorithms enable solving complex problems in various areas:
+            \begin{itemize}
+                \item \textbf{Resource Allocation:} Efficiently distributing resources in different scenarios.
+                \item \textbf{Pathfinding:} Used in GPS navigation to determine optimal routes.
+                \item \textbf{Game Playing:} Assisting in strategic decision-making, such as in chess AI.
+                \item \textbf{Automated Reasoning:} Methods like theorem proving that apply logic to reach conclusions.
+            \end{itemize}
+
+        \item \textbf{Example of A* Algorithm in Pathfinding:}
+            Given a map with obstacles, the A* algorithm finds the shortest path from point A to B by evaluating paths based on both traveled distance and estimated distance to the goal.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Summary - Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Significance of Search Algorithms in AI:}
+                \begin{itemize}
+                    \item Enable efficient processing of large datasets and complex decision-making.
+                    \item Understanding search strategies is essential for effectively addressing specific problems.
+                \end{itemize}
+            \item \textbf{Continued Evolution:}
+                \begin{itemize}
+                    \item Advancements in AI are leading to the evolution of search algorithms, including hybrid methods for enhanced performance.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Effective search strategies are fundamental to the success of AI, influencing various applications. Mastery of these algorithms enhances problem-solving capabilities and drives innovations in artificial intelligence development.
+    \end{block}
+\end{frame}
+
+
+\end{document}

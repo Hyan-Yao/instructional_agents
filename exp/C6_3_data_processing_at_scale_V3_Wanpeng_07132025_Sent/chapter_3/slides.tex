@@ -1,0 +1,995 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Week 3: Introduction to MapReduce]{Week 3: Introduction to MapReduce}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to MapReduce}
+    \begin{block}{Overview}
+        MapReduce is a powerful framework that processes large datasets in a distributed computing environment, enabling data-intensive operations across clusters of machines.
+    \end{block}
+    \begin{itemize}
+        \item Efficient handling of vast amounts of data
+        \item Significant in today's digital world
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components of MapReduce}
+    \begin{enumerate}
+        \item \textbf{Map Function}:
+            \begin{itemize}
+                \item Processes input data into key-value pairs.
+                \item \textit{Example}: In a word count application, it outputs pairs like \((\text{word}, 1)\).
+            \end{itemize}
+        \item \textbf{Reduce Function}:
+            \begin{itemize}
+                \item Aggregates the key-value pairs produced by the map function.
+                \item \textit{Example}: It sums counts for each unique word, outputting pairs like \((\text{word}, \text{totalCount})\).
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Why MapReduce?}
+    \begin{itemize}
+        \item \textbf{Scalability}:
+            \begin{itemize}
+                \item Processes data across numerous machines.
+                \item Easily scales to handle increased loads.
+            \end{itemize}
+        \item \textbf{Fault Tolerance}:
+            \begin{itemize}
+                \item Can rerun tasks on different machines upon failures.
+                \item Ensures robustness of data processing.
+            \end{itemize}
+        \item \textbf{Flexibility}:
+            \begin{itemize}
+                \item Works with various data formats.
+                \item Widely used for batch processing of big data.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example in Practice}
+    \begin{block}{Mapping}
+        \textit{Input}: "Data science is fun data is great." \\
+        \textit{Output from Map}: 
+        \[
+        \{(\text{Data}, 1), (\text{science}, 1), (\text{is}, 1), (\text{fun}, 1), (\text{great}, 1)\}
+        \]
+    \end{block}
+    
+    \begin{block}{Reducing}
+        \textit{Input}:
+        \[
+        [(\text{Data}, 1), (\text{data}, 1), (\text{science}, 1), (\text{is}, 2), (\text{fun}, 1), (\text{great}, 1)]
+        \]
+        \textit{Output}:
+        \[
+        \{(\text{Data}, 1), (\text{data}, 1), (\text{science}, 1), (\text{is}, 2), (\text{fun}, 1), (\text{great}, 1)\}
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Workflow Overview}
+    \begin{block}{Data Flow}
+        \centering
+        \text{Input Data} $\rightarrow$ \text{Map} $\rightarrow$ \text{Key-Value Pairs} $\rightarrow$ \text{Reduce} $\rightarrow$ \text{Result}
+    \end{block}
+    \begin{itemize}
+        \item Understanding this flow is key before tackling complex data processing tasks.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item MapReduce abstracts complex parallel processing tasks.
+        \item It is vital in big data technologies like Apache Hadoop.
+        \item Facilitates insights from massive datasets.
+    \end{itemize}
+    \begin{block}{What’s Next?}
+        Grasping MapReduce fundamentals prepares you for more intricate topics in big data processing and analysis.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{What is MapReduce? - Definition}
+  \begin{block}{Definition of MapReduce}
+    MapReduce is a programming model and processing framework designed for large-scale data processing across distributed systems. It allows developers to write applications for processing vast amounts of data quickly and reliably by breaking tasks into small, manageable components.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{What is MapReduce? - Core Components}
+  \begin{block}{Core Components of MapReduce}
+    \begin{itemize}
+      \item \textbf{Map Function:}
+        \begin{itemize}
+          \item \textbf{Purpose:} Processes input data set into intermediate key-value pairs.
+          \item \textbf{How it Works:}
+            \begin{itemize}
+              \item Input data is divided into smaller sub-problems, processed in parallel.
+              \item Each sub-problem produces intermediate outputs.
+            \end{itemize}
+          \item \textbf{Example:}
+            \begin{itemize}
+              \item Input: "Hello World Hello"
+              \item Output: Emit key-value pairs like (“Hello”, 1) and (“World”, 1).
+            \end{itemize}
+        \end{itemize}
+      \item \textbf{Reduce Function:}
+        \begin{itemize}
+          \item \textbf{Purpose:} Aggregates intermediate key-value pairs to produce final output.
+          \item \textbf{How it Works:}
+            \begin{itemize}
+              \item Collects all values associated with the same key and combines them.
+            \end{itemize}
+          \item \textbf{Example:}
+            \begin{itemize}
+              \item From pairs: (“Hello”, [1, 1]) and (“World”, [1])
+              \item Output: (“Hello”, 2) and (“World”, 1).
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{What is MapReduce? - Key Points}
+  \begin{block}{Key Points to Emphasize}
+    \begin{itemize}
+      \item \textbf{Scalability:} Can process petabytes of data by distributing tasks across multiple machines.
+      \item \textbf{Fault Tolerance:} Handles individual node failures automatically, ensuring uninterrupted processing.
+      \item \textbf{Ease of Use:} Focus on mapping and reducing data without complex system management.
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Sample Pseudocode}
+  \begin{lstlisting}[language=Python]
+# Sample Map Function
+def map_function(data):
+    for word in data.split():
+        emit(word, 1)
+
+# Sample Reduce Function
+def reduce_function(key, values):
+    return (key, sum(values))
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of MapReduce}
+    % Overview of fundamental principles of MapReduce
+    MapReduce is a programming model for processing large data sets. It is built on two core concepts:
+    \begin{itemize}
+        \item \textbf{Parallel Processing}
+        \item \textbf{Distributed Computing}
+    \end{itemize}
+    Understanding these concepts is crucial for efficient data processing.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Parallel Processing}
+    \begin{block}{Definition}
+        Parallel processing enables the simultaneous execution of multiple computations across different processors or machines, enhancing data processing speed.
+    \end{block}
+    
+    \begin{block}{Example}
+        \begin{itemize}
+            \item \textbf{Without parallel processing}: The document is read sequentially, leading to slow performance.
+            \item \textbf{With parallel processing}: The document is split into sections, and each section is processed simultaneously, drastically reducing time.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Point}
+        \textbf{Efficiency}: Tasks executed in parallel reduce the overall processing time.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Distributed Computing}
+    \begin{block}{Definition}
+        Distributed computing involves multiple independent computers working together, sharing resources through a network to solve a computational problem.
+    \end{block}
+    
+    \begin{block}{Example}
+        Consider a weather forecasting system:
+        \begin{itemize}
+            \item Each computer analyzes a portion of meteorological data.
+            \item Results from individual computers are aggregated to create a comprehensive model.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Point}
+        \textbf{Scalability}: Enables seamless expansion of computational resources, accommodating growing data volumes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. MapReduce Workflow}
+    \textbf{Map Phase}:
+    \begin{itemize}
+        \item Input data is divided into small chunks.
+        \item Each chunk is processed by the \textbf{Map function} generating intermediate key-value pairs.
+    \end{itemize}
+
+    \textbf{Reduce Phase}:
+    \begin{itemize}
+        \item Intermediate pairs are aggregated.
+        \item The \textbf{Reduce function} processes these pairs to produce the final output.
+    \end{itemize}
+
+    \begin{block}{Illustration of Workflow}
+        \begin{verbatim}
+Input Data --> [Mapper 1] --> {Key-Value Pairs} 
+               --> [Shuffle and Sort] --> [Reducer 1] --> Final Output
+               [Mapper 2] --> {Key-Value Pairs} --> [Reducer 2]
+        \end{verbatim}
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Load Balancing}: Dynamic task assignment optimizes resource use.
+        \item \textbf{Fault Tolerance}: The system can restart tasks on available nodes if a failure occurs.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    Understanding parallel processing and distributed computing is essential for leveraging MapReduce effectively. These principles allow for efficient data processing, making big data analytics practical at scale.
+    
+    By grasping these concepts, one can better implement MapReduce in real-world scenarios, optimizing data processing in various applications.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Advantages of MapReduce}
+  MapReduce is a programming model widely used for processing and generating large data sets across distributed computing environments. 
+  Understanding its advantages is crucial for effective data processing tasks.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Benefits of Using MapReduce - Scalability and Fault Tolerance}
+  \begin{enumerate}
+    \item \textbf{Scalability}
+    \begin{itemize}
+      \item Efficiently handles vast data by distributing workloads across many nodes.
+      \item Example: AWS can run MapReduce jobs on thousands of servers to process petabytes of data.
+    \end{itemize}
+  
+    \item \textbf{Fault Tolerance}
+    \begin{itemize}
+      \item Designed to handle failures gracefully; nodes can be redirected automatically.
+      \item Illustration: If a map task fails, it gets redirected to another node without interrupting the process.
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Benefits of Using MapReduce - Flexibility and Cost-Effectiveness}
+  \begin{enumerate}
+    \setcounter{enumi}{2} % Continue numbering from previous frame
+    \item \textbf{Flexibility}
+    \begin{itemize}
+      \item Processes data from various sources: structured, semi-structured, and unstructured.
+      \item Example: Analyzing log files, social media data, or genomic sequences.
+    \end{itemize}
+
+    \item \textbf{Cost-Effectiveness}
+    \begin{itemize}
+      \item Uses commodity hardware to build clusters, reducing costs.
+      \item Example: Organizations utilize low-cost servers for a powerful data processing environment (e.g., Apache Hadoop).
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Benefits of Using MapReduce - Simplicity, Performance, and Ecosystem}
+  \begin{enumerate}
+    \setcounter{enumi}{4} % Continue numbering
+    \item \textbf{Simplicity and Ease of Use}
+    \begin{itemize}
+      \item The model is straightforward, allowing developers to work in familiar environments.
+      \item Example code snippet in Java:
+      \begin{lstlisting}[language=Java]
+      public class WordCount {
+          public static class Mapper extends MapReduceBase implements Mapper<LongWritable, Text, Text, IntWritable> {
+              public void map(LongWritable key, Text value, OutputCollector<Text, IntWritable> output, Reporter reporter) {
+                  StringTokenizer tokenizer = new StringTokenizer(value.toString());
+                  while (tokenizer.hasMoreTokens()) {
+                      output.collect(new Text(tokenizer.nextToken()), new IntWritable(1));
+                  }
+              }
+          }
+      }
+      \end{lstlisting}
+    \end{itemize}
+
+    \item \textbf{High Performance}
+    \begin{itemize}
+      \item Parallel execution of map and reduce tasks leads to performance enhancements.
+      \item Key Point: Simultaneous task execution drastically reduces processing time.
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Benefits of Using MapReduce - Community Support and Summary}
+  \begin{enumerate}
+    \setcounter{enumi}{6} % Continue numbering
+    \item \textbf{Community Support and Ecosystem}
+    \begin{itemize}
+      \item Strong community support with a rich ecosystem (e.g., Apache Hadoop).
+      \item Example: Tools like Apache Hive (for SQL-like queries) and Apache Pig (for scripting).
+    \end{itemize}
+  \end{enumerate}
+
+  \begin{block}{Summary}
+    MapReduce revolutionized data processing in distributed systems by providing scalability, fault tolerance, and flexibility, while remaining simple and cost-effective.
+    Understanding these advantages is crucial for optimizing performance in big data tasks.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MapReduce - Introduction}
+    \begin{block}{Introduction}
+        MapReduce is a powerful programming model for processing large datasets in parallel across a distributed cluster. However, users often encounter challenges that can impact efficacy and efficiency in data processing tasks.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MapReduce - Key Challenges}
+    \begin{enumerate}
+        \item \textbf{Data Skew}
+        \item \textbf{Debugging Complexity}
+        \item \textbf{Limited Iteration}
+        \item \textbf{Combiner Limitations}
+        \item \textbf{Resource Management}
+        \item \textbf{Latency Issues}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MapReduce - Detailed View}
+    \begin{itemize}
+        \item \textbf{Data Skew:} 
+        \begin{itemize}
+            \item Occurs when disproportionate data is sent to a single mapper or reducer.
+            \item Example: Best-sellers vs. less popular products in sales data.
+        \end{itemize}
+
+        \item \textbf{Debugging Complexity:} 
+        \begin{itemize}
+            \item Difficulties arise due to errors in remote nodes.
+            \item Example: Hard to trace exceptions thrown in reduce phase.
+        \end{itemize}
+
+        \item \textbf{Limited Iteration:} 
+        \begin{itemize}
+            \item Designed for batch processing; not efficient for iterative algorithms.
+            \item Example: Poor performance for machine learning algorithms needing multiple dataset passes.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MapReduce - Continued}
+    \begin{itemize}
+        \item \textbf{Combiner Limitations:}
+        \begin{itemize}
+            \item Combiners reduce data transfer but have constraints.
+            \item Example: Must produce identical results as reducer output.
+        \end{itemize}
+
+        \item \textbf{Resource Management:}
+        \begin{itemize}
+            \item Requires significant system resources; allocation can be challenging.
+            \item Example: Poor configuration causing resource contention and inefficiencies.
+        \end{itemize}
+
+        \item \textbf{Latency Issues:} 
+        \begin{itemize}
+            \item High latency due to task management in distributed systems.
+            \item Example: Shuffle and sort overhead leading to delays for smaller datasets.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in MapReduce - Summary}
+    \begin{block}{Summary}
+        Understanding these challenges is crucial for effective data processing solutions within the MapReduce framework. Awareness of key issues like data skew and debugging complexity can help improve implementation.
+    \end{block}
+
+    \begin{block}{Key Takeaway}
+        Recognizing and addressing the limitations of MapReduce is essential for achieving optimal performance in large-scale data processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Suggested Diagram}
+    % Insert Flowchart here (not included in LaTeX code, needs an image or graphic)
+    \begin{block}{Diagram}
+        Illustrate the MapReduce process including potential points of failure or latency.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Sample Mapper Code}
+    \begin{lstlisting}[language=Java]
+    // Sample Mapper Code
+    public class MyMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+        public void map(LongWritable key, Text value, Context context) 
+                throws IOException, InterruptedException {
+            // Processing logic
+        }
+    }
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{MapReduce Workflow}
+  % Step-by-step process of how data is processed using the MapReduce framework.
+  MapReduce is a programming model developed by Google for processing large data sets in a distributed computing environment. It consists of two main functions: \textbf{Map} and \textbf{Reduce}, which work together to handle data efficiently.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Overview of MapReduce Workflow}
+  \begin{block}{Step-by-Step Process}
+    \begin{enumerate}
+      \item Input Data Preparation
+      \item Map Phase
+      \item Shuffle and Sort
+      \item Reduce Phase
+      \item Output
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Step 1: Input Data Preparation}
+  \begin{itemize}
+    \item \textbf{Description}: Data must be in a distributed file system (e.g., HDFS).
+    \item \textbf{Example}: Collection of text files from different servers' logs.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Step 2: Map Phase}
+  \begin{itemize}
+    \item \textbf{Function}: Generates intermediate key-value pairs from input key-value pairs.
+    \item \textbf{Process}:
+    \begin{enumerate}
+      \item Mappers read input data splits (e.g., lines from text files).
+      \item Mappers emit intermediate key-value pairs.
+    \end{enumerate}
+    \item \textbf{Example Output}:
+    \begin{itemize}
+      \item Input: "Hello World"
+      \item Output: Key: "Hello", Value: 1 ; Key: "World", Value: 1
+    \end{itemize}
+    \begin{lstlisting}[language=Python]
+def map_function(key, value):
+    for word in value.split():
+        emit(word, 1)
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Step 3: Shuffle and Sort}
+  \begin{itemize}
+    \item \textbf{Description}: Groups and sorts key-value pairs by key.
+    \item \textbf{Purpose}: Ensures all values for a specific key go to the same reducer.
+    \item \textbf{Illustration}:
+    \begin{itemize}
+      \item Input: ("Hello": 1, "World": 1, "Hello": 1)
+      \item Output: Key: "Hello", Values: [1, 1]; Key: "World", Values: [1]
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Step 4: Reduce Phase}
+  \begin{itemize}
+    \item \textbf{Function}: Processes grouped key-value pairs into final output.
+    \item \textbf{Process}:
+    \begin{itemize}
+      \item Each reducer aggregates values associated with each key.
+    \end{itemize}
+    \item \textbf{Example Output}:
+    \begin{itemize}
+      \item Input: { "Hello": [1, 1], "World": [1] }
+      \item Output: Key: "Hello", Value: 2; Key: "World", Value: 1
+    \end{itemize}
+    \begin{lstlisting}[language=Python]
+def reduce_function(key, values):
+    total = sum(values)
+    emit(key, total)
+    \end{lstlisting}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Key Points to Emphasize}
+  \begin{itemize}
+    \item \textbf{Scalability}: Can handle petabytes of data across many nodes.
+    \item \textbf{Fault Tolerance}: Automatically reroutes tasks if a node fails.
+    \item \textbf{Performance}: Excels in batch processing for data analysis.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  Including a diagram to illustrate the MapReduce workflow can greatly enhance comprehension. Understanding this workflow helps appreciate how MapReduce transforms large datasets into actionable insights.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of MapReduce - Overview}
+    \begin{itemize}
+        \item MapReduce is a programming model for processing large datasets.
+        \item Designed to run distributed algorithms on clusters.
+        \item Organizations utilize MapReduce to analyze vast amounts of data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of MapReduce - Key Concepts}
+    \begin{block}{Key Concepts}
+        \begin{itemize}
+            \item \textbf{Map Phase}: Input data is split into chunks and processed in parallel to create key-value pairs.
+            \item \textbf{Reduce Phase}: Key-value pairs are aggregated and summarized based on keys.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of MapReduce - Examples}
+    \begin{enumerate}
+        \item \textbf{Search Engines}
+            \begin{itemize}
+                \item \textbf{Application}: Indexing web pages for quick search results.
+                \item \textbf{Example}: Google uses MapReduce to handle indexing across thousands of machines.
+            \end{itemize}
+        
+        \item \textbf{E-Commerce}
+            \begin{itemize}
+                \item \textbf{Application}: Analyzing user behavior for recommendations.
+                \item \textbf{Example}: Amazon analyzes purchase histories to suggest products.
+            \end{itemize}
+
+        \item \textbf{Social Media Analytics}
+            \begin{itemize}
+                \item \textbf{Application}: Sentiment analysis on user-generated content.
+                \item \textbf{Example}: Facebook uses it to assess sentiment on trending topics.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of MapReduce - Further Examples}
+    \begin{enumerate}
+        \setcounter{enumi}{3} % To continue from previous frame
+        
+        \item \textbf{Healthcare Data Processing}
+            \begin{itemize}
+                \item \textbf{Application}: Genomic data analysis and patient records processing.
+                \item \textbf{Example}: Hospitals use it to identify health risks from genomic databases.
+            \end{itemize}
+        
+        \item \textbf{Fraud Detection}
+            \begin{itemize}
+                \item \textbf{Application}: Monitoring financial transactions for irregularities.
+                \item \textbf{Example}: Banks leverage MapReduce for real-time transaction analysis.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Points}
+    \begin{itemize}
+        \item MapReduce scales processing over large datasets efficiently.
+        \item Capable of handling both structured and unstructured data.
+        \item Enables real-time data analysis for critical decision-making.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        MapReduce is vital for organizations to unlock the potential of big data across various industries.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Diagrams and References}
+    \begin{itemize}
+        \item Include a diagram illustrating the Map and Reduce phases.
+        \item \textbf{References:}
+            \begin{itemize}
+                \item Introduction to Hadoop MapReduce. (Date). Retrieved from \url{https://hadoop.apache.org/docs/stable/hadoop-mapreduce-client/hadoop-mapreduce-client-core/}
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce vs. Other Processing Models - Overview}
+    \begin{block}{Data Processing Models}
+        Data processing models are essential in managing and analyzing large datasets. This presentation compares MapReduce with Apache Spark, focusing on their differences and applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce}
+    \begin{itemize}
+        \item \textbf{Definition}: A programming model for processing large datasets, utilizing two main functions: \textbf{Map} and \textbf{Reduce}.
+        \item \textbf{Key Characteristics}:
+            \begin{itemize}
+                \item \textbf{Batch Processing}: Operates on large datasets in batches, resulting in longer processing times for real-time applications.
+                \item \textbf{Disk-based Storage}: Utilizes disk storage (e.g., HDFS), adding latency to data read/write operations.
+                \item \textbf{Fault Tolerance}: Automatically recovers from failures by restarting tasks from known points.
+            \end{itemize}
+        \item \textbf{Example}: Web server log analysis for counting URL access using Map and Reduce functions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Apache Spark}
+    \begin{itemize}
+        \item \textbf{Definition}: An open-source, distributed computing system that offers a programming interface for cluster processing with data parallelism and fault tolerance.
+        \item \textbf{Key Characteristics}:
+            \begin{itemize}
+                \item \textbf{In-Memory Processing}: Processes data in-memory, leading to significantly faster execution, especially for iterative tasks.
+                \item \textbf{Rich API}: Supports various high-level APIs (Java, Scala, Python, R), providing more accessibility to developers.
+                \item \textbf{Real-Time Processing}: Capable of handling real-time data processing and streaming.
+            \end{itemize}
+        \item \textbf{Example}: Real-time processing of social media feeds to analyze trends and sentiments as data arrives.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison Summary}
+    \begin{center}
+        \begin{tabular}{|l|l|l|}
+            \hline
+            \textbf{Feature} & \textbf{MapReduce} & \textbf{Apache Spark} \\
+            \hline
+            Processing Model & Batch Processing & In-Memory Processing \\
+            \hline
+            Latency & Higher due to disk reads/writes & Lower due to in-memory capabilities \\
+            \hline
+            Ease of Use & More complex API & User-friendly with high-level APIs \\
+            \hline
+            Use Cases & Suitable for analytics & Ideal for real-time analytics and machine learning \\
+            \hline
+            Performance & Slower for iterative tasks & Faster for iterative workloads \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Points}
+    \begin{block}{Conclusion}
+        Both MapReduce and Apache Spark are powerful data processing tools. The choice depends on specific use cases, performance requirements, and data types. MapReduce is effective for batch jobs, while Spark excels in speed and real-time processing.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Scalability}: Both models are scalable but react differently under varying conditions.
+        \item \textbf{Learning Curve}: Spark is generally more intuitive, accelerating the implementation of complex jobs.
+        \item \textbf{Application Fit}: Use MapReduce for large datasets with acceptable latency; opt for Spark for fast processing requirements.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Technical Tools for MapReduce - Introduction}
+    
+    MapReduce is a powerful programming model for processing large datasets across a distributed cluster. It consists of two main phases:
+    \begin{itemize}
+        \item \textbf{Map:} Filtering and sorting
+        \item \textbf{Reduce:} Aggregating results
+    \end{itemize}
+    
+    Numerous tools and frameworks, like Apache Hadoop, support the efficient implementation of MapReduce.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Tools Supporting MapReduce}
+
+    Here are some key tools that support MapReduce:
+    
+    \begin{enumerate}
+        \item \textbf{Apache Hadoop}
+        \begin{itemize}
+            \item Open-source framework for MapReduce
+            \item Comprises:
+            \begin{itemize}
+                \item \textbf{HDFS:} Distributed file system for large file storage
+                \item \textbf{Hadoop MapReduce:} Component for processing data on multiple nodes
+            \end{itemize}
+            \item \textbf{Example:} Processing website clickstream data to analyze user behavior.
+        \end{itemize}
+        
+        \item \textbf{Apache Spark}
+        \begin{itemize}
+            \item Flexible and faster alternative to Hadoop
+            \item Supports in-memory processing for various workloads
+            \item \textbf{Example:} Real-time analytics on IoT streaming data.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Additional Tools and Key Points}
+
+    Continuing with more tools:
+    
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Amazon EMR}
+        \begin{itemize}
+            \item Cloud-based service for running Hadoop and Spark on AWS
+            \item Automatically provisions resources, allowing for cost-effective scaling
+            \item \textbf{Example:} Quickly deploying an ETL pipeline for fluctuating demands.
+        \end{itemize}
+        
+        \item \textbf{Apache Flink}
+        \begin{itemize}
+            \item Designed for real-time data processing, supports batch processing
+            \item \textbf{Example:} Monitoring financial transactions for fraud detection.
+        \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Scalability:} Tools like Hadoop and Spark offer scalable data processing.
+        \item \textbf{Flexibility:} Various frameworks cater to specific data processing needs.
+        \item \textbf{Cost-effectiveness:} Cloud solutions like EMR reduce upfront infrastructure costs.
+    \end{itemize}
+    \end{block}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of MapReduce}
+    \begin{block}{Definition}
+        \textbf{MapReduce} is a programming model and an associated implementation for processing and generating large data sets using a distributed algorithm on a cluster.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts Recap}
+    \begin{enumerate}
+        \item \textbf{Map Phase:}
+        \begin{itemize}
+            \item Function: Distributes input data into smaller subproblems.
+            \item Process: Each Mapper processes data and produces key-value pairs.
+            \item Example: A Mapper may output words as keys and their occurrence counts as values from a text file.
+        \end{itemize}
+        
+        \item \textbf{Reduce Phase:}
+        \begin{itemize}
+            \item Function: Aggregates outputs from the Map phase.
+            \item Process: Each Reducer collects key-value pairs, combines them, and produces the final output.
+            \item Example: A Reducer sums the counts of each word from Mappers to total them.
+        \end{itemize}
+    
+        \item \textbf{Fault Tolerance:} 
+        MapReduce reassigns tasks to healthy nodes on failure to ensure reliable data processing.
+        
+        \item \textbf{Scalability:} 
+        Allows horizontal scaling by adding machines for increased data volumes.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications}
+    \begin{itemize}
+        \item \textbf{Sentiment Analysis:} Used for analyzing large social media data for customer sentiment.
+        \item \textbf{Web Indexing:} Applied by search engines for rapid indexing of vast amounts of web pages.
+        \item \textbf{Data Warehousing:} Businesses leverage MapReduce for analyzing transaction data to make strategic decisions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points & Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Efficiency:} Enables efficient processing across distributed systems.
+            \item \textbf{Simplicity:} Abstracts complexity of parallel processing.
+            \item \textbf{Data Storage Integration:} Works with systems like HDFS (Hadoop Distributed File System).
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        MapReduce is vital in big data processing, allowing organizations to manage large datasets effectively. Understanding this model is crucial for leveraging modern data processing tools.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Formulas}
+    To clarify the MapReduce output for word counting:
+    \begin{equation}
+        \text{Mapper output} = \{(word_1, 1), (word_2, 1), \ldots, (word_n, 1)\}
+    \end{equation}
+    
+    \begin{equation}
+        \text{Reducer output} = \{(word_1, count_1), (word_2, count_2), \ldots, (word_n, count_n)\}
+    \end{equation}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Discussion and Q\&A - Introduction}
+    Open the floor for questions and discussions on the topics related to MapReduce and its applications in big data processing.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Map phase:} Converts data into key-value pairs.
+        \begin{itemize}
+            \item Example: 
+            \begin{block}{Output from Map}
+                ("Data", 1), ("is", 2), ("beautiful", 1), ("big", 1)
+            \end{block}
+        \end{itemize}
+        
+        \item \textbf{Reduce phase:} Aggregates values by key.
+        \begin{itemize}
+            \item Example: 
+            \begin{block}{Reduced Output}
+                ("Data", 2), ("is", 2), ("beautiful", 1), ("big", 1)
+            \end{block}
+        \end{itemize}
+        
+        \item \textbf{Shuffle and Sort:} Organizes intermediate data before the Reduce phase for efficiency.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications and Discussion Questions}
+    \begin{itemize}
+        \item \textbf{Important Applications:}
+        \begin{itemize}
+            \item Word Count
+            \item Log File Analysis
+            \item Data Transformation
+        \end{itemize}
+        
+        \item \textbf{Engaging Questions for Discussion:}
+        \begin{enumerate}
+            \item What are some real-world applications that could benefit from MapReduce?
+            \item In what scenarios might a different data processing model be preferred?
+            \item How does MapReduce ensure fault tolerance and data integrity?
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet Example}
+    \begin{lstlisting}[language=Python]
+    # Example of a simple MapReduce in Python
+    from collections import Counter
+    from functools import reduce
+
+    def map_function(document):
+        words = document.split()
+        return Counter(words)  # Returns a dictionary of word counts
+
+    def reduce_function(counter1, counter2):
+        return counter1 + counter2  # Merges two counters
+
+    documents = ["Data is beautiful.", "Data is big data."]
+    mapped = [map_function(doc) for doc in documents]
+    reduced = reduce(reduce_function, mapped)
+    print(reduced)  # Output: Counter({'Data': 3, 'is': 2, 'beautiful.': 1, 'big': 1})
+    \end{lstlisting}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,1347 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Model Evaluation]{Week 8: Supervised Learning - Model Evaluation}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Model Evaluation}
+    \begin{block}{Overview of Model Evaluation}
+        Model evaluation is a critical component of the machine learning workflow in supervised learning. 
+        It assesses how well a machine learning model performs on a given dataset, quantifying accuracy, generalization ability, and prediction effectiveness.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Model Evaluation}
+    \begin{enumerate}
+        \item \textbf{Performance Assessment:} Determines the best performing algorithms for specific tasks.
+        \item \textbf{Avoiding Overfitting:} Identifies overly complex models that memorize rather than learn.
+        \item \textbf{Model Selection and Tuning:} Fine-tunes hyperparameters for better performance on unseen data.
+        \item \textbf{Decision Making:} Provides objective metrics critical for strategy formulation across various domains.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Evaluation Metrics}
+    \begin{itemize}
+        \item \textbf{Accuracy:}
+        \[
+        \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+        \]
+        
+        \item \textbf{Precision:}
+        \[
+        \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+        \]
+        
+        \item \textbf{Recall (Sensitivity):}
+        \[
+        \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+        \]
+        
+        \item \textbf{F1 Score:}
+        \[
+        \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+        \]
+        
+        \item \textbf{ROC-AUC:} Area under the Receiver Operating Characteristic curve.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Model Evaluation}
+    \begin{block}{Classifiers' Performance}
+        Consider two classifiers predicting if an email is spam (1) or not spam (0):
+        \begin{itemize}
+            \item \textbf{Classifier A:} 
+                \begin{itemize}
+                    \item TP = 70
+                    \item TN = 20
+                    \item FP = 10
+                    \item FN = 5
+                \end{itemize}
+            \item \textbf{Classifier B:}
+                \begin{itemize}
+                    \item TP = 60
+                    \item TN = 30
+                    \item FP = 5
+                    \item FN = 15
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Accuracy Computation}
+        \begin{itemize}
+            \item Classifier A: 
+            \[
+            \text{Accuracy} = \frac{70 + 20}{70 + 20 + 10 + 5} = 0.82 \text{ (82\%)}
+            \]
+            \item Classifier B: 
+            \[
+            \text{Accuracy} = \frac{60 + 30}{60 + 30 + 5 + 15} = 0.80 \text{ (80\%)}
+            \]
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item Model evaluation is critical for verifying performance and ensuring reliable predictions.
+        \item Different metrics serve varied evaluation needs; comprehending each is crucial.
+        \item The goal is to ensure models generalize well to unseen data.
+    \end{itemize}
+    
+    \begin{block}{Next Steps}
+        We will discuss techniques such as cross-validation in the evaluation process.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Cross-Validation?}
+    \begin{block}{Definition}
+        Cross-validation is a statistical technique used to assess the performance of a machine learning model by dividing the dataset into two parts: one for training and one for validation/testing.
+    \end{block}
+    
+    \begin{block}{Purpose of Cross-Validation}
+        \begin{itemize}
+            \item Estimate Model Accuracy: Reliable estimate of predictive performance on unseen data.
+            \item Reduce Overfitting: Ensures the model learns general patterns rather than memorizing.
+            \item Model Comparison: Facilitates comparison between different models or configurations.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Cross-Validation Works}
+    \begin{enumerate}
+        \item \textbf{Splitting the Dataset:}
+        \begin{itemize}
+            \item The dataset is split into several subsets or "folds". 
+            \item Example: In k-fold cross-validation, divided into k equal parts.
+        \end{itemize}
+        
+        \item \textbf{Training and Validation Process:}
+        \begin{itemize}
+            \item For each fold, one fold is used for testing while others are used for training.
+            \item This process is repeated k times.
+        \end{itemize}
+        
+        \item \textbf{Performance Measurement:}
+        \begin{itemize}
+            \item Average the performance metrics across all folds after k iterations.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of k-Fold Cross-Validation}
+    \begin{enumerate}
+        \item Assume you have a dataset with 100 samples.
+        \item Choose k = 5: Split into 5 folds (20 samples each).
+        \item Training and Validation Cycles:
+        \begin{itemize}
+            \item Iteration 1: Train on folds 2-5, validate on fold 1.
+            \item Iteration 2: Train on folds 1, 3-5, validate on fold 2.
+            \item ...
+            \item Iteration 5: Train on folds 1-4, validate on fold 5.
+        \end{itemize}
+        \item \textbf{Calculate Average Performance:} 
+        Collect and compute average of performance metrics from each iteration.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Cross-validation helps avoid bias from a single train/test split.
+            \item It enhances reliability of model performance metrics.
+            \item Proper choice of k is critical: small k can lead to high variance, large k increases computation time.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Cross-validation is essential in supervised learning, ensuring robust model evaluation and performance across different datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formula for k-Fold Cross-Validation}
+    The overall accuracy can be calculated as:
+    \begin{equation}
+        \text{Average Accuracy} = \frac{A_1 + A_2 + \ldots + A_k}{k}
+    \end{equation}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet: k-Fold Cross-Validation}
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import load_iris
+
+# Load dataset
+data = load_iris()
+X, y = data.data, data.target
+
+# Initialize model
+model = RandomForestClassifier()
+
+# Perform 5-fold cross-validation
+scores = cross_val_score(model, X, y, cv=5)
+
+print("Cross-Validation Scores:", scores)
+print("Average Score:", scores.mean())
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Cross-Validation - Overview}
+    \begin{block}{Overview of Cross-Validation}
+        Cross-validation is a statistical method used to estimate the skill of machine learning models. 
+        It ensures that a model generalizes well to unseen data by partitioning the original dataset into a training set and a validation set.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Cross-Validation - K-Fold}
+    \begin{block}{1. K-Fold Cross-Validation}
+        \begin{itemize}
+            \item \textbf{Concept}: The dataset is divided into $k$ equally sized folds. 
+            The model is trained on $k-1$ folds and validated on the remaining fold.
+            \item \textbf{Process}:
+            \begin{itemize}
+                \item Shuffle the dataset randomly.
+                \item Split the data into $k$ folds.
+                \item For each fold:
+                \begin{itemize}
+                    \item Train the model on $k-1$ folds.
+                    \item Validate the model on the fold left out.
+                \end{itemize}
+                \item Calculate the average performance across all $k$ iterations.
+            \end{itemize}
+            \item \textbf{Example}: If we have 100 observations and choose $k=5$, 
+            the dataset will be divided into 5 folds (each with 20 observations).
+            \item \textbf{Key Point}: Common values for $k$ are 5 or 10; higher $k$ leads to lower bias but higher variance.
+        \end{itemize}
+        \begin{equation}
+            \text{Average Performance} = \frac{\text{Performance}_1 + \text{Performance}_2 + \ldots + \text{Performance}_k}{k}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Cross-Validation - LOOCV}
+    \begin{block}{2. Leave-One-Out Cross-Validation (LOOCV)}
+        \begin{itemize}
+            \item \textbf{Concept}: An extreme case of k-fold where $k$ equals the total number of observations. 
+            Each observation is used as a validation set, and the rest as training data.
+            \item \textbf{Process}:
+            \begin{itemize}
+                \item For a dataset with $n$ observations, train the model using $n-1$ observations 
+                and validate on the single left-out observation.
+                \item Repeat this for all $n$ observations.
+            \end{itemize}
+            \item \textbf{Example}: For a dataset of 10 observations, the process is repeated 10 times.
+            \item \textbf{Key Point}: Provides maximum training data but is computationally expensive for large datasets.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Summary of Key Points}
+        \begin{itemize}
+            \item \textbf{Cross-Validation Purpose}: To assess how results will generalize to independent datasets.
+            \item \textbf{Comparison}: K-Fold balances bias and variance, while LOOCV maximizes training data at a computational cost.
+            \item \textbf{Performance Metrics}: Accuracy, precision, recall, and F1-score can be evaluated post cross-validation.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Cross-Validation - Python Implementation}
+    \begin{block}{Code Snippet for K-Fold Implementation}
+        \begin{lstlisting}[language=Python]
+from sklearn.model_selection import KFold
+from sklearn.metrics import accuracy_score
+
+kf = KFold(n_splits=5)
+model = ...  # Initialize your model here
+scores = []
+
+for train_index, test_index in kf.split(X):
+    X_train, X_test = X[train_index], X[test_index]
+    y_train, y_test = y[train_index], y[test_index]
+    
+    model.fit(X_train, y_train)
+    predictions = model.predict(X_test)
+    scores.append(accuracy_score(y_test, predictions))
+
+average_accuracy = sum(scores) / len(scores)
+print("Average accuracy:", average_accuracy)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Hyperparameter Tuning - Introduction}
+    \begin{block}{Definition}
+        Hyperparameter tuning is the process of optimizing the parameters that govern the training of machine learning models. These parameters are not learned from the data but set prior to training.
+    \end{block}
+    \begin{block}{Purpose}
+        The main goal is to enhance the performance of the model on unseen data, achieving the best possible predictive accuracy.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Hyperparameter Tuning - Essentials}
+    \begin{itemize}
+        \item \textbf{Model Performance:} Proper tuning can lead to significant improvements in metrics such as accuracy, F1-score, recall, and precision.
+        
+        \item \textbf{Overfitting vs. Underfitting:}
+        \begin{itemize}
+            \item \textbf{Overfitting:} The model learns noise in the training data instead of the underlying pattern.
+            \item \textbf{Underfitting:} The model is too simple to capture the data structure. Well-chosen hyperparameters help balance this trade-off.
+        \end{itemize}
+        
+        \item \textbf{Customization:} Each model has unique hyperparameters (e.g., learning rate, number of layers, regularization) that require specific tuning to fit the dataset.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example and Key Points}
+    \begin{block}{Example: Decision Tree Classifier}
+        \begin{itemize}
+            \item \textbf{Hyperparameters:} Max depth, Min samples per leaf, Criterion (e.g., Gini impurity or entropy).
+            \item \textbf{Influence of Tuning:}
+            \begin{itemize}
+                \item A deeper tree (higher max depth) may fit the training data well but can lead to overfitting.
+                \item Conversely, a shallow tree might underfit.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Key Points to Emphasize:}
+        \begin{itemize}
+            \item Not all hyperparameters are created equal; some significantly impact model performance.
+            \item Hyperparameter tuning improves the generalization ability of the model, making it more robust to new data.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Considerations and Conclusion}
+    \begin{itemize}
+        \item \textbf{Evaluation Technique:} Utilize cross-validation to assess the model's performance for different hyperparameter settings.
+        
+        \item \textbf{Resource Intensity:} Tuning can be computationally expensive; awareness of available resources and time is crucial.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Hyperparameter tuning is vital for achieving optimal model performance. It directly affects model accuracy, generalization ability, and overall effectiveness in real-world applications.
+    \end{block}
+    
+    \begin{block}{Next Up}
+        We will dive into \textbf{Common Hyperparameter Tuning Techniques}, including Grid Search and Random Search.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Hyperparameter Tuning Techniques}
+    \begin{block}{Overview of Hyperparameter Tuning}
+        Hyperparameter tuning is essential in machine learning as it significantly impacts model performance. Unlike model parameters that are learned from the data, hyperparameters are set before the learning process begins and require careful optimization.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Techniques for Hyperparameter Tuning - Part 1}
+    \begin{enumerate}
+        \item \textbf{Grid Search}
+        \begin{itemize}
+            \item \textbf{Definition:} A systematic approach that exhaustively searches through a specified subset of hyperparameters for the best model.
+            \item \textbf{How it works:} 
+            \begin{itemize}
+                \item Define a grid of hyperparameter values.
+                \item Train the model for every combination of hyperparameters in the grid.
+                \item Evaluate the model's performance using a validation set and select the combination yielding the best results.
+            \end{itemize}
+            \item \textbf{Pros:}
+            \begin{itemize}
+                \item Comprehensive and guarantees finding the best combination within the grid.
+            \end{itemize}
+            \item \textbf{Cons:}
+            \begin{itemize}
+                \item Can be computationally expensive, especially with large datasets or many hyperparameters.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Techniques for Hyperparameter Tuning - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Random Search}
+        \begin{itemize}
+            \item \textbf{Definition:} A method that randomly samples hyperparameter combinations instead of testing every combination.
+            \item \textbf{How it works:}
+            \begin{itemize}
+                \item Specify a distribution for each hyperparameter.
+                \item Randomly sample a set number of combinations and evaluate each one to identify the best performance.
+            \end{itemize}
+            \item \textbf{Pros:}
+            \begin{itemize}
+                \item More efficient than grid search—especially with a large number of hyperparameters.
+                \item Can discover better models with less computational cost.
+            \end{itemize}
+            \item \textbf{Cons:}
+            \begin{itemize}
+                \item No guarantee of finding the global best model; can miss optimal combinations.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Examples for Hyperparameter Tuning}
+    \begin{block}{Grid Search Example}
+    \begin{lstlisting}[language=Python]
+    from sklearn.model_selection import GridSearchCV
+    from sklearn.ensemble import RandomForestClassifier
+
+    param_grid = {
+        'n_estimators': [10, 50, 100],
+        'max_depth': [None, 10, 20],
+        'min_samples_split': [2, 5, 10]
+    }
+    grid_search = GridSearchCV(RandomForestClassifier(), param_grid, cv=5)
+    grid_search.fit(X_train, y_train)
+    best_params = grid_search.best_params_
+    \end{lstlisting}
+    \end{block}
+
+    \begin{block}{Random Search Example}
+    \begin{lstlisting}[language=Python]
+    from sklearn.model_selection import RandomizedSearchCV
+
+    param_dist = {
+        'n_estimators': [10, 50, 100],
+        'max_depth': [None, 10, 20],
+        'min_samples_split': [2, 5, 10]
+    }
+    random_search = RandomizedSearchCV(RandomForestClassifier(), param_dist, n_iter=10, cv=5)
+    random_search.fit(X_train, y_train)
+    best_params = random_search.best_params_
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Selection of Technique:} 
+        The choice between Grid Search and Random Search often depends on the number of hyperparameters and the computational resources available. 
+        \item \textbf{Efficiency:} 
+        Random Search often finds a good model quicker than Grid Search, making it preferable for complex problems.
+        \item \textbf{Validation:} 
+        Both methods should use cross-validation to ensure the model's robustness against overfitting.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        In hyperparameter tuning, adopting the correct technique plays a vital role in enhancing model performance. Understanding when to use Grid Search versus Random Search is crucial for effective model optimization.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Evaluation Metrics}
+    Model evaluation metrics are crucial for assessing the performance of supervised learning models. These metrics allow us to quantify how well a model is performing, thereby enabling comparisons between different models and guiding further improvements.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Metrics for Model Evaluation - Part 1}
+    \begin{enumerate}
+        \item \textbf{Accuracy}
+            \begin{itemize}
+                \item \textbf{Definition}: Measures the proportion of correctly classified instances among the total instances.
+                \item \textbf{Formula}:
+                    \[
+                    \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{Total Instances}}
+                    \]
+                \item \textbf{Example}: If a model predicts correctly on 80 out of 100 instances, the accuracy is \(0.80\) or \(80\%\).
+            \end{itemize}
+        
+        \item \textbf{Precision}
+            \begin{itemize}
+                \item \textbf{Definition}: Indicates the accuracy of the positive predictions made by the model.
+                \item \textbf{Formula}:
+                    \[
+                    \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+                    \]
+                \item \textbf{Example}: If a model predicts 50 positives and 30 of them are true, the precision is \(0.60\) or \(60\%\).
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Metrics for Model Evaluation - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue the enumeration
+        \item \textbf{Recall (Sensitivity)}
+            \begin{itemize}
+                \item \textbf{Definition}: Measures the model’s ability to correctly identify all relevant instances (true positives).
+                \item \textbf{Formula}:
+                    \[
+                    \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+                    \]
+                \item \textbf{Example}: If out of 70 actual positives, the model correctly identifies 50, the recall is \(0.71\) or \(71\%\).
+            \end{itemize}
+        
+        \item \textbf{F1 Score}
+            \begin{itemize}
+                \item \textbf{Definition}: The harmonic mean of precision and recall, providing a balance between the two.
+                \item \textbf{Formula}:
+                    \[
+                    \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+                    \]
+                \item \textbf{Example}: If precision is \(0.6\) and recall is \(0.72\), the F1 Score is approximately \(0.66\).
+            \end{itemize}
+        
+        \item \textbf{ROC Curve and AUC}
+            \begin{itemize}
+                \item \textbf{Definition}: The ROC curve plots the true positive rate against the false positive rate at various threshold settings. The Area Under the Curve (AUC) quantifies the model's ability to discriminate between classes.
+                \item \textbf{Key Point}: An AUC of 1 indicates perfect discrimination, while an AUC of 0.5 indicates no discrimination.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Understanding trade-offs}: Different metrics highlight various aspects of model performance, such as the trade-off between precision and recall.
+        \item \textbf{Context matters}: The choice of metric can vary based on the business problem (e.g., use F1 for imbalanced datasets).
+        \item \textbf{Visual interpretation}: Tools such as ROC curves provide valuable visual insights into model performance.
+    \end{itemize}
+    
+    Model evaluation metrics are vital tools that help in understanding and improving machine learning models. By accurately assessing performance, these metrics guide the decision-making process regarding model selection and refinement. Always choose the most relevant metrics according to your specific problem context.
+\end{frame}
+
+\begin{frame}[fragile]{Accuracy - Definition}
+    \begin{block}{Definition of Accuracy}
+        Accuracy is a fundamental measure used in evaluating the performance of a classification model. It represents the proportion of correct predictions made by the model out of all predictions made.
+    \end{block}
+    \begin{equation}
+        \text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Number of Predictions}}
+    \end{equation}
+    This is also often expressed in percentage:
+    \begin{equation}
+        \text{Accuracy} (\%) = \left( \frac{\text{Correct Predictions}}{\text{Total Predictions}} \right) \times 100
+    \end{equation}
+\end{frame}
+
+\begin{frame}[fragile]{Accuracy - Significance}
+    \begin{block}{Significance of Accuracy in Model Evaluation}
+        \begin{itemize}
+            \item \textbf{Simplicity \& Intuitiveness:} A higher accuracy indicates a better-performing model, making it accessible for decision-makers and stakeholders.
+            \item \textbf{Baseline Comparison:} Accuracy serves as a baseline metric in model evaluation, helping to ascertain whether a model performs better than random guessing in balanced datasets.
+            \item \textbf{Initial Assessment Tool:} While providing initial insight, it should be used alongside other metrics, especially in imbalanced datasets, where it may obscure the model's true predictive ability.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Accuracy - Example and Key Points}
+    \begin{block}{Example}
+        Consider a binary classification problem:
+        \begin{itemize}
+            \item \textbf{Total Emails:} 100
+            \item \textbf{Correctly Predicted as Spam:} 70 (True Positives)
+            \item \textbf{Correctly Predicted as Not Spam:} 25 (True Negatives)
+            \item \textbf{Incorrectly Predicted as Spam:} 5 (False Positives)
+            \item \textbf{Incorrectly Predicted as Not Spam:} 0 (False Negatives)
+        \end{itemize}
+        Using these values, we calculate accuracy:
+        \begin{equation}
+            \text{Accuracy} = \frac{70 + 25}{100} = \frac{95}{100} = 0.95 \quad \text{(or 95\%)}
+        \end{equation}
+    \end{block}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Accuracy is useful for initial evaluations but may not tell the full story, especially in cases of class imbalance.
+            \item Always consider additional metrics like precision and recall for a comprehensive assessment of the model’s performance.
+            \item The context of the problem and the nature of the data should guide the choice of evaluation metrics.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Accuracy - Conclusion}
+    In summary, accuracy is a key metric in supervised learning that provides a quick look at model performance. However, for a complete evaluation, it should be supplemented with other metrics to ensure a well-rounded understanding of the model's capabilities. As we move forward, we will delve into precision, another critical metric in assessing model performance.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Introduction}
+    \begin{block}{What is Precision?}
+        Precision is a performance metric that measures the accuracy of a model’s positive predictions. It quantifies the number of true positive predictions relative to the total instances classified as positive. This metric is particularly important when the cost of false positives is high.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Formula}
+    The formula for precision is given by:
+    \begin{equation}
+        \text{Precision} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Positives (FP)}}
+    \end{equation}
+    \begin{itemize}
+        \item \textbf{True Positives (TP)}: Correct positive predictions by the model.
+        \item \textbf{False Positives (FP)}: Incorrect positive predictions by the model.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Relevance and Example}
+    \begin{block}{Relevance of Precision}
+        Precision is crucial for understanding the reliability of positive predictions. High precision is essential in scenarios where false positives can result in significant negative consequences, such as spam detection or disease screening.
+    \end{block}
+
+    \begin{block}{Example}
+        For a spam detection model:
+        \begin{itemize}
+            \item \textbf{True Positives (TP)}: 80 emails correctly classified as spam.
+            \item \textbf{False Positives (FP)}: 20 emails incorrectly classified as spam.
+        \end{itemize}
+        Calculating Precision:
+        \[
+        \text{Precision} = \frac{TP}{TP + FP} = \frac{80}{80 + 20} = 0.8 \quad \text{or} \quad 80\%
+        \]
+        This indicates that 80\% of flagged emails were indeed spam.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Key Points and Conclusion}
+    \begin{itemize}
+        \item Precision helps assess the quality of positive predictions.
+        \item High precision is vital where false positives can have serious repercussions.
+        \item Precision should be analyzed in conjunction with recall for a comprehensive view of model performance.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        Understanding precision aids in making informed decisions regarding model tuning and selection, especially where the implications of predictions vary significantly.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Moving Forward}
+    As we continue our discussion, we will explore \textbf{Recall}, another key metric that complements precision. Recall focuses on the model's ability to identify all relevant instances, providing a fuller picture of model performance.
+\end{frame}
+
+\begin{frame}[fragile]{Recall - Understanding Recall}
+    \begin{block}{Definition}
+        Recall, also known as Sensitivity or True Positive Rate, is a metric that measures the ability of a model to correctly identify positive instances in a dataset. It is crucial when the cost of false negatives is high. Recall quantifies how many actual positives were captured by the model.
+    \end{block}
+
+    \begin{block}{Formula}
+        Recall is calculated using the formula:
+
+        \begin{equation}
+        \text{Recall} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Negatives (FN)}}
+        \end{equation}
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{True Positives (TP)}: Instances correctly predicted as positive.
+        \item \textbf{False Negatives (FN)}: Instances incorrectly predicted as negative (missed positives).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Recall - Illustration}
+    \begin{block}{Example: Medical Test}
+        Imagine a medical test for a disease where:
+        \begin{itemize}
+            \item Total cases of the disease (positives): 100
+            \item True positives (TP): 90 (correctly identified as having the disease)
+            \item False negatives (FN): 10 (incorrectly identified as not having the disease)
+        \end{itemize}
+
+        Using the formula:
+        \begin{equation}
+        \text{Recall} = \frac{90}{90 + 10} = \frac{90}{100} = 0.90
+        \end{equation}
+
+        This indicates that the test has a recall of 90\%, meaning it successfully identifies 90\% of the actual positive cases.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Recall - Critical Role}
+    \begin{enumerate}
+        \item \textbf{High Importance in Certain Domains}:
+            \begin{itemize}
+                \item In areas such as healthcare (e.g., cancer detection) or fraud detection, a high recall is critical because missing a positive case can have severe consequences.
+            \end{itemize}
+
+        \item \textbf{Balancing with Precision}:
+            \begin{itemize}
+                \item Recall alone may not provide a complete picture of model performance. It's essential to evaluate recall in conjunction with \textbf{precision}:
+                
+                \begin{equation}
+                \text{Precision} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Positives (FP)}}
+                \end{equation}
+            \end{itemize}
+
+        \item \textbf{Trade-offs and Context}:
+            \begin{itemize}
+                \item A model with high recall may have lower precision and vice versa. When designing models, consider the specific context and costs associated with false negatives and false positives.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Recall - Key Takeaways}
+    \begin{itemize}
+        \item Recall measures the capability of a model to identify all relevant instances in a dataset.
+        \item Essential for applications where missing a positive case carries significant risk.
+        \item Must be considered alongside precision for a well-rounded evaluation of model performance.
+    \end{itemize}
+
+    \begin{block}{Next Steps}
+        In the next slide, we will discuss the \textbf{F1 Score}, which harmonizes recall and precision into a single metric, promoting a comprehensive evaluation of model utility.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion}
+    Understanding recall is fundamental for effectively evaluating model performance in supervised learning, particularly in critical applications. Remember to use it in conjunction with other metrics like precision for balanced assessments.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1 Score}
+    \begin{block}{Understanding the F1 Score}
+        The F1 Score is a crucial metric in supervised learning that evaluates the performance of a classification model, especially with imbalanced datasets. It balances two essential metrics: \textbf{Precision} and \textbf{Recall}.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision and Recall}
+    \begin{itemize}
+        \item \textbf{Precision}: Measures accuracy of positive predictions. 
+        \begin{equation}
+            \text{Precision} = \frac{TP}{TP + FP}
+        \end{equation}
+        \item \textbf{Recall}: Measures ability to find all relevant cases.
+        \begin{equation}
+            \text{Recall} = \frac{TP}{TP + FN}
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Why Use the F1 Score?}
+    The F1 Score is particularly useful in scenarios with class imbalance. It provides a more comprehensive assessment of the model's performance, as relying solely on accuracy can be misleading.
+
+    \begin{block}{F1 Score Formula}
+        The F1 Score is the harmonic mean of Precision and Recall:
+        \begin{equation}
+            \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of F1 Score Calculation}
+    Consider a binary classification example:
+    \begin{itemize}
+        \item True Positives (TP) = 70
+        \item False Positives (FP) = 30
+        \item False Negatives (FN) = 10
+    \end{itemize}
+    
+    Calculate Precision, Recall, and F1 Score:
+    
+    \begin{enumerate}
+        \item \textbf{Precision}:
+        \begin{equation}
+            \text{Precision} = \frac{TP}{TP + FP} = \frac{70}{70 + 30} = 0.7
+        \end{equation}
+        \item \textbf{Recall}:
+        \begin{equation}
+            \text{Recall} = \frac{TP}{TP + FN} = \frac{70}{70 + 10} = 0.875
+        \end{equation}
+        \item \textbf{F1 Score}:
+        \begin{equation}
+            \text{F1 Score} = 2 \times \frac{0.7 \times 0.875}{0.7 + 0.875} \approx 0.7857
+        \end{equation}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points}
+    \begin{itemize}
+        \item \textbf{Balancing Act}: The F1 Score balances Precision and Recall, beneficial for imbalanced datasets.
+        \item \textbf{Interpretation}: An F1 Score of 1 indicates perfect performance; 0 indicates the worst performance.
+        \item \textbf{Use Cases}: Widely applied in fields with varying costs for false negatives and false positives, like medical diagnoses or spam detection.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    The F1 Score is an essential tool for model evaluation, especially when aiming to optimize both Precision and Recall. A proficient understanding of the F1 Score enhances model selection and tuning capabilities.
+
+    \begin{block}{Next Slide Preview}
+        In the upcoming slide, we will explore the ROC-AUC metrics, providing another perspective on model evaluation.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ROC-AUC}
+    \begin{block}{Introduction to ROC Curve}
+        The ROC curve is a graphical representation used to assess the performance of a binary classification model.
+        It plots the true positive rate (TPR) against the false positive rate (FPR) at various threshold settings.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Terms}
+    \begin{itemize}
+        \item \textbf{True Positive Rate (TPR)}: Measures the proportion of actual positives correctly identified.
+        \begin{equation}
+        \text{TPR} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Negatives (FN)}}
+        \end{equation}
+        
+        \item \textbf{False Positive Rate (FPR)}: Measures the proportion of actual negatives incorrectly identified as positives.
+        \begin{equation}
+        \text{FPR} = \frac{\text{False Positives (FP)}}{\text{False Positives (FP)} + \text{True Negatives (TN)}}
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Interpreting the ROC Curve}
+    \begin{itemize}
+        \item The ROC curve starts at (0,0) and ends at (1,1).
+        \item A perfect model: (0,1) (high TPR, low FPR).
+        \item A random model: diagonal line (45-degree) indicating no discrimination ability.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Area Under the Curve (AUC)}
+    \begin{block}{AUC Interpretation}
+        \begin{itemize}
+            \item AUC quantifies the overall performance of a model.
+            \item Values range from 0 to 1:
+            \begin{itemize}
+                \item AUC = 1: Perfect model
+                \item AUC = 0.5: No better than random guessing
+                \item AUC < 0.5: Worse than random guessing
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of ROC Curve}
+    Consider a binary classifier predicting if a patient has a disease:
+    \begin{itemize}
+        \item Vary thresholds to compute TPR and FPR.
+        \item Example thresholds: 0.1, 0.3, 0.5,... yield different ROC points.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item ROC and AUC are useful for imbalanced datasets.
+        \item Higher AUC indicates better model performance.
+        \item Visualizing ROC helps select the optimal threshold based on requirements.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing ROC-AUC in Python}
+    \begin{lstlisting}[language=Python]
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import roc_curve, roc_auc_score
+
+# Sample binary classification probabilities and ground truth
+y_true = [0, 0, 1, 1]
+y_scores = [0.1, 0.4, 0.35, 0.8]
+
+# Compute ROC curve values
+fpr, tpr, thresholds = roc_curve(y_true, y_scores)
+roc_auc = roc_auc_score(y_true, y_scores)
+
+# Plotting the ROC curve
+plt.figure()
+plt.plot(fpr, tpr, color='blue', label='ROC curve (AUC = {:.2f})'.format(roc_auc))
+plt.plot([0, 1], [0, 1], color='gray', linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.ylim([0.0, 1.05])
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve')
+plt.legend(loc="lower right")
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Practical Application: Cross-Validation in Python}
+    \begin{block}{Understanding Cross-Validation}
+        Cross-validation is a technique used to assess the performance of a machine learning model. 
+        It helps ensure that the model generalizes well to new data, mitigating issues such as overfitting.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Key Concepts}
+    \begin{itemize}
+        \item \textbf{Overfitting}: When a model performs well on training data but poorly on unseen data.
+        \item \textbf{Underfitting}: A model that is too simple to capture the underlying trends in the data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Types of Cross-Validation}
+    \begin{enumerate}
+        \item \textbf{K-Fold Cross-Validation}
+            \begin{itemize}
+                \item Data is split into 'k' subsets (folds).
+                \item The model is trained on 'k-1' folds and tested on the remaining fold.
+                \item Repeated 'k' times with each fold serving as the test set once.
+            \end{itemize}
+            
+        \item \textbf{Stratified K-Fold}
+            \begin{itemize}
+                \item Like K-Fold but maintains the proportion of classes in each fold.
+                \item Useful for imbalanced datasets.
+            \end{itemize}
+        
+        \item \textbf{Leave-One-Out Cross-Validation (LOOCV)}
+            \begin{itemize}
+                \item A specific case where 'k' equals the number of data points.
+                \item Each model is trained on all points except one.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Example Implementation with Scikit-learn}
+    \frametitle{Implementation Steps}
+    \textbf{Step 1: Import Required Libraries}
+    \begin{lstlisting}[language=Python]
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.model_selection import KFold
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+    \end{lstlisting}
+    
+    \textbf{Step 2: Load Dataset}
+    \begin{lstlisting}[language=Python]
+# Load the Iris dataset
+data = load_iris()
+X, y = data.data, data.target
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Example Implementation with Scikit-learn (cont.)}
+    \frametitle{Performing Cross-Validation}
+    \textbf{Step 3: Set Up K-Fold Cross-Validation}
+    \begin{lstlisting}[language=Python]
+kf = KFold(n_splits=5)  # 5-fold cross-validation
+model = RandomForestClassifier()
+    \end{lstlisting}
+    
+    \textbf{Step 4: Perform Cross-Validation}
+    \begin{lstlisting}[language=Python]
+accuracies = []
+for train_index, test_index in kf.split(X):
+    X_train, X_test = X[train_index], X[test_index]
+    y_train, y_test = y[train_index], y[test_index]
+    
+    model.fit(X_train, y_train)
+    predictions = model.predict(X_test)
+    accuracy = accuracy_score(y_test, predictions)
+    accuracies.append(accuracy)
+
+# Compute the mean accuracy
+mean_accuracy = np.mean(accuracies)
+print(f'Mean Accuracy: {mean_accuracy:.2f}')
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}{Key Points to Emphasize}
+    \begin{itemize}
+        \item Cross-validation is essential for evaluating model reliability.
+        \item The choice of 'k' in K-Fold should balance between computational expense and accuracy of the estimate.
+        \item Different cross-validation methods are suitable for different datasets and goals.
+    \end{itemize}
+    
+    \textbf{Conclusion:} Cross-validation enhances model evaluation, providing insights into model stability and expected performance on unseen data.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Case Study: Hyperparameter Tuning Best Practices}
+    \begin{block}{Understanding Hyperparameter Tuning}
+    Hyperparameters are the external configurations of a model, which cannot be learned directly from the training data. Instead, they are set before the training process begins.
+    \end{block}
+    
+    \begin{block}{Why is Hyperparameter Tuning Important?}
+    \begin{itemize}
+        \item \textbf{Enhances Model Performance:} The right hyperparameters can significantly improve model accuracy.
+        \item \textbf{Prevents Overfitting:} Fine-tuning helps in generalizing the model for unseen data.
+        \item \textbf{Trade-offs Management:} Balancing parameters like complexity vs. interpretability.
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Hyperparameter Tuning}
+    \begin{enumerate}
+        \item \textbf{Grid Search}
+        \begin{itemize}
+            \item \textbf{Definition:} Systematically working through multiple combinations of hyperparameter values.
+            \item \textbf{Example:} Tuning the `max_depth` and `min_samples_split` of a decision tree.
+            \begin{lstlisting}[language=Python]
+from sklearn.model_selection import GridSearchCV
+from sklearn.tree import DecisionTreeClassifier
+
+param_grid = {
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10]
+}
+grid_search = GridSearchCV(DecisionTreeClassifier(), param_grid, cv=5)
+grid_search.fit(X_train, y_train)
+best_params = grid_search.best_params_
+            \end{lstlisting}
+        \end{itemize}
+        
+        \item \textbf{Random Search}
+        \begin{itemize}
+            \item \textbf{Definition:} Samples a few randomly chosen hyperparameter combinations instead of checking all values.
+            \begin{lstlisting}[language=Python]
+from sklearn.model_selection import RandomizedSearchCV
+
+param_dist = {
+    'max_depth': [None, 10, 20, 30],
+    'min_samples_split': [2, 5, 10],
+    'n_estimators': [50, 100, 200]
+}
+random_search = RandomizedSearchCV(DecisionTreeClassifier(), param_dist, n_iter=10, cv=5)
+random_search.fit(X_train, y_train)
+best_params = random_search.best_params_
+            \end{lstlisting}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Practices for Hyperparameter Tuning - Continued}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % to continue from the last frame
+        \item \textbf{Bayesian Optimization}
+        \begin{itemize}
+            \item \textbf{Definition:} Uses probability to estimate the performance of a targeted hyperparameter space.
+            \item \textbf{Example Tool:} Libraries like `Hyperopt` or `Optuna`.
+        \end{itemize}
+        
+        \item \textbf{Use of Cross-Validation}
+        \begin{itemize}
+            \item Helps assess the generalization performance of hyperparameters.
+            \item Ensure that selected hyperparameters are not overly fitted to a particular training dataset.
+        \end{itemize}
+        
+        \item \textbf{Automated Hyperparameter Tuning Tools}
+        \begin{itemize}
+            \item Tools like `AutoML`, `TPOT`, or `H2O.ai` can automatically explore and tune hyperparameters effectively.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points to Remember and Conclusion}
+    \begin{itemize}
+        \item Start simple: Utilize grid search for fewer hyperparameters before scaling to random or Bayesian.
+        \item Validation matters: Always use cross-validation to validate hyperparameters.
+        \item Consider computational cost against potential gains from tuning.
+        \item Utilize automated tools for efficiency when appropriate.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+    Effective hyperparameter tuning is pivotal in machine learning. Employing best practices not only optimizes model performance but also ensures robust and reliable predictions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Model Evaluation - Introduction}
+    \begin{block}{Model Evaluation}
+        Model evaluation is a crucial step in the supervised learning pipeline. It helps us understand how well our model is performing and identifies areas for improvement. However, various challenges can arise during this process that may affect our assessment of the model's performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Model Evaluation - Common Issues}
+    \begin{enumerate}
+        \item \textbf{Overfitting and Underfitting}
+        \begin{itemize}
+            \item Overfitting: Model learns noise, performs poorly on unseen data.
+            \item Underfitting: Model is too simple to capture data patterns.
+        \end{itemize}
+        \item \textbf{Noisy Labels}
+        \begin{itemize}
+            \item Incorrect labels due to human error or data collection limitations.
+            \item Solutions: Clean dataset and use robust models to handle label noise.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Model Evaluation - Continued}
+    \begin{enumerate} \setcounter{enumi}{2}
+        \item \textbf{Data Leakage}
+        \begin{itemize}
+            \item Occurs when information from outside the training dataset is used, leading to optimistic performance estimates.
+            \item Ensure strict separation between training and testing datasets.
+        \end{itemize}
+        
+        \item \textbf{Imbalanced Datasets}
+        \begin{itemize}
+            \item Occurs when the number of instances across classes is unequal.
+            \item Solutions: Use resampling techniques and adopt metrics like F1-score, precision, and recall.
+        \end{itemize}
+        
+        \item \textbf{Choosing the Right Metrics}
+        \begin{itemize}
+            \item Right metrics align with business goals and data characteristics.
+            \item Understand trade-offs between different metrics (e.g., precision vs. recall).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Model Evaluation - Summary}
+    Effectively addressing challenges in model evaluation involves a deep understanding of the data and careful validation practices. By identifying these common challenges and employing appropriate strategies, we can ensure our models are both robust and reliable.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Summary of Model Evaluation}
+    \begin{block}{Importance of Model Evaluation}
+        Model evaluation is a critical step in the supervised learning pipeline. It enables assessment of model performance on unseen data, preventing issues like overfitting and underfitting.
+    \end{block}
+    
+    \begin{itemize}
+        \item Performance Metrics: Provides quantifiable comparisons (accuracy, precision, recall).
+        \item Model Selection: Identifies the best generalizing model through evaluation.
+        \item Hyperparameter Tuning: Aids in fine-tuning model parameters for enhanced performance.
+        \item Insight into Data: Reveals dataset characteristics affecting predictions.
+        \item Risk Mitigation: Reduces deployment risks in sensitive fields (e.g., healthcare, finance).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Encouragement for Applying Learning}
+    As you continue your journey in machine learning, consider the following practical steps:
+
+    \begin{itemize}
+        \item Experiment with various evaluation metrics beyond accuracy.
+        \item Utilize k-fold cross-validation to validate model robustness.
+        \item Apply evaluation techniques on real-world datasets available on platforms like Kaggle.
+        \item Document your evaluation results and model settings for reflection and improvement.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Points and References}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Model evaluation ensures reliability and effectiveness of models.
+            \item Understanding different metrics offers a comprehensive view of performance.
+            \item Practical application sharpens skills and deepens understanding of evaluation concepts.
+        \end{itemize}
+    \end{block}
+
+    \begin{equation}
+        \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Predictions}}
+    \end{equation}
+
+    \begin{lstlisting}[language=Python, basicstyle=\footnotesize]
+from sklearn.metrics import classification_report
+
+# Assuming y_true are true labels and y_pred are predicted labels
+print(classification_report(y_true, y_pred))
+    \end{lstlisting}
+    
+    By applying these concepts, you will improve your model evaluation skills and enhance your predictive system development.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q \& A - Overview}
+    % Description of the Q & A session
+    This slide is dedicated to an open discussion, allowing students to clarify doubts, explore concepts further, and share insights related to model evaluation in supervised learning.
+    \begin{itemize}
+        \item Encourage interactive exchange of ideas
+        \item Ensure understanding of key points from the chapter
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q \& A - Key Concepts}
+    % Key concepts for clarification
+    \begin{enumerate}
+        \item \textbf{Importance of Model Evaluation}
+            \begin{itemize}
+                \item Definition: Assessing the performance of a machine learning model using various metrics
+                \item Why It Matters: Ensures model generalization, preventing overfitting
+            \end{itemize}
+            
+        \item \textbf{Evaluation Metrics}
+            \begin{itemize}
+                \item Accuracy: 
+                    \[
+                    \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+                    \]
+                \item Precision: 
+                    \[
+                    \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+                    \]
+                \item Recall (Sensitivity): 
+                    \[
+                    \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+                    \]
+                \item F1-Score: 
+                    \[
+                    F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+                    \]
+            \end{itemize}
+
+        \item \textbf{Validation Techniques}
+            \begin{itemize}
+                \item Train-Test Split
+                \item Cross-Validation
+            \end{itemize}
+
+        \item \textbf{Overfitting vs. Underfitting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q \& A - Engagement and Discussion Questions}
+    % Encouragement for engagement and discussion questions
+    \begin{itemize}
+        \item We invite students to ask questions or share their thoughts on:
+            \begin{itemize}
+                \item Their experiences with model evaluation
+                \item Uncertainties about the discussed metrics
+                \item Applications in their projects or areas of interest
+            \end{itemize}
+        \item \textbf{Example Discussion Questions}
+            \begin{enumerate}
+                \item What impact does choosing a specific evaluation metric have on model selection?
+                \item How would you approach evaluating a model trained on an imbalanced dataset?
+                \item Can you think of real-world applications where model evaluation can significantly affect outcomes?
+            \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

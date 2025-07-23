@@ -194,54 +194,71 @@ class EvaluationAgent:
             Dictionary containing scores and statistics
         """
         results = {}
-        
+        all_scores = []  # List to store all scores for the overall summary
+
         for file_type, files in file_data.items():
             if not files:  # Skip empty file lists
                 continue
-                
+
             type_results = []
             metrics = self.metrics.get(file_type, [])
-            
+
             for file_info in files:
                 filename = file_info['filename']
                 content = file_info['content']
-                
+
                 file_scores = {}
                 for metric in metrics.keys():
                     score = self.score_single_metric(file_type, filename, content, f"{metric}: {metrics[metric]}")
                     file_scores[metric] = score
                     print(f"Scored {filename} - {metric}: {score}")
-                
+
                 type_results.append({
                     'filename': filename,
                     'scores': file_scores,
                     'average': sum(file_scores.values()) / len(file_scores) if file_scores else 0
                 })
-            
-            # Calculate summary statistics
+
+                # Add scores to the overall list for summary
+                for score in file_scores.values():
+                    all_scores.append(score)
+
+            # Calculate summary statistics for each file type
             if type_results:
-                all_scores = []
+                type_all_scores = []
                 for result in type_results:
-                    all_scores.extend(result['scores'].values())
-                
+                    type_all_scores.extend(result['scores'].values())
+
                 results[file_type] = {
                     'files': type_results,
                     'summary': {
                         'total_files': len(type_results),
-                        'average_score': sum(all_scores) / len(all_scores) if all_scores else 0,
-                        'max_score': max(all_scores) if all_scores else 0,
-                        'min_score': min(all_scores) if all_scores else 0
+                        'average_score': sum(type_all_scores) / len(type_all_scores) if type_all_scores else 0,
+                        'max_score': max(type_all_scores) if type_all_scores else 0,
+                        'min_score': min(type_all_scores) if type_all_scores else 0
                     }
                 }
-        
+
+        # Calculate overall summary statistics
+        if all_scores:
+            results['overall_summary'] = {
+                "summary": {
+                    'total_files': sum(len(files) for files in file_data.values()),
+                    'average_score': sum(all_scores) / len(all_scores),
+                    'max_score': max(all_scores),
+                    'min_score': min(all_scores)
+                    }
+            }
+
         return results
+
 
 class CourseEvaluationSystem:
     """
     Main system for evaluating course materials
     """
-    def __init__(self, exp_name: str):
-        self.llm = LLM()
+    def __init__(self, model_name: str, exp_name: str):
+        self.llm = LLM(model_name=model_name)
         self.program_chair = ValidationAgent("Program Chair", self.llm)
         self.test_student = ValidationAgent("Test Student", self.llm)
         self.evaluator = EvaluationAgent(self.llm)
@@ -298,6 +315,12 @@ class CourseEvaluationSystem:
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(results, f, indent=2, ensure_ascii=False)
         
+        # Save JSON results
+        json_path = output_dir / "evaluation_scores_overall.json"
+        with open(json_path, 'w', encoding='utf-8') as f:
+            json.dump(results['overall_summary'], f, indent=2, ensure_ascii=False)
+        
+        '''
         # Save markdown summary
         md_path = output_dir / "evaluation_summary.md"
         with open(md_path, 'w', encoding='utf-8') as f:
@@ -318,14 +341,16 @@ class CourseEvaluationSystem:
                     f.write("\n")
         
         print(f"Saved evaluation results: {json_path}, {md_path}")
+        '''
+        print(f"Saved evaluation results: {json_path}")
 
-def main(exp_name):
+def main(model_name, exp_name):
     """
     Main function to process course materials
     """
     print("Starting Course Material Evaluation System...")
 
-    system = CourseEvaluationSystem(exp_name)
+    system = CourseEvaluationSystem(model_name, exp_name)
     root_dir = Path(f"exp/{exp_name}")
 
     # Collect all files to process
@@ -368,15 +393,16 @@ def main(exp_name):
                             'content': content,
                             'filepath': str(filepath)
                         })
-    
-    print("Files collected. Starting validation...")
-    
+
+    print("Files collected. Starting evaluation...")
+
     # Run evaluation agent
     evaluation_results = system.evaluator.evaluate_files(file_data)
     system.save_evaluation_results(evaluation_results)
     
     print("Evaluation complete!")
     
+    '''
     # Run validation agents
     for file_type, files in file_data.items():
         for file_info in files:
@@ -400,6 +426,7 @@ def main(exp_name):
                 )
     
     print("Validation complete.")
+    '''
     
     # Print summary
     print("\n" + "="*50)
@@ -419,11 +446,18 @@ if __name__ == "__main__":
     # Set up command line arguments
     parser = argparse.ArgumentParser(description="Run evaluation ......")
     parser.add_argument(
+        "--model", 
+        type=str,
+        default="gpt-4o-mini",
+        help="Model name to use for evaluation"
+    )
+
+    parser.add_argument(
         "--exp", 
         type=str,
-        default="exp1",
+        default="test",
         help="Experiment name for logging"
     )
     
     args = parser.parse_args()
-    main(exp_name = args.exp)
+    main(model_name=args.model, exp_name=args.exp)

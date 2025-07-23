@@ -1,0 +1,1003 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Week 6: SQL on Spark]{Week 6: SQL on Spark}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \titlepage
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Spark SQL}
+    Spark SQL is an essential component of Apache Spark, a powerful open-source framework used for large-scale data processing.
+    It enables users to execute SQL queries on large datasets, leveraging the speed and scalability of Spark's distributed computing architecture.
+    
+    \begin{itemize}
+        \item \textbf{Unified Data Access}: Queries across structured and semi-structured data sources (e.g., JSON, Parquet) within a unified data model.
+        \item \textbf{Performance Optimization}: Catalyst Optimizer automatically optimizes query execution plans, improving performance significantly.
+        \item \textbf{DataFrame API}: Provides an intuitive API for working with structured data for easier data manipulation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance in Data Processing}
+    \begin{itemize}
+        \item \textbf{Speed and Efficiency}: Much faster data handling compared to traditional SQL engines due to in-memory processing.
+        \item \textbf{Scalability}: Can scale out horizontally, processing petabytes of data efficiently.
+        \item \textbf{Integration with Big Data Frameworks}: Seamless integration with ecosystems like Hadoop and Hive for data querying and analysis.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Spark SQL}
+    \begin{enumerate}
+        \item \textbf{Ad-Hoc Querying}: Quick queries on large datasets accessible for analysts without deep technical skills.
+        \item \textbf{ETL Processes}: Utilization for Extract, Transform, and Load operations to prepare data for analytics.
+        \item \textbf{Business Intelligence}: Integration with BI tools for real-time data analysis insights.
+        \item \textbf{Machine Learning}: Foundation for querying and preprocessing data necessary for training models.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: A Simple Spark SQL Query}
+    \begin{lstlisting}[language=python]
+from pyspark.sql import SparkSession
+
+# Create Spark Session
+spark = SparkSession.builder \
+    .appName("Example Spark SQL") \
+    .getOrCreate()
+
+# Load data into a DataFrame
+df = spark.read.json("data.json")
+
+# Register DataFrame as a SQL temporary view
+df.createOrReplaceTempView("data_table")
+
+# Execute SQL query
+result = spark.sql("SELECT name, age FROM data_table WHERE age > 30")
+
+# Show results
+result.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Spark SQL bridges the gap between traditional databases and big data processing.
+        \item Capability to handle semi-structured data enhances usability across various data environments.
+        \item Integration with tools and frameworks simplifies complex analytics tasks.
+        \item Understanding the architecture, including DataFrames and SQL execution, is crucial for effective usage.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    By mastering Spark SQL, you empower yourself to navigate through massive datasets efficiently, gaining insights and making data-driven decisions that can positively influence your organization.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Spark SQL Components - Overview}
+    \begin{block}{Overview}
+        Spark SQL is a key module of Apache Spark that enables users to run SQL queries on big data. 
+        It provides a programming interface for working with structured and semi-structured data, allowing 
+        data scientists and analysts to utilize SQL alongside the full capabilities of Spark.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Spark SQL Components - DataFrames}
+    \begin{block}{DataFrames}
+        \begin{itemize}
+            \item \textbf{Definition}: A DataFrame is a distributed collection of data organized into named columns.
+            \item \textbf{Creation Example}:
+            \begin{lstlisting}[language=Python]
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("example").getOrCreate()
+data = [("Alice", 1), ("Bob", 2)]
+df = spark.createDataFrame(data, ["Name", "Id"])
+df.show()
+            \end{lstlisting}
+            \item \textbf{Characteristics}:
+            \begin{itemize}
+                \item Lazy Evaluation: Operations are executed upon action, optimizing execution plan.
+                \item Support for various data sources: Reads data from formats like JSON, Parquet, Hive, etc.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Spark SQL Components - Datasets and SQL Execution}
+    \begin{block}{Datasets}
+        \begin{itemize}
+            \item \textbf{Definition}: A Dataset is a distributed collection of data providing benefits of both DataFrames and RDDs.
+            \item \textbf{Creation Example}:
+            \begin{lstlisting}[language=Scala]
+import org.apache.spark.sql.SparkSession
+case class Person(name: String, id: Long)
+val spark = SparkSession.builder.appName("example").getOrCreate()
+import spark.implicits._
+val ds = Seq(Person("Alice", 1), Person("Bob", 2)).toDS()
+ds.show()
+            \end{lstlisting}
+            \item \textbf{Characteristics}:
+            \begin{itemize}
+                \item Type Safety: Errors are caught at compile-time.
+                \item Requires a schema: Users define a schema to create a Dataset.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{SQL Query Execution}
+        \begin{itemize}
+            \item \textbf{Execution Process}:
+            \begin{enumerate}
+                \item Parsing
+                \item Logical Optimization
+                \item Physical Planning
+                \item Execution
+            \end{enumerate}
+            \item \textbf{Example of SQL Execution}:
+            \begin{lstlisting}[language=Python]
+spark.sql("SELECT Name FROM df WHERE Id = 1").show()
+            \end{lstlisting}
+            \item \textbf{Key Features}:
+            \begin{itemize}
+                \item Integration with DataFrames and Datasets.
+                \item Multi-language support for queries.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Spark SQL Components - Conclusion}
+    \begin{block}{Conclusion}
+        Understanding the components of Spark SQL is crucial for effectively querying and processing large datasets. 
+        By leveraging DataFrames, Datasets, and SQL query execution, users can maximize the capabilities 
+        of their big data applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}{DataFrames and Datasets Overview}
+    \begin{block}{Introduction}
+        DataFrames and Datasets are key abstractions in Apache Spark used for data processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What are DataFrames?}
+    \begin{itemize}
+        \item A DataFrame is a distributed collection of data organized into named columns, similar to a table in a relational database.
+        \item Provides an API for working with structured data in Spark SQL.
+    \end{itemize}
+    
+    \begin{block}{Example}
+        \begin{lstlisting}[language=Python]
+# Creating a DataFrame in PySpark
+from pyspark.sql import SparkSession
+spark = SparkSession.builder.appName("example").getOrCreate()
+data = [("Alice", 1), ("Bob", 2)]
+columns = ["Name", "Id"]
+df = spark.createDataFrame(data, schema=columns)
+df.show()
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What are Datasets?}
+    \begin{itemize}
+        \item A Dataset is a type-safe abstract representation of a distributed collection of data, combining the benefits of RDDs and DataFrames.
+        \item Provides compile-time type safety and supports both functional and relational operations.
+    \end{itemize}
+    
+    \begin{block}{Example}
+        \begin{lstlisting}[language=Scala]
+// Creating a Dataset in Scala
+import spark.implicits._
+case class Person(name: String, id: Int)
+val peopleDS = Seq(Person("Alice", 1), Person("Bob", 2)).toDS()
+peopleDS.show()
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Similarities Between DataFrames and Datasets}
+    \begin{itemize}
+        \item Both are distributed collections capable of handling large datasets.
+        \item Utilizes Spark's Catalyst optimizer for optimized query execution.
+        \item Can run SQL-like queries seamlessly.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Differences Between DataFrames and Datasets}
+    \begin{table}[]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            Feature            & DataFrame                          & Dataset                          \\ \hline
+            Type Safety        & Not type-safe                      & Type-safe (for JVM languages)   \\ \hline
+            API                & Easier for non-JVM languages      & More complex (knowledge of Scala/Java needed) \\ \hline
+            Language Support    & Supports Python, R, Scala, Java  & Primarily for Scala and Java     \\ \hline
+        \end{tabular}
+        \caption{Differences between DataFrames and Datasets}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Advantages in Handling Big Data}
+    \begin{enumerate}
+        \item \textbf{Efficiency:} Optimizes memory and computation through lazy evaluation and partitioning.
+        \item \textbf{Ease of Use:} DataFrames are user-friendly, suitable for ETL processes.
+        \item \textbf{Performance:} Datasets leverage functional programming for optimization.
+        \item \textbf{Interoperability:} Seamless integration with various data sources like HDFS, S3, and JDBC.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{Key Points to Remember}
+    \begin{itemize}
+        \item DataFrames are suitable for non-programmers, ideal for ETL processes.
+        \item Datasets provide strong typing and handle complex data manipulations efficiently.
+        \item Both are essential tools in big data applications, especially with Spark SQL.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Conclusion}
+    DataFrames and Datasets are powerful tools in Spark for managing big data. Understanding their differences and advantages enables effective use in real-world scenarios.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Spark SQL Query Execution - Overview}
+    \begin{block}{Key Concepts}
+        \begin{enumerate}
+            \item \textbf{Execution Model Overview}:
+            \begin{itemize}
+                \item Spark SQL processes queries through a multi-phase process involving logical and physical planning.
+                \item The execution pathway ensures optimization prior to execution in a distributed environment.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Spark SQL Query Execution - Logical and Physical Plans}
+    \begin{block}{Logical Plan}
+        \begin{itemize}
+            \item Represents the user's query without knowledge of data distributions or resources.
+            \item A tree structure of operators, such as selection and projection.
+            \item \textbf{Example}: For `SELECT * FROM sales WHERE amount > 100`, it describes a filter operation based on the condition.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Physical Plan}
+        \begin{itemize}
+            \item Constructed after evaluating logical plans, determining how to execute queries.
+            \item Involves I/O strategies, including the choice of join algorithms or data layouts.
+            \item \textbf{Example}: Choosing between hash join or sort-merge join based on data characteristics.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Spark SQL Query Execution - Example Walkthrough}
+    \begin{block}{Example SQL Query}
+        \begin{lstlisting}
+SELECT customer_id, SUM(amount)
+FROM sales
+WHERE amount > 100
+GROUP BY customer_id
+        \end{lstlisting}
+        
+        \textbf{Logical Plan}:
+        \begin{itemize}
+            \item Identify `customer_id` and `amount` fields.
+            \item Filter records on `amount > 100`.
+            \item Group filtered records by `customer_id`.
+        \end{itemize}
+
+        \textbf{Physical Plan}:
+        \begin{itemize}
+            \item Choose execution strategy based on data distribution (e.g., hash aggregation vs. sort aggregation).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Spark SQL Query Execution - Code Snippet}
+    \begin{block}{Code Snippet}
+        To see Spark SQL in action, the following Scala code creates a DataFrame and executes a SQL query:
+        \begin{lstlisting}[language=scala]
+val salesDF = spark.read.csv("path/to/sales.csv")
+salesDF.createOrReplaceTempView("sales")
+val resultDF = spark.sql("SELECT customer_id, SUM(amount) FROM sales WHERE amount > 100 GROUP BY customer_id")
+resultDF.show()
+        \end{lstlisting}
+    \end{block}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Separation of Concerns}: Distinction between logical and physical planning allows flexibility.
+            \item \textbf{Cost-Based Optimization}: Catalyst optimizer plays a key role in selecting efficient execution plans.
+            \item \textbf{Efficiency}: Understanding query transformations aids in constructing efficient queries.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{Overview of Advanced SQL Queries}
+    \begin{block}{Introduction}
+        In this section, we'll explore advanced querying techniques in Spark SQL:
+        \begin{itemize}
+            \item Joins
+            \item Aggregations
+            \item Window Functions
+        \end{itemize}
+        These tools help in complex data manipulations and analyses.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Joins}
+    \begin{block}{Explanation}
+        Joins combine rows from two or more tables based on a related column. Types of joins include:
+        \begin{itemize}
+            \item \textbf{Inner Join}: Matches only rows from both tables.
+            \item \textbf{Left Join}: All rows from the left table; matched from the right, NULL if no match.
+            \item \textbf{Right Join}: All rows from the right table; matched from the left, NULL if no match.
+            \item \textbf{Full Outer Join}: Combines results of both left and right joins.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Example}
+        \begin{lstlisting}[language=SQL]
+SELECT a.id, a.name, b.salary
+FROM employees a
+LEFT JOIN salaries b ON a.id = b.emp_id
+        \end{lstlisting}
+        Retrieves all employee names and their corresponding salaries (if available).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Aggregations}
+    \begin{block}{Explanation}
+        Aggregation functions summarize data. Common functions are:
+        \begin{itemize}
+            \item \texttt{COUNT()}
+            \item \texttt{SUM()}
+            \item \texttt{AVG()}
+            \item \texttt{MAX()}
+            \item \texttt{MIN()}
+        \end{itemize}
+        These functions allow computation of totals and averages across grouped data.
+    \end{block}
+    \begin{block}{Example}
+        \begin{lstlisting}[language=SQL]
+SELECT department, AVG(salary) AS average_salary
+FROM employees
+GROUP BY department
+        \end{lstlisting}
+        This calculates the average salary for each department.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Window Functions}
+    \begin{block}{Explanation}
+        Window functions perform calculations over a set of rows related to the current row. Key aspects include:
+        \begin{itemize}
+            \item \texttt{OVER()} clause: Defines the window of rows for operation.
+            \item \texttt{PARTITION BY}: Divides result set into partitions.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Example}
+        \begin{lstlisting}[language=SQL]
+SELECT id, salary,
+       ROW_NUMBER() OVER (PARTITION BY department ORDER BY salary DESC) AS rank
+FROM employees
+        \end{lstlisting}
+        Ranks employees within each department based on salary.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item \textbf{Joins}: Merge datasets for analytics across multiple tables.
+            \item \textbf{Aggregations}: Summarize large datasets and derive insights.
+            \item \textbf{Window Functions}: Enable advanced analytics without losing detail.
+        \end{itemize}
+    \end{block}
+    Mastering these querying techniques will enhance your ability to analyze and manipulate large datasets effectively.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Optimization in Spark SQL - Introduction}
+    \begin{block}{Introduction to Performance Optimization}
+        Optimizing Spark SQL queries is essential for improving the efficiency and speed of data processing. Minor adjustments can lead to significant enhancements in performance.
+    \end{block}
+    \begin{itemize}
+        \item Focused strategies: 
+            \begin{itemize}
+                \item Partitioning
+                \item Caching
+                \item Broadcast Joins
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Optimization in Spark SQL - Partitioning}
+    \begin{block}{1. Partitioning}
+        \textbf{Concept:} Dividing a dataset into smaller pieces based on specific key(s) to improve query performance and reduce data shuffling.
+        
+        \textbf{Example:} Partitioning a sales dataset by \textit{date} allows queries filtering by date to skip irrelevant partitions.
+        
+        \textbf{Spark SQL Syntax:}
+        \begin{lstlisting}[language=SQL]
+CREATE TABLE sales_partitioned
+USING parquet
+PARTITIONED BY (sale_date)
+AS SELECT * FROM sales;
+        \end{lstlisting}
+    \end{block}
+    \begin{itemize}
+        \item Read less data during queries
+        \item Reduced shuffling leads to faster execution
+        \item Choose partition keys based on query patterns
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Optimization in Spark SQL - Caching and Broadcast Joins}
+    \begin{block}{2. Caching}
+        \textbf{Concept:} Storing intermediate results in memory for reuse in multiple queries, improving performance significantly.
+        
+        \textbf{Example:} Caching eliminates redundant computations on operations over the same DataFrame.
+        \begin{lstlisting}[language=Python]
+df = spark.read.csv("large_dataset.csv")
+df.cache()
+query_result = df.filter(df['column'] > value).count()
+        \end{lstlisting}
+    \end{block}
+    \begin{itemize}
+        \item Use \texttt{cache()} or \texttt{persist()} methods
+        \item Reminder: Cached data remains until unpersisted
+        \item Best for iterative algorithms or heavy computations
+    \end{itemize}
+    
+    \begin{block}{3. Broadcast Joins}
+        \textbf{Concept:} Broadcasting a smaller DataFrame to all nodes improves performance when joining with a larger DataFrame.
+        
+        \textbf{Example:}
+        \begin{lstlisting}[language=Python]
+from pyspark.sql.functions import broadcast
+result = transactions.join(broadcast(user_metadata), "user_id")
+        \end{lstlisting}
+    \end{block}
+    \begin{itemize}
+        \item Use \texttt{broadcast()} function with DataFrames
+        \item Reduces shuffling and speeds up joins
+        \item Effective when one DataFrame is significantly smaller
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Optimization in Spark SQL - Summary and Visual Aid}
+    \begin{block}{Summary}
+        Optimizing Spark SQL queries via partitioning, caching, and broadcast joins enhances data processing efficiency, reducing execution time and resource usage. 
+    \end{block}
+    
+    \begin{itemize}
+        \item Understanding optimization techniques is crucial for big data analysis with Spark.
+    \end{itemize}
+    
+    \begin{block}{Visual Aid}
+        \textit{(Include a flowchart illustrating data flow with and without these optimization techniques.)}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Spark SQL - Introduction}
+    \begin{block}{What is Spark SQL?}
+        A component of Apache Spark that enables large-scale data processing with SQL queries.\\
+        Combines the benefits of SQL semantics with the speed and scalability of the Spark engine.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Spark SQL - Why Organizations Use It}
+    \begin{itemize}
+        \item Handles petabytes of data efficiently.
+        \item Integrates seamlessly with various data sources (e.g., Hive, Avro, Parquet).
+        \item Provides high performance through in-memory computation and optimization techniques.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Spark SQL - Case Studies}
+    \begin{enumerate}
+        \item \textbf{Netflix}
+            \begin{itemize}
+                \item \textbf{Challenge:} Analyzing and personalizing content recommendations for millions of users.
+                \item \textbf{Application:} Utilizes Spark SQL for querying large datasets to enhance recommendation algorithms.
+                \item \textbf{Outcome:} Improved user engagement and retention through personalized viewing experiences.
+            \end{itemize}
+        
+        \item \textbf{Uber}
+            \begin{itemize}
+                \item \textbf{Challenge:} Managing massive amounts of real-time data generated from ride requests and trips.
+                \item \textbf{Application:} Employs Spark SQL to perform real-time analytics on operational data.
+                \item \textbf{Outcome:} Enhanced routing algorithms and operational efficiency leading to quicker ride pickups.
+            \end{itemize}
+
+        \item \textbf{Yahoo}
+            \begin{itemize}
+                \item \textbf{Challenge:} Managing a vast scale of data for improved search services and ad targeting.
+                \item \textbf{Application:} Uses Spark SQL for complex queries across massive datasets for ad forecasting and targeting.
+                \item \textbf{Outcome:} Increased advertisement effectiveness, leading to higher revenue.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Spark SQL - Key Points}
+    \begin{itemize}
+        \item \textbf{Scalability:} Spark SQL can process large datasets in real-time, making it ideal for organizations with enormous data volumes.
+        \item \textbf{Efficiency:} The in-memory processing of Spark enhances query performance, providing timely insights.
+        \item \textbf{Flexibility:} The ability to run SQL queries alongside data processing operations allows for versatile applications in data analysis.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Spark SQL - Conclusion}
+    Spark SQL is essential for organizations seeking to leverage large-scale data to drive insights and business decisions.\\
+    Its applications across various industries demonstrate its effectiveness in handling big data challenges.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Spark SQL - Code Snippet}
+    \begin{lstlisting}[language=SQL]
+SELECT user_id, COUNT(*) as rental_count 
+FROM rentals 
+WHERE rental_date BETWEEN '2023-01-01' AND '2023-12-31' 
+GROUP BY user_id 
+ORDER BY rental_count DESC 
+LIMIT 10;
+    \end{lstlisting}
+    \textit{This SQL query retrieves the top 10 users who rented the most during the specified period.}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Spark SQL - Further Reading}
+    \begin{itemize}
+        \item "Apache Spark: The Definitive Guide" for deeper insights into Spark architecture and use cases.
+        \item Explore case studies and white papers from the organizations mentioned for practical examples of Spark SQL applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Query Performance}
+    \begin{block}{Introduction}
+        Understanding query performance is crucial for efficient data processing in Spark SQL. 
+        This involves evaluating how well a query executes and how resources are utilized.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Performance Metrics}
+    \begin{itemize}
+        \item Execution Time
+        \item Resource Utilization
+        \item Query Execution Plans
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Execution Time}
+    \begin{block}{Definition}
+        Measures how long it takes for a query to complete from start to finish.
+    \end{block}
+    \begin{itemize}
+        \item Importance: Shorter execution time indicates more efficient queries.
+        \item Measurement: Best evaluated using Spark's UI.
+    \end{itemize}
+    \begin{block}{Example Scenario}
+        Query A: 10 seconds \\
+        Query B: 3 seconds \\
+        \textbf{Preferred: Query B (lower execution time)}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Resource Utilization}
+    \begin{block}{Definition}
+        Refers to the effectiveness of a query in using CPU, memory, and disk I/O.
+    \end{block}
+    \begin{itemize}
+        \item CPU Usage: \% of CPU capacity used.
+        \item Memory Usage: Amount of memory consumed.
+        \item Disk I/O: Volume of data read/written.
+        \item Importance: High resource utilization may indicate inefficiencies.
+    \end{itemize}
+    \begin{block}{Example Metrics}
+        CPU Usage: 75\% (high if >80\%) \\
+        Memory Usage: Near capacity (e.g., 90\%)
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Query Execution Plans}
+    \begin{block}{Definition}
+        Outlines how Spark SQL processes a query, detailing the operations performed.
+    \end{block}
+    \begin{itemize}
+        \item Importance: Analyzing can reveal inefficiencies in query structure.
+        \item How to Access: Use the command \texttt{explain()}.
+    \end{itemize}
+    \begin{lstlisting}[language=Python]
+    # Example code to get query execution plan
+    df = spark.sql("SELECT AVG(salary) FROM employees WHERE department = 'Sales'")
+    df.explain(True)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item Dynamic Resource Allocation: Improves efficiency.
+        \item Caching for Performance: Reduces execution times.
+        \item Parallel Processing: Optimizes resource usage.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        Monitoring execution time and resource utilization is essential for improving query performance in Spark SQL.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Challenges with Spark SQL - Introduction}
+    While Spark SQL is a powerful tool for big data analysis, it does come with its share of challenges. Understanding these common pitfalls is crucial for effectively leveraging Spark SQL in your projects. Successful troubleshooting requires both a theoretical understanding and practical skills.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Challenges with Spark SQL - Key Challenges}
+    \begin{itemize}
+        \item \textbf{Performance Issues}
+        \begin{itemize}
+            \item \textit{Cause:} Inefficient query planning or execution.
+            \item \textit{Effect:} Slow response times, increased resource usage.
+            \item \textit{Solution:} Use the Spark UI for query optimization to analyze execution plans.
+        \end{itemize}
+        
+        \item \textbf{Data Skew}
+        \begin{itemize}
+            \item \textit{Cause:} Uneven distribution of data among partitions.
+            \item \textit{Effect:} Task timeouts and inefficient resource utilization.
+            \item \textit{Solution:} Techniques like salting or repartitioning to balance data distribution.
+        \end{itemize}
+        
+        \item \textbf{Memory Management}
+        \begin{itemize}
+            \item \textit{Cause:} Insufficient memory allocation or improper caching strategies.
+            \item \textit{Effect:} Out-of-memory errors and crashes.
+            \item \textit{Solution:} Monitor memory consumption and tune Spark configurations (e.g., \texttt{spark.executor.memory}).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Challenges with Spark SQL - Continued}
+    \begin{itemize}
+        \item \textbf{Schema Evolution and Compatibility}
+        \begin{itemize}
+            \item \textit{Cause:} Changes in data schema over time.
+            \item \textit{Effect:} Query failures or inconsistencies in results.
+            \item \textit{Solution:} Use schema inference judiciously and define schemas explicitly where possible.
+        \end{itemize}
+        
+        \item \textbf{Debugging and Monitoring}
+        \begin{itemize}
+            \item \textit{Cause:} Complex distributed architecture makes it hard to trace errors.
+            \item \textit{Effect:} Longer debugging cycles and difficulty pinpointing issues.
+            \item \textit{Solution:} Use Spark logs and monitoring tools (e.g., Spark UI, Ganglia) for effective debugging.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Troubleshooting Techniques}
+    \begin{enumerate}
+        \item \textbf{Use \texttt{explain()}:}
+        \begin{itemize}
+            \item Inspect query plans to identify inefficiencies.
+            \item \textit{Example:}
+            \begin{lstlisting}[language=scala]
+df.explain(true)
+            \end{lstlisting}
+        \end{itemize}
+        
+        \item \textbf{Set Configuration Parameters:}
+        \begin{itemize}
+            \item Adjust parameters based on workload and cluster resources.
+            \item \textit{Example:}
+            \begin{lstlisting}[language=scala]
+spark.conf.set("spark.sql.shuffle.partitions", "200")
+            \end{lstlisting}
+        \end{itemize}
+        
+        \item \textbf{Analyze Job Metrics:}
+        \begin{itemize}
+            \item Monitor execution time, shuffle read/write metrics, and DAG visualization in the Spark UI.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Points}
+    Understanding and addressing common challenges in Spark SQL is essential for optimizing performance and reliability in big data environments. By employing effective troubleshooting techniques, you can enhance your data analytics capabilities and avoid potential pitfalls.
+
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Monitor performance metrics via Spark UI.
+            \item Address data skew through partitioning strategies.
+            \item Predefine schemas to handle schema evolution issues.
+            \item Regularly inspect execution plans using the \texttt{explain()} method for optimization.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-On Project Overview - Introduction}
+    In this final project, you will apply your knowledge of Spark SQL to analyze real-world datasets. 
+    This hands-on experience will solidify your understanding of the concepts learned throughout the course 
+    and provide valuable insight into how Spark SQL functions in practice.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-On Project Overview - Goals}
+    \begin{itemize}
+        \item \textbf{Data Exploration}: Familiarize yourself with the datasets, understand their structure, and identify interesting patterns or trends.
+        \item \textbf{Data Manipulation}: Use Spark SQL to clean and prepare the data for analysis, ensuring it meets the project requirements.
+        \item \textbf{Query Execution}: Implement various SQL queries to extract insights from the data, including aggregations, filtering, and joining multiple datasets.
+        \item \textbf{Presentation of Findings}: Compile your results and present them clearly, illustrating how your analyses can lead to actionable insights.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-On Project Overview - Datasets and Requirements}
+    \begin{block}{Datasets}
+        You will have access to a selection of datasets relevant to real-world scenarios such as:
+        \begin{itemize}
+            \item \textbf{E-commerce Transactions}: Analyze customer purchasing behaviors.
+            \item \textbf{Public Health Data}: Explore patterns in health outcomes across different demographics.
+            \item \textbf{Social Media Analytics}: Investigate user engagement and content effectiveness.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Project Requirements}
+        \begin{enumerate}
+            \item Familiarization with datasets, documenting initial observations about data quality.
+            \item Data preparation: cleaning the data and using Spark SQL commands.
+            \item Execute at least five different SQL queries, optimizing them for performance.
+            \item Documentation of SQL commands and their outcomes.
+            \item Final report and presentation summarizing your analysis.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-On Project Overview - Key Points}
+    \begin{itemize}
+        \item \textbf{Practical Application}: This project bridges theory and practice, simulating industry applications.
+        \item \textbf{Collaboration and Feedback}: Engage with peers for insights and feedback throughout the project.
+        \item \textbf{Problem Solving}: Apply troubleshooting techniques to overcome challenges encountered during your analysis.
+    \end{itemize}
+
+    By the end of this project, you should have a clearer understanding of how to utilize Spark SQL in real-world situations, 
+    enhancing both your technical skills and your ability to derive insights from data. Happy analyzing!
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and Future Trends - Part 1}
+    \frametitle{Conclusion}
+    In this week’s lesson on Spark SQL, we developed a comprehensive understanding of how Spark SQL operates within the ecosystem of big data technologies. Below are the key takeaways:
+    
+    \begin{enumerate}
+        \item \textbf{Unified Data Processing}:
+        \begin{itemize}
+            \item Spark SQL allows users to run SQL queries alongside data processing tasks, leveraging the same execution engine for both uses.
+            \item Example: Using a DataFrame API to manipulate structured data similarly to traditional SQL databases.
+        \end{itemize}
+        
+        \item \textbf{Performance Optimization}:
+        \begin{itemize}
+            \item The Catalyst optimizer and Tungsten execution engine enhance query execution speed by optimizing query plans and managing memory efficiently.
+            \item Example: Transforming a complex join operation into a series of optimized tasks.
+        \end{itemize}
+        
+        \item \textbf{Integration with Diverse Data Sources}:
+        \begin{itemize}
+            \item Spark SQL supports various data formats like JSON, Parquet, and ORC and integrates with data storage systems such as HDFS, Apache Kafka, and Amazon S3.
+            \item Example: Reading a JSON file into a DataFrame and executing SQL queries against structured data retrieved from an S3 bucket.
+        \end{itemize}
+        
+        \item \textbf{Interoperability}:
+        \begin{itemize}
+            \item Spark SQL can interoperate with Hive, enabling users to execute SQL queries on Hive tables, accessing existing Hive architecture without drastic changes.
+            \item Example: Linking an existing Hive table with Spark SQL to run analytics on the data.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and Future Trends - Part 2}
+    \frametitle{Future Trends}
+    Looking ahead, several trends are emerging within the realm of Spark SQL and big data technologies:
+    
+    \begin{enumerate}
+        \item \textbf{Increased Adoption of Serverless Architectures}:
+        \begin{itemize}
+            \item The trend toward serverless computing continues to rise, allowing users to execute code without provisioning servers. Spark SQL is likely to evolve into this model.
+        \end{itemize}
+        
+        \item \textbf{Real-Time Data Processing}:
+        \begin{itemize}
+            \item As businesses require faster insights, real-time streaming data processing is becoming more prominent.
+        \end{itemize}
+        
+        \item \textbf{Enhanced Machine Learning Integration}:
+        \begin{itemize}
+            \item Future versions may streamline the integration of SQL-driven data transformations with machine learning pipelines.
+        \end{itemize}
+        
+        \item \textbf{Cloud-Native Big Data Solutions}:
+        \begin{itemize}
+            \item The shift toward cloud platforms continues, with Spark SQL playing a significant role in running analytics at scale.
+        \end{itemize}
+        
+        \item \textbf{Focus on Data Governance and Quality}:
+        \begin{itemize}
+            \item Maintaining data integrity and quality will be paramount, with future developments in Spark SQL likely incorporating advanced tools for monitoring.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and Future Trends - Code Example}
+    \frametitle{Example Code Snippet}
+    Here’s a basic example of using Spark SQL to query data:
+    
+    \begin{lstlisting}[language=Python]
+from pyspark.sql import SparkSession
+
+# Initialize a Spark session
+spark = SparkSession.builder \
+    .appName("Spark SQL Example") \
+    .getOrCreate()
+
+# Load JSON data into DataFrame
+df = spark.read.json("path/to/data.json")
+
+# Create a temporary view for SQL queries
+df.createOrReplaceTempView("data_view")
+
+# Run SQL query
+result = spark.sql("SELECT name, age FROM data_view WHERE age > 30")
+
+# Show the results
+result.show()
+    \end{lstlisting}
+    
+    This snippet demonstrates how easy it is to load data, create views, and run SQL queries, capturing the essence of Spark SQL's power and accessibility in a data-driven world.
+\end{frame}
+
+
+\end{document}

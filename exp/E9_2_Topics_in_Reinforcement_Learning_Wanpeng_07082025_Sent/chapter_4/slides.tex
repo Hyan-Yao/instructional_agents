@@ -1,0 +1,1185 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Week 4: Model-Free Prediction and Control]{Week 4: Model-Free Prediction and Control}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Model-Free Prediction and Control - Overview}
+    \begin{itemize}
+        \item **Model-Free Reinforcement Learning (RL)**:
+        \begin{itemize}
+            \item Algorithms that do not require an environment model
+            \item Learn directly from interactions and experiences
+            \item Useful in complex environments
+        \end{itemize}
+        \item **Significance**:
+        \begin{itemize}
+            \item Predict outcomes and control actions effectively
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components of Model-Free Approaches}
+    \begin{block}{Key Components}
+        \begin{itemize}
+            \item **State (s)**: Current representation of the agent's situation
+            \item **Action (a)**: Decision taken by the agent to interact with the environment
+            \item **Reward (r)**: Numerical feedback from the environment
+            \item **Value Function (V(s))**: Expected return for being in state $s$ under a given policy
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Model-Free Algorithms}
+    \begin{itemize}
+        \item **Q-Learning**: 
+        \begin{itemize}
+            \item Updates action-value function based on observed rewards
+            \item \textbf{Update Rule}:
+            \begin{equation}
+                Q(s, a) \gets Q(s,a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s,a) \right)
+            \end{equation}
+            \begin{itemize}
+                \item $\alpha$: learning rate
+                \item $\gamma$: discount factor
+                \item $s'$: next state
+            \end{itemize}
+        \end{itemize}
+        \item **SARSA**:
+        \begin{itemize}
+            \item An on-policy algorithm for value estimation
+            \item \textbf{Update Rule}:
+            \begin{equation}
+                Q(s, a) \gets Q(s,a) + \alpha \left( r + \gamma Q(s', a') - Q(s,a) \right)
+            \end{equation}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item **No Model Required**: Learn directly from the environment, enhancing versatility
+        \item **Exploration vs. Exploitation**: Balance discovery of new actions and utilizing known rewarding actions
+        \item **Application Diversity**: Wide usage in game-playing, robotics, and more
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Course Learning Objectives - Part 1}
+    \frametitle{Objectives for This Week}
+
+    \begin{enumerate}
+        \item \textbf{Understanding Value Functions}
+        \begin{itemize}
+            \item \textbf{Definition}: A value function predicts future rewards for a state or action in an environment, reflecting the goodness of a state or action.
+            \item \textbf{Importance}: Central to reinforcement learning, value functions guide decision-making by indicating long-term benefits.
+            \item \textbf{Key Points}:
+            \begin{itemize}
+                \item \textbf{State Value Function} (\( V \)): Represents expected return starting from state \( s \).
+                \begin{equation}
+                V(s) = \mathbb{E} [R | S_t = s]
+                \end{equation}
+                \item \textbf{Action Value Function} (\( Q \)): Represents expected return for an action \( a \) taken in state \( s \).
+                \begin{equation}
+                Q(s, a) = \mathbb{E} [R | S_t = s, A_t = a]
+                \end{equation}
+            \end{itemize}
+            \item \textbf{Example}: In chess, the value function can indicate the likelihood of winning from a board position.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Course Learning Objectives - Part 2}
+    \frametitle{Objectives for This Week (cont.)}
+
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Monte Carlo Methods}
+        \begin{itemize}
+            \item \textbf{Definition}: A class of algorithms using random sampling for numerical results; used to estimate value functions in reinforcement learning.
+            \item \textbf{Importance}: Allows learning of value functions by averaging returns over multiple episodes without needing environmental models.
+            \item \textbf{Key Points}:
+            \begin{itemize}
+                \item \textbf{Sample Average}: To estimate \( V(s) \), simulate episodes and average returns:
+                \begin{equation}
+                V(s) \approx \frac{1}{N} \sum_{n=1}^{N} G_n(s)
+                \end{equation}
+                \item \textbf{Exploration vs. Exploitation}: A balance required for effective learning from all states.
+            \end{itemize}
+            \item \textbf{Example}: In Blackjack, track winnings over many hands to average results and update the value function.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Course Learning Objectives - Summary}
+    \frametitle{Summary}
+
+    This week, we will deepen our understanding of:
+    \begin{itemize}
+        \item Value functions as essential tools in reinforcement learning.
+        \item Monte Carlo methods for model-free prediction and control.
+    \end{itemize}
+    By mastering these concepts, you will be prepared to implement and evaluate effective reinforcement learning strategies.
+
+\end{frame}
+
+\begin{frame}[fragile]{Course Learning Objectives - Next Steps}
+    \frametitle{Next Steps}
+
+    In the next slide, we will explore value functions in detail, discussing their significance and applications in various reinforcement learning scenarios.
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Functions Overview}
+    \begin{block}{Introduction}
+        Value functions are essential in reinforcement learning (RL), providing a measure of expected future rewards. They help evaluate different strategies and actions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Value Functions?}
+    \begin{itemize}
+        \item **Definition**: Value functions quantify the expected future rewards an agent can obtain from a state or action.
+        \item **Role in RL**: They are used to evaluate and compare strategies or actions, guiding agents toward maximizing cumulative rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Value Functions in Reinforcement Learning}
+    \begin{enumerate}
+        \item \textbf{Guiding Decision-Making}
+            \begin{itemize}
+                \item Help agents choose actions that maximize cumulative rewards.
+                \item Enable better strategizing through future outcome predictions.
+            \end{itemize}
+        \item \textbf{Model-Free Approach}
+            \begin{itemize}
+                \item Learn expected rewards directly from environment interactions.
+                \item Useful in complex or unknown environments.
+            \end{itemize}
+        \item \textbf{Foundation for Learning Algorithms}
+            \begin{itemize}
+                \item Backbone for various RL algorithms (e.g., Q-learning, Temporal-Difference).
+                \item Facilitate prediction and control processes.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Value Functions Represent Future Rewards}
+    \textbf{State Value Function (V):}
+    \begin{equation}
+    V(s) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_t \mid s_0 = s \right]
+    \end{equation}
+    \textbf{Description:}
+    \begin{itemize}
+        \item Calculates expected return from a given state.
+        \item \( \gamma \) is the discount factor ($0 < \gamma < 1$).
+    \end{itemize}
+
+    \textbf{Action Value Function (Q):}
+    \begin{equation}
+    Q(s, a) = \mathbb{E}_\pi \left[ \sum_{t=0}^{\infty} \gamma^t R_t \mid s_0 = s, a_0 = a \right]
+    \end{equation}
+    \textbf{Description:}
+    \begin{itemize}
+        \item Measures expected return for taking action \( a \) in state \( s \).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: Robot Exploration}
+    \begin{itemize}
+        \item **State (S)**: Location of the robot.
+        \item **Actions (A)**: Move forward, turn left, turn right.
+        \item The robot evaluates rewarding locations using state value function \( V \) and action value function \( Q \) to determine beneficial actions.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        Understanding value functions is crucial in reinforcement learning, as they guide agents in evaluating actions and optimizing strategies toward achieving goals.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Value Functions - Introduction}
+    \begin{block}{Introduction to Value Functions}
+        In reinforcement learning, value functions play a critical role as they quantify the expected future rewards an agent can achieve, helping to guide its behavior. 
+    \end{block}
+    \begin{itemize}
+        \item Two primary types of value functions: 
+        \begin{itemize}
+            \item \textbf{State Value Function (V)}
+            \item \textbf{Action Value Function (Q)}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Value Functions - State Value Function (V)}
+    \begin{block}{1. State Value Function (V)}
+        \textbf{Definition:} The State Value Function \( V(s) \) measures the expected return when the agent is in state \( s \) and follows a specific policy \( \pi \).
+    \end{block}
+    \begin{equation}
+        V(s) = \mathbb{E}_{\pi}[R_t | S_t = s]
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item \( R_t \): total reward received from time \( t \) onwards.
+        \item Expectation \( \mathbb{E} \) is over all possible trajectories starting from state \( s \).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Value Functions - Action Value Function (Q)}
+    \begin{block}{2. Action Value Function (Q)}
+        \textbf{Definition:} The Action Value Function \( Q(s, a) \) evaluates the expected return following a specific action \( a \) in state \( s \), and then continuing with a policy \( \pi \).
+    \end{block}
+    \begin{equation}
+        Q(s, a) = \mathbb{E}_{\pi}[R_t | S_t = s, A_t = a]
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item \( A_t \): action taken at time \( t \).
+    \end{itemize}
+    \begin{block}{Key Distinction}
+        \begin{itemize}
+            \item \( V \) evaluates states independently of actions.
+            \item \( Q \) factors in actions, allowing refined decision-making.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mathematical Representation of Value Functions - Introduction}
+    \begin{itemize}
+        \item In reinforcement learning, value functions quantify the goodness of:
+        \begin{itemize}
+            \item Being in a state (State Value Function \(V\))
+            \item Taking an action in a state (Action Value Function \(Q\))
+        \end{itemize}
+        \item They help assess the expected long-term reward from a state or state-action pair.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{State Value Function \(V(s)\)}
+    \begin{block}{Definition}
+        The state value function \(V(s)\) measures the expected return when starting from state \(s\):
+        \begin{equation}
+        V(s) = \mathbb{E}_{\pi} \left[ R_t | S_t = s \right]
+        \end{equation}
+        where \(R_t\) is the total reward from time step \(t\) onwards.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Properties:}
+        \begin{itemize}
+            \item Range: Often bounded between min and max returns.
+            \item Estimation: Can be estimated via methods like Monte Carlo or Temporal Difference learning.
+        \end{itemize}
+        \item \textbf{Example:} In a grid world, \(V(s) = 10\) for a state with high reward signifies an expected total return of 10.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Action Value Function \(Q(s, a)\)}
+    \begin{block}{Definition}
+        The action value function \(Q(s, a)\) measures the expected return for taking action \(a\) in state \(s\):
+        \begin{equation}
+        Q(s, a) = \mathbb{E}_{\pi} \left[ R_t | S_t = s, A_t = a \right]
+        \end{equation}
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Properties:}
+        \begin{itemize}
+            \item Q-learning: Involves learning the optimal \(Q^*\) values iteratively.
+            \item Exploration vs. Exploitation: Balancing new actions and known rewards is critical in estimating \(Q\).
+        \end{itemize}
+        \item \textbf{Example:} If \(Q(s, a) = 5\), this indicates action \(a\) in state \(s\) leads to a beneficial expected reward of 5.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Formulas Recap}
+    \begin{itemize}
+        \item \textbf{Relationships:}
+        \begin{itemize}
+            \item \(V(s)\) provides aggregate future reward estimates.
+            \item \(Q(s, a)\) gives a detailed breakdown by state-action pairs.
+        \end{itemize}
+        \item \textbf{Utility:} Essential for decision-making in reinforcement learning, maximizing expected rewards.
+    \end{itemize}
+    
+    \begin{block}{Formulas}
+        \begin{equation}
+        V(s) = \sum_{a} \pi(a|s) Q(s,a)
+        \end{equation}
+        \begin{equation}
+        Q(s, a) = r + \gamma \sum_{s'} P(s'|s,a) V(s')
+        \end{equation}
+        where \(r\) is the immediate reward, and \(\gamma\) (0 \(\leq\) \(\gamma\) < 1) is the discount factor.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Introduction to Monte Carlo Methods - Overview}
+  \begin{itemize}
+    \item Monte Carlo methods rely on random sampling for numerical results.
+    \item Essential in reinforcement learning for estimating value functions.
+    \item Evaluate policies based on episodic experiences rather than a complete model.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Role in Estimating Value Functions}
+  \begin{itemize}
+    \item \textbf{Value Function Estimation:} 
+    \begin{itemize}
+      \item Estimate state value functions \( V(s) \) and action value functions \( Q(s, a) \) by averaging returns from sampled trajectories.
+    \end{itemize}
+    \item \textbf{Episodic Tasks:} 
+    \begin{itemize}
+      \item Requires clear start and endpoint for episodes to compute returns effectively.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Characteristics}
+  \begin{enumerate}
+    \item \textbf{Experience-Based:} Estimates values from episodes, not prior knowledge.
+    \item \textbf{Model-Free:} No need for a model of the environment.
+    \item \textbf{Long-Term Returns:} 
+      \begin{equation}
+      G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots
+      \end{equation}
+      where \( G_t \) is the return, \( R \) are rewards, and \( \gamma \) is the discount factor.
+    \item \textbf{Convergence:} With enough episodes, estimates converge to the true value function under certain conditions.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example: Estimating State Value Function}
+  \begin{itemize}
+    \item Consider estimating the value of state \( s \) in a grid world.
+    \item \textbf{Episode 1:} Rewards collected: \([0, 1, 1]\) ⇒ \( G = 1 + 1 = 2 \)
+    \item \textbf{Episode 2:} Rewards collected: \([0, 0, 1, 1, 1]\) ⇒ \( G = 1 + 1 + 1 = 3 \)
+    \item \textbf{Averaging Returns:}
+      \[
+      V(s) \approx \frac{2 + 3}{2} = 2.5
+      \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points to Emphasize}
+  \begin{itemize}
+    \item Monte Carlo methods rely on random sampling and averaging.
+    \item Effective for complex or unknown environment dynamics.
+    \item Accuracy improves with an increased number of episodes.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  \begin{itemize}
+    \item Monte Carlo methods offer a robust framework for model-free prediction and control in reinforcement learning.
+    \item Emphasize episodic learning and value estimation based on sampled experience.
+    \item Understanding these methods is key for advancing in reinforcement learning exploration.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monte Carlo Prediction - Introduction}
+    \begin{itemize}
+        \item Monte Carlo methods are techniques for estimating value functions in reinforcement learning.
+        \item Particularly useful for \textbf{episodic tasks}.
+        \item An agent interacts with the environment over a finite number of time steps leading to terminal states.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monte Carlo Prediction - Key Concepts}
+    \begin{itemize}
+        \item \textbf{State Value Function \(V(s)\)}:
+        \begin{itemize}
+            \item Estimates expected return from state \(s\) following policy \(\pi\).
+            \item Answers: "What is the expected value of being in state \(s\)?"
+        \end{itemize}
+        
+        \item \textbf{Episodic Tasks}:
+        \begin{itemize}
+            \item Interactions broken into episodes.
+            \item Each episode ends after a certain number of steps.
+            \item Full outcomes allow Monte Carlo methods to work effectively.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monte Carlo Prediction - Process Overview}
+    \begin{enumerate}
+        \item \textbf{Generate Episodes}:
+        \begin{itemize}
+            \item Simulate episodes using policy \(\pi\).
+            \item Each episode is a sequence of states, actions, and rewards.
+        \end{itemize}
+        
+        \item \textbf{Calculate Returns}:
+        \begin{equation}
+            G_t = R_t + \gamma R_{t+1} + \gamma^2 R_{t+2} + \ldots
+        \end{equation}
+        \begin{itemize}
+            \item \(R_t\) is immediate reward at time \(t\), \(\gamma\) is the discount factor (0 ≤ \(\gamma\) < 1).
+        \end{itemize}
+        
+        \item \textbf{Update Value Estimates}:
+        \begin{equation}
+            V(s) \leftarrow V(s) + \alpha (G_t - V(s))
+        \end{equation}
+        \begin{itemize}
+            \item \(\alpha\) is the learning rate.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monte Carlo Prediction - Implications}
+    \begin{itemize}
+        \item \textbf{Convergence}:
+        \begin{itemize}
+            \item With sufficient episodes, can converge to true state value function.
+        \end{itemize}
+        
+        \item \textbf{Exploration Requirement}:
+        \begin{itemize}
+            \item Adequate representation of state distribution needed for accuracy.
+            \item Must explore the state space sufficiently.
+        \end{itemize}
+        
+        \item \textbf{No Environmental Models Needed}:
+        \begin{itemize}
+            \item Unlike other methods, does not require an explicit model of environment dynamics.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monte Carlo Prediction - Example}
+    \begin{itemize}
+        \item Consider a grid-world environment:
+        \begin{itemize}
+            \item Agent moves in four directions and receives rewards for reaching specific states.
+            \item By generating episodes of movement, the agent estimates state values.
+        \end{itemize}
+        
+        \item \textbf{Key Points to Emphasize}:
+        \begin{itemize}
+            \item Monte Carlo methods rely on complete episodes.
+            \item Average returns improve value function estimates over time.
+            \item Exploration is critical for effective learning.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monte Carlo Control - Overview}
+    \begin{itemize}
+        \item Monte Carlo Control derives optimal policies through episode-based sampling.
+        \item Unlike Monte Carlo Prediction, it aims to improve decision-making via interaction with the environment.
+        \item Key objective: Learn an optimal policy \( \pi^* \) maximizing expected return \( G_t \).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts - Monte Carlo Methods}
+    \begin{block}{Monte Carlo Methods}
+        Monte Carlo methods evaluate policies based on sampled returns from episodes.
+    \end{block}
+    
+    \begin{itemize}
+        \item An episode includes a sequence of states, actions, rewards, ending at a terminal state.
+        \item Monte Carlo methods use episodes to compute returns.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{On-Policy vs Off-Policy Strategies}
+    \begin{block}{On-Policy Method}
+        \begin{itemize}
+            \item Learns the value of the policy currently being followed.
+            \item Example: First-Visit Monte Carlo updates based on first visits in an episode.
+            \item Advantages: Simple implementation and direct relation to behavior policy.
+        \end{itemize}
+        \begin{lstlisting}
+        for each episode:
+            Initialize returns for all state-action pairs
+            Generate an episode using current policy
+            Return G_t for each state-action pair in the episode
+            Update the value estimates
+        \end{lstlisting}
+    \end{block}
+
+    \begin{block}{Off-Policy Method}
+        \begin{itemize}
+            \item Learns from one policy (target) while following another (behavior).
+            \item Example: Importance Sampling updates value estimates for target policy.
+            \item Advantages: Flexible learning from old data and exploratory behaviors.
+        \end{itemize}
+        \begin{lstlisting}
+        for each episode:
+            Initialize returns for target policy
+            Generate an episode using behavior policy
+            Compute G_t and importance sampling ratio
+            Update target policy's value estimates using weighted returns
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Illustration}
+    \begin{itemize}
+        \item \textbf{Exploration vs. Exploitation}: Balance is crucial for learning.
+        \item \textbf{Limitation of Episodes}: Requires complete episodes for updates.
+        \item \textbf{Convergence}: Both methods can converge to optimal policies based on exploration efficiency.
+    \end{itemize}
+
+    \begin{block}{Illustration}
+        \textit{Include a diagram illustrating the flow of On-Policy vs. Off-Policy control.}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation}
+    \begin{block}{Understanding the Trade-Off}
+        In reinforcement learning (RL), an agent must decide between two strategies:
+        \begin{enumerate}
+            \item \textbf{Exploration}: Trying out new actions to discover their potential rewards.
+            \item \textbf{Exploitation}: Leveraging known actions that yield the highest rewards based on past experiences.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation - Why It Matters}
+    \begin{itemize}
+        \item \textbf{Too Much Exploration}:
+            \begin{itemize}
+                \item Leads to inefficiency by wasting time on less rewarding actions.
+                \item Agent may fail to capitalize on known profitable strategies.
+            \end{itemize}
+        \item \textbf{Too Much Exploitation}:
+            \begin{itemize}
+                \item Risks missing better, optimal actions.
+                \item Agent may get stuck in a local maximum, failing to explore new possibilities.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monte Carlo Methods and Their Role}
+    \begin{block}{Application in Exploration and Exploitation}
+        Monte Carlo methods address the exploration-exploitation trade-off through:
+        \begin{itemize}
+            \item \textbf{Random Sampling}: Using random actions during training to explore efficiently.
+            \item \textbf{Importance Sampling}: Re-weighting experiences using specific sampling strategies to update value estimates.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Illustration}
+    Imagine a simple grid world where an agent (robot) can move in four directions (up, down, left, right):
+    \begin{itemize}
+        \item The robot learns that moving right yields a reward of +10 (exploitation).
+        \item Undiscovered paths could yield different rewards (exploration).
+        \item Monte Carlo methods allow the robot to make random movements to explore these paths, potentially finding greater rewards (e.g., hidden treasure).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Dynamic Balance}: The balance may change as the agent learns the environment.
+        \item \textbf{ε-Greedy Strategy}: Mostly exploits (with probability 1-$\epsilon$) but explores (with probability $\epsilon$) randomly.
+        \item \textbf{Softmax Action Selection}: Assigns a probability distribution over actions, allowing for increased exploration of less tried actions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration-Exploitation Balance Formula}
+    To mathematically define the balance, we compare action values \( Q(s, a) \):
+    \begin{equation}
+        \text{Value}(s, a) = \frac{1}{N(s, a)} \sum_{t=1}^{T} r_t \quad (N(s, a) \text{ is the number of times action } a \text{ is taken in state } s)
+    \end{equation}
+    where \( r_t \) represents the reward received, and \( T \) is the total time steps.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Successfully navigating the exploration vs. exploitation trade-off is key in building effective reinforcement learning agents. 
+    Monte Carlo methods provide a structured approach to balance these strategies, enhancing learning and leading to improved decision-making.
+    
+    \textbf{Next Up}: Limitations of Monte Carlo methods in addressing various challenges within a reinforcement learning framework.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Limitations of Monte Carlo Methods}
+    \begin{block}{Understanding Monte Carlo Methods}
+        Monte Carlo methods rely on repeated random sampling to obtain numerical results. In reinforcement learning (RL), they estimate value functions and improve decision-making policies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Limitations of Monte Carlo Methods}
+    \begin{enumerate}
+        \item \textbf{Convergence Issues}
+        \begin{itemize}
+            \item \textbf{Variance}: High variance can yield unreliable value function estimates.
+            \item \textbf{Slow Convergence}: Requires many episodes to converge, especially with sparse rewards.
+        \end{itemize}
+        
+        \item \textbf{Sample Inefficiency}
+        \begin{itemize}
+            \item Entire episodes must be simulated to update estimates, leading to inefficiency in complex environments.
+        \end{itemize}
+        
+        \item \textbf{Dependence on Complete Episodes}
+        \begin{itemize}
+            \item Updates occur only at the end of each episode, complicating continuous tasks.
+        \end{itemize}
+        
+        \item \textbf{Exploration vs. Exploitation}
+        \begin{itemize}
+            \item The trade-off may lead to biased value function estimates.
+        \end{itemize}
+        
+        \item \textbf{Limited Application in Non-Stationary Environments}
+        \begin{itemize}
+            \item Assumes stationary distributions, making it less effective in changing environments.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustration and Key Points}
+    \begin{block}{Example Illustration}
+        Consider a grid world where an agent navigates to a goal. Variance in rewards leads to fluctuating estimates of the value function across episodes.
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Monte Carlo methods have significant challenges regarding convergence and efficiency.
+            \item The effectiveness relies on the number of episodes and outcome variance.
+            \item Best suited for problems with well-defined episodes and relatively stable rewards.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Useful Formulas}
+    \begin{block}{Conclusion}
+        Understanding the limitations of Monte Carlo methods is crucial for effective implementation. Combining them with model-based techniques or other algorithms like Temporal Difference Learning can help mitigate challenges.
+    \end{block}
+
+    \begin{block}{Useful Formula}
+        \begin{equation}
+        V(s) \approx \frac{1}{N} \sum_{i=1}^{N} G_t^i 
+        \end{equation}
+        Where \( N \) is the number of samples and \( G_t^i \) is the return from the \( i \)-th episode.
+    \end{block}
+    
+    \begin{block}{Closing Thought}
+        Consider how alternative approaches might mitigate these limitations as we explore practical applications in real-world scenarios.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Practical Applications of Value Functions - Understanding Value Functions}
+  
+  Value functions are essential in reinforcement learning (RL) for evaluating states or actions based on expected future rewards. They enable model-free prediction and control, allowing algorithms to make decisions without a complete model.
+  
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Practical Applications of Value Functions - Key Concepts}
+  
+  \begin{block}{Value Function (V)}
+    Represents the expected return from a specific state when following a policy.
+    \begin{equation}
+      V(s) = E\left[\sum_{t} \gamma^t R_t | S_0 = s\right]
+    \end{equation}
+    \begin{itemize}
+      \item \(s\): State
+      \item \(R_t\): Reward at time \(t\)
+      \item \(\gamma\): Discount factor \((0 \leq \gamma < 1)\)
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Action-Value Function (Q)}
+    Indicates expected return of taking a specific action in a given state.
+    \begin{equation}
+      Q(s, a) = E\left[\sum_{t} \gamma^t R_t | S_0 = s, A_0 = a\right]
+    \end{equation}
+    \begin{itemize}
+      \item \(a\): Action
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Practical Applications of Value Functions - Real-World Applications}
+  
+  \begin{enumerate}
+    \item \textbf{Robotics}
+      \begin{itemize}
+        \item Robot navigation using value functions to optimize paths.
+      \end{itemize}
+      
+    \item \textbf{Finance}
+      \begin{itemize}
+        \item Use Monte Carlo methods for portfolio optimization and trading strategies.
+      \end{itemize}
+
+    \item \textbf{Healthcare}
+      \begin{itemize}
+        \item Value functions estimate long-term outcomes of treatments.
+      \end{itemize}
+      
+    \item \textbf{Recommendation Systems}
+      \begin{itemize}
+        \item Companies like Netflix use value functions to predict user preferences.
+      \end{itemize}
+      
+    \item \textbf{Transportation and Logistics}
+      \begin{itemize}
+        \item Uber uses simulations to optimize routing strategies based on data.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Case Study: Application in Game AI}
+  \begin{block}{Introduction to Monte Carlo Methods in Game AI}
+    Monte Carlo methods are computational algorithms that utilize repeated random sampling to achieve numerical results. They support decision-making in complex gaming environments where exhaustive outcome modeling is impractical.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Core Concepts}
+  \begin{enumerate}
+    \item \textbf{Monte Carlo Simulation}:
+      \begin{itemize}
+        \item Understands the impact of risk and uncertainty in forecasting models.
+        \item In Game AI, it represents various gameplay scenarios, aiding AI in action evaluation.
+      \end{itemize}
+      
+    \item \textbf{Monte Carlo Tree Search (MCTS)}:
+      \begin{itemize}
+        \item An algorithm for optimal move selection through random sampling in large decision spaces (e.g., board games).
+        \item Consists of four phases:
+          \begin{enumerate}
+            \item \textbf{Selection}: Traverse the tree to select the node to expand.
+            \item \textbf{Expansion}: Add new child nodes.
+            \item \textbf{Simulation}: Simulate random play-outs and evaluate results.
+            \item \textbf{Backpropagation}: Update nodes based on simulation results.
+          \end{enumerate}
+        \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Practical Examples}
+  \begin{itemize}
+    \item \textbf{AlphaGo}:
+      \begin{itemize}
+        \item Utilized MCTS with deep neural networks for move evaluation leading to historic victories.
+      \end{itemize}
+      
+    \item \textbf{OpenAI’s Dota 2 Bot}:
+      \begin{itemize}
+        \item Implemented Monte Carlo techniques to plan and adapt strategy during gameplay.
+      \end{itemize}
+  \end{itemize}
+
+  \begin{block}{Key Points to Emphasize}
+    \begin{itemize}
+      \item \textbf{Strengths}:
+        \begin{itemize}
+          \item Excellent in uncertain and vast decision spaces.
+          \item Can derive value estimates from game experience.
+        \end{itemize}
+      \item \textbf{Limitations}:
+        \begin{itemize}
+          \item High computational costs in real-time scenarios.
+          \item Dependent on simulation quality; bad plays lead to suboptimal outcomes.
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  Monte Carlo methods, specifically MCTS, play a crucial role in developing intelligent game AI. They enable efficient exploration of complex decision trees, allowing for informed choices based on simulations, thus enhancing the overall gameplay experience.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Takeaways - Overview}
+    \begin{block}{Overview}
+        In this chapter, we explored the foundational concepts of model-free prediction and control in reinforcement learning (RL). 
+        We emphasized the significance of value functions and practical applications in various scenarios such as game AI.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Takeaways - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Model-Free Prediction:}
+            \begin{itemize}
+                \item \textbf{Definition:} Predicting future rewards or state values without a model of the environment.
+                \item \textbf{Utility:} Enables agents to learn from experiences.
+                \item \textbf{Example:} Estimating winning likelihood in a board game.
+            \end{itemize}
+            
+        \item \textbf{Model-Free Control:}
+            \begin{itemize}
+                \item \textbf{Definition:} Choosing actions to maximize cumulative reward without a model.
+                \item \textbf{Methodologies:}
+                    \begin{itemize}
+                        \item Policy Evaluation
+                        \item Policy Improvement
+                    \end{itemize}
+                \item \textbf{Example:} A robot learns effective actions in a maze through trial and error.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Takeaways - Continued}
+    \begin{enumerate}[resume]
+        \item \textbf{Value Functions:}
+            \begin{itemize}
+                \item \textbf{Role in RL:} Quantifies state value (State Value function, $V(s)$).
+                \item \textbf{Formulae:}
+                    \begin{equation}
+                        V(s) = \mathbb{E} \left[ R_t | S_t = s \right]
+                    \end{equation}
+                    \begin{equation}
+                        Q(s, a) = \mathbb{E} \left[ R_t | S_t = s, A_t = a \right]
+                    \end{equation}
+                \item \textbf{Example:} Helps in determining the value of each cell in a grid world.
+            \end{itemize}
+
+        \item \textbf{Exploration vs. Exploitation:}
+            \begin{itemize}
+                \item \textbf{Exploration:} Trying new actions.
+                \item \textbf{Exploitation:} Using known information for decision-making.
+                \item \textbf{Balancing Act:} Managing the trade-off is crucial for optimal learning.
+            \end{itemize}
+
+        \item \textbf{Practical Applications:}
+            \begin{itemize}
+                \item Game AI Development: Utilizing model-free methods like Monte Carlo simulations to create adaptable game-playing agents.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Takeaways - Conclusion}
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Model-free techniques provide interactive learning frameworks for various applications (robotics, gaming).
+            \item Value functions are crucial for prediction and control in RL.
+            \item Balancing exploration and exploitation enhances agent performance.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        The concepts of model-free prediction and control allow for the development of intelligent systems. Future discussions will cover advancements in model-free techniques and their applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Reinforcement Learning - Overview}
+    \begin{block}{Model-Free Techniques}
+        Model-free reinforcement learning (RL) focuses on learning policies or value functions without requiring an explicit model of the environment's dynamics. 
+        The growing landscape of machine learning research continues to advance these techniques due to their application versatility.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Reinforcement Learning - Emerging Research Directions}
+    \begin{itemize}
+        \item \textbf{Integration of Deep Learning:}
+        \begin{itemize}
+            \item Combines deep learning with model-free methods, leading to Deep Q-Networks (DQN).
+            \item Example: In Atari games, DQNs learn to play by correlating raw pixel inputs with optimal actions.
+        \end{itemize}
+        
+        \item \textbf{Inverse Reinforcement Learning (IRL):}
+        \begin{itemize}
+            \item Deduces the reward structure guiding observed behavior.
+            \item Example: Inferring a driver’s preferences in autonomous vehicles by observing driving behavior.
+        \end{itemize}
+        
+        \item \textbf{Hierarchical Reinforcement Learning (HRL):}
+        \begin{itemize}
+            \item Breaks down tasks into subtasks to simplify complex decision-making.
+            \item Example: In robot navigation, higher-level policies decide the destination, while lower levels execute specific movements.
+        \end{itemize}
+        
+        \item \textbf{Multi-Agent Reinforcement Learning (MARL):}
+        \begin{itemize}
+            \item Studies environments where multiple agents learn simultaneously and interact.
+            \item Example: Competitive and cooperative games, such as in economics or traffic.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Reinforcement Learning - Optimization, Applications, and Takeaways}
+    \begin{itemize}
+        \item \textbf{Optimization and Sample Efficiency:}
+        \begin{itemize}
+            \item \textbf{Off-Policy Learning:} Improves sample efficiency by using data collected from different policies to optimize learning.
+            \item \textbf{Prioritized Experience Replay:} Increases learning efficiency by prioritizing experiences with higher learning potential.
+            \begin{equation}
+                \rho(i) = |TD \, \text{Error}|^{\alpha}
+            \end{equation}
+        \end{itemize}
+
+        \item \textbf{Real-World Applications:}
+        \begin{itemize}
+            \item \textbf{Healthcare:} Optimizing treatment strategies through simulations.
+            \item \textbf{Finance:} Tailoring investment strategies by learning from market conditions.
+            \item \textbf{Robotics:} Robots adaptive learning to perform tasks like grasping objects or navigating environments.
+        \end{itemize}
+
+        \item \textbf{Key Takeaways:}
+        \begin{itemize}
+            \item Model-free techniques are growing and diversifying with interdisciplinary applications.
+            \item Ongoing research is focusing on improving robustness, efficiency, and adaptability.
+            \item The interplay between AI techniques, such as deep learning and hierarchical learning, is pivotal.
+        \end{itemize}
+
+        \item \textbf{Interactive Element for Class Discussion:}
+        Prepare to share your thoughts on which emerging area fascinates you the most and its potential real-life applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Interactive Discussion}
+    \begin{block}{Objective}
+        Facilitate an interactive discussion to deepen understanding of value functions and Monte Carlo methods in reinforcement learning (RL).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Functions}
+    \begin{itemize}
+        \item \textbf{Definition:} Value functions estimate the expected return for an agent in a particular state or state-action pair. 
+        \item \textbf{Types:}
+        \begin{enumerate}
+            \item \textbf{State Value Function (V):} Represents the expected return from a given state.
+            \begin{equation}
+            V(s) = \mathbb{E}[\sum_{t=0}^{\infty} \gamma^t r_t | s_t = s]
+            \end{equation}
+            \item \textbf{Action Value Function (Q):} Represents the expected return for taking an action in a given state.
+            \begin{equation}
+            Q(s, a) = \mathbb{E}[\sum_{t=0}^{\infty} \gamma^t r_t | s_t = s, a_t = a]
+            \end{equation}
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Monte Carlo Methods}
+    \begin{itemize}
+        \item \textbf{Definition:} Monte Carlo methods are algorithms that utilize repeated random sampling to obtain numerical results, frequently used for estimating value functions.
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Suitable for episodic tasks.
+            \item Estimate value functions directly from samples of returns.
+            \item Updates are based on complete episodes rather than bootstrapping.
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Discussion Points}
+        \begin{itemize}
+            \item How do value functions inform the decision-making process of an agent?
+            \item Can you provide an example of where Monte Carlo methods are advantageous over other methods like Temporal Difference Learning?
+            \item What challenges exist in calculating accurate value functions in larger or continuous state spaces?
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Encouraged Participation}
+    \begin{itemize}
+        \item Pose questions about students' previous experiences with reinforcement learning.
+        \item Think critically about the implications of optimal policies derived from estimated value functions.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        By fostering this discussion, students can clarify their understanding, explore diverse applications, and relate theoretical aspects to practical scenarios.
+    \end{block}
+    \begin{block}{Preparation for Next Slide}
+        Encourage students to think about the connection between the concepts discussed and future advancements in model-free techniques.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Closing Remarks and Further Reading - Overview}
+  \begin{block}{Focus of the Week}
+    This week we delved into the foundational aspects of Model-Free Prediction and Control, specifically emphasizing the use of \textbf{Monte Carlo methods} and \textbf{Temporal-Difference (TD) learning}.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Closing Remarks and Further Reading - Key Concepts}
+  \begin{itemize}
+    \item \textbf{Value Functions}:
+      \begin{itemize}
+        \item Estimate the expected return for a given state or state-action pair.
+        \item Example: In a grid world, the value function indicates the benefit of starting from a specific cell (state).
+      \end{itemize}
+    
+    \item \textbf{Monte Carlo Methods}:
+      \begin{itemize}
+        \item Average over multiple episodes to derive expected rewards.
+        \item Example: Playing a game multiple times and averaging outcomes to decide the best strategy.
+      \end{itemize}
+  
+    \item \textbf{Temporal-Difference Learning}:
+      \begin{itemize}
+        \item Updates value estimates based on subsequent rewards without waiting for the final outcome.
+        \item Example: Updating the value of the current state after each action based on immediate rewards and the estimated value of the next state.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Closing Remarks and Further Reading - Further Reading}
+  \begin{block}{Further Reading Recommendations}
+    For a deeper understanding:
+    \begin{enumerate}
+      \item \textit{Reinforcement Learning: An Introduction} by Richard S. Sutton and Andrew G. Barto.
+      \item \textit{Algorithms for Reinforcement Learning} by Csaba Szepesvári.
+      \item Research Papers: Look for articles in journals such as JMLR and IEEE Transactions on Neural Networks and Learning Systems.
+    \end{enumerate}
+  \end{block}
+
+  \begin{block}{Final Thoughts}
+    Mastering model-free prediction and control lays the groundwork for more complex topics in reinforcement learning. Engage with suggested readings and exercises for practical skill development.
+  \end{block}
+\end{frame}
+
+
+\end{document}

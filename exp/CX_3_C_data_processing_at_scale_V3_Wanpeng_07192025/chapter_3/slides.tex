@@ -1,0 +1,987 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Week 3: Data Cleaning and Transformation]{Week 3: Data Cleaning and Transformation}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Data Cleaning and Transformation}
+    \begin{block}{Importance}
+        Data cleaning and transformation are essential steps in the data processing workflow, especially for large datasets (data at scale). They ensure data quality, enhance usability, and contribute to reliable insights for informed decision-making.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Data Cleaning?}
+    \begin{itemize}
+        \item Data cleaning (or data cleansing) involves identifying and correcting errors or inconsistencies to improve data quality.
+        \item Key tasks include:
+        \begin{itemize}
+            \item \textbf{Removing Duplicates:} Ensuring each entry is unique.
+            \item \textbf{Handling Missing Values:} Addressing incomplete data entries.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Data Transformation?}
+    \begin{itemize}
+        \item Data transformation is the process of converting data into a different format for analysis and reporting.
+        \item Key methods include:
+        \begin{itemize}
+            \item \textbf{Normalization:} Adjusting values to a common scale.
+            \item \textbf{Aggregation:} Summarizing data to derive insights.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{enumerate}
+        \item \textbf{Quality Over Quantity:} Clean data leads to reliable analysis.
+        \item \textbf{Scalability:} Effective processes are crucial with large datasets.
+        \item \textbf{Automation:} Use tools like Pandas to save time and reduce errors.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Scenario}
+    \begin{block}{Retail Company Analysis}
+        If a retail company's sales data contains missing entries and duplicates:
+        \begin{itemize}
+            \item The analysis may lead to incorrect business decisions.
+            \item By cleaning data (removing duplicates and filling missing records), the company can accurately assess product performance and forecast trends.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Tools and Techniques}
+    Common tools for data cleaning and transformation include:
+    \begin{itemize}
+        \item \textbf{Python Pandas:} A powerful library for data manipulation.
+    \end{itemize}
+    \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Loading sample data
+df = pd.read_csv('sales_data.csv')
+
+# Removing duplicates
+df.drop_duplicates(inplace=True)
+
+# Filling missing values with mean
+df['Sales'] = df['Sales'].fillna(df['Sales'].mean())
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding effective data cleaning and transformation processes is vital for ensuring data integrity. This leads to improved accuracy and better data-driven decision-making across various applications, such as business intelligence, research, and technical modeling.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Incomplete Data}
+    \begin{block}{Definition}
+        Incomplete data occurs when some values in a dataset are missing or not recorded, undermining the quality of analytical outcomes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Incomplete Data}
+    \begin{itemize}
+        \item \textbf{Missing Values}: Fields left blank or coded as NaN (not a number).
+        \item \textbf{Outdated Information}: Data that may no longer be accurate or relevant.
+        \item \textbf{Partial Records}: Some data entries are fully populated while others are not.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Incomplete Data}
+    \begin{enumerate}
+        \item \textbf{Survey Responses}: Some respondents skip questions.
+              \begin{itemize}
+                  \item Example: Out of 100 respondents, 30 did not provide their age.
+              \end{itemize}
+        
+        \item \textbf{Sales Data}: Incomplete records for different products.
+              \begin{itemize}
+                  \item Example: Product A has 100 entries, Product B has only 75.
+              \end{itemize}
+
+        \item \textbf{Database Entries}: Missing information for clients.
+              \begin{itemize}
+                  \item Example: 50 out of 500 customer entries lack email addresses.
+              \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impacts on Analysis and Decision-Making}
+    \begin{itemize}
+        \item \textbf{Biased Results}: Missing values can skew analysis outcomes.
+              \begin{itemize}
+                  \item Example: Skewed view of customer preferences due to missing demographic data.
+              \end{itemize}
+        
+        \item \textbf{Reduced Statistical Power}: Validity of conclusions decreases with missing data.
+        
+        \item \textbf{Increased Complexity}: Requires additional steps for handling missing data.
+        
+        \item \textbf{Misguided Decisions}: Decisions based on incomplete data can be harmful.
+              \begin{itemize}
+                  \item Example: Misinterpreting sales data leads to product discontinuation.
+              \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Incomplete data is common and affects the reliability of analytics.
+            \item Understanding the nature of data is crucial for effective cleaning and transformation.
+            \item Strategies exist to handle missing data, which will be discussed next.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dealing with Incomplete Data - Introduction}
+    \begin{itemize}
+        \item Incomplete data occurs when some values are missing or unrecorded.
+        \item Leads to inaccurate analysis and insights.
+        \item Crucial for effective data analysis to understand how to manage incomplete data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dealing with Incomplete Data - Normalization Techniques}
+    \begin{block}{Normalization Definition}
+        Normalization helps bring all data into a common format, maintaining analysis integrity even with incomplete data.
+    \end{block}
+    \begin{itemize}
+        \item **Min-Max Normalization**:
+            \begin{equation}
+            x' = \frac{x - \text{min}(X)}{\text{max}(X) - \text{min}(X)}
+            \end{equation}
+        \item **Z-Score Normalization**:
+            \begin{equation}
+            z = \frac{x - \mu}{\sigma}
+            \end{equation}
+        \end{itemize}
+    \begin{block}{Key Point}
+        Normalization is essential to ensure that outliers do not skew the analysis.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dealing with Incomplete Data - Imputation Methods}
+    \begin{block}{Imputation Overview}
+        Imputation replaces missing values with substitutes based on existing data.
+    \end{block}
+    \begin{itemize}
+        \item **Mean/Median/Mode Imputation**:
+            \begin{itemize}
+                \item Replace missing values with mean, median, or mode of non-missing values.
+                \item Example: In [24, 30, NaN, 22, 28] → NaN replaced with Mean = 24.67.
+            \end{itemize}
+        \item **K-Nearest Neighbors (KNN)**:
+            \begin{itemize}
+                \item Fills missing values using the mean/median of the 'k' closest complete cases.
+            \end{itemize}
+        \item **Regression Imputation**:
+            \begin{itemize}
+                \item Predicts missing values using a regression model trained on available data.
+            \end{itemize}
+    \end{itemize}
+    \begin{block}{Key Point}
+        Choose imputation methods that align with dataset characteristics to avoid bias.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dealing with Incomplete Data - Context of Data Recovery}
+    \begin{block}{Data Recovery Overview}
+        Data recovery retrieves lost or corrupted data. Incomplete data may arise from several issues.
+    \end{block}
+    \begin{itemize}
+        \item **Data Backup**: Regularly back up data to prevent loss.
+        \item **Error Handling**: Implement processes to identify and correct errors promptly.
+        \item **Documentation**: Keep detailed records of data sources and cleaning processes.
+    \end{itemize}
+    \begin{block}{Key Point}
+        Effective data management reduces the risk of incomplete data and ensures integrity.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dealing with Incomplete Data - Conclusion}
+    \begin{itemize}
+        \item Dealing with incomplete data involves normalization, imputation, and recovery practices.
+        \item Enhances data quality and improves reliability of analytical outcomes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code for Mean Imputation in Python}
+    \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Sample DataFrame with missing values
+data = {'Age': [24, 30, None, 22, 28]}
+df = pd.DataFrame(data)
+
+# Mean Imputation
+mean_age = df['Age'].mean()
+df['Age'].fillna(mean_age, inplace=True)
+
+print(df)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Diagram Representation}
+    \begin{block}{Before Imputation}
+        [24, 30, NA, 22, 28]
+    \end{block}
+    \begin{block}{After Imputation}
+        [24, 30, 26.4 (mean), 22, 28]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Formatting Fundamentals}
+    \begin{block}{Overview of Data Formatting}
+        Data formatting is a crucial step in data cleaning and transformation, ensuring the data is in a suitable structure for analysis and processing. Proper data formats enhance data integrity and usability, making it easier to manipulate and draw insights.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Data Formats}
+    \begin{enumerate}
+        \item \textbf{Structured Formats}:
+            \begin{itemize}
+                \item Definition: Organized in a predictable format, often in rows and columns (e.g., tables).
+                \item Examples: 
+                    \begin{itemize}
+                        \item CSV (Comma-Separated Values)
+                        \begin{lstlisting}[basicstyle=\ttfamily]
+Name,Age,Gender
+John,30,Male
+Sarah,25,Female
+                        \end{lstlisting}
+                        \item SQL Databases: Data stored in relational databases, organized in tables.
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Data Formats (Cont'd)}
+    \begin{enumerate}
+        \setcounter{enumi}{1} % Continue numbering
+        \item \textbf{Semi-Structured Formats}:
+            \begin{itemize}
+                \item Definition: Data without a strict schema but contains tags or markers to separate elements.
+                \item Examples: 
+                    \begin{itemize}
+                        \item JSON (JavaScript Object Notation)
+                        \begin{lstlisting}[basicstyle=\ttfamily]
+{
+  "employees": [
+    {"name": "John", "age": 30, "gender": "Male"},
+    {"name": "Sarah", "age": 25, "gender": "Female"}
+  ]
+}
+                        \end{lstlisting}
+                        \item XML (eXtensible Markup Language)
+                        \begin{lstlisting}[basicstyle=\ttfamily]
+<employees>
+  <employee>
+    <name>John</name>
+    <age>30</age>
+    <gender>Male</gender>
+  </employee>
+  <employee>
+    <name>Sarah</name>
+    <age>25</age>
+    <gender>Female</gender>
+  </employee>
+</employees>
+                        \end{lstlisting}
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Data Formats (Cont'd)}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue numbering
+        \item \textbf{Unstructured Formats}:
+            \begin{itemize}
+                \item Definition: Data without a pre-defined format or structure, often consisting of text, images, or complex documents.
+                \item Examples: 
+                    \begin{itemize}
+                        \item Text Files: Contains plain text without formal structure.
+                        \item Social Media Posts: Freeform text including emojis and hashtags.
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relevance of Data Formats in Processing}
+    \begin{itemize}
+        \item \textbf{Compatibility}: Understanding formats is crucial for data importing and exporting.
+        \item \textbf{Efficiency}: Some formats are more efficient for large datasets (e.g., Parquet).
+        \item \textbf{Flexibility}: Semi-structured formats like JSON offer complex data structures with readability.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Choose the appropriate data format based on analytical needs and available tools.
+        \item Distinction between structured, semi-structured, and unstructured data is key to effective data cleaning.
+        \item Format conversions may be necessary for compatibility across platforms.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet for Reading a CSV File in Python}
+    \begin{lstlisting}[basicstyle=\ttfamily]
+import pandas as pd
+
+# Reading a CSV file
+data = pd.read_csv('data.csv')
+print(data.head())
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    \begin{block}{Key Takeaway}
+        Understanding the fundamentals of data formatting is critical for data cleaners and analysts. It enables better manipulation of datasets, leading to more effective data-driven decision-making.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Transforming Data Formats}
+    \begin{block}{Overview of Data Format Transformation}
+        Data is stored in various formats depending on the source and intended use. Common formats include:
+    \end{block}
+    \begin{itemize}
+        \item \textbf{CSV (Comma-Separated Values)}: Plain text format for tabular data.
+        \item \textbf{JSON (JavaScript Object Notation)}: Lightweight format for hierarchical data structures.
+        \item \textbf{XML (eXtensible Markup Language)}: Markup language for complex data structures.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Why Transform Data Formats?}
+    % Key reasons for transforming data formats
+    \begin{itemize}
+        \item Ensures compatibility with various systems.
+        \item Facilitates data sharing.
+        \item Prepares data for processing in different environments.
+    \end{itemize}
+    Transforming data, such as converting to JSON format, allows web applications to easily parse and manipulate the data.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques for Data Transformation}
+    \begin{block}{Using Python}
+        Python libraries simplify the conversion process.
+    \end{block}
+    \begin{enumerate}
+        \item \textbf{CSV to JSON using Python}
+        \begin{lstlisting}[language=Python]
+import csv
+import json
+
+# Read CSV file
+with open('data.csv', mode='r') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    data = [row for row in csv_reader]
+
+# Write to JSON file
+with open('data.json', mode='w') as json_file:
+    json.dump(data, json_file, indent=4)
+        \end{lstlisting}
+        
+        \item \textbf{JSON to XML using Python}
+        \begin{lstlisting}[language=Python]
+import json
+import dicttoxml  # Requires installation
+
+# Load JSON data
+with open('data.json', mode='r') as json_file:
+    data = json.load(json_file)
+
+# Convert to XML
+xml_data = dicttoxml.dicttoxml(data)
+
+# Write to XML file
+with open('data.xml', mode='wb') as xml_file:
+    xml_file.write(xml_data)
+        \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Using Python for Data Cleaning - Introduction}
+    \begin{block}{Introduction to Data Cleaning}
+        Data cleaning is a crucial step in data analysis. It involves correcting or removing inaccurate records from a dataset. Clean data leads to reliable analysis and quality insights.
+    \end{block}
+    \begin{block}{Key Libraries}
+        \begin{itemize}
+            \item \textbf{Pandas}: High-level data manipulation tool for numerical tables and time series.
+            \item \textbf{NumPy}: Foundational library for numerical computing, supporting arrays and matrices.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Using Python for Data Cleaning - Key Libraries}
+    \begin{block}{Pandas}
+        \begin{itemize}
+            \item \textbf{DataFrame \& Series}: Convenient data structures for managing datasets.
+            \item \textbf{Functions}: Easy-to-use functions for data manipulation, filtering, and aggregation.  
+        \end{itemize}
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Loading a dataset
+data = pd.read_csv('data.csv')
+
+# Basic overview
+print(data.head())  # Display the first 5 rows of the dataset
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Using Python for Data Cleaning - Techniques}
+    \begin{block}{Data Cleaning Techniques}
+        \begin{itemize}
+            \item \textbf{Handling Missing Data}:
+                \begin{itemize}
+                    \item \texttt{data.dropna()}: Removes missing values.
+                    \item \texttt{data.fillna(value)}: Replaces missing values.
+                \end{itemize}
+            \item \textbf{Converting Data Types}:
+                \begin{itemize}
+                    \item Ensure correct types using \texttt{.astype()}.
+                \end{itemize}
+            \item \textbf{Removing Duplicates}:
+                \begin{itemize}
+                    \item Use \texttt{data.drop\_duplicates()} to eliminate duplicate rows.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+    \begin{block}{Example: Filling NaN Values}
+    \begin{lstlisting}[language=Python]
+# Filling NaN values with the mean
+mean_value = data['column_name'].mean()
+data['column_name'].fillna(mean_value, inplace=True)
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Using Python for Data Cleaning - Key Points}
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Always inspect your data before and after cleaning to understand changes.
+            \item Use the power of Pandas for effective handling of tabular data.
+            \item Utilize NumPy for statistical analyses and numerical operations.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Conclusion}
+        Mastering Python's Pandas and NumPy libraries is essential for effective data cleaning, resulting in reliable datasets ready for analysis.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Data Cleaning Functions - Introduction}
+    \begin{block}{Overview}
+        Data cleaning is vital for ensuring datasets are accurate, consistent, and ready for analysis. This presentation will cover:
+    \end{block}
+    \begin{itemize}
+        \item The importance of data cleaning.
+        \item Key functions from the Pandas library:
+        \begin{itemize}
+            \item \texttt{dropna()}
+            \item \texttt{fillna()}
+            \item \texttt{astype()}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Data Cleaning Functions - Key Functions}
+    \begin{enumerate}
+        \item \textbf{\texttt{dropna()}}  
+            \begin{itemize}
+                \item \textbf{Purpose}: Removes missing values from a DataFrame.
+                \item \textbf{Use Cases}: To eliminate rows (or columns) containing NaN values.
+                \item \textbf{Example}:
+                \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Sample DataFrame
+data = {'Name': ['Alice', 'Bob', None], 'Age': [24, None, 22]}
+df = pd.DataFrame(data)
+
+# Dropping rows with NaN values
+cleaned_df = df.dropna()
+print(cleaned_df)
+                \end{lstlisting}
+                \item \textbf{Output}:
+                \begin{lstlisting}
+    Name   Age
+0  Alice  24.0
+                \end{lstlisting}
+            \end{itemize}
+        
+        \item \textbf{\texttt{fillna()}}  
+            \begin{itemize}
+                \item \textbf{Purpose}: Replaces missing values with a specified value.
+                \item \textbf{Use Cases}: To maintain all records but fill NaN values meaningfully.
+                \item \textbf{Example}:
+                \begin{lstlisting}[language=Python]
+# Filling NaN values with the mean of the column
+filled_df = df.fillna({'Age': df['Age'].mean()})
+print(filled_df)
+                \end{lstlisting}
+                \item \textbf{Output}:
+                \begin{lstlisting}
+    Name   Age
+0  Alice  24.0
+1    Bob  23.0  # Replaced with mean value
+2  None   22.0
+                \end{lstlisting}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Data Cleaning Functions - Continuing}
+    \begin{enumerate}[resume]
+        \item \textbf{\texttt{astype()}}  
+            \begin{itemize}
+                \item \textbf{Purpose}: Converts data type of a pandas Series or DataFrame column.
+                \item \textbf{Use Cases}: Ensure data is in the correct format for analysis.
+                \item \textbf{Example}:
+                \begin{lstlisting}[language=Python]
+# Sample DataFrame
+df2 = pd.DataFrame({'Age': ['24', '25', '26']})
+
+# Converting Age column to integer type
+df2['Age'] = df2['Age'].astype(int)
+print(df2)
+                \end{lstlisting}
+                \item \textbf{Output}:
+                \begin{lstlisting}
+   Age
+0  24
+1  25
+2  26
+                \end{lstlisting}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Data Transformation}
+    \begin{block}{Maintaining Data Integrity and Consistency}
+      Data transformation is crucial in the data cleaning process, where raw data is converted into a usable format for analysis. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Your Data}
+    \begin{enumerate}
+        \item \textbf{Data Profiling:}
+        \begin{itemize}
+            \item Examine dataset properties including types, ranges, and unique values.
+            \item \textit{Example:} Run functions like \texttt{df.describe()} in pandas to understand numerical columns.
+        \end{itemize}
+        
+        \item \textbf{Identify Relationships:}
+        \begin{itemize}
+            \item Analyze interactions and dependencies among variables.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Validation}
+    \begin{enumerate}
+        \item \textbf{Set Validation Rules:}
+        \begin{itemize}
+            \item Establish rules for acceptable data formats, ranges, and values.
+            \item \textit{Example:} Validate that age entries fall within (0-120).
+        \end{itemize}
+
+        \item \textbf{Use Data Type Checks:}
+        \begin{itemize}
+            \item Ensure correct data types to prevent logical errors.
+            \begin{lstlisting}
+assert df['age'].dtype == 'int64', "Age column should be of type integer"
+            \end{lstlisting}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Consistent Formatting}
+    \begin{itemize}
+        \item \textbf{Standardize Formats:} Ensure uniformity in formats such as dates and categorical labels.
+        \item \textit{Example:} Convert dates to standard format (\texttt{YYYY-MM-DD}).
+        \begin{lstlisting}
+df['date'] = pd.to_datetime(df['date']).dt.strftime('%Y-%m-%d')
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Handling Missing Values}
+    \begin{enumerate}
+        \item \textbf{Decide on a Strategy:}
+        \begin{itemize}
+            \item Identify how to address missing data—fill, leave, or drop.
+            \item \textit{Example Strategies:}
+            \begin{itemize}
+                \item Filling with mean/median for numerical data.
+                \item Using a placeholder (e.g., 'N/A') for categorical data.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Code Snippet:}
+        \begin{lstlisting}
+df['column'].fillna(df['column'].mean(), inplace=True)
+        \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Documenting Changes}
+    \begin{itemize}
+        \item \textbf{Maintain a Transformation Log:} Keep records of every data transformation.
+        \begin{itemize}
+            \item \textit{Why It Matters:} Essential for tracking changes and ensuring reproducibility.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Testing Post-Transformation}
+    \begin{itemize}
+        \item \textbf{Post-Transformation Checks:} Verify that transformations have not introduced errors.
+        \begin{itemize}
+            \item \textit{Example:} Check summary statistics before and after transformations.
+        \end{itemize}
+    \end{itemize}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Consistency is key for reliable analysis.
+            \item Automate repetitive tasks to minimize human error.
+            \item Stay updated with new transformation techniques.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Case Study: Data Cleaning in Action}
+    Data cleaning is essential for accurate data analysis. This case study illustrates key cleaning steps and their impact on outcomes.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Case Study Overview}
+    \begin{block}{Customer Feedback Analysis}
+        \begin{itemize}
+            \item \textbf{Context:} A retail company collected customer feedback via surveys to improve product offerings.
+            \item \textbf{Dataset Variables:} 
+                \begin{itemize}
+                    \item Customer ID
+                    \item Rating
+                    \item Comment
+                    \item Purchase Date
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Data Cleaning Steps}
+    \begin{enumerate}
+        \item \textbf{Identifying Missing Values}
+            \begin{itemize}
+                \item Action: Check for NULL entries (e.g., in 'Rating').
+                \item Example: Handle missing ratings by removing or imputing values.
+            \end{itemize}
+            \begin{lstlisting}[language=Python]
+import pandas as pd
+
+df = pd.read_csv('customer_feedback.csv')
+missing_values = df.isnull().sum()
+            \end{lstlisting}
+
+        \item \textbf{Correcting Data Types}
+            \begin{itemize}
+                \item Action: Ensure appropriate data types (e.g., 'Purchase Date' as datetime).
+                \item Example: Convert 'Purchase Date' format.
+            \end{itemize}
+            \begin{lstlisting}[language=Python]
+df['Purchase Date'] = pd.to_datetime(df['Purchase Date'], errors='coerce')
+            \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Data Cleaning Steps (Continued)}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Removing Duplicates}
+            \begin{itemize}
+                \item Action: Identify and eliminate duplicate entries.
+                \item Example: Check for duplicate Customer IDs.
+            \end{itemize}
+            \begin{lstlisting}[language=Python]
+df.drop_duplicates(subset='Customer ID', keep='first', inplace=True)
+            \end{lstlisting}
+
+        \item \textbf{Standardizing Text Entries}
+            \begin{itemize}
+                \item Action: Ensure consistency in categorical data.
+                \item Example: Convert feedback comments to lowercase.
+            \end{itemize}
+            \begin{lstlisting}[language=Python]
+df['Comment'] = df['Comment'].str.lower()
+            \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Data Cleaning Steps (Final)}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Outlier Detection and Treatment}
+            \begin{itemize}
+                \item Action: Identify anomalies that could skew analysis.
+                \item Example: Use IQR to detect outliers in 'Rating'.
+            \end{itemize}
+            \begin{lstlisting}[language=Python]
+Q1 = df['Rating'].quantile(0.25)
+Q3 = df['Rating'].quantile(0.75)
+IQR = Q3 - Q1
+df = df[~((df['Rating'] < (Q1 - 1.5 * IQR)) | (df['Rating'] > (Q3 + 1.5 * IQR)))]
+            \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Impact on Analysis Outcomes}
+    \begin{itemize}
+        \item \textbf{Improved Data Quality:} Reliable datasets yield trustworthy insights.
+        \item \textbf{Enhanced Decision Making:} Accurate data leads to better understanding of customer preferences.
+        \item \textbf{Visualization:} Use bar charts or histograms for distributions pre- and post-cleaning.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    Effective data cleaning transforms raw data into actionable insights. By applying systematic cleaning steps, organizations can derive meaningful conclusions essential for informed decision-making.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Takeaways - Overview}
+    \begin{block}{Overview}
+        Data cleaning and transformation are essential processes in data analysis that enhance the quality and reliability of datasets before conducting any analysis. This section recaps key concepts and practices that can significantly impact the results of data-driven decisions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Takeaways - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Data Quality}:
+        \begin{itemize}
+            \item \textbf{Definition}: Condition based on factors like accuracy, completeness, consistency, reliability, and relevance.
+            \item \textbf{Importance}: Poor quality can lead to incorrect conclusions and lost opportunities.
+        \end{itemize}
+        
+        \item \textbf{Common Data Cleaning Practices}:
+        \begin{itemize}
+            \item Handling Missing Values: 
+            \begin{itemize}
+                \item Methods: Imputation (mean, median, mode), Deletion.
+            \end{itemize}
+            
+            \item Outlier Detection and Treatment:
+            \begin{itemize}
+                \item Methods: Z-score method, IQR (Interquartile Range).
+            \end{itemize}
+
+            \item Standardizing and Normalizing Data: 
+            \begin{itemize}
+                \item Standardization: Mean of 0, SD of 1. 
+                \item Normalization: Fit within specific range (e.g., [0, 1]).
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Takeaways - Data Transformation}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue numbering from the previous frame
+        \item \textbf{Data Transformation Techniques}:
+        \begin{itemize}
+            \item Encoding Categorical Variables:
+            \begin{itemize}
+                \item Methods: One-Hot Encoding, Label Encoding.
+                \item \textbf{Code Snippet for One-Hot Encoding}:
+                \begin{lstlisting}
+                import pandas as pd
+                data = pd.get_dummies(original_data, columns=['category_column'])
+                \end{lstlisting}
+            \end{itemize}
+
+            \item Feature Engineering:
+            \begin{itemize}
+                \item Definition: Creating new features from existing data for improved model performance.
+                \item Example: Converting 'Date of Birth' into 'Age'.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Takeaways - Conclusion}
+    \begin{itemize}
+        \item \textbf{Key Points to Emphasize}:
+        \begin{itemize}
+            \item Iterative Process: Data cleaning may require multiple iterations.
+            \item Documentation: Keep records of all cleaning procedures.
+            \item Data Pipeline Integration: Processes should be part of the overall data pipeline.
+        \end{itemize}
+        
+        \item \textbf{Conclusion}:
+        \begin{itemize}
+            \item Thorough data cleaning and transformation enhance dataset quality and ensure more accurate analysis outcomes.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

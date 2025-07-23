@@ -1,0 +1,810 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Title Page Information
+\title[Supervised Learning Techniques]{Week 3: Supervised Learning Techniques}
+\author[]{Your Name}
+\institute[Your Institution]{
+  Your Department\\
+  Your Institution\\
+  \vspace{0.3cm}
+  Email: your.email@institution.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \titlepage
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Supervised Learning - Overview}
+    \begin{block}{What is Supervised Learning?}
+        Supervised learning is a type of machine learning where an algorithm learns from labeled training data to make predictions or decisions. The model is trained using input-output pairs, allowing it to learn the relationship between features (inputs) and labels (outputs).
+    \end{block}
+
+    \begin{block}{Importance of Supervised Learning}
+        \begin{itemize}
+            \item \textbf{Predictive Accuracy}: Highly accurate predictions with quality data.
+            \item \textbf{Structured Framework}: Facilitates understanding relationships in data.
+            \item \textbf{Wide Applicability}: Used in various fields including healthcare and finance for informed decisions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Supervised Learning - Applications}
+    \begin{block}{Applications in AI}
+        \begin{enumerate}
+            \item \textbf{Image Classification}: Identifying objects in pictures (e.g., distinguishing cats from dogs).
+            \item \textbf{Spam Detection}: Classifying emails as spam or not.
+            \item \textbf{Credit Scoring}: Predicting borrower risk using previous loan data.
+            \item \textbf{Stock Price Prediction}: Forecasting stock prices based on historical data.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Supervised Learning Process}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Labeled Data}: Requires datasets paired with correct outputs (labels).
+            \item \textbf{Prediction and Classification}: Includes both regression (continuous values) and classification (discrete labels) tasks.
+            \item \textbf{Evaluation Metrics}: Utilizes accuracy, precision, recall, and F1-score for assessing model performance.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Supervised Learning Process}
+        \begin{enumerate}
+            \item \textbf{Data Collection}: Gather a labeled dataset.
+            \item \textbf{Model Training}: Use the dataset to train the model.
+            \item \textbf{Model Testing}: Evaluate on a separate dataset.
+            \item \textbf{Deployment}: Implement in real-time for decision-making.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code Snippet}
+    This code snippet demonstrates how to build a simple supervised learning model using the Iris dataset:
+
+    \begin{lstlisting}[language=Python]
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+# Load the dataset
+iris = datasets.load_iris()
+X = iris.data  # Features
+y = iris.target  # Labels
+
+# Split the data into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize the model
+model = RandomForestClassifier()
+
+# Train the model
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Calculate accuracy
+accuracy = accuracy_score(y_test, predictions)
+print(f'Accuracy: {accuracy * 100:.2f}%')
+    \end{lstlisting}
+
+\end{frame}
+
+\begin{frame}[fragile]{Types of Supervised Learning - Overview}
+    \begin{block}{Supervised Learning}
+        Supervised learning is a type of machine learning where a model is trained on a labeled dataset. Each training example is paired with an output label. The aim is to learn a mapping from inputs to outputs, enabling the model to predict outcomes for unseen data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Types of Supervised Learning - Regression}
+    \begin{block}{Regression}
+        \begin{itemize}
+            \item \textbf{Definition:} Predicts continuous output values, establishing a relationship between independent variables (features) and a continuous dependent variable (target).
+            \item \textbf{Examples:} 
+                \begin{itemize}
+                    \item Predicting house prices based on size, location, and number of bedrooms.
+                    \item Forecasting temperatures using historical weather data.
+                \end{itemize}
+            \item \textbf{Key Characteristics:}
+                \begin{itemize}
+                    \item Output is numerical and continuous.
+                    \item Commonly evaluated using metrics like Mean Squared Error (MSE) or R-squared.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Types of Supervised Learning - Classification}
+    \begin{block}{Classification}
+        \begin{itemize}
+            \item \textbf{Definition:} Aims to predict discrete categories or class labels, assigning input samples to one of these categories.
+            \item \textbf{Examples:} 
+                \begin{itemize}
+                    \item Determining if an email is "spam" or "not spam."
+                    \item Classifying animal images into categories like "cat," "dog," or "bird."
+                \end{itemize}
+            \item \textbf{Key Characteristics:}
+                \begin{itemize}
+                    \item Output is categorical (could be binary or multi-class).
+                    \item Commonly evaluated using metrics like Accuracy, Precision, Recall, and F1 Score.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Differences Between Regression and Classification}
+    \begin{block}{Key Differences}
+        \begin{itemize}
+            \item \textbf{Output Type:}
+                \begin{itemize}
+                    \item Regression: Continuous values (real numbers).
+                    \item Classification: Discrete classes (labels).
+                \end{itemize}
+            \item \textbf{Goals:}
+                \begin{itemize}
+                    \item Regression: Minimize prediction error for continuous outputs.
+                    \item Classification: Maximize accuracy in assigning correct labels to instances.
+                \end{itemize}
+            \item \textbf{Evaluation Metrics:}
+                \begin{itemize}
+                    \item Regression: MSE, R-squared.
+                    \item Classification: Accuracy, Precision, Recall, F1 Score.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Types of Supervised Learning - Conclusion}
+    \begin{block}{Conclusion}
+        Understanding the distinction between regression and classification is crucial for problem-solving in supervised learning. Each type requires different algorithms, techniques, and evaluation methodologies, making the choice critical for successful model development.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Regression Techniques}
+    \begin{block}{Learning Objectives}
+        \begin{enumerate}
+            \item Understand various regression algorithms and their applications.
+            \item Differentiate between Linear Regression, Decision Trees, and Support Vector Regression in terms of functionality and use cases.
+            \item Gain insights into the strengths and weaknesses of each technique.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Linear Regression}
+    \begin{itemize}
+        \item \textbf{Definition:} The simplest form of regression analysis, modeling the relationship between a dependent variable (Y) and one (or more) independent variables (X) using a linear equation.
+        \item \textbf{Equation:}
+        \begin{equation}
+            Y = \beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_nX_n + \epsilon
+        \end{equation}
+        \begin{itemize}
+            \item $Y$: Dependent variable
+            \item $X$: Independent variables
+            \item $\beta$: Coefficients
+            \item $\epsilon$: Error term
+        \end{itemize}
+        \item \textbf{Example:} Predicting house prices based on square footage and number of bedrooms.
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Assumes a linear relationship
+            \item Sensitive to outliers
+            \item Easy to interpret coefficients
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Decision Trees}
+    \begin{itemize}
+        \item \textbf{Definition:} A flowchart-like structure where internal nodes represent features, branches depict decision rules, and leaf nodes indicate outcomes.
+        \item \textbf{How it Works:} The algorithm splits data into subsets based on feature values, recursively applying this process until maximal data separation.
+        \item \textbf{Example:} Predicting customer purchases based on age, income, and prior purchase history.
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Captures non-linear relationships
+            \item Models are easy to visualize and interpret
+            \item Prone to overfitting if not pruned properly
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Support Vector Regression (SVR)}
+    \begin{itemize}
+        \item \textbf{Definition:} An adaptation of Support Vector Machines for regression, fitting the best line (or hyperplane) within an epsilon tube margin.
+        \item \textbf{How it Works:} Aims to minimize model complexity while ensuring that errors are within a threshold, focusing on support vectors around the margin.
+        \item \textbf{Example:} Forecasting stock prices using historical data with a non-linear kernel for complex relationships.
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Effective in high-dimensional spaces
+            \item Robust to outliers
+            \item Computationally intensive compared to other methods
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    \begin{itemize}
+        \item \textbf{Choosing the Right Technique:}
+        \begin{itemize}
+            \item Use Linear Regression for straightforward relationships.
+            \item Opt for Decision Trees when interpretability and non-linear patterns are needed.
+            \item Choose Support Vector Regression for complex, outlier-sensitive datasets.
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Closing Note}
+        Understanding which regression technique to use is essential for effective modeling in supervised learning, as each method has strengths and weaknesses that influence prediction results.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Classification Techniques - Learning Objectives}
+    \begin{itemize}
+        \item Understand fundamental classification algorithms used in supervised learning.
+        \item Analyze the strengths and weaknesses of each algorithm through examples.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Classification Techniques - Key Algorithms}
+    \begin{enumerate}
+        \item Logistic Regression
+        \item k-Nearest Neighbors (k-NN)
+        \item Naive Bayes
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Logistic Regression}
+    \begin{block}{Concept}
+        Logistic Regression is a statistical method used for binary classification. It predicts the probability that a given input belongs to a certain category.
+    \end{block}
+    \begin{block}{How It Works}
+        \begin{itemize}
+            \item Uses the logistic function (sigmoid) to constrain the output between 0 and 1.
+            \item Formula:
+            \[
+            P(Y=1|X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1X_1 + \cdots + \beta_nX_n)}}
+            \]
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Logistic Regression - Example and Key Points}
+    \begin{block}{Example}
+        Predicting whether an email is spam (1) or not spam (0).
+    \end{block}
+    \begin{itemize}
+        \item Output is a probability score.
+        \item Effective for binary outcomes; can be extended to multi-class problems using techniques like One-vs-Rest.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{k-Nearest Neighbors (k-NN)}
+    \begin{block}{Concept}
+        k-NN is a non-parametric classification algorithm that categorizes data points based on their proximity to other points in feature space.
+    \end{block}
+    \begin{block}{How It Works}
+        \begin{itemize}
+            \item Given a new sample, it looks for the 'k' closest training samples and classifies it according to the majority vote of its neighbors.
+            \item Distance Metrics: 
+            \begin{itemize}
+                \item Euclidean distance
+                \item Manhattan distance
+                \item Minkowski distance
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{k-Nearest Neighbors (k-NN) - Example and Key Points}
+    \begin{block}{Example}
+        Classifying a fruit based on color, weight, and texture by comparing it to known fruits.
+    \end{block}
+    \begin{itemize}
+        \item No training phase required; all calculations happen during classification.
+        \item Sensitive to irrelevant features and outliers.
+        \item Choosing the right value of 'k' is crucial: too small can lead to noise, too large can overgeneralize.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Naive Bayes}
+    \begin{block}{Concept}
+        Naive Bayes classifiers are based on Bayes' Theorem and assume independence between features. Ideal for large datasets and text classification.
+    \end{block}
+    \begin{block}{How It Works}
+        Computes the posterior probability for each class, given a sample. Formula:
+        \[
+        P(C|X) = \frac{P(X|C) \cdot P(C)}{P(X)}
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Naive Bayes - Example and Key Points}
+    \begin{block}{Example}
+        Classifying emails into categories like Promotions, Social, or Updates based on words in the email.
+    \end{block}
+    \begin{itemize}
+        \item Useful for text classification; works well with large datasets.
+        \item "Naive" due to the assumption of feature independence.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Next Steps}
+    \begin{block}{Conclusion}
+        Understanding these classification techniques is crucial for building effective supervised learning models. Each algorithm has strengths and weaknesses that can impact model performance based on the dataset and problem context.
+    \end{block}
+    \begin{block}{Next Steps}
+        In the next slides, we will explore how to evaluate the performance of classification models using metrics such as accuracy, precision, recall, and F1-score. Stay tuned!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Performance of Models}
+    
+    \begin{block}{Learning Objectives}
+        \begin{itemize}
+            \item Understand key performance metrics for supervised learning models.
+            \item Learn how to apply these metrics to evaluate regression and classification models.
+            \item Compare metrics to choose appropriate ones for specific applications.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Metrics for Assessing Supervised Models - Regression}
+
+    \textbf{A. Regression Model Evaluation: Mean Squared Error (MSE)}
+    
+    \begin{itemize}
+        \item \textbf{Definition}: MSE measures the average squared difference between predicted values and actual values.
+        \item \textbf{Formula}:
+        \begin{equation}
+            \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+        \end{equation}
+        Where: 
+        \begin{itemize}
+            \item $n$ = number of observations
+            \item $y_i$ = actual value
+            \item $\hat{y}_i$ = predicted value
+        \end{itemize}
+        
+        \item \textbf{Key Points}:
+        \begin{itemize}
+            \item Lower MSE indicates a better-fitting model.
+            \item Sensitive to outliers due to squaring errors.
+        \end{itemize}
+        
+        \item \textbf{Example}: For actual prices \([200, 250, 300]\) and predicted \([210, 240, 320]\),
+        MSE = \(\frac{600}{3} = 200\).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Metrics for Assessing Supervised Models - Classification}
+
+    \textbf{B. Classification Model Evaluation:}
+    
+    \begin{enumerate}
+        \item \textbf{Accuracy}
+        \begin{equation}
+            \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Instances}}
+        \end{equation}
+        
+        \item \textbf{Precision}
+        \begin{equation}
+            \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+        \end{equation}
+
+        \item \textbf{Recall (Sensitivity)}
+        \begin{equation}
+            \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+        \end{equation}
+        
+        \item \textbf{F1-Score}
+        \begin{equation}
+            \text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+        \end{equation}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Use Cases in Real World}
+    \begin{block}{Learning Objectives}
+        \begin{enumerate}
+            \item Understand the applications of supervised learning in various industries.
+            \item Analyze specific examples to illustrate the effectiveness of supervised learning techniques.
+            \item Connect theoretical principles with practical use cases.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Supervised Learning Techniques}
+    \begin{itemize}
+        \item Supervised learning involves training algorithms on labeled datasets, where the desired output is known.
+        \item The algorithm learns to map inputs to outputs by adjusting its model based on errors.
+        \item Let’s explore specific applications across various industries.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Supervised Learning}
+    \begin{block}{1. Finance}
+        \begin{itemize}
+            \item \textbf{Fraud Detection:} Logistic regression identifies patterns in transactions.
+            \begin{itemize}
+                \item Example: Predicting transaction fraud likelihood based on features like amount, time, and merchant type.
+            \end{itemize}
+            \item \textbf{Credit Scoring:} Assessing credit risk with predictive models.
+            \begin{itemize}
+                \item Example: Using decision trees to classify loan applicants based on credit history.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Supervised Learning (Cont'd)}
+    \begin{block}{2. Healthcare}
+        \begin{itemize}
+            \item \textbf{Disease Diagnosis:} Analyzing patient data to predict disease types.
+            \begin{itemize}
+                \item Example: SVM can differentiate between malignant and benign tumors from mammography images.
+            \end{itemize}
+            \item \textbf{Patient Outcome Prediction:} Predicting surgical recovery or complications.
+            \begin{itemize}
+                \item Example: Using linear regression to predict hospital stay length based on demographics and clinical data.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Supervised Learning (Cont'd)}
+    \begin{block}{3. Marketing}
+        \begin{itemize}
+            \item \textbf{Customer Segmentation:} Predicting customer behaviors for targeted marketing.
+            \begin{itemize}
+                \item Example: Using classifiers to predict customer segments based on purchase history.
+            \end{itemize}
+            \item \textbf{Churn Prediction:} Forecasting customer retention likelihood.
+            \begin{itemize}
+                \item Example: Random forest models can analyze customer behavior patterns for churn risk.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Labeled Data:} Required for training supervised algorithms.
+        \item \textbf{Model Evaluation:} Performance assessed with metrics like accuracy and Mean Squared Error.
+        \item \textbf{Diverse Applications:} Supervised learning aids in decision-making across various domains.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item Supervised learning techniques are crucial for real-world applications in diverse sectors.
+        \item Understanding these cases highlights how data-driven decisions enhance outcomes for industries and consumers.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Trends in Supervised Learning}
+    \begin{block}{Introduction to Trends}
+        Supervised learning is rapidly evolving, enhancing its effectiveness and usability across various fields.
+        This presentation discusses two significant advances: 
+        \begin{itemize}
+            \item \textbf{Ensemble Methods}
+            \item \textbf{Deep Learning Integration}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ensemble Methods}
+    Ensemble methods involve combining multiple learning algorithms to improve predictive model performance. 
+    They can significantly reduce the risk of overfitting and provide more accurate predictions than individual models.
+    
+    \begin{block}{Key Types of Ensemble Methods}
+        \begin{itemize}
+            \item \textbf{Bagging (Bootstrap Aggregating)}: 
+                Improves model accuracy by training on different subsets of the data.
+                \textit{Example:} Random Forest, a robust bagging method using decision trees.
+            \item \textbf{Boosting}: 
+                Sequentially trains models focusing on errors made by previous ones.
+                \textit{Examples:} AdaBoost, Gradient Boosting.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Ensemble Method - Random Forest}
+    \begin{lstlisting}[language=Python]
+from sklearn.ensemble import RandomForestClassifier
+
+# Instantiate the model
+rf_model = RandomForestClassifier(n_estimators=100)
+
+# Fit the model on training data
+rf_model.fit(X_train, y_train)
+
+# Make predictions
+predictions = rf_model.predict(X_test)
+    \end{lstlisting}
+
+    \begin{block}{Key Point}
+        Ensemble methods improve robustness and accuracy through diversification.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Deep Learning Integration}
+    The integration of deep learning with supervised learning is gaining traction, 
+    with deep learning models (especially neural networks) automatically extracting complex patterns from large data sets.
+    
+    \begin{block}{Why Integrate Deep Learning?}
+        \begin{itemize}
+            \item \textbf{Feature Extraction}: 
+                Deep models automatically learn representations, reducing manual selection.
+            \item \textbf{Handling Large Datasets}: 
+                Deep networks can effectively leverage vast labeled training data, increasing accuracy in domains like image and speech recognition.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of a Neural Network for Classification}
+    \begin{lstlisting}[language=Python]
+import tensorflow as tf
+from tensorflow.keras import layers
+
+# Sample Sequential Model
+model = tf.keras.Sequential([
+    layers.Dense(64, activation='relu', input_shape=(input_shape,)),
+    layers.Dense(32, activation='relu'),
+    layers.Dense(num_classes, activation='softmax')
+])
+
+# Compile the model
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+
+# Fit the model
+model.fit(X_train, y_train, epochs=10)
+    \end{lstlisting}
+
+    \begin{block}{Key Point}
+        Deep learning augments supervised learning by enhancing feature representation and handling complexity in data.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    Understanding and adopting these emerging trends in supervised learning can lead to improved predictive models and better decision-making across various applications. 
+    As these techniques evolve, they are shaping the future landscape of machine learning.
+    
+    \begin{block}{Summary of Key Points}
+        \begin{itemize}
+            \item Ensemble Methods provide robustness and accuracy (e.g., Random Forest and Boosting).
+            \item Deep Learning Integration allows for automatic feature extraction and effective handling of large datasets.
+            \item Both trends contribute significantly to the advancement of supervised learning techniques.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ethical Considerations in Supervised Learning}
+    \begin{itemize}
+        \item Understand key ethical implications in supervised learning.
+        \item Recognize how bias affects algorithmic fairness.
+        \item Explore accountability in AI applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{1. Ethical Implications of Supervised Learning}
+    Supervised learning involves training algorithms on labeled datasets to make predictions. While this technology offers powerful capabilities, it also raises significant ethical considerations, including:
+    
+    \begin{block}{A. Bias in Algorithms}
+        \begin{itemize}
+            \item \textbf{Definition}: Systematic errors that result in unfair outcomes for certain groups.
+            \item \textbf{Types of Bias}:
+                \begin{itemize}
+                    \item Data Bias: Training data reflects societal prejudices.
+                    \item Algorithmic Bias: Errors introduced by model design.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Example of Bias}
+    \begin{itemize}
+        \item A hiring algorithm trained on historical employment data may favor candidates similar to those already hired, thereby perpetuating gender or racial biases.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{B. Accountability}
+    \begin{block}{Definition}
+        Accountability in AI refers to the responsibility of developers, organizations, and users for the outcomes generated by AI systems.
+    \end{block}
+    \begin{itemize}
+        \item Key Questions:
+            \begin{itemize}
+                \item Who is responsible when an AI system makes a biased decision?
+                \item How can we ensure transparency in algorithm development?
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example of Accountability}
+    \begin{itemize}
+        \item If an autonomous vehicle is involved in an accident, determining accountability can be complex—should it fall on the vehicle manufacturer, the software developer, or the operator?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{2. Key Points to Emphasize}
+    \begin{itemize}
+        \item Awareness of bias in data and algorithm design is crucial for fairness.
+        \item Accountability mechanisms must be integrated into AI development.
+        \item Ethical considerations should be a priority alongside technological advances.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{3. Approaches to Mitigate Ethical Issues}
+    \begin{itemize}
+        \item Use diverse datasets to create more representative models.
+        \item Implement tools like Fairness Indicators to analyze model predictions for bias.
+        \item Conduct thorough audits of AI systems to ensure compliance with ethical standards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{4. Conclusion}
+    As supervised learning technologies advance, incorporating ethical frameworks is essential to foster trust and ensure the equitable application of AI in society. Both developers and policymakers must prioritize fairness and accountability.
+\end{frame}
+
+\begin{frame}[fragile]{References}
+    \begin{itemize}
+        \item "Weapons of Math Destruction" by Cathy O'Neil – Discusses the impact of biased algorithms on society.
+        \item AI Fairness 360 Toolkit (IBM) – An open-source toolkit for detecting and mitigating bias in machine learning models.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Thought Provoking Question}
+    As AI continues to evolve, how can we balance innovation with ethical responsibilities to create fair and accountable AI systems?
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary - Part 1}
+    \begin{block}{Key Points Recap}
+        \begin{itemize}
+            \item \textbf{Definition and Importance of Supervised Learning:}
+            \begin{itemize}
+                \item A class of machine learning utilizing labeled datasets to train algorithms for predicting outcomes. 
+                \item Fundamental for various AI applications: image classification, spam detection, medical diagnosis.
+            \end{itemize}
+
+            \item \textbf{Types of Supervised Learning Techniques:}
+            \begin{itemize}
+                \item \textbf{Regression}: Predict continuous outputs (e.g., housing prices).
+                \item \textbf{Classification}: Predict discrete outcomes (e.g., spam vs. not spam).
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary - Part 2}
+    \begin{block}{Key Algorithms Explored}
+        \begin{itemize}
+            \item \textbf{Decision Trees:} Visual models for decision-making; applicable for classification and regression.
+            \item \textbf{Support Vector Machines (SVM):} Classifies data by finding the optimal hyperplane in high-dimensional spaces.
+            \item \textbf{Neural Networks:} Complex models mimicking human brain structure, effective for large datasets and intricate relationships.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Performance Evaluation Metrics}
+        \begin{itemize}
+            \item \textbf{Accuracy}: Proportion of correctly predicted instances.
+            \item \textbf{Precision and Recall}: Key for assessing model performance, especially in imbalanced datasets.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary - Part 3}
+    \begin{block}{Ethical Considerations}
+        \begin{itemize}
+            \item Recognizing algorithmic bias and the impact of training data quality on fairness.
+            \item Emphasizing accountability to ensure trustworthy AI applications.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Relevance to Advanced AI Applications}
+        \begin{itemize}
+            \item Supervised learning as a backbone for advancements in various sectors:
+                \begin{itemize}
+                    \item \textbf{Healthcare}: Disease prediction and treatment personalization.
+                    \item \textbf{Finance}: Fraud detection and risk analysis.
+                    \item \textbf{Autonomous Systems}: Improved decision-making in robotics.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Grasping supervised learning principles enhances understanding of machine learning and equips us for real-world problem-solving.
+    \end{block}
+\end{frame}
+
+
+\end{document}

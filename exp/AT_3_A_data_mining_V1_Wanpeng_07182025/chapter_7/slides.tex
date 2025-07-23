@@ -1,0 +1,987 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Week 7: Association Rule Learning]{Week 7: Association Rule Learning}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Association Rule Learning}
+    \begin{block}{What is Association Rule Learning?}
+        Association Rule Learning (ARL) is a fundamental data mining technique that identifies interesting relationships or patterns among a set of items in large datasets.
+        It primarily focuses on discovering rules that predict the occurrence of an item based on the presence of other items in transactional data, such as purchase histories.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance in Data Mining}
+    \begin{itemize}
+        \item \textbf{Discovering Hidden Patterns:} 
+        ARL is crucial for uncovering non-obvious associations within data, enabling businesses to better understand customer behaviors and preferences.
+        
+        \item \textbf{Applications Across Industries:} 
+        From retail to finance, ARL is utilized in various domains. 
+        In retail, it helps identify product combinations frequently purchased together, guiding effective product placement and promotions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in ARL}
+    \begin{enumerate}
+        \item \textbf{Frequent Itemsets:} 
+        A collection of items that appear together in transactions with a frequency exceeding a specified threshold, known as support.
+        
+        \item \textbf{Association Rules:} 
+        These rules are of the form \{X\} $\rightarrow$ \{Y\}, indicating that if item set X is present, item set Y is likely to be present as well.
+        \begin{itemize}
+            \item Example: If a customer buys bread and butter, they are likely to buy jam.
+        \end{itemize}
+        
+        \item \textbf{Support, Confidence, and Lift:} 
+        \begin{itemize}
+            \item \textbf{Support (S):} The proportion of transactions that contain a particular itemset.
+            \begin{equation}
+                S(X) = \frac{\text{Number of transactions containing } X}{\text{Total number of transactions}}
+            \end{equation}
+            
+            \item \textbf{Confidence (C):} Measures the likelihood that item Y is purchased when item X is purchased.
+            \begin{equation}
+                C(X \rightarrow Y) = \frac{S(X \cup Y)}{S(X)}
+            \end{equation}
+            
+            \item \textbf{Lift (L):} Indicates how much more likely item Y is purchased when item X is purchased compared to the overall probability of purchasing item Y.
+            \begin{equation}
+                L(X \rightarrow Y) = \frac{C(X \rightarrow Y)}{S(Y)}
+            \end{equation}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example in Context}
+    \begin{block}{Market Basket Analysis:}
+        A common application of ARL is in analyzing consumer shopping patterns. Retailers can identify rules like:
+        \begin{itemize}
+            \item \textbf{Rule:} \{Milk\} $\rightarrow$ \{Bread\}
+            \item \textbf{Interpretation:} Customers who buy milk are likely to buy bread, indicating a potential for cross-promotional marketing.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Association Rule Learning presents an effective way of finding relationships in large datasets, transforming the way businesses engage with customers.
+        \item The ability to quantify and evaluate the strength of association rules through support, confidence, and lift is vital for making informed business decisions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Market Basket Analysis? - Definition}
+    \begin{block}{Definition}
+        Market Basket Analysis (MBA) is a data mining technique used to discover patterns and associations between different items purchased together by consumers. It identifies relationships in transaction data, effectively analyzing consumer buying habits.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Market Basket Analysis? - Applications}
+    \begin{enumerate}
+        \item \textbf{Retail Strategy Development}
+        \begin{itemize}
+            \item Optimize promotions, product placements, and store layouts based on purchase associations.
+        \end{itemize}
+        
+        \item \textbf{Cross-Selling Opportunities}
+        \begin{itemize}
+            \item Identify complementary products for marketing together (e.g., pasta and sauce).
+        \end{itemize}
+        
+        \item \textbf{Inventory Management}
+        \begin{itemize}
+            \item Make informed decisions about stocking products based on purchase patterns.
+        \end{itemize}
+        
+        \item \textbf{Personalized Marketing}
+        \begin{itemize}
+            \item Enhance recommendations for customers based on their purchase history.
+        \end{itemize}
+        
+        \item \textbf{Customer Segmentation}
+        \begin{itemize}
+            \item Segment customers based on buying behaviors to inform marketing strategies.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Market Basket Analysis? - Example}
+    \begin{block}{Example Scenario}
+        A grocery store analyzes sales data revealing a strong association between diapers and baby wipes.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Findings:} Strong association found.
+        \item \textbf{Action:} Create a promotional discount for baby products enhancing sales.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Market Basket Analysis? - Key Points}
+    \begin{itemize}
+        \item MBA uncovers hidden patterns leading to actionable insights.
+        \item Employs algorithms like the Apriori algorithm to identify frequent itemsets.
+        \item Should be used alongside other analytics techniques for comprehensive insights.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Market Basket Analysis? - Metrics and Techniques}
+    \begin{block}{Formulas}
+        \begin{enumerate}
+            \item \textbf{Support (A, B)} = Frequency of A and B together / Total number of transactions
+            \item \textbf{Confidence (A $\to$ B)} = Support (A, B) / Support (A)
+            \item \textbf{Lift (A, B)} = Support (A, B) / (Support (A) $\cdot$ Support (B))
+        \end{enumerate}
+    \end{block}
+    Using these metrics helps businesses identify and understand the strength of relationships between products.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Market Basket Analysis? - Summary}
+    \begin{block}{Summary}
+        MBA is a crucial tool for retailers and marketers to:
+        \begin{itemize}
+            \item Improve sales.
+            \item Enhance customer experience.
+            \item Make informed decisions based on consumer behavior insights.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Terms in Association Rule Learning - Summary}
+    \begin{itemize}
+        \item This presentation covers essential concepts in Association Rule Learning.
+        \item Key terms include:
+          \begin{itemize}
+              \item Itemsets
+              \item Rules
+              \item Support
+              \item Confidence
+              \item Lift
+          \end{itemize}
+        \item Each term plays a vital role in Market Basket Analysis and consumer behavior insights.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Terms - Itemsets and Rules}
+    \begin{block}{1. Itemsets}
+        \begin{itemize}
+            \item \textbf{Definition}: Collection of one or more items, representing items purchased together.
+            \item \textbf{Example}: In a transaction, buying {milk, bread, eggs} constitutes the itemset.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{2. Rules}
+        \begin{itemize}
+            \item \textbf{Definition}: An implication of the form $A \to B$, indicating relationships between items.
+            \item \textbf{Example}: The rule ${bread} \to {butter}$ suggests buying bread increases likelihood of buying butter.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Metrics - Support, Confidence, and Lift}
+    \begin{block}{3. Support}
+        \begin{itemize}
+            \item \textbf{Definition}: Frequency of an itemset in the dataset.
+            \item \textbf{Formula}:
+            \begin{equation}
+                \text{Support}(A) = \frac{\text{Number of transactions containing A}}{\text{Total number of transactions}}
+            \end{equation}
+            \item \textbf{Example}: If 20 out of 100 transactions include {milk, bread}, then Support = 0.20 or 20\%.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{4. Confidence}
+        \begin{itemize}
+            \item \textbf{Definition}: Likelihood that item B is purchased when item A is purchased.
+            \item \textbf{Formula}:
+            \begin{equation}
+                \text{Confidence}(A \to B) = \frac{\text{Support}(A \cup B)}{\text{Support}(A)}
+            \end{equation}
+            \item \textbf{Example}: If among 20 transactions with {milk, bread}, 15 also contain {butter}, then Confidence = 0.75 or 75\%.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{5. Lift}
+        \begin{itemize}
+            \item \textbf{Definition}: Measures how much more likely item B is purchased with A compared to its overall likelihood.
+            \item \textbf{Formula}:
+            \begin{equation}
+                \text{Lift}(A \to B) = \frac{\text{Confidence}(A \to B)}{\text{Support}(B)}
+            \end{equation}
+            \item \textbf{Example}: If Support({butter}) = 0.3 and Confidence({milk, bread} \to {butter}) = 0.75, then Lift = 2.5.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item Itemsets are the foundation of association rules.
+        \item Support, confidence, and lift are essential metrics for evaluating rules' strength.
+        \item Understanding these terms is crucial for leveraging consumer insights and marketing strategies.
+    \end{itemize}
+    
+    \textbf{Conclusion}: Mastering these key terms allows you to effectively utilize association rule learning and extract valuable insights from transactional data.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Itemsets - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Itemsets}: A collection of one or more items found together in a dataset. 
+        \begin{itemize}
+            \item Example: In a grocery store dataset, the itemset $\{bread, butter\}$ represents a customer buying both items.
+        \end{itemize}
+        
+        \item \textbf{Frequent Itemsets}: 
+        \begin{itemize}
+            \item An itemset that appears in the dataset with frequency greater than a specified minimum threshold (support threshold).
+            \item Support is calculated as:  
+            \begin{equation}
+            \text{Support}(X) = \frac{\text{Number of transactions containing } X}{\text{Total number of transactions}}
+            \end{equation}
+            \item Example: If a store has 100 transactions and 15 include $\{milk, eggs\}$, then $\text{Support}(\{milk, eggs\}) = \frac{15}{100} = 0.15$.
+        \end{itemize}
+        
+        \item \textbf{Infrequent Itemsets}: 
+        \begin{itemize}
+            \item An itemset that does not meet the support threshold.
+            \item Example: If $\{soda, chips\}$ appears in 5 transactions, then $\text{Support}(\{soda, chips\}) = \frac{5}{100} = 0.05$, which is below the threshold (e.g., 0.1).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Itemsets - Key Points}
+    \begin{itemize}
+        \item \textbf{Importance of Itemsets}: 
+        \begin{itemize}
+            \item Understanding itemsets helps discover patterns in transactional data, aiding marketing strategies and inventory management.
+        \end{itemize}
+
+        \item \textbf{Threshold Setting}: 
+        \begin{itemize}
+            \item The choice of support threshold significantly impacts frequent itemset identification.
+            \item Lower threshold yields more frequent itemsets; higher leads to fewer but more meaningful itemsets.
+        \end{itemize}
+
+        \item \textbf{Applications}:
+        \begin{itemize}
+            \item Frequent itemsets are essential for generating association rules, enabling data-driven business decisions (e.g., cross-selling).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recap and Illustration}
+    \begin{itemize}
+        \item \textbf{Recap}:
+        \begin{itemize}
+            \item Frequent itemsets help identify common combinations of purchased items, guiding business insights.
+            \item Infrequent itemsets may have value but do not meet criteria for frequent analysis.
+        \end{itemize}
+
+        \item \textbf{Visual Representation}:
+        \begin{itemize}
+            \item Consider using a simple bar graph to show support values of various itemsets (frequent vs. infrequent).
+        \end{itemize}
+    \end{itemize}
+
+    \begin{block}{Next Steps}
+        We will delve into the \textbf{Apriori algorithm}, which efficiently generates association rules based on frequent itemsets!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Apriori Algorithm Overview - Part 1}
+    \begin{block}{What is the Apriori Algorithm?}
+        The Apriori Algorithm is a foundational technique in data mining, particularly for mining association rules. It identifies relationships between variables in large datasets. 
+        \begin{itemize}
+            \item \textbf{Main Objective:} Discover frequent itemsets—combinations of items that appear together in transactions at a specified minimum support threshold.
+            \item \textbf{Purpose:} Find association rules that reveal interesting patterns in data.
+            \item \textbf{Example:} In a grocery store, it might uncover that customers who buy bread often also purchase butter.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Apriori Algorithm Overview - Part 2}
+    \begin{block}{Key Concepts}
+        \begin{itemize}
+            \item \textbf{Itemsets:} A collection of one or more items (e.g., {bread, butter} is a 2-itemset).
+            \item \textbf{Frequent Itemsets:} Itemsets that meet a predefined minimum support threshold.
+            \item \textbf{Infrequent Itemsets:} These do not meet the minimum support threshold and are typically discarded.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{How does the Apriori Algorithm Work?}
+        \begin{enumerate}
+            \item Generate candidate itemsets starting with individual items (1-itemsets).
+            \item Count support for each candidate itemset.
+            \item Filter by support threshold to retain frequent itemsets.
+            \item Generate association rules from discovered frequent itemsets.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Apriori Algorithm Overview - Part 3}
+    \begin{block}{Example of Apriori Algorithm}
+        Consider a dataset with the following transactions:
+        \begin{tabular}{|c|l|}
+            \hline
+            Transaction ID & Items \\
+            \hline
+            1 & {Bread, Milk} \\
+            2 & {Bread, Diapers, Beer} \\
+            3 & {Milk, Diapers, Beer} \\
+            4 & {Bread, Milk, Diapers, Beer} \\
+            5 & {Milk} \\
+            \hline
+        \end{tabular}
+        
+        \begin{itemize}
+            \item Identify 1-itemsets: {Bread}, {Milk}, {Diapers}, {Beer}.
+            \item Calculate support (e.g., support for {Bread} = 3/5 = 0.6).
+            \item Assume a minimum support threshold of 0.5; discard infrequent sets.
+            \item Form 2-itemsets: {Bread, Milk}, {Bread, Diapers}, etc.
+            \item Repeat until no new frequent itemsets can be generated.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Apriori Algorithm Overview - Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item The Apriori Algorithm leverages the apriori property to efficiently reduce the number of potential itemsets.
+            \item Frequent itemsets generated can form actionable association rules.
+            \item Widely used in market basket analysis, web usage mining, and other domains for relationship discovery.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Formulas and Terminology}
+        \textbf{Support (S):} The proportion of transactions containing a particular itemset:
+        \begin{equation}
+            S(A) = \frac{\text{Number of transactions containing A}}{\text{Total number of transactions}}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Apriori Algorithm Steps - Introduction}
+    \begin{block}{Introduction to Apriori Algorithm}
+        The Apriori algorithm is a fundamental method in association rule learning, primarily used to discover frequent itemsets in large datasets. It identifies items that frequently co-occur in transactions, which helps in making decisions based on patterns in the data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Apriori Algorithm Steps - Overview}
+    \begin{enumerate}
+        \item \textbf{Initialization}
+            \begin{itemize}
+                \item \textbf{Input}: A dataset of transactions (e.g., shopping baskets).
+                \item \textbf{Thresholds}: Set the minimum support threshold (min\_sup).
+            \end{itemize}
+        \item \textbf{Generate Candidate Itemsets}
+            \begin{itemize}
+                \item Start with individual items (1-itemsets).
+                \item Generate larger itemsets (k-itemsets) by combining current frequent itemsets.
+            \end{itemize}
+        \item \textbf{Support Count Computation}
+            \begin{itemize}
+                \item Count occurrences of each candidate itemset.
+                \item Filter out itemsets that don’t meet the minimum support threshold.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Apriori Algorithm Steps - Continuation}
+    \begin{enumerate}
+        \setcounter{enumi}{3} % continue numbering from previous frame
+        \item \textbf{Repeat Steps 2 and 3}
+            \begin{itemize}
+                \item Continue until no new frequent itemsets are found.
+            \end{itemize}
+        \item \textbf{Generate Association Rules}
+            \begin{itemize}
+                \item Generate rules of the form \(X \rightarrow Y\) and calculate confidence.
+                \item Filter rules based on a minimum confidence threshold.
+            \end{itemize}
+        \item \textbf{Output Rules}
+            \begin{itemize}
+                \item Present the generated rules with their support and confidence values.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluation Metrics for Association Rules - Overview}
+    
+    \begin{block}{Introduction}
+        In Association Rule Learning, evaluating the strength and usefulness of generated rules is crucial. This slide covers key metrics: \textbf{Support}, \textbf{Confidence}, and \textbf{Lift}.
+    \end{block}
+    
+    Understanding these metrics helps refine models and interpret patterns in data effectively.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluation Metrics for Association Rules - Support}
+    
+    \begin{block}{1. Support}
+        \textbf{Definition:} Support measures the proportion of transactions containing both the antecedent and the consequent of a rule, indicating how frequently itemsets appear together.
+        
+        \textbf{Formula:}
+        \begin{equation}
+            \text{Support}(A \rightarrow B) = \frac{\text{Number of transactions containing both A and B}}{\text{Total number of transactions}}
+        \end{equation}
+        
+        \textbf{Example:}
+        If there are 100 transactions and 20 contain both "Bread" and "Butter":
+        \begin{equation}
+            \text{Support(Bread, Butter)} = \frac{20}{100} = 0.20
+        \end{equation}
+        This indicates that 20\% of transactions include both items.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluation Metrics for Association Rules - Confidence and Lift}
+    
+    \begin{block}{2. Confidence}
+        \textbf{Definition:} Confidence indicates the likelihood that the consequent is true given the antecedent is true, aiding in understanding the strength of implication.
+        
+        \textbf{Formula:}
+        \begin{equation}
+            \text{Confidence}(A \rightarrow B) = \frac{\text{Support}(A \cap B)}{\text{Support}(A)}
+        \end{equation}
+        
+        \textbf{Example:} For "Bread" with support of 40 transactions:
+        \begin{equation}
+            \text{Confidence(Bread} \rightarrow \text{Butter)} = \frac{20}{40} = 0.50
+        \end{equation}
+        This implies a 50\% chance that if a customer buys "Bread", they will also buy "Butter".
+    \end{block}
+    
+    \begin{block}{3. Lift}
+        \textbf{Definition:} Lift measures how much more likely the consequent occurs given the antecedent compared to its general occurrence. A lift value greater than 1 indicates a positive relationship.
+
+        \textbf{Formula:}
+        \begin{equation}
+            \text{Lift}(A \rightarrow B) = \frac{\text{Confidence}(A \rightarrow B)}{\text{Support}(B)}
+        \end{equation}
+        
+        \textbf{Example:} If "Butter" has a support of 30 transactions:
+        \begin{equation}
+            \text{Lift(Bread} \rightarrow \text{Butter)} = \frac{0.50}{0.30} \approx 1.67
+        \end{equation}
+        This means buying "Bread" increases the likelihood of buying "Butter" by 67\% compared to the average likelihood of buying "Butter".
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview}
+    \begin{itemize}
+        \item Market Basket Analysis (MBA) is an application of Association Rule Learning in retail.
+        \item Identifies relationships between items purchased together.
+        \item Helps retailers understand purchasing patterns and optimize marketing strategies.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Case Study: Walmart}
+    \begin{itemize}
+        \item Walmart analyzed customer shopping patterns to find frequently bought items.
+        \item Key finding: Customers buying diapers often bought beer as well.
+        \item This insight led to strategic product placement to enhance sales.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Findings and Methods}
+    \begin{block}{Methods and Metrics}
+        \begin{enumerate}
+            \item Data Preparation
+            \item Applied the Apriori algorithm to mine frequent itemsets.
+        \end{enumerate}
+        Key metrics:
+        \begin{itemize}
+            \item \textbf{Support:} Frequency of item combination in transactions.
+            \item \textbf{Confidence:} Likelihood of purchasing item B when A is purchased (P(B|A)).
+            \item \textbf{Lift:} Strength of association compared to random chance.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Calculation}
+    \begin{itemize}
+        \item If 100 transactions included diapers and 80 also included beer:
+        \begin{itemize}
+            \item \textbf{Support for \{Diapers, Beer\}:} \( \frac{80}{100} = 0.8 \)
+            \item \textbf{Confidence:} \( \frac{80}{100} = 0.8 \)
+        \end{itemize}
+        \item If 50 transactions included beer:
+        \begin{itemize}
+            \item \textbf{Lift:} \( \frac{0.8}{\frac{50}{100}} = 1.6 \)
+        \end{itemize}
+        \item A lift greater than 1 indicates a positive association.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item Actionable insights guided Walmart to place diapers and beer nearby, increasing sales.
+        \item Findings enabled personalized marketing and targeted promotions.
+        \item Improved inventory management through demand prediction.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        Using MBA with Association Rule Learning provides retailers with insights that enhance marketing strategies, improve customer satisfaction, and drive sales growth.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formula Recap}
+    \begin{itemize}
+        \item \textbf{Support:} \( \text{Support}(A \cap B) = \frac{\text{Transactions containing both A and B}}{\text{Total Transactions}} \)
+        \item \textbf{Confidence:} \( \text{Confidence}(A \to B) = \frac{\text{Support}(A \cap B)}{\text{Support}(A)} \)
+        \item \textbf{Lift:} \( \text{Lift}(A, B) = \frac{\text{Support}(A \cap B)}{\text{Support}(A) \cdot \text{Support}(B)} \)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Preparation for Next Slide}
+    \begin{itemize}
+        \item Next, we will explore popular software tools for implementing Association Rule Learning.
+        \item Discuss practical libraries and real-world applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Software Tools for Implementation}
+    \begin{block}{Overview of Association Rule Learning}
+        Association Rule Learning is a data mining technique used to discover interesting relationships (associations) between variables in large datasets. It is applied in various fields, including retail, healthcare, and web usage mining.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Popular Software Tools for Implementation}
+    Here, we introduce some of the most popular software tools and libraries for Association Rule Learning:
+    
+    \begin{enumerate}
+        \item \textbf{Python Libraries}
+        \item \textbf{R Package}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Software Tools - Python Libraries}
+    \begin{block}{Python: `mlxtend`}
+        A Python library for machine learning and data analysis, containing functionalities for association rule mining.
+        
+        \textbf{Key Functions:}
+        \begin{itemize}
+            \item \texttt{apriori()}: Identifies frequent itemsets in a dataset.
+            \item \texttt{association\_rules()}: Generates the rules from the frequent itemsets.
+        \end{itemize}
+        
+        \textbf{Example Code:}
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Sample data
+transactions = pd.DataFrame({'Items': [['Milk', 'Bread'], ['Bread', 'Diaper'], ['Milk', 'Diaper', 'Bread'], ['Diaper']]})
+# One-hot encoding
+one_hot = transactions['Items'].str.join('|').str.get_dummies()
+
+# Finding frequent itemsets
+frequent_itemsets = apriori(one_hot, min_support=0.5, use_colnames=True)
+
+# Generating rules
+rules = association_rules(frequent_itemsets, metric="lift", min_threshold=1)
+print(rules)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Software Tools - R Package}
+    \begin{block}{R: `arules`}
+        An R package widely used for mining association rules and frequent itemsets.
+        
+        \textbf{Key Functions:}
+        \begin{itemize}
+            \item \texttt{apriori()}: Computes the frequent itemsets.
+            \item \texttt{inspect()}: Displays the resulting rules.
+        \end{itemize}
+        
+        \textbf{Example Code:}
+        \begin{lstlisting}[language=R]
+library(arules)
+
+# Sample data
+transactions <- as(split(c('Milk', 'Bread', 'Diaper', 'Bread', 'Milk', 'Diaper', 'Milk'), ' '), "transactions")
+
+# Finding frequent itemsets
+frequent_itemsets <- apriori(transactions, parameter = list(support = 0.5, target = "frequent itemsets"))
+
+# Generating rules
+rules <- apriori(transactions, parameter = list(support = 0.5, confidence = 0.8))
+inspect(rules)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points and Takeaway}
+    \begin{itemize}
+        \item \textbf{Usability}: Both Python and R offer intuitive approaches for Association Rule Learning.
+        \item \textbf{Flexibility}: Tool choice depends on users' programming familiarity and data analysis requirements.
+        \item \textbf{Community Support}: Robust documentation and community aid for both `mlxtend` and `arules`.
+    \end{itemize}
+    
+    \textbf{Takeaway:} Association Rule Learning is accessible through powerful tools that simplify data insight mining. Mastering these enhances analytical skills and decision-making.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Assignment: Market Basket Analysis}
+    \begin{block}{Overview}
+        This practical assignment aims to provide hands-on experience with Market Basket Analysis (MBA) using Association Rule Learning. You will work with real-world data to uncover purchasing patterns that inform marketing strategies and product placement.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Objectives}
+    \begin{itemize}
+        \item \textbf{Understand the Fundamentals}: Gain a solid understanding of Association Rule Learning concepts, including support, confidence, and lift.
+        \item \textbf{Apply Analytical Tools}: Utilize popular software tools such as Python with \texttt{mlxtend} or R with the \texttt{arules} package to analyze data sets.
+        \item \textbf{Interpret Results}: Develop the ability to interpret and communicate the results of your analysis effectively.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Tasks}
+    \begin{enumerate}
+        \item \textbf{Data Preparation}: Choose a dataset (e.g., retail transaction data). Clean and preprocess the data for analysis.
+        \item \textbf{Implementing Association Rules}: Generate association rules focusing on key measures:
+            \begin{itemize}
+                \item \textbf{Support (S)}:
+                    \begin{equation}
+                    S(X) = \frac{\text{Number of transactions containing } X}{\text{Total number of transactions}}
+                    \end{equation}
+                \item \textbf{Confidence (C)}:
+                    \begin{equation}
+                    C(X \rightarrow Y) = \frac{S(X \cap Y)}{S(X)}
+                    \end{equation}
+                \item \textbf{Lift (L)}:
+                    \begin{equation}
+                    L(X \rightarrow Y) = \frac{C(X \rightarrow Y)}{S(Y)}
+                    \end{equation}
+            \end{itemize}
+        \item \textbf{Analysis \& Interpretation}: Generate a report summarizing findings and implications for business strategy.
+        \item \textbf{Presentation}: Prepare a presentation summarizing your process and findings. Include visuals for enhanced understanding.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluation Criteria}
+    \begin{itemize}
+        \item \textbf{Completeness and Accuracy (40\%)}: Successful execution of tasks and correct calculations.
+        \item \textbf{Analytical Insight (30\%)}: Depth of interpretation and implications of the findings.
+        \item \textbf{Presentation Quality (20\%)}: Clarity, organization, engagement, and use of visuals.
+        \item \textbf{Timeliness (10\%)}: Adherence to submission deadlines and requirements.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Ensure data is correctly preprocessed to avoid skewed results.
+        \item Understanding key metrics (support, confidence, lift) is crucial for effective analysis.
+        \item Communicate findings clearly and relate them to practical marketing strategies.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet Example}
+    \begin{lstlisting}[language=Python]
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Loading transaction dataset
+dataset = ...  # Load your data here
+
+# Apply Apriori algorithm
+frequent_itemsets = apriori(dataset, min_support=0.04, use_colnames=True)
+
+# Generate association rules
+rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.5)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Conclusion}
+    \begin{block}{Conclusion}
+        Association Rule Learning is a powerful technique within data mining that helps uncover interesting relationships between variables in large datasets. 
+        Widely applied in market basket analysis, this technique allows retailers and businesses to identify products that frequently co-occur in transactions, enhancing marketing strategies and customer experience.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Key Concepts}
+    \begin{block}{Key Concepts Covered}
+        \begin{enumerate}
+            \item \textbf{Association Rules:}
+            \begin{itemize}
+                \item Defined as implications of the form \( A \rightarrow B \), where A and B are disjoint itemsets.
+                \item This means that if item A is purchased, item B is likely to be purchased as well.
+            \end{itemize}
+            
+            \item \textbf{Metrics of Interest:}
+            \begin{itemize}
+                \item \textbf{Support:}
+                \[
+                \text{Support}(A) = \frac{\text{Frequency of A}}{\text{Total Transactions}}
+                \]
+                
+                \item \textbf{Confidence:}
+                \[
+                \text{Confidence}(A \rightarrow B) = \frac{\text{Support}(A \cap B)}{\text{Support}(A)}
+                \]
+                
+                \item \textbf{Lift:}
+                \[
+                \text{Lift}(A \rightarrow B) = \frac{\text{Support}(A \cap B)}{\text{Support}(A) \cdot \text{Support}(B)}
+                \]
+            \end{itemize}
+            
+            \item \textbf{Algorithms:}
+            \begin{itemize}
+                \item The \textbf{Apriori Algorithm} is foundational, utilizing a bottom-up approach.
+                \item The \textbf{FP-Growth Algorithm} improves efficiency through the use of FP-trees. 
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Key Takeaways}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item \textbf{Practical Applications:} 
+            Association Rule Learning is beneficial in retail for cross-selling, inventory management, and personalized recommendations.
+            
+            \item \textbf{Data Insights:}
+            Properly implemented insights can lead to increased sales and enhanced promotions through personalized offers.
+            
+            \item \textbf{Limitations to Consider:}
+            Beware of low-quality rules that can overwhelm results; critical refinement and interpretation are essential.
+            
+            \item \textbf{Integration with Other Techniques:}
+            Combining with clustering and classification provides deeper insights into data analyses.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Example and Summary}
+    \begin{block}{Example}
+        In a grocery store, an analysis might reveal that 80\% of customers who buy bread also buy butter. 
+        This can drive promotional strategies such as product bundles or item placements to boost sales.
+    \end{block}
+
+    \begin{block}{Summary}
+        Association Rule Learning has substantial real-world implications. 
+        It uncovers patterns that facilitate informed decision-making and strategic advantages in a data-driven environment. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Call to Action}
+    \begin{block}{Call to Action}
+        As you prepare for the practical assignment on Market Basket Analysis, think about how the concepts of support, confidence, and lift will guide your analysis. 
+        Explore different itemsets and patterns in your dataset to uncover actionable insights.
+    \end{block}
+    
+    \begin{block}{Transition to Next Slide}
+        Feel free to ask any questions or delve deeper into the concepts discussed as we head into the Q\&A session!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q\&A Session - Overview}
+    \begin{block}{Purpose of the Session}
+        This session provides an opportunity for students to clarify doubts, discuss concepts, and enhance understanding of Association Rule Learning (ARL). 
+        Engaging in this discussion is crucial as it allows students to solidify their knowledge and address any uncertainties regarding the lecture material.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q\&A Session - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Association Rule Learning}:
+            \begin{itemize}
+                \item A data mining technique used to uncover relationships between variables in large datasets.
+                \item Commonly applied in market basket analysis, web usage mining, and bioinformatics.
+            \end{itemize}
+        \item \textbf{Key Terms}:
+            \begin{itemize}
+                \item \textbf{Support}: Percentage of transactions that include a particular item set.
+                \item \textbf{Confidence}: Measure of the likelihood that an item B is purchased when item A is purchased.
+                \item \textbf{Lift}: Ratio of the observed support to the expected support if A and B were independent.
+            \end{itemize}
+        \item \textbf{Common Algorithms}:
+            \begin{itemize}
+                \item \textbf{Apriori Algorithm}: A foundational algorithm that finds frequent itemsets and derives rules from them.
+                \item \textbf{FP-Growth Algorithm}: More efficient than Apriori, constructing a compact data structure known as the FP-tree.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q\&A Session - Examples and Discussion Points}
+    \begin{block}{Examples to Illustrate Concepts}
+        \begin{itemize}
+            \item \textbf{Market Basket Analysis}:
+                \begin{itemize}
+                    \item \textbf{Scenario:} A grocery store wants to increase sales.
+                    \item \textbf{ARL Insight:} If customers who buy bread also often buy butter, the store can place these items closer together or offer bundled discounts.
+                \end{itemize}
+            \item \textbf{Practical Application:}
+                \begin{itemize}
+                    \item Example rule: \{Diapers\} $\rightarrow$ \{Beer\} with support = 0.1, confidence = 0.8.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Discussion Points}
+        \begin{itemize}
+            \item Differences between Support, Confidence, and Lift: How they guide decision-making in marketing strategies.
+            \item Applications of ARL in retail, e-commerce, and healthcare.
+            \item Challenges: Discuss potential pitfalls, such as overfitting and interpretation of results.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+\end{document}

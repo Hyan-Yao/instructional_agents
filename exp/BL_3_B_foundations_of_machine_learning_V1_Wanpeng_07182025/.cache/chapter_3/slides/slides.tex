@@ -1,0 +1,950 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Chapter 3: Data Preprocessing and Cleaning]{Chapter 3: Data Preprocessing and Cleaning}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Data Preprocessing and Cleaning}
+    \begin{block}{Overview of Data Preprocessing}
+        Data preprocessing is a crucial phase in the data science pipeline that involves transforming raw data into a clean and usable format. 
+        It serves as the foundation for machine learning (ML) and data analysis, ensuring that we build models on accurate and representative data.
+    \end{block}
+
+    \begin{block}{Importance}
+        The quality of our input data directly affects the outcome of our models, making data preprocessing indispensable.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Data Preprocessing}
+    \begin{enumerate}
+        \item \textbf{Enhances Model Performance}
+        \begin{itemize}
+            \item Cleaner data leads to better model accuracy.
+            \item Reduces the likelihood of overfitting and underfitting.
+        \end{itemize}
+        \item \textbf{Facilitates Data Understanding}
+        \begin{itemize}
+            \item Helps explore and understand data better, revealing patterns and trends.
+        \end{itemize}
+        \item \textbf{Handles Missing Values}
+        \begin{itemize}
+            \item Improperly managed missing data can lead to biased models.
+            \item Common techniques include imputation and deletion.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Continued Importance of Data Preprocessing}
+    \begin{enumerate}[resume]
+        \item \textbf{Standardizes Data Formats}
+        \begin{itemize}
+            \item Ensures consistency across data attributes (e.g., date formats).
+        \end{itemize}
+
+        \item \textbf{Prevents Computational Errors}
+        \begin{itemize}
+            \item Irregularities can disrupt processing (e.g., wrong data types).
+        \end{itemize}
+
+        \item \textbf{Key Points to Emphasize}
+        \begin{itemize}
+            \item Data cleaning and preprocessing are iterative processes.
+            \item Automation tools like Pandas enhance preprocessing efficiency.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Python Example: Data Preprocessing}
+    \begin{block}{Code Snippet}
+    \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Example: Dropping missing values and standardizing column names
+df = pd.read_csv('data.csv')
+df.dropna(inplace=True)                      # Drop rows with missing values
+df.columns = [col.strip().lower() for col in df.columns]  # Standardize column names
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    In summary, effective data preprocessing is essential for achieving reliable results in machine learning. 
+    It prepares the foundation upon which impactful insights can be built, making it a non-negotiable step in any data-driven project.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Acquisition Techniques - Overview}
+    \begin{block}{Overview}
+        Data acquisition is the process of collecting and retrieving data from various sources to facilitate data processing and analysis. 
+        In this presentation, we will explore three essential methods for data acquisition in data science:
+        \begin{itemize}
+            \item Web Scraping
+            \item APIs (Application Programming Interfaces)
+            \item Databases
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Acquisition Techniques - Web Scraping}
+    \begin{block}{Web Scraping}
+        \textbf{Concept:} Automatically extracting information from websites, useful for gathering publicly available data.
+        
+        \textbf{How it works:}
+        \begin{itemize}
+            \item Sends requests to web pages
+            \item Retrieves HTML content
+            \item Processes HTML to extract data using libraries (e.g., Beautiful Soup, Scrapy)
+        \end{itemize}
+        
+        \textbf{Example:} 
+        Collecting product prices from an e-commerce site. 
+    \end{block}
+    
+    \begin{lstlisting}[language=Python]
+import requests
+from bs4 import BeautifulSoup
+
+url = 'http://example.com/products'
+response = requests.get(url)
+soup = BeautifulSoup(response.text, 'html.parser')
+
+product_prices = [price.text for price in soup.find_all(class_='price')]
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Acquisition Techniques - APIs and Databases}
+    \begin{block}{APIs (Application Programming Interfaces)}
+        \textbf{Concept:} APIs allow retrieval of data from external services programmatically. Data is often returned in JSON or XML format.
+        
+        \textbf{How it works:}
+        \begin{itemize}
+            \item Sends requests to API endpoints
+            \item API processes request and returns structured data
+        \end{itemize}
+        
+        \textbf{Example:} Fetching tweets using the Twitter API.
+    \end{block}
+
+    \begin{lstlisting}[language=Python]
+import requests
+
+url = 'https://api.twitter.com/2/tweets/search/recent?query=your_hashtag'
+headers = {'Authorization': 'Bearer YOUR_ACCESS_TOKEN'}
+response = requests.get(url, headers=headers)
+tweets = response.json()['data']
+    \end{lstlisting}
+    
+    \begin{block}{Databases}
+        \textbf{Concept:} Organized collections of data that can be accessed and managed through queries.
+        
+        \textbf{How it works:}
+        \begin{itemize}
+            \item Use SQL or other query languages
+            \item Examples include MySQL, PostgreSQL, MongoDB
+        \end{itemize}
+        
+        \textbf{Example:}
+        \begin{lstlisting}[language=SQL]
+SELECT * FROM customers WHERE country = 'USA';
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Cleaning Overview}
+    
+    \begin{block}{What is Data Cleaning?}
+        Data cleaning, also known as data cleansing, is the process of detecting and correcting (or removing) inaccurate records from a dataset.
+    \end{block}
+    
+    \begin{block}{Why is Data Cleaning Necessary?}
+        \begin{enumerate}
+            \item \textbf{Reliability and Accuracy}: Ensures accurate analytics leading to better business decisions.
+            \item \textbf{Enhanced Decision-Making}: Clean datasets provide a solid foundation for data-driven insights.
+            \item \textbf{Data Usability}: Clean data is easier to analyze, visualize, and share.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Data Issues}
+    
+    \begin{itemize}
+        \item \textbf{Duplicates}:
+        \begin{itemize}
+            \item \textbf{Definition}: Multiple records for the same entity.
+            \item \textbf{Example}: A customer named "John Doe" appearing three times.
+            \item \textbf{Impact}: Skews results in analyses.
+            \item \textbf{Resolution}: Use deduplication methods.
+        \end{itemize}
+        
+        \item \textbf{Inconsistencies}:
+        \begin{itemize}
+            \item \textbf{Definition}: Disparities in data entry formats.
+            \item \textbf{Example}: "New York" vs. "NewYork".
+            \item \textbf{Impact}: Issues in data aggregation.
+            \item \textbf{Resolution}: Standardization techniques.
+        \end{itemize}
+        
+        \item \textbf{Format Errors}:
+        \begin{itemize}
+            \item \textbf{Definition}: Data that does not conform to expected formats.
+            \item \textbf{Example}: Date formats differing between records.
+            \item \textbf{Impact}: Disrupts analyses relying on chronological data.
+            \item \textbf{Resolution}: Implement formatting checks.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Example Code}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Proactive vs. Reactive Cleaning}: Build systems that catch errors early.
+            \item \textbf{Automation Tools}: Leverage libraries like Pandas for scalable cleaning processes.
+            \item \textbf{Documentation}: Maintain transparency in data handling through documentation.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example of Data Cleaning Code Snippet (Python with Pandas)}
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Load data
+data = pd.read_csv('data.csv')
+
+# Remove duplicates
+data = data.drop_duplicates()
+
+# Standardize city names
+data['City'] = data['City'].str.strip().str.title()
+
+# Format date column
+data['Date'] = pd.to_datetime(data['Date'], format='%d-%m-%Y')
+
+# Review the cleaned data
+print(data.head())
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Handling Missing Values - Introduction}
+    \begin{block}{Overview}
+        Missing values in datasets can significantly affect data analysis outcomes. Handling these missing values appropriately is crucial for maintaining data integrity and ensuring reliable insights.
+    \end{block}
+    In this section, we will explore strategies for addressing missing data, including:
+    \begin{itemize}
+        \item Deletion Methods
+        \item Imputation Strategies
+        \item Best Practices
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Handling Missing Values - Deletion Methods}
+    \begin{block}{Deletion Methods}
+        Deletion methods involve removing data points with missing values. They are straightforward but can lead to loss of valuable information.
+    \end{block}
+    \begin{enumerate}
+        \item \textbf{Listwise Deletion}
+        \begin{itemize}
+            \item Definition: Removes entire rows of data where any variable is missing.
+            \item Use Case: Suitable when the number of records with missing values is small relative to the dataset size.
+            \item Example: If a dataset has 1000 observations and 10 have a missing value in age, 990 records remain.
+        \end{itemize}
+        \item \textbf{Pairwise Deletion}
+        \begin{itemize}
+            \item Definition: Uses available data for analysis when a variable is missing, analyzing only cases with present data.
+            \item Use Case: Useful in correlation analyses when the dataset is large.
+            \item Example: Correlation for age and income will be calculated for 995 observations despite 5 missing age values.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Handling Missing Values - Imputation Strategies}
+    \begin{block}{Imputation Strategies}
+        Imputation allows us to fill in missing values using statistical methods.
+    \end{block}
+    \begin{enumerate}
+        \item \textbf{Mean/Median/Mode Imputation}
+        \begin{itemize}
+            \item Replace missing values with the mean/median (numerical) or mode (categorical).
+            \item Example: If ages are 20, 25, 30 and one is missing, impute mean (approx. 25).
+        \end{itemize}
+        \item \textbf{Predictive Imputation}
+        \begin{itemize}
+            \item Uses regression or machine learning algorithms to predict missing values.
+            \item Example: Predict 'income' where it might be missing based on 'age'.
+        \end{itemize}
+        \item \textbf{K-Nearest Neighbors (KNN) Imputation}
+        \begin{itemize}
+            \item Fills in missing values by averaging (numerical) or taking mode (categorical) of K nearest observations.
+            \item Use Case: Effective for datasets with strong similarities between observations.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Handling Missing Values - Best Practices}
+    \begin{block}{Best Practices for Handling Missing Data}
+        \begin{itemize}
+            \item \textbf{Understand the Nature of Missingness}:
+            \begin{itemize}
+                \item Types: MCAR, MAR, or MNAR affect method choice.
+            \end{itemize}
+            \item \textbf{Assess the Impact of Missing Data}:
+            \begin{itemize}
+                \item Evaluate missing data significance before method selection.
+            \end{itemize}
+            \item \textbf{Documentation}:
+            \begin{itemize}
+                \item Document how missing data were handled to ensure transparency.
+            \end{itemize}
+            \item \textbf{Test Different Approaches}:
+            \begin{itemize}
+                \item Applying multiple methods can illuminate imputation effects.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Outlier Detection and Treatment}
+    \begin{block}{Overview}
+        Exploration of methods for detecting and treating outliers, including statistical tests and visualization techniques.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{1. Understanding Outliers}
+    \begin{itemize}
+        \item \textbf{Definition}: Outliers are data points that deviate significantly from the majority of the data.
+        \item \textbf{Importance of Detection}:
+        \begin{itemize}
+            \item Skew statistical analyses and mislead modeling processes.
+            \item Enhance dataset quality, improving reliability of predictive models.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2. Methods for Detecting Outliers}
+    \begin{block}{A. Statistical Tests}
+        \begin{enumerate}
+            \item \textbf{Z-Score Method}
+            \begin{itemize}
+                \item \textbf{Formula}:
+                \begin{equation}
+                Z = \frac{(X - \mu)}{\sigma}
+                \end{equation}
+                where:
+                \begin{itemize}
+                    \item $X$ = data point
+                    \item $\mu$ = mean of the dataset
+                    \item $\sigma$ = standard deviation of the dataset
+                \end{itemize}
+                \item \textbf{Interpretation}: |Z| > 3 indicates an outlier.
+            \end{itemize}
+            
+            \item \textbf{IQR Method (Interquartile Range)}
+            \begin{itemize}
+                \item Steps:
+                \begin{enumerate}
+                    \item Calculate $Q1$ and $Q3$
+                    \item Compute IQR = $Q3 - Q1$
+                    \item Determine boundaries:
+                    \begin{itemize}
+                        \item Lower Bound = $Q1 - 1.5 \times IQR$
+                        \item Upper Bound = $Q3 + 1.5 \times IQR$
+                    \end{itemize}
+                \end{enumerate}
+                \item \textbf{Interpretation}: Points outside these bounds are outliers.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2. Methods for Detecting Outliers (cont.)}
+    \begin{block}{B. Visualization Techniques}
+        \begin{itemize}
+            \item \textbf{Box Plots}: Show data distribution; outliers are points beyond the "whiskers."
+            \item \textbf{Scatter Plots}: Identify outliers in bivariate data, look for points far from clusters.
+            \item \textbf{Histogram}: Reveals unusual frequency distributions indicating outliers.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{3. Treatment of Outliers}
+    \begin{itemize}
+        \item \textbf{Removal}: Discard outliers from the dataset if they result from measurement errors.
+        \item \textbf{Transformation}: Apply transformations (e.g., log or square root) to mitigate effect of outliers.
+        \item \textbf{Imputation}: Replace outliers with a statistical measure (mean or median) if part of a larger trend.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{4. Key Points to Remember}
+    \begin{itemize}
+        \item Investigate the cause of outliers before deciding on treatment methods.
+        \item Context matters; an outlier in one domain may be normal in another.
+        \item Combine statistical methods and visual analysis for effective outlier detection.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code Snippet (Python)}
+    \begin{lstlisting}[language=Python]
+import numpy as np
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Create example data
+data = np.random.normal(size=100)
+data_with_outliers = np.append(data, [10, 12, 15])  # adding outliers
+
+# Calculate IQR
+Q1 = np.percentile(data_with_outliers, 25)
+Q3 = np.percentile(data_with_outliers, 75)
+IQR = Q3 - Q1
+lower_bound = Q1 - 1.5 * IQR
+upper_bound = Q3 + 1.5 * IQR
+
+print("Lower Bound:", lower_bound)
+print("Upper Bound:", upper_bound)
+
+# Visualize
+sns.boxplot(data=data_with_outliers)
+plt.title("Box Plot with Outliers")
+plt.show()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item Detection and treatment of outliers are crucial in data preprocessing.
+        \item Impact the quality and accuracy of analyses or models.
+        \item Employ multiple methods for a comprehensive assessment.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Normalization and Standardization - Overview}
+    \begin{block}{Purpose of Scaling}
+        Normalization and standardization are techniques used to scale data, enhancing the performance of machine learning algorithms by ensuring that feature scales do not disproportionately impact model training.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Normalization:} Rescales feature values to a specified range, usually [0, 1].
+        \item \textbf{Standardization:} Rescales data to have a mean of 0 and a standard deviation of 1.
+        \item The choice between these techniques depends on the data distribution and the model requirements.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Normalization}
+    \begin{block}{Definition}
+        Normalization transforms features to a similar scale, often using Min-Max Normalization.
+    \end{block}
+    \begin{equation}
+        X' = \frac{X - X_{\text{min}}}{X_{\text{max}} - X_{\text{min}}}
+    \end{equation}
+    where:
+    \begin{itemize}
+        \item \(X'\) is the normalized value,
+        \item \(X\) is the original value,
+        \item \(X_{\text{min}}\) is the minimum feature value,
+        \item \(X_{\text{max}}\) is the maximum feature value.
+    \end{itemize}
+
+    \begin{block}{When to Use Normalization}
+        \begin{itemize}
+            \item Features with different units 
+            \item Algorithms sensitive to feature scales (e.g., k-NN, neural networks)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Standardization}
+    \begin{block}{Definition}
+        Standardization rescales data to have a mean of 0 and a standard deviation of 1 using the Z-score.
+    \end{block}
+    \begin{equation}
+        Z = \frac{X - \mu}{\sigma}
+    \end{equation}
+    where:
+    \begin{itemize}
+        \item \(Z\) is the standardized value,
+        \item \(X\) is the original value,
+        \item \(\mu\) is the mean,
+        \item \(\sigma\) is the standard deviation.
+    \end{itemize}
+
+    \begin{block}{When to Use Standardization}
+        \begin{itemize}
+            \item Data with a Gaussian distribution 
+            \item Algorithms assuming normally distributed data (e.g., linear regression) 
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet for Normalization and Standardization}
+    \begin{lstlisting}[language=Python]
+import numpy as np
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+
+# Sample data
+data = np.array([[100], [200], [300], [400], [500]])
+
+# Normalization
+min_max_scaler = MinMaxScaler()
+normalized_data = min_max_scaler.fit_transform(data)
+
+# Standardization
+standard_scaler = StandardScaler()
+standardized_data = standard_scaler.fit_transform(data)
+
+print("Normalized Data:\n", normalized_data)
+print("Standardized Data:\n", standardized_data)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Summary}
+        Normalization and standardization are key preprocessing steps:
+        \begin{itemize}
+            \item Enhances model performance.
+            \item Affects training efficiency and accuracy.
+            \item Choosing the right technique depends on data characteristics and algorithm requirements.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Transformation Techniques - Introduction}
+    \begin{block}{Overview}
+        Data transformation techniques are essential for preparing data for analysis, especially when dealing with different scales, distributions, or types of data. 
+    \end{block}
+    
+    \begin{itemize}
+        \item Focus on three key techniques: 
+        \begin{itemize}
+            \item Log Transformation
+            \item Box-Cox Transformation
+            \item Polynomial Features
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Transformation Techniques - Log Transformation}
+    \begin{block}{Definition}
+        Log transformation involves replacing each value \( x \) in the dataset with its logarithm \( \log(x) \).
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{When to Use:}
+        \begin{itemize}
+            \item When data is positively skewed.
+            \item When dealing with exponential growth patterns.
+        \end{itemize}
+        
+        \item \textbf{Example:} For dataset \( [10, 100, 1000, 10000] \):
+        \[
+        \text{Log}(10) = 1, \quad \text{Log}(100) = 2, \quad \text{Log}(1000) = 3, \quad \text{Log}(10000) = 4 
+        \]
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Makes data more manageable and interpretable.
+            \item Helps leverage linear models effectively.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Transformation Techniques - Box-Cox Transformation}
+    \begin{block}{Definition}
+        Box-Cox transformation is defined as:
+        \[
+        y' = \begin{cases} 
+        \frac{y^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0 \\ 
+        \log(y) & \text{if } \lambda = 0 
+        \end{cases}
+        \]
+        where \( y \) is the original data.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{When to Use:}
+        \begin{itemize}
+            \item When data is non-normally distributed.
+            \item To stabilize variance.
+        \end{itemize}
+        
+        \item \textbf{Example:} For dataset \( [4, 16, 64] \):
+        \begin{itemize}
+            \item After optimizing \( \lambda \), transformed values normalize the data.
+        \end{itemize}
+        
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Usage depends on determining the best \( \lambda \).
+            \item Often applied in regression analysis.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Transformation Techniques - Polynomial Features}
+    \begin{block}{Definition}
+        Polynomial feature transformation involves creating new features by raising existing features to a polynomial degree.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{When to Use:}
+        \begin{itemize}
+            \item When the relationship between features and the target variable is non-linear.
+        \end{itemize}
+        
+        \item \textbf{Example:} For feature set \( X = [2, 3] \) with \( n = 2 \):
+        \begin{itemize}
+            \item Transformed feature set: \( [2, 4, 3, 9] \)
+        \end{itemize}
+        
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Captures complex patterns.
+            \item May require regularization techniques to avoid overfitting.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Transformation Techniques - Conclusion}
+    \begin{block}{Summary}
+        Data transformation techniques improve data quality and enable robust analyses. Properly choosing a technique enhances model performance and interpretability.
+    \end{block}
+    
+    \begin{itemize}
+        \item Essential for setting the foundation for Feature Engineering.
+        \item Enhance predictive capabilities.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Additional Resources}
+    \begin{itemize}
+        \item References to statistical packages (e.g., R, Python SciPy) for applying these transformations.
+        \item Examples of real-world datasets requiring transformations (e.g., financial, environmental data).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Engineering - Understanding and Importance}
+    \begin{block}{Definition}
+        Feature engineering is the process of using domain knowledge to extract and create features (input variables) from raw data. It significantly enhances the predictive power of machine learning models by transforming raw data into useful formats.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Model Performance:} Quality and relevance of features directly impact model accuracy.
+        \item \textbf{Interpretability:} Helps understand model decisions, improving transparency.
+        \item \textbf{Reduction of Dimensionality:} Key feature selection simplifies models, improving training speed and interpretability.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Engineering - Methods for Creating New Features}
+    \begin{enumerate}
+        \item \textbf{Mathematical Transformations:}
+            \begin{itemize}
+                \item \textit{Log Transformation:} Useful for skewed data, e.g., \( \text{New Feature} = \log(\text{Original Feature} + 1) \)
+            \end{itemize}
+        \item \textbf{Polynomial Features:}
+            \begin{itemize}
+                \item Construct terms from existing features, e.g., create \( x^2, x^3 \) from feature \( x \).
+            \end{itemize}
+        \item \textbf{Binning:}
+            \begin{itemize}
+                \item Convert continuous variables into discrete bins, e.g., age groups (0-18, 19-35).
+            \end{itemize}
+        \item \textbf{Interaction Features:}
+            \begin{itemize}
+                \item Create products of features, e.g., \( \text{BMI} = \frac{\text{Weight}}{(\text{Height})^2} \).
+            \end{itemize}
+        \item \textbf{Text Features:}
+            \begin{itemize}
+                \item Use TF-IDF to assess importance of words in text data.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Engineering - Impact on Model Performance and Key Takeaways}
+    \begin{itemize}
+        \item \textbf{Improved Accuracy:} Well-crafted features enhance model performance.
+        \item \textbf{Speed of Learning:} Effective feature selection accelerates training.
+        \item \textbf{Overfitting Reduction:} Fewer relevant features prevent fitting noise.
+    \end{itemize}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item \textbf{Invest Time in Features:} Explore and create valuable features.
+            \item \textbf{Iterate and Experiment:} Refine features based on feedback and validation.
+            \item \textbf{Documentation:} Track features and their impact for future projects.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Engineering - Code Example}
+    \begin{lstlisting}[language=Python]
+import pandas as pd
+from sklearn.preprocessing import PolynomialFeatures
+
+# Sample DataFrame
+data = pd.DataFrame({'Height': [1.5, 1.8, 2.0], 'Weight': [50, 80, 90]})
+
+# Creating Polynomial Features
+poly = PolynomialFeatures(degree=2, include_bias=False)
+poly_features = poly.fit_transform(data[['Height', 'Weight']])
+
+# Convert to DataFrame for better readability
+poly_df = pd.DataFrame(poly_features, columns=['Height', 'Weight', 'Height^2', 'Height*Weight', 'Weight^2'])
+print(poly_df)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reflective Logs in Data Preprocessing - Importance}
+    
+    Reflective logs are essential records during the data preprocessing phase. Their importance includes:
+    
+    \begin{itemize}
+        \item \textbf{Traceability}: Tracks what changes were made, when, and why.
+        \item \textbf{Transparency}: Facilitates understanding among team members, enhancing collaboration.
+        \item \textbf{Learning Tool}: Aids reflection on the preprocessing steps to identify patterns in challenges and solutions.
+        \item \textbf{Quality Assurance}: Documents validation steps to ensure data integrity and consistency.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reflective Logs in Data Preprocessing - Challenges}
+    
+    Data preprocessing presents several challenges:
+    
+    \begin{itemize}
+        \item \textbf{Missing Data}: Choosing between imputation and deletion for gaps in the dataset.
+        \item \textbf{Outliers}: Managing extreme data points through removal or adjustment.
+        \item \textbf{Data Transformation}: Selecting methods for scaling, encoding, or aggregating data.
+        \item \textbf{Consistency Issues}: Resolving anomalies in formatting or representation across datasets.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reflective Logs in Data Preprocessing - Problem-Solving Process}
+    
+    The process to tackle challenges in data preprocessing includes:
+    
+    \begin{enumerate}
+        \item \textbf{Identify Challenges}: Reflecting on issues during preprocessing.
+        \item \textbf{Brainstorm Solutions}: Collaborating to explore various strategies.
+        \item \textbf{Implement Solutions}: Documenting chosen methods, as shown in the snippet below.
+        
+        \begin{lstlisting}[language=Python]
+import pandas as pd
+
+# Example of imputing missing values with the mean
+df['feature_name'].fillna(df['feature_name'].mean(), inplace=True)
+        \end{lstlisting}
+        
+        \item \textbf{Evaluate Outcomes}: Assessing the impact of applied solutions on data quality.
+        \item \textbf{Iterate}: Refining strategies based on evaluations.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Best Practices - Overview}
+    \begin{block}{Effective Data Preprocessing and Cleaning}
+        Data preprocessing and cleaning are crucial steps in any machine learning project, significantly impacting model performance and predictive accuracy. This slide summarizes essential practices to enhance efficiency and reliability in this phase.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of Data Preprocessing}
+    \begin{enumerate}
+        \item \textbf{Data Quality Assurance}
+            \begin{itemize}
+                \item Ensures that data is accurate, consistent, and reliable.
+                \item \textit{Example:} Regularly validate data from different sources against a known correct dataset.
+            \end{itemize}
+        
+        \item \textbf{Handling Missing Values}
+            \begin{itemize}
+                \item \textit{Approaches:}
+                    \begin{itemize}
+                        \item Imputation: Replace missing values with statistical metrics (mean, median) or predictive models.
+                        \item Removal: Delete record or variable if missing data exceeds a certain threshold (e.g., > 30\% missing).
+                    \end{itemize}
+                \item \textit{Code Snippet:}
+                \begin{lstlisting}[language=Python]
+# Impute missing values using mean
+df.fillna(df.mean(), inplace=True)
+                \end{lstlisting}
+            \end{itemize}
+
+        \item \textbf{Outlier Detection and Treatment}
+            \begin{itemize}
+                \item Identify outliers using visualizations (box plots) or statistical tests (Z-score).
+                \item Treatment options include capping, removing, or correcting erroneous values.
+                \item \textit{Example:} Outliers in a dataset of household incomes might skew the model; consider logging transformations to reduce their impact.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices Summary}
+    \begin{enumerate}
+        \item \textbf{Consistency in Data Collection and Cleaning.}
+        \item \textbf{Document Data Processing Steps.}
+            \begin{itemize}
+                \item Maintain reflective logs to record challenges and solutions encountered during preprocessing.
+            \end{itemize}
+        \item \textbf{Iterative Approach.}
+            \begin{itemize}
+                \item Always iterate on data preprocessing techniques based on model performance analytics.
+            \end{itemize}
+        \item \textbf{Empirical Testing.}
+            \begin{itemize}
+                \item Validate preprocessing techniques with cross-validation to ensure that enhancements positively influence model outcomes.
+            \end{itemize}
+    \end{enumerate}
+
+    \vspace{1em}
+    \textbf{Encouraged Discussion:}
+    \begin{itemize}
+        \item Why is it essential to address missing values before training a model?
+        \item How could outliers impact your model’s performance, and what methods might you apply to mitigate this effect?
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

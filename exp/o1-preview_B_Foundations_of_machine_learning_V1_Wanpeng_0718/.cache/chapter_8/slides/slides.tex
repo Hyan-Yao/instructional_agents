@@ -1,0 +1,941 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+basicstyle=\ttfamily\small,
+keywordstyle=\color{blue},
+commentstyle=\color{gray},
+stringstyle=\color{red},
+breaklines=true,
+frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Chapter 8: Advanced Neural Networks}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Advanced Neural Networks}
+    \begin{block}{Overview of Deep Learning}
+        Deep Learning is a subfield of machine learning, which is a branch of artificial intelligence (AI). It involves deep neural networks that learn from data similarly to the human brain. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance of Deep Learning in Machine Learning}
+    \begin{enumerate}
+        \item \textbf{Complex Data Handling:} 
+        Deep learning processes vast amounts of unstructured data, allowing it to excel in tasks like image recognition and natural language processing.
+        
+        \item \textbf{Feature Extraction:}
+        - Automatically discovers features during training, unlike traditional machine learning.
+        - Example: In image recognition, it identifies edges, shapes, and textures without explicit feature engineering.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Advantages of Deep Learning}
+    \begin{itemize}
+        \item \textbf{Performance in Prediction:} 
+        Often outperforms classical algorithms due to its ability to learn hierarchical representations.
+        
+        \item \textbf{Real-Time Analysis:} 
+        Analyzes data in real-time, making it suitable for applications such as self-driving cars and fraud detection.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts to Understand}
+    \begin{itemize}
+        \item \textbf{Neurons and Layers:} 
+        - Basic units of neural networks that mimic biological neurons.
+        - \textbf{Input Layer:} Receives raw data.
+        - \textbf{Hidden Layers:} Perform computations.
+        - \textbf{Output Layer:} Produces final results.
+        
+        \item \textbf{Activation Functions:} 
+        Introduce non-linearity (e.g., ReLU, sigmoid) to help learn complex relationships.
+        
+        \item \textbf{Backpropagation:} 
+        A training algorithm that optimizes weight adjustments based on prediction errors.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Deep Learning}
+    \begin{itemize}
+        \item \textbf{Image Classification:} Categorizing images (e.g., identifying cats vs. dogs).
+        \item \textbf{Natural Language Processing:} Enabling machine understanding and generation of human language (e.g., chatbots).
+        \item \textbf{Medical Diagnosis:} Assisting in diagnosis through analysis of medical images (e.g., X-rays).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaway}
+    Deep learning is transforming how machines understand complex data, significantly enhancing performance in various applications compared to traditional machine learning models. Understanding these fundamentals sets the stage for exploring advanced neural network architectures and techniques.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Example: Simple Deep Learning Model}
+    \begin{lstlisting}[language=Python]
+import tensorflow as tf
+from tensorflow import keras
+
+# Example of a simple deep learning model
+model = keras.Sequential([
+    keras.layers.Dense(128, activation='relu', input_shape=(input_dim,)),
+    keras.layers.Dense(10, activation='softmax')
+])
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Deep Learning Fundamentals}
+    \begin{block}{Description}
+        Explanation of the structure and functioning of neural networks.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Neural Networks?}
+    \begin{itemize}
+        \item Computational models inspired by the human brain's architecture.
+        \item Designed to recognize patterns and learn from data.
+        \item Consist of interconnected layers of nodes (neurons) that process information.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of a Neural Network}
+    \begin{itemize}
+        \item \textbf{Input Layer:} Receives input data, with each neuron corresponding to a feature.
+        \item \textbf{Hidden Layers:} Transform inputs using weights and activation functions, with one or more layers referred to as "deep."
+        \item \textbf{Output Layer:} Provides the network's processing result, such as classification or regression output.
+    \end{itemize}
+    \begin{center}
+        \includegraphics[width=0.7\linewidth]{insert-diagram-here}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Neurons and their Functioning}
+    Each neuron computes:
+    \begin{equation}
+        h(x) = f\left(\sum_{i=1}^{n} w_i x_i + b\right)
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item \( h(x) \) = output of the neuron
+        \item \( w_i \) = weights
+        \item \( x_i \) = input features
+        \item \( b \) = bias
+        \item \( f \) = activation function (e.g., ReLU, Sigmoid, Tanh)
+    \end{itemize}
+    \vspace{1em}
+    \textbf{Example:} A single neuron with inputs (2, 3), weights (0.5, 1.5), bias -1, and ReLU activation function.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Activation Functions}
+    Activation functions introduce non-linearity:
+    \begin{itemize}
+        \item \textbf{ReLU (Rectified Linear Unit):} 
+        \[
+        f(x) = \max(0, x)
+        \]
+        \item \textbf{Sigmoid:} 
+        \[
+        f(x) = \frac{1}{1 + e^{-x}}
+        \]
+        \item \textbf{Tanh (Hyperbolic Tangent):} Outputs between -1 and 1.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Forward Propagation Process}
+    \begin{enumerate}
+        \item \textbf{Data Input:} Input data is fed into the network.
+        \item \textbf{Calculation:} Each neuron processes inputs using weights, biases, and activation functions.
+        \item \textbf{Output:} The network produces a result based on layer computations.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Neural networks learn by adjusting weights based on prediction errors (backpropagation).
+        \item Network depth and width significantly influence its learning capacity.
+        \item Understanding neural network structure is vital for mastering deep learning techniques.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    By grasping these fundamentals, you'll build a strong foundation to explore advanced neural network concepts.
+    \vspace{1em}
+    \textbf{Next Slide:} Understanding Neural Networks – Components: neurons, layers, weights, and biases.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Neural Networks - Overview}
+    \begin{itemize}
+        \item Neural networks are computational models inspired by the human brain.
+        \item Key components include:
+        \begin{itemize}
+            \item Neurons
+            \item Layers
+            \item Weights
+            \item Biases
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Neural Networks - Components}
+    \begin{block}{1. Neurons}
+        \begin{itemize}
+            \item Basic building blocks of a neural network.
+            \item Each neuron processes inputs and produces an output.
+            \item The output can be described as:
+            \[
+            y = f\left(\sum_{i=1}^{n} w_i x_i + b\right)
+            \]
+            \begin{itemize}
+                \item \( x_i \) = input values
+                \item \( w_i \) = weights
+                \item \( b \) = bias
+                \item \( f \) = activation function (e.g., sigmoid, ReLU)
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Neural Networks - Layers}
+    \begin{block}{2. Layers}
+        \begin{itemize}
+            \item Neurons are organized into three types of layers:
+            \begin{itemize}
+                \item \textbf{Input Layer}: Receives raw input data.
+                \item \textbf{Hidden Layers}: Intermediate layers that perform complex computations.
+                \item \textbf{Output Layer}: Produces the final output.
+            \end{itemize}
+        \end{itemize}
+        \begin{example}
+            In image classification, the input layer receives pixel values, hidden layers extract features, and the output layer provides class probabilities (e.g., cat, dog).
+        \end{example}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Neural Networks - Weights and Biases}
+    \begin{block}{3. Weights}
+        \begin{itemize}
+            \item Parameters controlling the strength of connections between neurons.
+            \item Learning occurs by adjusting weights through training algorithms like backpropagation.
+            \item Key Point: Higher weight magnitudes indicate a stronger influence on the output.
+        \end{itemize}
+    \end{block}
+    \begin{block}{4. Biases}
+        \begin{itemize}
+            \item Additional parameters that provide flexibility in fitting the data.
+            \item Allow the model to learn patterns even when all input values are zero.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Neural Networks - Conclusion}
+    \begin{itemize}
+        \item A neural network consists of neurons organized into layers.
+        \item Neurons utilize weights, biases, and activation functions to transform inputs.
+        \item Understanding these components is crucial for grasping neural network functionality.
+    \end{itemize}
+    \begin{block}{Next Steps}
+        We will now explore activation functions, which significantly influence a neuron's output based on computed inputs.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Activation Functions - Overview}
+    \begin{block}{Importance of Activation Functions}
+        Activation functions are crucial components in neural networks, as they introduce non-linearity into the model and help it learn complex patterns in data. 
+        Without activation functions, a neural network would behave like a linear regression model, limiting its capability to solve more complex problems.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Activation Functions - Common Types}
+    \begin{enumerate}
+        \item \textbf{Sigmoid Function}
+        \item \textbf{ReLU (Rectified Linear Unit)}
+        \item \textbf{Softmax Function}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Activation Function - Sigmoid}
+    \begin{itemize}
+        \item \textbf{Formula:} 
+        \begin{equation}
+            S(x) = \frac{1}{1 + e^{-x}}
+        \end{equation}
+        \item \textbf{Range:} (0, 1)
+        \item \textbf{Characteristics:}
+        \begin{itemize}
+            \item Maps input to a value between 0 and 1.
+            \item Useful for binary classification problems.
+        \end{itemize}
+        \item \textbf{Example:}
+        If the weighted sum of inputs to a neuron is 2, the output is:
+        \begin{equation}
+            S(2) = \frac{1}{1 + e^{-2}} \approx 0.88
+        \end{equation}
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Can cause vanishing gradient problem for large/small inputs.
+            \item Not suitable for deep networks due to saturation gradients.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Activation Function - ReLU}
+    \begin{itemize}
+        \item \textbf{Formula:}
+        \begin{equation}
+            f(x) = \max(0, x)
+        \end{equation}
+        \item \textbf{Range:} [0, ∞)
+        \item \textbf{Characteristics:}
+        \begin{itemize}
+            \item Outputs the input directly if positive; otherwise, outputs zero.
+        \end{itemize}
+        \item \textbf{Example:}
+        If a neuron computes a weighted sum of -1.5, the output is:
+        \begin{equation}
+            f(-1.5) = \max(0, -1.5) = 0
+        \end{equation}
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Computationally efficient due to simplicity.
+            \item Helps mitigate the vanishing gradient problem.
+            \item Can lead to "dying ReLU" issue, where neurons become inactive.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Activation Function - Softmax}
+    \begin{itemize}
+        \item \textbf{Formula:}
+        \begin{equation}
+            \text{Softmax}(z_i) = \frac{e^{z_i}}{\sum_{j} e^{z_j}}
+        \end{equation}
+        \item \textbf{Range:} (0, 1) for each output, sum of outputs equals 1.
+        \item \textbf{Characteristics:}
+        \begin{itemize}
+            \item Converts raw scores (logits) into probabilities.
+            \item Used for multi-class classification.
+        \end{itemize}
+        \item \textbf{Example:}
+        Given logits \( z = [1.0, 2.0, 0.5] \):
+        \begin{equation}
+            \text{Softmax}(z_2) = \frac{e^{2.0}}{e^{1.0} + e^{2.0} + e^{0.5}} \approx 0.71
+        \end{equation}
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Provides a probability distribution over classes.
+            \item Sensitive to large logits; normalization can improve stability.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Activation Functions - Summary and Key Takeaways}
+    \begin{itemize}
+        \item Activation functions are essential for modeling complex relationships in data.
+        \item Each function has its specific use case with advantages and disadvantages.
+        \item \textbf{Key Takeaways:}
+        \begin{itemize}
+            \item Sigmoid is perfect for binary outputs but suffers from gradient issues.
+            \item ReLU is widely used for hidden layers; efficient yet can lead to dead neurons.
+            \item Softmax is optimal for multi-class outputs, converting logits to probabilities.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Convolutional Neural Networks (CNNs) - Introduction}
+    \begin{block}{What are CNNs?}
+        Convolutional Neural Networks (CNNs) are deep learning models designed for processing structured grid data, especially images. 
+        They excel at detecting patterns and features, making them a cornerstone of modern computer vision.
+    \end{block}
+    
+    \begin{itemize}
+        \item Powerful for image recognition tasks
+        \item Enable classification and accurate predictions
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{CNN Architecture - Key Components}
+    A typical CNN architecture consists of the following layers:
+    
+    \begin{enumerate}
+        \item \textbf{Input Layer}:
+            \begin{itemize}
+                \item Accepts raw pixel data (e.g., 32x32 RGB image)
+            \end{itemize}
+        
+        \item \textbf{Convolutional Layers}:
+            \begin{itemize}
+                \item Extract features using filters (kernels)
+                \item Apply activation functions (ReLU)
+            \end{itemize}
+            \begin{equation}
+            Y(i, j) = \sum_{m=1}^{M} \sum_{n=1}^{N} X(i+m, j+n) \cdot W(m, n) + b
+            \end{equation}
+            where $Y$ is the output, $X$ is the input image, $W$ is the filter, and $b$ is the bias.
+            
+        \item \textbf{Pooling Layers}:
+            \begin{itemize}
+                \item Reduce spatial dimensions (Max Pooling, Average Pooling)
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{CNN Architecture - Remaining Components}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Fully Connected Layers}:
+            \begin{itemize}
+                \item Connect every neuron from the previous to the next layer
+                \item Final predictions based on extracted features
+            \end{itemize}
+
+        \item \textbf{Output Layer}:
+            \begin{itemize}
+                \item Utilizes Softmax function for multi-class problems
+                \item Provides probability outputs for each class
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of CNNs}
+    CNNs can be applied in various domains:
+    
+    \begin{enumerate}
+        \item \textbf{Image Classification}: Identifying object categories (e.g., dogs vs. cats)
+        \item \textbf{Object Detection}: Locating and classifying objects in images (e.g., cars in a street)
+        \item \textbf{Image Segmentation}: Classifying every pixel in an image
+        \item \textbf{Facial Recognition}: Verifying human faces
+        \item \textbf{Medical Image Analysis}: Disease detection from X-rays, MRIs, etc.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Hierarchical feature learning from low-level to high-level features
+            \item Parameter sharing improves efficiency and performance
+            \item Translation invariance allows recognition of objects regardless of location
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        CNNs have transformed computer vision, enabling advanced visual data interpretation. Understanding their architecture and applications is vital for leveraging deep learning effectively.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pooling Layers in CNNs - Introduction}
+    \begin{itemize}
+        \item \textbf{Definition}: Critical components of Convolutional Neural Networks (CNNs) reducing spatial dimensions while preserving important features.
+        \item \textbf{Functionality}: Operate on feature maps, summarizing presence of features.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pooling Layers in CNNs - Significance}
+    \begin{itemize}
+        \item \textbf{Dimensionality Reduction}: 
+            \begin{itemize}
+                \item Reduces parameters and computations, allowing faster training.
+                \item Decreases risk of overfitting.
+            \end{itemize}
+        \item \textbf{Feature Extraction}: 
+            \begin{itemize}
+                \item Abstracts features through down-sampling.
+                \item Provides invariance to small translations and distortions.
+            \end{itemize}
+        \item \textbf{Retention of Key Information}: 
+            \begin{itemize}
+                \item Summarizes features, discarding less important information.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pooling Layers in CNNs - Types and Representations}
+    \begin{itemize}
+        \item \textbf{Max Pooling}:
+            \begin{itemize}
+                \item Selects maximum value from each patch.
+                \item \textbf{Example}: In block \([1, 3, 2, 4]\) outputs \(4\).
+            \end{itemize}
+        \item \textbf{Average Pooling}:
+            \begin{itemize}
+                \item Computes average value of each patch.
+                \item \textbf{Example}: Block \([1, 3, 2, 4]\) yields \(2.5\).
+            \end{itemize}
+        \item \textbf{Global Average Pooling}:
+            \begin{itemize}
+                \item Averages all values, resulting in a \(1\times1\) output.
+            \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{Mathematical Representation}
+        For a \(2 \times 2\) pooling operation:
+        \[
+        P_{i,j} = \max_{m,n}(F_{i \cdot S + m,j \cdot S + n}) \quad \text{(for max pooling)}
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pooling Layers in CNNs - Key Points and Example}
+    \begin{itemize}
+        \item Pooling reduces computational load and enhances robustness to minor shifts.
+        \item Choice of pooling type impacts model performance; max pooling is preferred in feature-rich tasks.
+        \item Used between convolutional layers to create feature hierarchies.
+    \end{itemize}
+
+    \begin{block}{Example Diagram (Textual Description)}
+        Input Feature Map:
+        \[
+        \begin{bmatrix}
+        1 & 2 & 3 & 4 \\
+        5 & 6 & 7 & 8 \\
+        9 & 10 & 11 & 12 \\
+        13 & 14 & 15 & 16
+        \end{bmatrix}
+        \]
+        Max Pooling Output (2x2):
+        \[
+        \begin{bmatrix}
+        6 & 8 \\
+        14 & 16
+        \end{bmatrix}
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pooling Layers in CNNs - Conclusion}
+    Pooling layers are essential in CNNs for:
+    \begin{itemize}
+        \item Reducing dimensionality
+        \item Decreasing computational workload
+        \item Aiding in retention of critical features
+    \end{itemize}
+    Understanding pooling methods is crucial for developing robust and efficient models in image processing applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recurrent Neural Networks (RNNs) - Introduction}
+    \begin{block}{Introduction to RNNs}
+        Recurrent Neural Networks (RNNs) are designed for processing sequences of data by utilizing information from previous inputs in the sequence.
+        \\ \\
+        Unlike traditional feedforward neural networks, RNNs maintain a hidden state that captures temporal dependencies over time.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recurrent Neural Networks (RNNs) - Structure}
+    \begin{enumerate}
+        \item \textbf{Neurons and Hidden State}:
+        \begin{itemize}
+            \item Each RNN unit consists of input neurons, hidden neurons, and an output layer.
+            \item The hidden state (h) carries information from prior time steps, enabling decisions based on past and current inputs.
+        \end{itemize}
+        
+        \item \textbf{Recurrent Connections}:
+        \begin{equation}
+            h_t = \sigma(W_h h_{t-1} + W_x x_t + b)
+        \end{equation}
+        where:
+        \begin{itemize}
+            \item $h_t$: hidden state at time step $t$
+            \item $h_{t-1}$: hidden state from time step $t-1$
+            \item $x_t$: input at time step $t$
+            \item $W_h$, $W_x$: weight matrices
+            \item $b$: bias term
+            \item $\sigma$: activation function (often tanh or ReLU)
+        \end{itemize}
+        
+        \item \textbf{Output Layer}:
+        \begin{equation}
+            y_t = W_y h_t + b_y
+        \end{equation}
+        where $y_t$ is the output, and $W_y$, $b_y$ are parameters similar to those for inputs.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recurrent Neural Networks (RNNs) - Use Cases}
+    RNNs effectively handle applications with sequential or temporal data. Common use cases include:
+    
+    \begin{itemize}
+        \item \textbf{Natural Language Processing (NLP)}:
+        \begin{itemize}
+            \item Tasks like language modeling and text generation depend on understanding word sequences and prior contexts.
+            \item \textit{Example:} Generating sentences based on previous words.
+        \end{itemize}
+        
+        \item \textbf{Speech Recognition}:
+        \begin{itemize}
+            \item RNNs process audio signals in time sequences to recognize spoken words.
+            \item \textit{Example:} Transcribing spoken language into text.
+        \end{itemize}
+        
+        \item \textbf{Time Series Prediction}:
+        \begin{itemize}
+            \item Predicting future values based on previous observations.
+            \item \textit{Example:} Stock price forecasting using prior prices.
+        \end{itemize}
+        
+        \item \textbf{Video Analysis}:
+        \begin{itemize}
+            \item Analyzing video frames over time to detect activities or objects.
+            \item \textit{Example:} Classifying actions in a video clip.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recurrent Neural Networks (RNNs) - Key Points}
+    \begin{itemize}
+        \item RNNs are tailored for sequential data, vital for tasks with time dependencies.
+        \item Their hidden state capacity allows recalling information from prior inputs.
+        \item RNNs may struggle with long sequences due to vanishing gradients, leading to advanced architectures like LSTMs.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recurrent Neural Networks (RNNs) - Conclusion}
+    \begin{block}{Conclusion}
+        Recurrent Neural Networks are key in sequence modeling, enabling applications in NLP, speech recognition, and time series predictions. Understanding RNN structure and functionality lays the foundation for exploring advanced architectures like Long Short-Term Memory (LSTM) networks, which address some RNN limitations.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Next Slide Preview}
+    \begin{block}{Next Topic}
+        Transitioning from RNNs, we'll delve into Long Short-Term Memory (LSTM) Networks, examining their mechanics and advantages over classic RNN models.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Long Short-Term Memory (LSTM) Networks - Overview}
+    \begin{block}{Overview}
+        Long Short-Term Memory (LSTM) networks are a specialized type of Recurrent Neural Networks (RNNs) designed to address the limitations of traditional RNNs, especially in learning long-range dependencies within sequence data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Long Short-Term Memory (LSTM) Networks - Mechanics}
+    LSTMs have a unique architecture composed of memory cells, input gates, output gates, and forget gates. This structure enables them to effectively remember or forget information over long sequences.
+
+    \begin{enumerate}
+        \item \textbf{Memory Cell}: The core component that stores information over time.
+        \item \textbf{Input Gate}: Controls the flow of information into the memory cell.
+              \begin{equation}
+                  i_t = \sigma(W_i \cdot [h_{t-1}, x_t])
+              \end{equation}
+        \item \textbf{Forget Gate}: Determines what information to discard from the memory cell.
+              \begin{equation}
+                  f_t = \sigma(W_f \cdot [h_{t-1}, x_t])
+              \end{equation}
+        \item \textbf{Output Gate}: Dictates how much of the memory cell's content is passed to the output.
+              \begin{equation}
+                  o_t = \sigma(W_o \cdot [h_{t-1}, x_t])
+              \end{equation}
+        \item \textbf{Cell State Update}:
+              \begin{equation}
+                  C_t = f_t * C_{t-1} + i_t * \tilde{C_t}
+              \end{equation}
+        \item \textbf{Hidden State Update}:
+              \begin{equation}
+                  h_t = o_t * \tanh(C_t)
+              \end{equation}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Long Short-Term Memory (LSTM) Networks - Advantages}
+    \begin{block}{Key Advantages of LSTMs Over Traditional RNNs}
+        \begin{itemize}
+            \item \textbf{Overcoming Vanishing Gradient Problem}: LSTMs maintain a stable gradient due to their gating mechanisms.
+            \item \textbf{Long-Term Memory Retention}: Ideal for tasks where context is crucial, such as language translation or speech recognition.
+            \item \textbf{Selective Memory}: Can selectively remember or forget information, enhancing learning capabilities.
+            \item \textbf{Improved Performance}: Often outperform traditional RNNs in various sequence modeling tasks, such as text generation and time series prediction.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Long Short-Term Memory (LSTM) Networks - Example and Conclusion}
+    \begin{block}{Practical Example}
+        \textbf{Natural Language Processing}: In translating sentences, an LSTM can remember context from earlier words, aiding in more accurate translations. 
+        For example, in the sentence "The cat sat on the mat", knowing "cat" and "sat" helps in understanding their relationship during translation.
+    \end{block}
+
+    \begin{block}{Conclusion}
+        LSTMs significantly enhance the capabilities of RNNs by addressing their limitations, providing robust solutions for sequence data tasks. Their architecture and ability to manage long-range dependencies make them a powerful tool in multiple fields.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of CNNs and RNNs}
+    \begin{block}{Overview}
+        This presentation discusses real-world applications of Convolutional Neural Networks (CNNs) in computer vision and Recurrent Neural Networks (RNNs) in natural language processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Convolutional Neural Networks (CNNs) in Computer Vision}
+    
+    \begin{block}{Concept Overview}
+        CNNs are specialized neural networks for processing structured grid data such as images. They employ convolutional layers to automatically learn spatial hierarchies of features.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Image Classification:}
+            \begin{itemize}
+                \item \textit{Example:} Classifying images of cats and dogs using datasets like CIFAR-10.
+                \item \textit{Explanation:} CNNs analyze pixel patterns and features to categorize images.
+            \end{itemize}
+        \item \textbf{Object Detection:}
+            \begin{itemize}
+                \item \textit{Example:} YOLO (You Only Look Once) for real-time object detection.
+                \item \textit{Explanation:} CNNs identify and localize objects within images with bounding boxes.
+            \end{itemize}
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{CNN Applications Continued}
+    
+    \begin{itemize}
+        \item \textbf{Image Segmentation:}
+            \begin{itemize}
+                \item \textit{Example:} U-Net architecture in medical images for tumor detection.
+                \item \textit{Explanation:} CNNs segment images at the pixel level, differentiating regions.
+            \end{itemize}
+        \item \textbf{Facial Recognition:}
+            \begin{itemize}
+                \item \textit{Example:} Social media platforms for tagging individuals.
+                \item \textit{Explanation:} CNNs extract unique features from facial images for identification.
+            \end{itemize}
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recurrent Neural Networks (RNNs) in NLP}
+    
+    \begin{block}{Concept Overview}
+        RNNs are designed to handle sequential data by maintaining memory of past inputs, making them effective for text prediction and language modeling.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Language Translation:}
+            \begin{itemize}
+                \item \textit{Example:} Google’s translation services.
+                \item \textit{Explanation:} RNNs analyze word context for meaningful translations.
+            \end{itemize}
+        \item \textbf{Sentiment Analysis:}
+            \begin{itemize}
+                \item \textit{Example:} Analyzing customer reviews.
+                \item \textit{Explanation:} RNNs interpret emotional tone from word sequences.
+            \end{itemize}
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RNN Applications Continued}
+    
+    \begin{itemize}
+        \item \textbf{Text Generation:}
+            \begin{itemize}
+                \item \textit{Example:} AI-generated writing tools creating poems or stories.
+                \item \textit{Explanation:} RNNs predict next words based on preceding context.
+            \end{itemize}
+        \item \textbf{Speech Recognition:}
+            \begin{itemize}
+                \item \textit{Example:} Virtual assistants like Siri or Google Assistant.
+                \item \textit{Explanation:} RNNs process audio sequences to decode speech.
+            \end{itemize}
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Code Snippets}
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item \textbf{CNN Strengths:} Effective for spatial data and capturing local patterns.
+            \item \textbf{RNN Strengths:} Designed for sequence data, capturing temporal dependencies.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{CNN Example Code (TensorFlow)}
+        \begin{lstlisting}
+import tensorflow as tf
+from tensorflow.keras import layers, models
+
+model = models.Sequential([
+    layers.Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 3)),
+    layers.MaxPooling2D((2, 2)),
+    layers.Conv2D(64, (3, 3), activation='relu'),
+    layers.MaxPooling2D((2, 2)),
+    layers.Flatten(),
+    layers.Dense(64, activation='relu'),
+    layers.Dense(10, activation='softmax')  # For 10 categories
+])
+        \end{lstlisting}
+    \end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{RNN Example Code (TensorFlow)}
+    
+    \begin{block}{RNN Example Code}
+        \begin{lstlisting}
+from tensorflow.keras import layers, models
+
+model = models.Sequential([
+    layers.SimpleRNN(64, input_shape=(None, num_features)),
+    layers.Dense(1, activation='sigmoid')  # Binary classification
+])
+        \end{lstlisting}
+    \end{block}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Future Trends - Key Points Recap}
+    
+    \begin{enumerate}
+        \item \textbf{Advanced Neural Network Types}:
+        \begin{itemize}
+            \item \textbf{CNNs}: Excel at analyzing spatial hierarchies in images, forming the backbone of computer vision.
+            \item \textbf{RNNs}: Designed for sequential data, effective for natural language processing and time series.
+        \end{itemize}
+        
+        \item \textbf{Techniques and Improvements}:
+        \begin{itemize}
+            \item \textbf{Transfer Learning}: Utilizes pre-trained networks for faster training and accuracy on smaller datasets.
+            \item \textbf{Regularization Methods}: Techniques like Dropout prevent overfitting, aiding in model generalization.
+        \end{itemize}
+        
+        \item \textbf{Real-World Impact}: Applications span across fields such as autonomous vehicles, facial recognition, chatbots, and translation systems.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Trends in Neural Networks}
+    
+    \begin{enumerate}
+        \item \textbf{Integration of AI with Other Technologies}:
+        \begin{itemize}
+            \item \textbf{Edge Computing}: Neural networks deployed on edge devices for real-time processing.
+            \item \textbf{AI and IoT}: Smart systems in healthcare, smart homes, and industrial automation.
+        \end{itemize}
+        
+        \item \textbf{Explainable AI (XAI)}: Greater focus on creating interpretable models to enhance transparency and accountability.
+        
+        \item \textbf{Neuro-symbolic AI}: Combines neural networks with symbolic reasoning for tasks requiring logic and common sense.
+        
+        \item \textbf{Self-Supervised Learning}: Training on unlabelled data reduces dependence on labeled datasets.
+        
+        \item \textbf{Quantum Neural Networks}: Potential use of quantum computing to enhance training speeds and model complexity.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways and Example Code}
+    
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Advanced neural networks lead the way in various AI applications.
+            \item Ongoing innovation is essential to address emerging challenges.
+            \item Future advancements will focus on integration, interpretability, efficiency, and capabilities.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example Code Snippet}
+        \begin{lstlisting}[language=Python]
+import tensorflow as tf
+
+# Example of creating a simple CNN model in TensorFlow
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 3)),
+    tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+
+\end{document}

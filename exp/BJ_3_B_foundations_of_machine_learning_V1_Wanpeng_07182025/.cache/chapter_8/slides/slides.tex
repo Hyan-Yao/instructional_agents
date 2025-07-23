@@ -1,0 +1,1256 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Dealing with Overfitting and Underfitting]{Week 8: Dealing with Overfitting and Underfitting}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Overfitting and Underfitting}
+    \begin{block}{Understanding Model Performance}
+        In machine learning, achieving a well-performing model is crucial, and two common issues that can significantly hinder this performance are \textbf{overfitting} and \textbf{underfitting}. 
+        Understanding these concepts is essential for developing models that generalize well when faced with new, unseen data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Overfitting}
+    \begin{itemize}
+        \item \textbf{Definition:} Occurs when a model learns the training data too well, capturing noise and random fluctuations instead of the underlying pattern.
+        \item \textbf{Characteristics:}
+        \begin{itemize}
+            \item High accuracy on training data
+            \item Poor performance on validation/testing data
+        \end{itemize}
+        \item \textbf{Example:} A polynomial regression model fitting a dataset with only a few points perfectly by using a high-degree polynomial. 
+        While it might show high accuracy on the training set, it performs poorly on test data due to its complexity.
+    \end{itemize}
+    \begin{block}{Illustration}
+        (Imagine a graph where a complex curve perfectly fits all training data points but diverges wildly outside this data range.)
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Underfitting}
+    \begin{itemize}
+        \item \textbf{Definition:} Happens when a model is too simple to capture the underlying pattern in the data, leading to poor performance on both training and testing datasets.
+        \item \textbf{Characteristics:}
+        \begin{itemize}
+            \item Low accuracy on both training and testing data
+            \item Simplistic model assumptions (e.g., a linear model applied to a non-linear dataset)
+        \end{itemize}
+        \item \textbf{Example:} Using a simple linear regression model on a dataset that follows a quadratic trend, resulting in large errors.
+    \end{itemize}
+    \begin{block}{Illustration}
+        (Imagine a graph where a straight line tries to fit a parabolic curve but misses the data points entirely.)
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Trade-Off:} There is a trade-off between overfitting and underfitting known as the \textbf{bias-variance trade-off}:
+        \begin{itemize}
+            \item \textbf{Bias:} Errors due to overly simplistic assumptions in the learning algorithm, leading to underfitting.
+            \item \textbf{Variance:} Errors due to excessive complexity in the model, leading to overfitting.
+        \end{itemize}
+        \item \textbf{Performance Measurement:} Always evaluate your model's performance using cross-validation techniques to identify overfitting or underfitting.
+        \item \textbf{Goal:} The primary goal in machine learning is to find a sweet spot where the model achieves the best generalization on unknown data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Next Steps}
+    By mastering the concepts of overfitting and underfitting, you can construct models that fit the training data well while maintaining good predictive accuracy on new datasets, ensuring robust model performance.
+    
+    \textbf{Next Slide Preview:} In the next slide, we will delve deeper into understanding overfitting, its definitions, characteristics, and the scenarios in which it occurs.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Overfitting? - Definition}
+    \begin{block}{Definition}
+        Overfitting occurs in machine learning when a model learns not only the underlying patterns in the training data but also the noise and outliers. Consequently, the model performs exceptionally well on the training dataset but fails to generalize to new, unseen data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Overfitting? - Characteristics}
+    \begin{itemize}
+        \item \textbf{High Training Accuracy:} Very high accuracy on training data.
+        \item \textbf{Poor Validation/Test Accuracy:} Underperforms on validation/test datasets.
+        \item \textbf{Complex Model Structures:} Often results from overly complex architectures.
+        \item \textbf{Sensitivity to Noise:} Adapts too much to every data point, including outliers.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Overfitting? - Causes}
+    \begin{itemize}
+        \item \textbf{Insufficient Training Data:} Limited or non-representative dataset.
+        \item \textbf{Excessive Complexity:} Too many parameters relative to data amount.
+        \item \textbf{Lack of Regularization:} Absence of techniques to constrain model complexity.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Overfitting? - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Bias-Variance Trade-off:} Overfitting increases variance and decreases bias.
+        \item \textbf{Validation Importance:} Cross-validation can help identify overfitting.
+        \item \textbf{Preventive Techniques:} 
+        \begin{itemize}
+            \item Pruning (for decision trees)
+            \item Regularization (penalties for complexity)
+            \item Early Stopping (halting training at decline in validation accuracy)
+            \item Data Augmentation (increasing dataset size)
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Overfitting? - Example}
+    Consider a polynomial regression model attempting to fit a dataset of points:
+    \begin{itemize}
+        \item \textbf{Underfitting:} Linear model failing to capture trend (high bias).
+        \item \textbf{Ideal Fit:} Quadratic model capturing trend (balanced bias and variance).
+        \item \textbf{Overfitting:} High-degree polynomial fitting training data perfectly, but performs poorly on new data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Overfitting? - Code Example}
+    \begin{lstlisting}[language=Python]
+# Example of Overfitting in Python using Scikit-Learn
+from sklearn.datasets import make_regression
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression, Ridge
+import matplotlib.pyplot as plt
+
+# Create dataset
+X, y = make_regression(n_samples=100, noise=15)
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Fit a complex model
+model = Ridge(alpha=1)  # Using Ridge for simplification
+model.fit(X_train, y_train)
+
+# Predict
+train_pred = model.predict(X_train)
+test_pred = model.predict(X_test)
+    \end{lstlisting}
+    \begin{block}{Note}
+        This visualizes how a complex model may overfit training data while struggling with test data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Overfitting? - Conclusion}
+    By understanding overfitting, we can better tune our machine learning models for optimal performance, ensuring they are robust and capable of making accurate predictions on unseen data.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Underfitting?}
+    
+    \begin{block}{Definition of Underfitting}
+        Underfitting occurs when a machine learning model is too simple to capture the underlying patterns in the training data. It results in poor performance on both the training data and new, unseen data.
+    \end{block}
+    
+    This situation often arises when a model has insufficient complexity to represent the relationships in the dataset.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Underfitting vs. Overfitting}
+    
+    \begin{itemize}
+        \item \textbf{Underfitting:}
+        \begin{itemize}
+            \item Model performs poorly on both training and test datasets.
+            \item Results from overly simplistic models, like linear regression on non-linear data.
+            \item Indicates a lack of learned patterns.
+        \end{itemize}
+        
+        \item \textbf{Overfitting:}
+        \begin{itemize}
+            \item Model performs well on training data but poorly on unseen data (test dataset).
+            \item Caused by excessive complexity in the model, such as too many parameters or layers.
+            \item Indicates that the model has memorized training data rather than learned general patterns.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Characteristics of Underfit Models}
+    
+    \begin{enumerate}
+        \item \textbf{High Bias:} Characterized by high bias, leading to systematic errors due to strong assumptions about the data.
+        
+        \item \textbf{Low Complexity:} Simple models like linear regression on polynomial relationships often suffer from underfitting.
+        
+        \item \textbf{Inadequate Feature Use:} Fails to capture key features that could enhance predictive accuracy.
+        
+        \item \textbf{Poor Performance Metrics:} Evaluation metrics (e.g., Mean Squared Error, accuracy) show disappointing results both on training and validation datasets.
+        
+        \item \textbf{Example:} A linear regression model fitting data points that follow a curved pattern results in a high error rate.
+    \end{enumerate}
+    
+    \begin{block}{Key Takeaways}
+        - Aim for a balance between model complexity and data representation.
+        - Address underfitting by increasing model complexity or using more features.
+        - Regularly evaluate model performance using appropriate metrics.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Identifying Overfitting and Underfitting - Overview}
+    \begin{block}{Understanding Overfitting and Underfitting}
+        \begin{itemize}
+            \item \textbf{Overfitting:} Model learns training data too well, capturing noise. 
+            \begin{itemize}
+                \item Results in poor performance on unseen data.
+            \end{itemize}
+            \item \textbf{Underfitting:} Model is too simple, failing to capture the underlying trend.
+            \begin{itemize}
+                \item Results in poor performance on both training and testing datasets.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Identifying Overfitting and Underfitting - Detection Techniques}
+    \begin{block}{Techniques for Detection}
+        \begin{enumerate}
+            \item \textbf{Performance Metrics}
+            \begin{itemize}
+                \item Train/Test Split: Compare performance metrics (e.g., accuracy, loss) on training vs. validation sets.
+                \item \textbf{Example:} Training Accuracy: 95\%, Validation Accuracy: 70\% (indicative of overfitting).
+            \end{itemize}
+            
+            \item \textbf{Cross-Validation}
+            \begin{itemize}
+                \item k-fold method: Train model k times, each time omitting one subset for validation.
+            \end{itemize}
+            
+            \item \textbf{Learning Curves}
+            \begin{itemize}
+                \item Plot performance over iterations. 
+                \item Overfitting Indicator: Large gap between training and validation performance.
+                \item Underfitting Indicator: Low performance on both.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Identifying Overfitting and Underfitting - More Techniques}
+    \begin{block}{More Techniques}
+        \begin{enumerate}[resume]
+            \item \textbf{Regularization Techniques}
+            \begin{itemize}
+                \item Add penalties for complexity during model training (e.g., L1/L2).
+            \end{itemize}
+            
+            \item \textbf{Visual Diagnosis}
+            \begin{itemize}
+                \item Scatter plots and residual plots assess model fit.
+                \item Even residuals indicate a well-fitted model; patterns suggest overfitting/underfitting.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item High Training Accuracy and Low Validation Accuracy $\rightarrow$ Overfitting.
+            \item Low Accuracy on both training and validation sets $\rightarrow$ Underfitting.
+            \item Regular use of performance metrics and visualizations is crucial.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Example Code Snippet}
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LogisticRegression
+
+# Create data
+X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2)
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Evaluate performance
+train_accuracy = accuracy_score(y_train, model.predict(X_train))
+val_accuracy = accuracy_score(y_val, model.predict(X_val))
+
+print(f'Train Accuracy: {train_accuracy}, Validation Accuracy: {val_accuracy}')
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Impacts of Overfitting - Part 1}
+    \frametitle{Introduction to Overfitting}
+    \begin{itemize}
+        \item Overfitting occurs when a model learns the training data too well, capturing noise rather than the underlying patterns.
+        \item Results:
+            \begin{itemize}
+                \item Excellent performance on training data 
+                \item Poor performance on unseen data
+            \end{itemize}
+        \item Leads to high variance problems.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Impacts of Overfitting - Part 2}
+    \frametitle{Negative Effects of Overfitting}
+    \begin{enumerate}
+        \item \textbf{Poor Generalization}:
+            \begin{itemize}
+                \item Definition: Ability to perform well on unseen data.
+                \item Impact: An overfitted model fails to predict accurately on test data.
+                \item Example: A flower classification model misclassifies new flowers.
+            \end{itemize}
+
+        \item \textbf{Increased Complexity}:
+            \begin{itemize}
+                \item Definition: Creating overly complex models with too many parameters.
+                \item Impact: Greater computational cost and chances of noise misinterpretation.
+                \item Key Point: Balance model complexity with training data size is crucial.
+            \end{itemize}
+
+        \item \textbf{Unreliable Predictions}:
+            \begin{itemize}
+                \item Definition: Overfitted model sensitivity to training data specifics.
+                \item Impact: Minor input changes cause large output deviations.
+                \item Example: Misleading medical diagnoses based on spurious patterns.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Impacts of Overfitting - Part 3}
+    \frametitle{Visualizing Overfitting}
+    \begin{itemize}
+        \item Graphical Representation:
+            \begin{itemize}
+                \item Training Data Curve: Perfectly fits training data points.
+                \item Validation/Test Data Curve: Shows poor performance and diverges from training accuracy.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Impacts of Overfitting - Part 4}
+    \frametitle{Preventing Overfitting}
+    \begin{itemize}
+        \item \textbf{Strategies}:
+            \begin{itemize}
+                \item Cross-Validation: Use k-fold cross-validation for diverse training sets.
+                \item Regularization: Apply L1 (Lasso) and L2 (Ridge) regularization to prevent complexity.
+                \item Simplifying the Model: Use feature selection or dimensionality reduction (e.g., PCA).
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Impacts of Overfitting - Conclusion}
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item Understanding overfitting is crucial for robust machine learning models.
+        \item Importance of balancing model complexity and training data.
+        \item Always prioritize generalization over training accuracy for reliable predictions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impacts of Underfitting - Understanding Underfitting}
+    \begin{block}{Definition}
+        Underfitting occurs when a machine learning model is too simple to capture the underlying patterns in the data. This results in inadequate learning from the training data, leading to poor predictive performance on both the training and test datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impacts of Underfitting - Consequences}
+    \begin{enumerate}
+        \item \textbf{Poor Accuracy:}
+        \begin{itemize}
+            \item Low accuracy on both training and test datasets.
+            \item Example: A linear regression model fitting a quadratic relationship produces suboptimal predictions.
+        \end{itemize}
+
+        \item \textbf{High Bias:}
+        \begin{itemize}
+            \item Indicates strong assumptions that do not reflect data complexity.
+            \item Can lead to systematic errors in predictions.
+            \item Formula: 
+            \begin{equation}
+                \text{Bias}^2 = \text{Expected Prediction} - \text{True Value}
+            \end{equation}
+        \end{itemize}
+
+        \item \textbf{Insufficient Complexity:}
+        \begin{itemize}
+            \item Occurs when using overly simplistic algorithms.
+            \item Example: A shallow decision tree failing to capture data variation.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impacts of Underfitting - Example Scenario and Key Points}
+    \begin{block}{Example Scenario}
+        A model predicting house prices based solely on the number of bedrooms might ignore important features like location and size, resulting in inaccurate predictions due to underfitting.
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Feedback Loop:} Poor predictions can lead to incorrect conclusions about data, perpetuating errors.
+            \item \textbf{Detection:} Evaluate metrics like mean squared error (MSE) on training and test datasets; both will be high if underfitting is present.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques to Combat Overfitting - Introduction}
+    \begin{block}{What is Overfitting?}
+        Overfitting occurs when a model learns not only the underlying patterns in the training data but also the noise. This leads to poor performance on unseen data. Combatting overfitting is crucial for developing robust machine learning models.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques to Combat Overfitting - Key Techniques}
+    \begin{enumerate}
+        \item \textbf{Train with More Data}
+            \begin{itemize}
+                \item \textbf{Explanation:} More training examples help the model generalize better.
+                \item \textbf{Example:} 10,000 samples vs. 1,000 samples.
+            \end{itemize}
+
+        \item \textbf{Simpler Models}
+            \begin{itemize}
+                \item \textbf{Explanation:} Choosing less complex models reduces overfitting.
+                \item \textbf{Example:} Linear regression vs. 5th-degree polynomial regression.
+            \end{itemize}
+
+        \item \textbf{Cross-Validation}
+            \begin{itemize}
+                \item \textbf{Explanation:} Ensures model generalization by validating on different subsets.
+                \item \textbf{Example:} K-fold cross-validation.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques to Combat Overfitting - Additional Techniques}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Early Stopping}
+            \begin{itemize}
+                \item \textbf{Explanation:} Halt training when validation performance starts degrading.
+                \item \textbf{Example:} Monitor validation loss during training.
+            \end{itemize}
+
+        \item \textbf{Regularization Techniques}
+            \begin{itemize}
+                \item \textbf{L1 Regularization (Lasso):}
+                    \begin{equation}
+                    J(\theta) = \text{Loss} + \lambda \sum_{i=1}^{n} |\theta_i|
+                    \end{equation}
+                    \begin{itemize}
+                        \item \textbf{Benefit:} Encourages sparsity in the model.
+                    \end{itemize}
+                
+                \item \textbf{L2 Regularization (Ridge):}
+                    \begin{equation}
+                    J(\theta) = \text{Loss} + \lambda \sum_{i=1}^{n} \theta_i^2
+                    \end{equation}
+                    \begin{itemize}
+                        \item \textbf{Benefit:} Distributes coefficients and reduces influence of any single feature.
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques to Combat Overfitting - Further Techniques}
+    \begin{enumerate}
+        \setcounter{enumi}{5}
+        \item \textbf{Dropout (for Neural Networks)}
+            \begin{itemize}
+                \item \textbf{Explanation:} Randomly sets a fraction of input units to zero during training, preventing co-adaptation.
+                \item \textbf{Example:} 0.5 dropout rate means half of the neurons are turned off during training.
+            \end{itemize}
+
+        \item \textbf{Data Augmentation}
+            \begin{itemize}
+                \item \textbf{Explanation:} Enhances training set with modified existing data, increasing diversity.
+                \item \textbf{Example:} Applying rotations and shifts to image data.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques to Combat Overfitting - Conclusion}
+    \begin{block}{Conclusion}
+        Reducing overfitting is key to creating models that perform well on unseen data. Employing a mix of the above techniques can significantly improve model generalization. Understanding and implementing these techniques is a crucial skill in machine learning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Regularization}
+    \begin{itemize}
+        \item Regularization is used in machine learning to prevent overfitting.
+        \item It introduces additional information or constraints into the model, effectively reducing complexity.
+        \item Helps models generalize better to unseen data.
+    \end{itemize}
+
+    \begin{block}{Key Concepts}
+        \begin{itemize}
+            \item \textbf{Overfitting}: Learning noise in training data, resulting in poor performance on new data.
+            \item \textbf{Underfitting}: Model is too simple to capture the underlying trends in the data.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Regularization Techniques}
+    \begin{enumerate}
+        \item L1 Regularization (Lasso Regularization)
+        \item L2 Regularization (Ridge Regularization)
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{L1 Regularization (Lasso Regularization)}
+    \begin{itemize}
+        \item \textbf{Concept}: Adds a penalty equal to the absolute value of coefficients, shrinking some to zero.
+        \item \textbf{Formula}:
+        \begin{equation}
+            J(\theta) = \text{Loss} + \lambda \sum_{i=1}^{n} |\theta_i|
+        \end{equation}
+        \item \textbf{Example}: In a model with multiple features, L1 can identify significant features by reducing less important ones to zero.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{L2 Regularization (Ridge Regularization)}
+    \begin{itemize}
+        \item \textbf{Concept}: Adds a penalty equal to the square of the coefficients' magnitudes, reducing their size without driving some to zero.
+        \item \textbf{Formula}:
+        \begin{equation}
+            J(\theta) = \text{Loss} + \lambda \sum_{i=1}^{n} \theta_i^2
+        \end{equation}
+        \item \textbf{Example}: In linear regression, L2 helps smooth the learned function and reduces variance, improving predictive capabilities.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of L1 and L2 Regularization}
+    \begin{itemize}
+        \item \textbf{Sparsity}: 
+        \begin{itemize}
+            \item L1 leads to sparse solutions (zero coefficients).
+            \item L2 generally keeps all features in the model.
+        \end{itemize}
+        \item \textbf{Performance}:
+        \begin{itemize}
+            \item L1 is preferable when feature selection is crucial.
+            \item L2 is suitable when all features are believed to have influence.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Choosing the right regularization depends on the problem and the dataset.
+        \item Regularization enhances model generalization and prevents overfitting.
+        \item Tuning the regularization parameter $\lambda$ is essential, often done via cross-validation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet Example (Python)}
+    \begin{lstlisting}[language=Python]
+from sklearn.linear_model import Lasso, Ridge
+
+# L1 Regularization (Lasso)
+lasso_model = Lasso(alpha=0.1)
+lasso_model.fit(X_train, y_train)
+
+# L2 Regularization (Ridge)
+ridge_model = Ridge(alpha=0.1)
+ridge_model.fit(X_train, y_train)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Cross-Validation - Overview}
+    \begin{block}{What is Cross-Validation?}
+        Cross-validation is a statistical technique used to assess how well a model generalizes to an independent dataset. It evaluates the model's ability to predict new data and helps to prevent overfitting.
+    \end{block}
+    
+    \begin{block}{Why Use Cross-Validation?}
+        - Prevents overfitting by ensuring the model captures underlying patterns rather than noise.\\
+        - Provides a more reliable estimate of model performance than a single train-test split.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Cross-Validation - Process}
+    \begin{block}{How Does Cross-Validation Work?}
+        \begin{enumerate}
+            \item \textbf{Data Splitting}: The dataset is divided into several subsets or "folds".
+            \item \textbf{Training and Validation}: The model is trained on (k-1) folds and validated on the remaining fold.
+            \item \textbf{Repetition}: This process is repeated k times, with each fold used as the validation set once.
+        \end{enumerate}
+    \end{block}
+
+    \begin{block}{Common Types of Cross-Validation}
+        - \textbf{K-Fold Cross-Validation}: Divides the dataset into k subsets. Each fold is used for validation once.\\
+        - \textbf{Stratified K-Fold}: Ensures each fold has the same proportion of class labels as the original dataset, beneficial for imbalanced datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Cross-Validation - Example}
+    \begin{block}{Example: K-Fold with k=5}
+        Suppose you have 100 samples:
+        - Split into 5 folds of 20 samples each.\\
+        - Train on 4 folds (80 samples), validate on remaining fold (20 samples).
+    \end{block}
+
+    \begin{block}{Cross-Validation Process}
+        \begin{enumerate}
+            \item 1st Iteration: Train on Folds 1 to 4, Validate on Fold 5.
+            \item 2nd Iteration: Train on Folds 1, 2, 3, 5, Validate on Fold 4.
+            \item ... Repeat until all folds are validated.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Cross-Validation - Key Benefits}
+    \begin{block}{Key Points to Emphasize}
+        - **Reduces Overfitting**: Validating on different subsets ensures performance isn't due to lucky training on a specific dataset.\\
+        - **Better Model Evaluation**: Offers a more reliable estimate of performance compared to a single train-test split.\\
+        - **Hyperparameter Tuning**: Useful in tuning hyperparameters by assessing performance across multiple folds.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Cross-Validation - Code Example}
+    \begin{block}{Code Snippet: K-Fold Cross-Validation in Python}
+        \begin{lstlisting}[language=Python]
+from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import load_iris
+
+# Load example dataset
+data = load_iris()
+X, y = data.data, data.target
+
+# Initialize KFold
+kf = KFold(n_splits=5)
+
+# Initialize model
+model = RandomForestClassifier()
+
+# Perform cross-validation
+scores = cross_val_score(model, X, y, cv=kf)
+
+print("Cross-Validation Scores:", scores)
+print("Mean Accuracy:", scores.mean())
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Cross-Validation - Conclusion}
+    \begin{block}{Conclusion}
+        Cross-validation is an essential tool in model evaluation that:
+        - Provides better understanding of model performance.\\
+        - Prevents overfitting by testing the model on various unseen samples.\\
+        - Guides better model selection and hyperparameter tuning, leading to improved predictive performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pruning in Decision Trees - Overview}
+    \begin{block}{Brief Summary}
+        Pruning techniques are employed in decision trees to reduce overfitting by simplifying the model. This involves removing parts of the tree that do not significantly contribute to predictive performance, enhancing generalization on unseen data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Overfitting in Decision Trees}
+    \begin{itemize}
+        \item Overfitting occurs when a model captures noise rather than the underlying data pattern.
+        \item Decision trees are prone to overfitting by becoming too complex and deep.
+        \item Symptoms: High training accuracy but low validation performance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Pruning: A Solution to Overfitting}
+    \begin{block}{Definition}
+        Pruning is the process of removing tree sections that add little predictive value, simplifying the decision tree and reducing overfitting.
+    \end{block}
+    
+    \begin{itemize}
+        \item Simplifies the model structure
+        \item Enhances performance on unseen data
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Pruning Techniques}
+    \begin{enumerate}
+        \item \textbf{Pre-Pruning (Early Stopping):}
+            \begin{itemize}
+                \item Stop growing the tree based on specific criteria.
+                \item Example criteria:
+                    \begin{itemize}
+                        \item Maximum depth of the tree
+                        \item Minimum samples required to split a node
+                        \item Minimum impurity decrease
+                    \end{itemize}
+            \end{itemize}
+        \item \textbf{Post-Pruning:}
+            \begin{itemize}
+                \item Grow the full tree first and remove less important branches.
+                \item Utilize validation datasets to evaluate the impact of branch removal.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Summary}
+    \begin{itemize}
+        \item Pruning balances complexity and simplicity, crucial for preventing overfitting.
+        \item An optimal pruned tree usually outperforms an unpruned tree on validation datasets.
+        \item Both pre-pruning and post-pruning can be used based on model needs.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Implementing pruning enhances decision tree robustness and predictive accuracy on unseen data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Selection - Importance}
+    \begin{block}{Importance of Feature Selection}
+        Feature selection is a crucial step in the machine learning pipeline aimed at improving model performance by selecting only the most relevant features from the dataset. 
+    \end{block}
+    
+    \begin{itemize}
+        \item Helps combat overfitting and underfitting
+        \item Reduces model complexity
+        \item Highlights essential patterns in the data
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Selection - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Overfitting vs. Underfitting}:
+            \begin{itemize}
+                \item \textbf{Overfitting}: Learning noise instead of trends leads to poor performance on unseen data.
+                \item \textbf{Underfitting}: Too simple of a model fails to capture underlying trends.
+            \end{itemize}
+        
+        \item \textbf{Reducing Dimensionality}:
+            \begin{itemize}
+                \item Fewer features result in simpler models and reduced likelihood of overfitting.
+            \end{itemize}
+
+        \item \textbf{Noise Reduction}:
+            \begin{itemize}
+                \item Irrelevant features introduce noise, making it difficult to uncover relationships.
+                \item Selecting relevant features minimizes this noise.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Feature Selection - Techniques}
+    \begin{itemize}
+        \item \textbf{Filter Methods}: Score features using statistical techniques.
+            \begin{block}{Example: Pearson's correlation}
+                Evaluate correlation with the target variable.
+            \end{block}
+            \begin{lstlisting}[language=Python]
+import pandas as pd
+from sklearn.feature_selection import SelectKBest, f_classif
+
+# Load your dataset
+dataframe = pd.read_csv('data.csv')
+X = dataframe.iloc[:, :-1] # Features
+y = dataframe.iloc[:, -1]  # Target variable
+
+# Select top K features
+best_features = SelectKBest(score_func=f_classif, k=10)
+fit = best_features.fit(X, y)
+                \end{lstlisting}
+
+        \item \textbf{Wrapper Methods}: Evaluate subsets of features.
+            \begin{block}{Example: Recursive Feature Elimination (RFE)}
+                Prunes less meaningful features based on model performance.
+            \end{block}
+        
+        \item \textbf{Embedded Methods}: Integrate feature selection during training.
+            \begin{block}{Example: Lasso Regression}
+                Uses L1 regularization to penalize irrelevant features.
+            \end{block}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ensemble Methods}
+    \begin{block}{Definition}
+        Ensemble methods combine multiple models to improve prediction accuracy and robustness, effectively addressing overfitting and underfitting. 
+    \end{block}
+    \begin{block}{Key Features}
+        \begin{itemize}
+            \item Leverage strengths of various algorithms.
+            \item Provide generalized predictions beyond individual models.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Ensemble Methods}
+    \begin{enumerate}
+        \item \textbf{Bagging (Bootstrap Aggregating)}
+        \begin{itemize}
+            \item Reduces variance by training multiple models on different subsets.
+            \item Example: Random Forest builds numerous decision trees on bootstrapped datasets.
+            \item Key Characteristics:
+                \begin{itemize}
+                    \item Models are trained independently.
+                    \item Predictions are combined by averaging (regression) or voting (classification).
+                \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Boosting}
+        \begin{itemize}
+            \item Builds a sequential model that corrects errors of previous ones.
+            \item Example: AdaBoost, XGBoost.
+            \item Key Characteristics:
+                \begin{itemize}
+                    \item Models are trained sequentially.
+                    \item Predictions are combined by weighting outputs based on performance.
+                \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Formulas}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Reduction of Overfitting: Both methods leverage diversity among models.
+            \item Handling Bias-Variance Trade-off: Balances bias (boosting) and variance (bagging).
+            \item Model Interpretability: Techniques available to comprehend ensemble decisions.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Formulas}
+        \begin{equation}
+            \text{Final Prediction} = \text{mode of } (\text{predictions } \{y_1, y_2, \ldots, y_n\})
+        \end{equation}
+        \begin{equation}
+            F(x) = \sum_{m=1}^{M} \alpha_m h_m(x)
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques to Combat Underfitting}
+    \begin{block}{Understanding Underfitting}
+        \begin{itemize}
+            \item \textbf{Definition}: Underfitting occurs when a model is too simple to capture underlying patterns in data.
+            \item \textbf{Symptoms}: High bias, low variance; low accuracy on training data indicates failure to learn effectively.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques to Address Underfitting - Part 1}
+    \begin{enumerate}
+        \item \textbf{Increase Model Complexity}
+            \begin{itemize}
+                \item Shift from simpler models (e.g., linear regression) to complex models (e.g., polynomial regression).
+                \item Example: Use a polynomial model $y = ax^2 + bx + c$ instead of $y = mx + c$.
+                \item \textbf{Illustration}: A linear fit on a parabolic dataset will underperform compared to a quadratic polynomial.
+            \end{itemize}
+        
+        \item \textbf{Feature Engineering}
+            \begin{itemize}
+                \item Create new features or modify existing ones to enrich input data.
+                \item Techniques:
+                    \begin{itemize}
+                        \item Interaction Terms: Combine features (e.g., $x_1 \times x_2$).
+                        \item Polynomial Features: Add powers of features up to a certain degree.
+                    \end{itemize}
+                \item Example: In a housing dataset, create features like "bedrooms $\times$ bathrooms".
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques to Address Underfitting - Part 2}
+    \begin{enumerate}[resume]
+        \item \textbf{Increase Training Data}
+            \begin{itemize}
+                \item More data helps models learn intricate patterns, reducing underfitting.
+                \item Methods:
+                    \begin{itemize}
+                        \item Data Augmentation: For images, apply transformations like rotation, flipping, and zooming.
+                        \item Collecting More Data: Use different sources or surveys for additional data points.
+                    \end{itemize}
+                \item \textbf{Impact}: Increases variability for better generalization.
+            \end{itemize}
+        
+        \item \textbf{Reduce Regularization}
+            \begin{itemize}
+                \item Adjusting regularization parameters (e.g., in Lasso or Ridge regression) can improve model fitting.
+                \item Effect: Too much regularization can lead to underfitting.
+                \item Example: Lowering alpha in Ridge regression reduces penalty on weights, allowing more complexity.
+            \end{itemize}
+    
+        \item \textbf{Use More Powerful Algorithms}
+            \begin{itemize}
+                \item Choose algorithms that capture complex patterns.
+                \item Examples:
+                    \begin{itemize}
+                        \item Decision Trees: Model non-linear relationships with deeper trees.
+                        \item SVM with Non-linear Kernels: Find complex decision boundaries.
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways}
+    \begin{block}{Conclusion}
+        Successfully combating underfitting often requires a multi-faceted approach, combining these techniques to find a balance for effective learning and generalization to new data.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Key Takeaways:}
+        \begin{itemize}
+            \item Identify and understand underfitting: High bias indicates a simplistic model.
+            \item Iterate on model complexity: Adjust architecture and features to capture data relationships.
+            \item Regularly evaluate model performance: Use training and validation sets to assess improvements continuously.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Choosing the Right Model - Overview}
+    \begin{block}{Understanding Overfitting and Underfitting}
+        \begin{itemize}
+            \item \textbf{Overfitting:} High accuracy on training data but poor performance on unseen data due to learning noise.
+            \item \textbf{Underfitting:} Low accuracy on both training and test datasets due to a model too simple to capture data complexity.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Choosing the Right Model - Strategies}
+    \begin{enumerate}
+        \item \textbf{Balance Model Complexity}
+        \begin{itemize}
+            \item Choose a model complexity that matches data characteristics.
+            \item \textit{Example:} Linear regression for size; polynomial regression for multiple features.
+        \end{itemize}
+        
+        \item \textbf{Cross-Validation}
+        \begin{itemize}
+            \item Use k-fold cross-validation to ensure the model generalizes well. 
+            \item A consistently performing model in cross-validation can perform well on unseen data.
+        \end{itemize}
+        
+        \item \textbf{Regularization Techniques}
+        \begin{itemize}
+            \item Apply L1 (Lasso) or L2 (Ridge) regularization to reduce overfitting.
+            \item \textit{Formula for L2 Regularization:}
+            \begin{equation}
+                J(\theta) = \text{Loss}(\theta) + \lambda \sum_{j=1}^{n} \theta_j^2
+            \end{equation}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Choosing the Right Model - Additional Strategies}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Feature Selection}
+        \begin{itemize}
+            \item Identify and select relevant features to reduce noise and overfitting.
+            \item \textit{Example:} Backward elimination or forward selection.
+        \end{itemize}
+        
+        \item \textbf{Model Comparison}
+        \begin{itemize}
+            \item Experiment with different models based on performance metrics.
+            \item Different structures can yield varying results on the same data.
+        \end{itemize}
+        
+        \item \textbf{Learning Curves}
+        \begin{itemize}
+            \item Plot learning curves to visualize model performance.
+            \item Helps diagnose underfitting or overfitting: both curves converging to high error indicates a need for a more complex model.
+        \end{itemize}
+        
+        \item \textbf{Ensemble Methods}
+        \begin{itemize}
+            \item Combine predictions from multiple models (e.g., Bagging, Boosting) to enhance accuracy and reduce overfitting variance.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Choosing the right model is critical to achieving good predictive performance while managing overfitting and underfitting. By understanding your data and applying appropriate strategies, you can enhance the effectiveness and reliability of your models.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Recap}
+    \begin{block}{Importance of Managing Overfitting and Underfitting}
+        In machine learning, effectively managing both overfitting and underfitting is crucial for developing models that generalize well to unseen data. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Overfitting}:
+            \begin{itemize}
+                \item Definition: A model that is too complex captures noise and performs well on training data but poorly on new data.
+                \item Example: A decision tree with excessive branches can perfectly classify training data but fails with unseen examples.
+            \end{itemize}
+        \item \textbf{Underfitting}:
+            \begin{itemize}
+                \item Definition: A model that is too simple fails to capture data trends, leading to poor performance on both training and new data.
+                \item Example: A linear model trying to fit non-linear data will miss essential patterns.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Managing Techniques and Takeaways}
+    \begin{block}{Techniques for Management}
+        \begin{itemize}
+            \item \textbf{Data Handling}: Use cross-validation to validate model performance.
+            \item \textbf{Model Complexity}: Select suitable models based on dataset complexity.
+            \item \textbf{Regularization Techniques}:
+                \begin{itemize}
+                    \item \textbf{L1 Regularization (Lasso)}: 
+                    \begin{equation}
+                    L(\beta) = \frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{p} |\beta_j|
+                    \end{equation}
+                    \item \textbf{L2 Regularization (Ridge)}: 
+                    \begin{equation}
+                    L(\beta) = \frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2 + \lambda \sum_{j=1}^{p} \beta_j^2
+                    \end{equation}
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Balancing model complexity with fitting leads to better predictive performance.
+            \item Regular monitoring and adjustments of model parameters are essential.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Next Steps}
+    \begin{block}{Q\&A Session}
+        Let's discuss any questions or clarifications regarding the concepts of overfitting and underfitting!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q\&A Session on Overfitting and Underfitting}
+    \begin{block}{Overview of Key Concepts}
+        \begin{itemize}
+            \item \textbf{Overfitting}: Model learns the training data too well, capturing noise. 
+            \item \textbf{Underfitting}: Model is too simple, failing to capture underlying data structure.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Signs of Overfitting and Underfitting}
+    \begin{block}{Overfitting}
+        \begin{itemize}
+            \item High accuracy on training data 
+            \item Low accuracy on validation/test data
+            \item Complex models (e.g., deep learning with many parameters)
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Underfitting}
+        \begin{itemize}
+            \item Low accuracy on both training and validation/test data
+            \item Basic model structure (e.g., linear regression on non-linear data)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Overfitting and Underfitting}
+    \begin{block}{Overfitting Example}
+        Consider a polynomial regression model fit to a linear dataset:
+        \begin{equation}
+            y = a_0 + a_1x + a_2x^2 + \ldots + a_{10}x^{10}
+        \end{equation}
+        A higher degree polynomial will perfectly predict training data but fail on unseen data.
+    \end{block}
+
+    \begin{block}{Underfitting Example}
+        A linear regression on a sinusoidal dataset:
+        \begin{equation}
+            y = mx + b
+        \end{equation}
+        Results in a straight line that does not match the underlying curvatures.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Managing Overfitting and Underfitting}
+    \begin{block}{Techniques to Handle Overfitting}
+        \begin{itemize}
+            \item Regularization (L1 and L2)
+            \item Cross-Validation (k-fold)
+            \item Pruning (for decision trees)
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Strategies for Addressing Underfitting}
+        \begin{itemize}
+            \item Increase Model Complexity
+            \item Feature Engineering
+            \item Adjust Hyperparameters
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Discussion Points for the Q\&A Session}
+    \begin{itemize}
+        \item Share your experiences with overfitting or underfitting. Can you provide examples?
+        \item What regularization techniques or hyperparameter tuning have you applied? How did they perform?
+        \item Any questions about visualizing model performance and identifying these issues?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    This session aims to clarify and deepen your understanding of overfitting and underfitting, providing you tools to identify, address, and manage these challenges in model training and evaluation. 
+    Feel free to ask any questions or seek further clarification!
+\end{frame}
+
+
+\end{document}

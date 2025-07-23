@@ -1,0 +1,1163 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Custom Commands
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Title Page Information
+\title[Search Algorithms]{Chapter 3: Search Algorithms: Uninformed \& Informed}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \titlepage
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Search Algorithms}
+    Search algorithms are fundamental components of artificial intelligence (AI) that enable systems to explore datasets and solve problems by identifying paths from a given start point to a goal. They are a critical foundation for numerous applications, including game playing, robotics, and navigation systems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance in AI}
+    \begin{itemize}
+        \item \textbf{Problem Solving}: Help find solutions, navigating through possibilities to reach an optimal endpoint.
+        \item \textbf{Decision Making}: Support processes by evaluating various options and outcomes.
+        \item \textbf{Efficiency}: Minimize computational resources such as time and memory in complex problem spaces.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Search Algorithms}
+    Search algorithms can be categorized into two primary types: uninformed and informed search strategies.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Uninformed Search Strategies}
+    \begin{itemize}
+        \item These algorithms lack additional information about the goal's location.
+        \item \textbf{Examples}:
+        \begin{enumerate}
+            \item \textbf{Breadth-First Search (BFS)}: Explores all nodes at the current depth before moving to the next.
+            \item \textbf{Depth-First Search (DFS)}: Explores as far along a branch as possible before backtracking.
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Strategies}
+    \begin{itemize}
+        \item These algorithms use heuristic information to guide the search process.
+        \item \textbf{Examples}:
+        \begin{enumerate}
+            \item \textbf{A* Search Algorithm}: Uses a cost function $f(n) = g(n) + h(n)$ to ensure a balance between exploration and guided search.
+            \item \textbf{Greedy Best-First Search}: Explores nodes that seem closest to the goal based on a heuristic.
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Uninformed vs. Informed}: Uninformed strategies do not utilize domain knowledge; informed strategies do.
+        \item \textbf{Applicability}: Choosing the right search algorithm depends on problem structure.
+        \item \textbf{Complexity}: Both types may exhibit exponential time complexity in worst cases.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    In summary, search algorithms are indispensable in AI, playing a crucial role in problem-solving and decision-making processes. Distinguishing between uninformed and informed strategies allows practitioners to select suitable approaches tailored to specific problems, leading to more efficient and optimal solutions.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Objectives of the Chapter}
+    \begin{block}{Learning Objectives}
+        In this chapter, you will:
+        \begin{enumerate}
+            \item Understand the Classification of Search Algorithms
+            \item Explore Uninformed Search Algorithms
+            \item Investigate Informed Search Algorithms
+            \item Implement Search Algorithms
+            \item Apply Search Algorithms in Problem Solving
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Classification of Search Algorithms}
+    \begin{block}{1. Understand the Classification of Search Algorithms}
+        \begin{itemize}
+            \item Distinguish between \textbf{uninformed} and \textbf{informed} search strategies.
+            \item Define the characteristics and use cases of each type.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Uninformed Search Algorithms}
+    \begin{block}{2. Explore Uninformed Search Algorithms}
+        \begin{itemize}
+            \item Identify key algorithms such as Depth-First Search (DFS), Breadth-First Search (BFS), and Uniform Cost Search.
+            \item Analyze their implementation and effective use.
+            \item \textbf{Example:} Using BFS to find the shortest path in an unweighted graph.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Informed Search Algorithms}
+    \begin{block}{3. Investigate Informed Search Algorithms}
+        \begin{itemize}
+            \item Learn about algorithms like A* Search and Greedy Best-First Search.
+            \item Understand how heuristics improve search efficiency.
+            \item \textbf{Example:} Utilizing A* to navigate a grid while minimizing distance and obstacles.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing Search Algorithms}
+    \begin{block}{4. Implement Search Algorithms}
+        \begin{itemize}
+            \item Gain practical skills by coding a basic search algorithm.
+            \item Use pseudocode to illustrate the logic behind algorithms.
+        \end{itemize}
+        \begin{lstlisting}[language=Python]
+from collections import deque
+
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    while queue:
+        vertex = queue.popleft()
+        if vertex not in visited:
+            visited.add(vertex)
+            queue.extend(neighbor for neighbor in graph[vertex] if neighbor not in visited)
+    return visited
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applying Search Algorithms}
+    \begin{block}{5. Apply Search Algorithms in Problem Solving}
+        \begin{itemize}
+            \item Tackle real-world problems through the lens of search algorithms.
+            \item \textbf{Case Study:} Finding routes for delivery services using informed search strategies.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Importance in AI: Foundational to AI, facilitating decision-making and problem-solving.
+            \item Heuristic Functions: Optimize searches and reduce computational complexity.
+            \item Practical Applications: Versatile in gaming, robotics, and logistics.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Conclusion}
+        By mastering these objectives, you will be equipped not only to implement various search algorithms but also to understand their strategic importance in AI applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What are Uninformed Search Algorithms? - Definition}
+    \begin{block}{Definition}
+        Uninformed Search Algorithms, also known as blind search algorithms, are search strategies that explore the search space without any domain knowledge or additional information about the goal states. 
+        They operate solely based on the structure of the search space, systematically exploring possible solutions until they find the desired outcome.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What are Uninformed Search Algorithms? - Key Characteristics}
+    \begin{itemize}
+        \item \textbf{No Additional Information:} 
+            Uninformed search methods do not use heuristics or any information beyond the problem definition.
+            They treat all paths equally, following a defined exploration method.
+        
+        \item \textbf{Exhaustive Exploration:} 
+            These algorithms can guarantee finding a solution if one exists, as they explore all possible paths systematically.
+
+        \item \textbf{Time and Space Complexity:} 
+            The efficiency of uninformed search can be problematic; they can consume significant time and memory as the search space grows, particularly with large or infinite problems.
+
+        \item \textbf{Complete and Optimal:} 
+            While many uninformed algorithms are complete (will find a solution if one exists) and optimal (will find the least-cost solution), the characteristics depend on the specific algorithm employed.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{What are Uninformed Search Algorithms? - Examples}
+    \begin{enumerate}
+        \item \textbf{Breadth-First Search (BFS):} 
+            \begin{itemize}
+                \item Explores the neighbor nodes at the present depth before moving on to nodes at the next depth level.
+                \item Guarantees the shortest path in an unweighted graph.
+                \item Example: Finding the shortest path in a maze.
+            \end{itemize}
+        
+        \item \textbf{Depth-First Search (DFS):} 
+            \begin{itemize}
+                \item Explores as far down one branch of the tree as possible before backtracking.
+                \item Can be more memory efficient than BFS but does not guarantee the shortest path.
+                \item Example: Navigating through a hierarchy like a family tree.
+            \end{itemize}
+
+        \item \textbf{Uniform Cost Search (UCS):} 
+            \begin{itemize}
+                \item Explores paths based on their cumulative cost, expanding the least costly node first.
+                \item Guarantees the optimal solution in weighted graphs.
+                \item Example: Route planning where distances are not uniform.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{What are Uninformed Search Algorithms? - Summary}
+    Uninformed search algorithms serve as foundational techniques in search theory, illustrating fundamental principles of exploration and solution discovery in problem-solving contexts. 
+    \begin{itemize}
+        \item They perform systematic exploration without any heuristics.
+        \item They may not be the most efficient in terms of computational resources, especially for large search spaces.
+        \item Understanding uninformed search algorithms is crucial before delving into informed search strategies that leverage heuristics for improved efficiency.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Types of Uninformed Search Algorithms}
+    \begin{block}{Overview}
+        Uninformed search algorithms, also known as blind search algorithms, explore the search space without any domain-specific knowledge. 
+        They operate solely on the given information about the problem.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Breadth-First Search (BFS)}
+    \begin{itemize}
+        \item \textbf{Description}: Explores all nodes at the present depth before moving on to the next depth level.
+        \item \textbf{Key Characteristics}:
+            \begin{itemize}
+                \item \textbf{Completeness}: Guaranteed to find a solution if one exists.
+                \item \textbf{Optimality}: Guarantees shortest path solution if all edge weights are equal.
+                \item \textbf{Space Complexity}: $O(b^d)$, where $b$ is the branching factor and $d$ is the depth of the solution.
+            \end{itemize}
+        \item \textbf{Example}: Finding the shortest path in an unweighted graph.
+    \end{itemize}
+    \begin{block}{Algorithmic Steps}
+        \begin{enumerate}
+            \item Initialize a queue and enqueue the initial state.
+            \item While the queue is not empty:
+                \begin{itemize}
+                    \item Dequeue the front state.
+                    \item If it is the goal state, return the path to this state.
+                    \item Else, enqueue all its child states (not visited).
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Depth-First Search (DFS) \& Uniform Cost Search (UCS)}
+    \begin{itemize}
+        \item \textbf{Depth-First Search (DFS)}:
+            \begin{itemize}
+                \item \textbf{Description}: Explores as far as possible down one branch before backtracking using a LIFO strategy.
+                \item \textbf{Key Characteristics}:
+                    \begin{itemize}
+                        \item \textbf{Completeness}: Not guaranteed; can get stuck in infinite branches.
+                        \item \textbf{Optimality}: Not guaranteed to find the shortest path.
+                        \item \textbf{Space Complexity}: $O(b \cdot m)$, where $m$ is the maximum depth of any path.
+                    \end{itemize}
+                \item \textbf{Example}: Finding a solution in a maze where paths can loop back.
+                \item \textbf{Algorithmic Steps}:
+                    \begin{enumerate}
+                        \item Initialize a stack and push the initial state.
+                        \item While the stack is not empty:
+                            \begin{itemize}
+                                \item Pop the top state.
+                                \item If it is the goal state, return the path to this state.
+                                \item Else, push all its child states (not visited).
+                            \end{itemize}
+                    \end{enumerate}
+            \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{Uniform Cost Search (UCS)}
+        \begin{itemize}
+            \item \textbf{Description}: Expands the least-cost node first, prioritizing paths with the lowest cumulative cost.
+            \item \textbf{Key Characteristics}:
+                \begin{itemize}
+                    \item \textbf{Completeness}: Guaranteed to find a solution if one exists.
+                    \item \textbf{Optimality}: Guarantees the least-cost path solution.
+                    \item \textbf{Space Complexity}: $O(b^d)$ (similar to BFS).
+                \end{itemize}
+            \item \textbf{Example}: Navigating a map with different distances between locations.
+            \item \textbf{Algorithmic Steps}:
+                \begin{enumerate}
+                    \item Initialize a priority queue with the initial state, prioritized by cost.
+                    \item While the priority queue is not empty:
+                        \begin{itemize}
+                            \item Dequeue the state with the lowest cost.
+                            \item If it is the goal state, return the path and total cost.
+                            \item Else, enqueue all its child states with their respective costs.
+                        \end{itemize}
+                \end{enumerate}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Points to Remember}
+    \begin{itemize}
+        \item \textbf{Uninformed Search}: Does not utilize heuristic information.
+        \item \textbf{BFS}: Best for unweighted problems.
+        \item \textbf{DFS}: Memory efficient but not foolproof.
+        \item \textbf{UCS}: An extension of BFS that incorporates costs.
+    \end{itemize}
+    
+    \begin{block}{Visual Aid}
+        Consider including a diagram showing the breadth and depth search trees for a simple graph to illustrate the distinction between exploring breadth vs. depth.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Breadth-First Search (BFS) - Overview}
+    \begin{block}{What is BFS?}
+        Breadth-First Search (BFS) is an uninformed search algorithm used for traversing or searching tree or graph data structures. It explores all the neighbor nodes at the current depth before moving deeper, ensuring the shortest path in unweighted graphs.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{BFS - Algorithmic Steps}
+    \begin{enumerate}
+        \item \textbf{Initialization:}
+        \begin{itemize}
+            \item Create an empty queue (FIFO structure) for nodes to explore.
+            \item Create a set for visited nodes to avoid reprocessing.
+        \end{itemize}
+        
+        \item \textbf{Start from the root node:}
+        \begin{itemize}
+            \item Enqueue the root node and mark it as visited.
+        \end{itemize}
+        
+        \item \textbf{While the queue is not empty:}
+        \begin{itemize}
+            \item Dequeue a node from the front.
+            \item Process the node (check if it’s the goal).
+            \item Enqueue all unvisited neighbors, marking them as visited.
+        \end{itemize}
+        
+        \item \textbf{Repeat} until the queue is empty or the goal is found.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{BFS - Pseudocode and Use Cases}
+    \begin{block}{Example Pseudocode}
+        \begin{lstlisting}
+BFS(graph, start_node):
+    create a queue Q
+    mark start_node as visited and enqueue Q
+    while Q is not empty:
+        current_node = dequeue(Q)
+        process(current_node)
+        for each neighbor in graph[current_node]:
+            if neighbor is not visited:
+                mark neighbor as visited
+                enqueue(Q, neighbor)
+        \end{lstlisting}
+    \end{block}
+
+    \begin{block}{Example Use Cases}
+        \begin{itemize}
+            \item Shortest Path in Unweighted Graphs
+            \item Identifying Connected Components
+            \item Web Crawlers
+            \item Puzzle Solving (e.g., maze navigation)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Depth-First Search (DFS) - Overview}
+    \begin{block}{Understanding Depth-First Search (DFS)}
+        Depth-First Search (DFS) is a key algorithm for exploring vertices and edges of graphs or tree structures by traversing deeply before backtracking. It is particularly useful for pathfinding and various puzzles.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Depth-First Search (DFS) - Algorithmic Steps}
+    \begin{enumerate}
+        \item \textbf{Initialization}:
+        \begin{itemize}
+            \item Start with a chosen starting node (or root in trees).
+            \item Create a stack (can be implicit using recursion) for nodes to explore.
+            \item Maintain a set or list to track visited nodes to avoid cycles.
+        \end{itemize}
+        
+        \item \textbf{Traversal}:
+        \begin{itemize}
+            \item Push the starting node onto the stack.
+            \item While the stack is not empty:
+            \begin{enumerate}
+                \item Pop a node from the stack.
+                \item If the node hasn't been visited:
+                \begin{itemize}
+                    \item Mark it as visited.
+                    \item Process the node (e.g., print or check for goals).
+                    \item Push all adjacent (unvisited) nodes onto the stack.
+                \end{itemize}
+            \end{enumerate}
+        \end{itemize}
+        
+        \item \textbf{Termination}: The algorithm ends when the stack is empty, meaning all reachable nodes have been explored.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Depth-First Search (DFS) - Characteristics and Use Cases}
+    \begin{block}{Characteristics of DFS}
+        \begin{itemize}
+            \item \textbf{Space Complexity}: $O(h)$, where $h$ is the maximum depth (in terms of stack space).
+            \item \textbf{Time Complexity}: $O(V + E)$, where $V$ is the number of vertices and $E$ is the number of edges.
+            \item Can be implemented using recursion or an explicit stack.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example Use Cases of DFS}
+        \begin{itemize}
+            \item Pathfinding (e.g., maze solving)
+            \item Topological Sorting (scheduling problems)
+            \item Connected Components (identifying groups in graphs)
+            \item Cycle Detection (checking for cycles in graphs)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Depth-First Search (DFS) - Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Backtracking}: Often used in backtracking algorithms like Sudoku solving.
+            \item \textbf{Memory Concerns}: Efficient for wide graphs, but can use excessive memory for deep graphs.
+            \item \textbf{Exploration Order}: The order can influence efficiency and outcomes.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        DFS is a foundational search strategy that is straightforward yet essential for understanding more complex algorithms and applications in computer science.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Uniform Cost Search (UCS)}
+  \begin{block}{What is Uniform Cost Search?}
+    Uniform Cost Search (UCS) is an uninformed search algorithm used to find the lowest-cost path from a start node to a goal node in a weighted graph. Unlike other search algorithms, UCS expands the least costly node first, ensuring that the path found is the most optimal in terms of total cost.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{UCS Operation}
+  \begin{enumerate}
+    \item \textbf{Initialization:}
+    \begin{itemize}
+      \item Start with a priority queue (often implemented as a min-heap) containing the initial node with a cost of zero.
+    \end{itemize}
+
+    \item \textbf{Cost Calculation:}
+    \begin{itemize}
+      \item Evaluate the total cost to reach each node, considering the cost of the edges traversed.
+    \end{itemize}
+
+    \item \textbf{Node Expansion:}
+    \begin{itemize}
+      \item Continuously remove the node with the smallest cost from the priority queue.
+      \item If this node is the goal node, the search terminates successfully.
+    \end{itemize}
+
+    \item \textbf{Neighbor Exploration:}
+    \begin{itemize}
+      \item Expand the current node by generating its successors (neighboring nodes).
+      \item For each successor, calculate the new path cost.
+      \item If the new cost is less than any previously recorded cost for that successor, update it and add the successor to the priority queue.
+    \end{itemize}
+
+    \item \textbf{Repeat:}
+    \begin{itemize}
+      \item Repeat the process until the goal node is reached or the priority queue is empty (indicating failure).
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{When to Use UCS}
+  \begin{block}{Effective Scenarios for UCS}
+    UCS is particularly effective for scenarios where:
+    \begin{itemize}
+      \item The path costs differ significantly (e.g., in transportation networks).
+      \item Optimal solutions are paramount (e.g., in logistics and delivery routing).
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Key Points}
+    \begin{itemize}
+      \item UCS guarantees finding the least costly path by expanding the lowest-cost node first.
+      \item It is complete, finding a solution if one exists and the search space is finite.
+      \item UCS can be memory-intensive as it stores all expanded nodes.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion}
+  \begin{block}{Conclusion}
+    Uniform Cost Search is a powerful algorithm for optimal pathfinding in weighted graphs, making it suitable in various fields like logistics, graphics, and navigation systems. Understanding its mechanics can be pivotal for advanced search strategies.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Limitations of Uninformed Search Algorithms}
+    \begin{block}{Overview of Uninformed Search Algorithms}
+        Uninformed search algorithms, also known as blind search algorithms, explore the search space without any additional information about the problem domain. Common examples include Breadth-First Search (BFS) and Depth-First Search (DFS).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Limitations - Part 1}
+    \begin{enumerate}
+        \item \textbf{Inefficiency in Space and Time}:
+        \begin{itemize}
+            \item BFS uses more memory as it stores all generated nodes in the queue, leading to significant memory overhead in large search spaces.
+            \item \textbf{Time Complexity}: $O(b^d)$, where $b$ is the branching factor and $d$ is the depth of the shallowest solution. As $b$ and $d$ increase, computational load grows exponentially.
+        \end{itemize}
+        
+        \item \textbf{Poor Performance with Large Search Spaces}:
+        \begin{itemize}
+            \item Uninformed algorithms may explore many areas of the search space that do not lead to a solution, wasting time and resources.
+            \item \textbf{Illustration}: In a maze with multiple dead ends, naive search might navigate these paths without realizing they lead nowhere.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Key Limitations - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue enumerating from the previous frame
+        \item \textbf{Optimality and Completeness Issues}:
+        \begin{itemize}
+            \item Some uninformed algorithms, like Uniform Cost Search (UCS), are optimal, while others (e.g., DFS) may fail to find the optimal solution.
+            \item \textbf{Example}: DFS can get stuck in a loop in cyclic graphs, leading to incomplete solutions.
+        \end{itemize}
+        
+        \item \textbf{Lack of Adaptability}:
+        \begin{itemize}
+            \item Uninformed search strategies do not adapt and are not context-aware, failing to utilize heuristic information to streamline the search, resulting in longer execution times.
+        \end{itemize}
+        
+        \item \textbf{No Prior Knowledge Utilization}:
+        \begin{itemize}
+            \item They do not leverage any prior knowledge, which may lead them to explore inefficient paths.
+            \item \textbf{Example}: Navigating a graph where certain paths are known to be longer from previous visits, uninformed search has no mechanism to shortcut these paths.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and Key Points}
+    \begin{block}{Conclusion}
+        While uninformed search algorithms serve as foundational techniques in search theory, their limitations become pronounced in complex scenarios. Understanding these constraints is essential when considering more efficient informed search strategies that leverage heuristics.
+    \end{block}
+    
+    \begin{itemize}
+        \item Uninformed algorithms are simple yet inefficient.
+        \item They lack the ability to utilize problem-specific information to optimize search.
+        \item Algorithm choice must be based on problem context.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Diagram Example}
+    % Here you can add a diagram illustrating the breadth-first expansion of nodes against depth-first search.
+    \begin{block}{Illustration}
+        Consider illustrating the breadth-first expansion of nodes highlighting memory usage versus traversed paths, and a similar depiction for depth-first search that demonstrates potential recursion depth and space inefficiency.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What are Informed Search Algorithms? - Definition}
+    \begin{block}{Definition}
+        Informed search algorithms, also known as heuristic search algorithms, optimize the search process by utilizing additional information, or heuristics, about the problem domain. This allows the algorithm to estimate the "cost" or "distance" from a given node to the goal, making more informed decisions about which paths to explore.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What are Informed Search Algorithms? - Characteristics}
+    \begin{itemize}
+        \item \textbf{Use of Heuristics:} Informed search algorithms leverage heuristics—rules of thumb that evaluate how promising a particular state or node \( n \) is for finding the goal, denoted as \( h(n) \).
+        
+        \item \textbf{Efficiency:} Focuses the search on promising paths, significantly reducing the number of nodes explored compared to uninformed search algorithms.
+        
+        \item \textbf{Optimality:} Some algorithms guarantee to find the optimal solution under certain conditions, such as using admissible heuristics (never overestimates the cost to reach the goal).
+        
+        \item \textbf{Completeness:} Often complete; they will find a solution if one exists, assuming the search space is finite and properly manipulated.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{What are Informed Search Algorithms? - Examples}
+    \begin{enumerate}
+        \item \textbf{A* Search Algorithm:}
+        \begin{itemize}
+            \item Combines Uniform Cost Search and Greedy Best-First Search.
+            \item Evaluates nodes using \( f(n) = g(n) + h(n) \), where:
+                \begin{itemize}
+                    \item \( g(n) \) = cost so far to reach node \( n \)
+                    \item \( h(n) \) = estimated cost from node \( n \) to the goal
+                \end{itemize}
+            \item \textit{Example:} In a pathfinding problem, \( g(n) \) is the distance already traveled, while \( h(n) \) might be the straight-line distance to destination.
+        \end{itemize}
+        
+        \item \textbf{Greedy Best-First Search:}
+        \begin{itemize}
+            \item Chooses paths based solely on the heuristic value \( h(n) \), ignoring the cost already incurred.
+            \item \textit{Example:} In a maze, it heads towards the closest location to the exit according to the heuristic, potentially overlooking longer but better paths.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Evaluation Function of A* Algorithm}
+    The evaluation function for A* is defined as:
+    \begin{equation}
+        f(n) = g(n) + h(n)
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item \( f(n) \) = total estimated cost of the cheapest solution through node \( n \)
+        \item \( g(n) \) = cost to reach node \( n \)
+        \item \( h(n) \) = estimated cost from node \( n \) to the goal
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{What are Informed Search Algorithms? - Summary}
+    Informed search algorithms play a critical role in efficient problem-solving by leveraging heuristic functions that guide the search towards promising avenues. Understanding these algorithms is essential for tackling complex problems efficiently, making them a foundational topic in computer science and artificial intelligence.
+\end{frame}
+
+\begin{frame}[fragile]{Types of Informed Search Algorithms}
+    \begin{block}{Overview of Informed Search Algorithms}
+        Informed search algorithms utilize domain knowledge in the form of heuristics to enhance the efficiency of the search process. 
+        These algorithms are designed to intelligently guide the search toward the goal, making them more effective than uninformed search algorithms, which rely solely on the problem's structure.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Informed Search Algorithms - A*}
+    \begin{itemize}
+        \item \textbf{A* Search Algorithm}
+        \begin{itemize}
+            \item \textbf{Description:} A* is a widely-used informed search algorithm that combines the strengths of both Dijkstra's algorithm and Greedy Best-First Search.
+            \item \textbf{Key Characteristics:}
+            \begin{itemize}
+                \item Uses a heuristic function \( h(n) \) to estimate the cost from the current node to the goal.
+                \item Maintains a total cost function defined as:
+                \begin{equation}
+                    f(n) = g(n) + h(n)
+                \end{equation}
+                Where:
+                \begin{itemize}
+                    \item \( g(n) \): Actual cost to reach node \( n \) from the start node.
+                    \item \( h(n) \): Estimated cost from node \( n \) to the goal.
+                \end{itemize}
+            \end{itemize}
+            \item \textbf{Example Usage:} Commonly used in pathfinding applications, such as Google Maps, where finding the shortest route is critical.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Key Informed Search Algorithms - Greedy Best-First Search}
+    \begin{itemize}
+        \item \textbf{Greedy Best-First Search}
+        \begin{itemize}
+            \item \textbf{Description:} Selects paths based solely on the heuristic function, aiming to minimize the estimated cost to the goal.
+            \item \textbf{Key Characteristics:}
+            \begin{itemize}
+                \item Focuses only on the estimated cost to reach the goal:
+                \begin{equation}
+                    f(n) = h(n)
+                \end{equation}
+            \end{itemize}
+            \item \textbf{Example Usage:} Useful when a quick solution is needed because it can be applied in quick decision-making scenarios, such as game AI movements.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{A* Search Algorithm}
+    \frametitle{A* Search Algorithm}
+    \begin{block}{What is A* Search?}
+        A* is a widely used guided search algorithm that combines both the cost to reach a node and an estimate of the cost from that node to the goal. It is optimal and complete when the heuristic is admissible.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Key Components}
+    \begin{enumerate}
+        \item \textbf{Cost Function} $g(n)$: Actual cost from the start node to the current node $n$.
+        \item \textbf{Heuristic Function} $h(n)$: Estimate of the cost to reach the goal from the current node $n$. Should be admissible: $h(n) \leq h^*(n)$.
+        \item \textbf{Total Estimated Cost} $f(n)$: 
+        \begin{equation}
+          f(n) = g(n) + h(n)
+        \end{equation}
+        A* selects the node with the lowest $f(n)$ value to expand next.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{How A* Works}
+    \begin{enumerate}
+        \item \textbf{Initialization:}
+            \begin{itemize}
+                \item Open set: Nodes to be evaluated.
+                \item Closed set: Nodes already evaluated.
+                \item Add the start node to the open set.
+            \end{itemize}
+        
+        \item \textbf{Iteration:} While the open set is not empty:
+            \begin{itemize}
+                \item Select node $n$ with the lowest $f(n)$.
+                \item If $n$ is the goal node, reconstruct the path.
+                \item Move $n$ from open set to closed set.
+                \item For each neighbor of $n$:
+                    \begin{itemize}
+                        \item Calculate $g$, $h$, and $f$ values.
+                        \item Add neighbor to open set if not already present.
+                        \item Update values if neighbor has a higher $g$ cost.
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Example Applications}
+    \begin{block}{Pathfinding in Games}
+        A* is commonly used in video games for AI navigation, allowing characters to navigate complex environments by finding optimal paths.
+    \end{block}
+    
+    \begin{block}{GPS Navigation Systems}
+        A* is also applied in GPS software to calculate the shortest route from one location to another, considering both distance and potential time.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Pseudocode for A* Algorithm}
+    \begin{lstlisting}[language=plaintext]
+function A*(start, goal)
+    openSet.add(start)
+    cameFrom[] = {}
+
+    gScore[start] = 0
+    fScore[start] = heuristic(start, goal)
+
+    while not openSet.isEmpty()
+        current = node in openSet with lowest fScore[]
+
+        if current == goal
+            return reconstructPath(cameFrom, current)
+
+        openSet.remove(current)
+        closedSet.add(current)
+
+        for each neighbor in current.neighbors
+            if neighbor in closedSet
+                continue
+
+            tentative_gScore = gScore[current] + distance(current, neighbor)
+
+            if neighbor not in openSet
+                openSet.add(neighbor)
+            else if tentative_gScore >= gScore[neighbor]
+                continue
+
+            cameFrom[neighbor] = current
+            gScore[neighbor] = tentative_gScore
+            fScore[neighbor] = gScore[neighbor] + heuristic(neighbor, goal)
+
+    return failure
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Greedy Best-First Search}
+    \begin{block}{Overview}
+        Greedy Best-First Search (GBFS) is an informed search algorithm that selects the path that seems most promising according to a heuristic function. It expands the most promising node based solely on this heuristic information.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Characteristics}
+    \begin{itemize}
+        \item \textbf{Heuristic Function (h(n))}: Estimates how close a state is to the goal, prioritizing the lowest values.
+        \item \textbf{No Cost Consideration}: GBFS focuses only on estimated costs to the goal, without accounting for the actual cost to reach the nodes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{How Does It Work?}
+    \begin{enumerate}
+        \item \textbf{Initialization}: Start from the initial node, adding it to an open list.
+        \item \textbf{Node Evaluation}:
+            \begin{itemize}
+                \item Remove the node with the lowest heuristic value from the open list.
+                \item If this is the goal, the search is complete.
+            \end{itemize}
+        \item \textbf{Expanding Node}: Generate children nodes and calculate their heuristic values, adding them to the open list.
+        \item \textbf{Repeat}: Continue until the goal is reached or the open list is exhausted.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Example of Greedy Best-First Search}
+    Consider a simple maze from A to G with heuristic values:
+    \begin{itemize}
+        \item A (0), B (2), C (1), D (3), G (0)
+    \end{itemize}
+    \textbf{Order of Expansion}:
+    \begin{enumerate}
+        \item Start at A, expand to B (h(B)=2) and C (h(C)=1).
+        \item Choose C next (smallest h value).
+        \item From C, expand to children: choose B (lower h than D).
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{When to Use GBFS}
+    \begin{itemize}
+        \item \textbf{Suitable Scenarios}:
+            \begin{itemize}
+                \item Problems with a reliable heuristic function.
+                \item Situations where quick solutions are more critical than optimality.
+            \end{itemize}
+        \item \textbf{Limitations}:
+            \begin{itemize}
+                \item \textbf{Completeness}: Not guaranteed to find a solution.
+                \item \textbf{Optimality}: Paths may not be the shortest due to ignoring actual costs.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Pseudocode Overview}
+    \begin{lstlisting}[language=Python]
+function GreedyBestFirstSearch(start, goal)
+  open_list = priority_queue()
+  open_list.add(start)
+
+  while not open_list.is_empty():
+    current_node = open_list.remove_lowest_h() 
+    
+    if current_node == goal:
+      return "Goal Reached!"
+
+    for neighbor in current_node:
+      open_list.add(neighbor)
+
+  return "No Solution Found!"
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison of Informed and Uninformed Search Algorithms}
+    \begin{block}{Introduction}
+        In search algorithms, two primary categories exist: \textbf{uninformed search algorithms} and \textbf{informed search algorithms}. Understanding the differences between these two types is crucial for selecting the appropriate algorithm for a given problem. 
+    \end{block}
+    
+    This slide discusses their key differences in terms of \textbf{efficiency}, \textbf{completeness}, and \textbf{optimality}.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Differences Between Algorithms}
+    \begin{itemize}
+        \item \textbf{Uninformed Search Algorithms}: Operate without additional information about the state space, exploring nodes blindly (e.g., Breadth-First Search, Depth-First Search).
+        
+        \item \textbf{Informed Search Algorithms}: Utilize heuristics or extra information to make educated choices about node exploration, improving performance (e.g., A*, Greedy Best-First Search).
+    \end{itemize}
+    
+    \begin{block}{Comparison Table}
+        \begin{tabular}{|l|l|l|}
+            \hline
+            \textbf{Feature} & \textbf{Uninformed Search} & \textbf{Informed Search} \\
+            \hline
+            Efficiency & Generally less efficient; explores many nodes without guidance. & More efficient; utilizes heuristics to reduce search space. \\
+            \hline
+            Completeness & Guaranteed to find a solution if one exists (e.g., Breadth-First Search). & Can be complete, depending on the heuristic (e.g., A* is complete with an admissible heuristic). \\
+            \hline
+            Optimality & May not always find the optimal solution (e.g., Depth-First Search). & Often guarantees optimal solutions if heuristic is admissible (e.g., A* is optimal). \\
+            \hline
+        \end{tabular}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Search Algorithms}
+    \begin{itemize}
+        \item \textbf{Uninformed Example}:
+        \begin{itemize}
+            \item \textbf{Breadth-First Search (BFS)}: Explores all nodes at the present depth before moving on to the next depth level. While complete and simple, it can exhaustively search wide states leading to inefficiency in large state spaces.
+        \end{itemize}
+        
+        \item \textbf{Informed Example}:
+        \begin{itemize}
+            \item \textbf{A*}: Utilizes a heuristic function \( f(n) = g(n) + h(n) \), where \( g(n) \) is the cost to reach node \( n \), and \( h(n) \) is the estimated cost from \( n \) to the goal. This approach leads to efficient and often optimal solutions.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Search Algorithms in AI}
+    \begin{block}{Introduction to Search Algorithms}
+        Search algorithms are crucial in AI for exploring possibilities and finding solutions to complex problems. They can be categorized into two main types:
+        \begin{itemize}
+            \item \textbf{Uninformed Search}
+            \item \textbf{Informed Search}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Uninformed and Informed Search Algorithms}
+    \begin{columns}
+        \column{0.5\textwidth}
+            \begin{block}{Uninformed Search Algorithms}
+                \begin{itemize}
+                    \item Do not use additional information about the problem.
+                    \item Examples: 
+                    \begin{itemize}
+                        \item Breadth-First Search (BFS)
+                        \item Depth-First Search (DFS)
+                    \end{itemize}
+                \end{itemize}
+            \end{block}
+        \column{0.5\textwidth}
+            \begin{block}{Informed Search Algorithms}
+                \begin{itemize}
+                    \item Use heuristics to guide the search process towards a goal.
+                    \item Examples:
+                    \begin{itemize}
+                        \item A* Search
+                        \item Greedy Best-First Search
+                    \end{itemize}
+                \end{itemize}
+            \end{block}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications}
+    \begin{block}{Applications of Search Algorithms}
+        \begin{enumerate}
+            \item \textbf{Robotics and Navigation}
+            \begin{itemize}
+                \item Pathfinding with A* in autonomous vehicles.
+            \end{itemize}
+            
+            \item \textbf{Game AI}
+            \begin{itemize}
+                \item Minimax with alpha-beta pruning in strategy games (e.g., Chess).
+            \end{itemize}
+
+            \item \textbf{Problem-Solving}
+            \begin{itemize}
+                \item Solving puzzles like Rubik's Cube using uninformed search techniques.
+            \end{itemize}
+
+            \item \textbf{Data Retrieval and Web Search}
+            \begin{itemize}
+                \item Search engines utilizing efficient algorithms for information retrieval.
+            \end{itemize}
+            
+            \item \textbf{Healthcare}
+            \begin{itemize}
+                \item Diagnosing diseases by managing large datasets with informed search algorithms.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations in Search Algorithms - Introduction}
+    \begin{block}{Introduction to Ethical Considerations}
+        Search algorithms are pivotal in various applications—from recommendation systems to autonomous vehicles. However, their implementation raises significant ethical considerations that merit attention.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations in Search Algorithms - Key Ethical Concerns}
+    \begin{block}{Key Ethical Concerns}
+        \begin{enumerate}
+            \item \textbf{Bias in Algorithms}
+                \begin{itemize}
+                    \item \textbf{Definition:} Bias refers to systematic favoritism towards particular outcomes or groups that can result in unfair discrimination.
+                    \item \textbf{Example:} A search algorithm used in hiring may favor candidates from certain demographic backgrounds if trained on biased historical data.
+                    \item \textbf{Impact:} Leads to perpetuation of stereotypes and exclusion of qualified individuals from overlooked groups.
+                \end{itemize}
+                
+            \item \textbf{Decision-Making Transparency}
+                \begin{itemize}
+                    \item \textbf{Definition:} The processes and reasoning behind algorithmic decisions must be clear and understandable to users.
+                    \item \textbf{Example:} If a search algorithm denies credit to an applicant, it should explain the criteria influencing that decision.
+                    \item \textbf{Impact:} Lack of transparency erodes trust and can lead to accountability issues.
+                \end{itemize}
+                
+            \item \textbf{Responsibility for Outcomes}
+                \begin{itemize}
+                    \item \textbf{Definition:} Understanding who is accountable for the results generated by algorithms.
+                    \item \textbf{Example:} In predictive policing, if algorithms are flawed, who is responsible for disproportionate law enforcement practices?
+                    \item \textbf{Impact:} Raises legal and ethical questions about accountability and oversight in algorithm design.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations in Search Algorithms - Potential Mitigation Strategies}
+    \begin{block}{Potential Mitigation Strategies}
+        \begin{enumerate}
+            \item \textbf{Diverse Datasets}
+                \begin{itemize}
+                    \item Ensure datasets used for training algorithms are diverse and representative to minimize bias.
+                \end{itemize}
+                
+            \item \textbf{Algorithm Audits}
+                \begin{itemize}
+                    \item Regularly review algorithms for bias and accuracy; implement third-party auditing for independent evaluation.
+                \end{itemize}
+                
+            \item \textbf{User Education}
+                \begin{itemize}
+                    \item Educate users about algorithm workings and encourage critical assessment of algorithmic outputs.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations in Search Algorithms - Conclusion}
+    \begin{block}{Conclusion}
+        Understanding the ethical implications of search algorithms is crucial as they shape decisions across various domains. Addressing biases, ensuring transparency, and clarifying accountability can foster trust and fairness in these processes. Ethical frameworks can enhance the effectiveness of algorithms in real-world applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Summary of Key Points}
+    
+    \begin{enumerate}
+        \item \textbf{Uninformed Search Algorithms}
+            \begin{itemize}
+                \item \textbf{Definition}: Blind search algorithms that explore the search space without domain knowledge.
+                \item \textbf{Examples}:
+                \begin{itemize}
+                    \item \textit{Breadth-First Search (BFS)}: Guarantees shortest path in unweighted graphs.
+                    \item \textit{Depth-First Search (DFS)}: Memory efficient but does not guarantee shortest path.
+                \end{itemize}
+                \item \textbf{Key Point}: Can be inefficient for large search spaces.
+            \end{itemize}
+
+        \item \textbf{Informed Search Algorithms}
+            \begin{itemize}
+                \item \textbf{Definition}: Use heuristic functions to guide the search process.
+                \item \textbf{Examples}:
+                \begin{itemize}
+                    \item \textit{A* Search}: Finds the most cost-effective path; commonly used in GPS navigation.
+                    \item \textit{Greedy Best-First Search}: Fast selection towards the goal, may not yield optimal solutions.
+                \end{itemize}
+                \item \textbf{Key Point}: Reduces time complexity in large problem spaces.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Comparative Analysis}
+    
+    \begin{block}{Uninformed vs. Informed Algorithms}
+        \begin{itemize}
+            \item \textbf{Memory Usage}: Uninformed algorithms consume more memory, exploring all nodes.
+            \item \textbf{Efficiency}: Informed algorithms minimize unnecessary exploration, reaching solutions faster.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Relevance to AI}
+    
+    \begin{itemize}
+        \item \textbf{Real-world Impact}: The choice of search algorithms affects AI efficiency in tasks like route optimization and resource allocation.
+        \item \textbf{Ethical Considerations}: Algorithm choices can introduce biases; understanding them aids in making ethical AI decisions.
+    \end{itemize}
+    
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Understanding search algorithms is fundamental for efficient AI systems.
+            \item Heuristics are crucial for smart and swift solutions.
+            \item Ethical implications must be considered in real-world applications.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Code Example}
+        \begin{lstlisting}[language=Python]
+function A_star(start, goal):
+    open_set = {start}
+    came_from = {}
+    
+    g_score[start] = 0
+    f_score[start] = heuristic(start, goal)
+
+    while open_set is not empty:
+        current = node in open_set with lowest f_score
+        
+        if current == goal:
+            return reconstruct_path(came_from, current)
+
+        open_set.remove(current)
+        
+        for each neighbor of current:
+            tentative_g_score = g_score[current] + distance(current, neighbor)
+            if tentative_g_score < g_score[neighbor]:
+                came_from[neighbor] = current
+                g_score[neighbor] = tentative_g_score
+                f_score[neighbor] = g_score[neighbor] + heuristic(neighbor, goal)
+                if neighbor not in open_set:
+                    open_set.add(neighbor)
+
+    return failure
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+
+\end{document}

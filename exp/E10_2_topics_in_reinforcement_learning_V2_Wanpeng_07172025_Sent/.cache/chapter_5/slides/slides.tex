@@ -1,0 +1,1874 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Week 5: Temporal-Difference Learning]{Week 5: Temporal-Difference Learning}
+\author[J. Smith]{Your Name}
+\institute[Your Institution]{
+  Your Department\\
+  Your Institution\\
+  \vspace{0.3cm}
+  Email: your.email@example.com\\
+  Website: www.yourwebsite.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Temporal-Difference Learning}
+    \begin{block}{Overview}
+        An overview of temporal-difference learning as a method within reinforcement learning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Temporal-Difference Learning?}
+    Temporal-Difference (TD) Learning is a fundamental method in reinforcement learning that combines concepts from dynamic programming and Monte Carlo methods, allowing agents to learn from incomplete episodes and make predictions based on experience.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{itemize}
+        \item \textbf{Reinforcement Learning (RL):} A type of learning where an agent learns to make decisions by interacting with an environment to maximize cumulative rewards.
+        \item \textbf{State (s):} A specific situation or configuration of the environment.
+        \item \textbf{Action (a):} A decision or choice made by the agent that can affect the state.
+        \item \textbf{Reward (R):} A feedback signal received after taking action in a specific state.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How does TD Learning Work?}
+    \begin{enumerate}
+        \item \textbf{Estimation of Value Functions:} TD learning focuses on predicting the value of states in the environment, called the \textbf{value function (V(s))}.
+        \item \textbf{Updates Based on Experience:} 
+        Unlike Monte Carlo methods that require an entire episode to complete before updating, TD learning updates the value function based on the estimated return after every step using the following formula:
+        \begin{equation}
+            V(s) \gets V(s) + \alpha \left( R + \gamma V(s') - V(s) \right)
+        \end{equation}
+        Here:
+        \begin{itemize}
+            \item \( \alpha \): Learning rate (how quickly the agent updates its knowledge).
+            \item \( R \): Immediate reward received after taking action.
+            \item \( s' \): New state after action.
+            \item \( \gamma \): Discount factor (how much future rewards matter compared to immediate rewards).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of TD Learning}
+    Consider an agent in a grid world where it receives a reward of +1 for reaching the goal. If it is currently in state \( s \), it takes action \( a \) to move to state \( s' \) and receives a reward \( R \):
+    \begin{itemize}
+        \item Current value: \( V(s) = 0.5 \)
+        \item Observed reward: \( R = 1 \)
+        \item Next state value: \( V(s') = 0.6 \)
+        \item Learning rate: \( \alpha = 0.1 \)
+        \item Discount factor: \( \gamma = 0.9 \)
+    \end{itemize}
+    Applying the TD update gives:
+    \begin{equation}
+        V(s) \gets 0.5 + 0.1 \left( 1 + 0.9 \times 0.6 - 0.5 \right)
+    \end{equation}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item TD Learning is effective in dynamic environments where episodes can be lengthy.
+        \item It supports online learning, allowing updates as new data comes in.
+        \item It lays the foundation for more complex algorithms such as Q-Learning and SARSA.
+    \end{itemize}
+    By understanding Temporal-Difference Learning, we set the stage for exploring advanced reinforcement learning topics.
+\end{frame}
+
+\begin{frame}[fragile]{Learning Objectives for Week 5: Temporal-Difference Learning}
+    In this chapter, we will explore the fundamental concepts and principles of Temporal-Difference (TD) Learning, a key technique in Reinforcement Learning (RL). By the end of this chapter, you should be able to understand, apply, and analyze TD Learning methods in the context of RL.
+\end{frame}
+
+\begin{frame}[fragile]{Understanding Temporal-Difference Learning}
+    \begin{enumerate}
+        \item \textbf{Definition:} Learn what Temporal-Difference Learning is, including its role within the broader paradigm of reinforcement learning.
+        \item \textbf{Key Idea:} Understand how TD Learning combines ideas from Monte Carlo methods and dynamic programming, offering a method for learning value functions through bootstrapping.
+        \begin{itemize}
+            \item \textit{Example:} TD Learning updates the value of the current state based on the value of the next state.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Key Algorithms}
+    \begin{enumerate}
+        \item \textbf{TD(0) Algorithm:}
+            \begin{itemize}
+                \item Learn how the TD(0) algorithm updates the value of a state based on the observed reward and the estimated value of the successor state.
+                \item \textbf{Formula:}
+                \begin{equation}
+                    V(S_t) \leftarrow V(S_t) + \alpha \left[ R_t + \gamma V(S_{t+1}) - V(S_t) \right]
+                \end{equation}
+                \item Where \( \alpha \) is the learning rate, \( R_t \) is the reward, and \( \gamma \) is the discount factor.
+            \end{itemize}
+        \item \textbf{SARSA (State-Action-Reward-State-Action):}
+            \begin{itemize}
+                \item Understand the SARSA algorithm as an on-policy method that updates the action-value function based on the current policy.
+                \item \textit{Example:} Learn how action selection influences the updates and policy improvement.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Comparison with Other Methods}
+    \begin{enumerate}
+        \item \textbf{Contrast TD Learning with Monte Carlo Methods:}
+            \begin{itemize}
+                \item Understand the differences regarding sample efficiency and the need for complete episodes.
+            \end{itemize}
+        \item \textbf{Integration with Function Approximation:}
+            \begin{itemize}
+                \item Introduce how TD methods can be combined with function approximation techniques, enabling the handling of large state spaces.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Applications of TD Learning}
+    \begin{itemize}
+        \item \textbf{Game Playing:} Discuss how TD Learning can enhance reinforcement learning algorithms in games like chess or Go.
+        \item \textbf{Robotics:} Investigate how TD Learning is used for training autonomous agents to learn from experience.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Key Considerations}
+    \begin{enumerate}
+        \item \textbf{Convergence and Stability:} 
+            \begin{itemize}
+                \item Discuss the importance of choosing appropriate parameters like learning rate and discount factor for the convergence of TD Learning algorithms.
+            \end{itemize}
+        \item \textbf{Exploration vs Exploitation:}
+            \begin{itemize}
+                \item Highlight the trade-off between exploration of new actions and exploitation of known rewarding actions in the context of TD Learning.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Key Takeaway}
+    Temporal-Difference Learning is a foundational concept in Reinforcement Learning that facilitates the iterative improvement of value estimates and policies, leveraging the interplay between past experiences and future expectations.
+\end{frame}
+
+\begin{frame}[fragile]{Next Steps}
+    After grasping these objectives, we will delve into the fundamental concepts of Reinforcement Learning that relate directly to Temporal-Difference methods.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Fundamental Concepts in Temporal-Difference Learning}
+    \begin{block}{What is Temporal-Difference (TD) Learning?}
+        \begin{itemize}
+            \item \textbf{Definition:} A key reinforcement learning method that updates the value of states based on the temporal difference between predicted and actual rewards.
+            \item \textbf{Core Idea:} Updates state values on the fly after each step, unlike Monte Carlo methods which wait until the end of an episode.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Terminology}
+    \begin{itemize}
+        \item \textbf{State (s):} Current situation of the agent in the environment.
+        \item \textbf{Action (a):} A choice made by the agent affecting the state.
+        \item \textbf{Reward (r):} Feedback signal received after an action in a state.
+        \item \textbf{Value Function (V):} Estimates expected return (future rewards) from a given state under a particular policy.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{TD Learning Process and Update Rule}
+    \begin{block}{Update Rule}
+        \begin{equation}
+        V(s) \leftarrow V(s) + \alpha \cdot [R + \gamma V(s') - V(s)]
+        \end{equation}
+        \begin{itemize}
+            \item \( V(s) \): Current value of state \( s \)
+            \item \( R \): Immediate reward received after transitioning
+            \item \( \gamma \): Discount factor (0 ≤ \( \gamma \) < 1) balancing immediate and future rewards
+            \item \( \alpha \): Step-size parameter controlling value estimate updates
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of TD Learning}
+    \begin{itemize}
+        \item Imagine an agent navigating a simple maze:
+        \begin{itemize}
+            \item \textbf{State:} Current position in the maze
+            \item \textbf{Action:} Moving Up, Down, Left, or Right
+            \item \textbf{Reward:} +1 for reaching the goal, -1 for hitting a wall
+        \end{itemize}
+        \item After moving, the agent uses the TD update rule to adjust its predicted value of the current state.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Other Methods}
+    \begin{itemize}
+        \item \textbf{Monte Carlo Methods:} Wait until episode ends to update values.
+        \item \textbf{Q-Learning:} A specific type of TD learning estimating action-value (Q) instead of state-value (V).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item TD Learning speeds up the learning process by allowing updates from partial episodes.
+        \item Balances immediate and long-term rewards via the discount factor \( \gamma \).
+        \item Key applications include robotics, game playing, and dynamic programming problems.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{}
+        Understanding Temporal-Difference Learning provides a foundation for more complex RL concepts such as Q-learning and policy gradients. We will explore how these fundamental concepts integrate into the broader RL framework in future discussions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Framework - Overview}
+    Reinforcement Learning (RL) is a machine learning paradigm where an agent learns through interaction with its environment and receives feedback in the form of rewards. The key components of the RL framework include:
+    \begin{itemize}
+        \item \textbf{Agent}: The learner or decision-maker.
+        \item \textbf{Environment}: The context in which the agent operates.
+        \item \textbf{States (s)}: Descriptions of the situation at a specific time.
+        \item \textbf{Actions (a)}: Choices the agent can make to influence the environment.
+        \item \textbf{Rewards (r)}: Feedback signals received after actions taken in states.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Framework - Key Components}
+    \begin{enumerate}
+        \item \textbf{Agent}
+            \begin{itemize}
+                \item Definition: The learner or decision-maker that interacts with the environment.
+                \item Example: A robot navigating through a maze or a chess program.
+            \end{itemize}
+        \item \textbf{Environment}
+            \begin{itemize}
+                \item Definition: The context where the agent operates, providing states and feedback.
+                \item Example: The maze or the chessboard.
+            \end{itemize}
+        \item \textbf{States (s)}
+            \begin{itemize}
+                \item Definition: A condition describing the environment at a specific time.
+                \item Example: The robot's position in the maze or the chess pieces arrangement.
+            \end{itemize}
+        \item \textbf{Actions (a)}
+            \begin{itemize}
+                \item Definition: Choices available to the agent that influence the environment.
+                \item Example: Robot movements or specific chess moves.
+            \end{itemize}
+        \item \textbf{Rewards (r)}
+            \begin{itemize}
+                \item Definition: Feedback signal received after an action in a state.
+                \item Example: Positive reward for reaching a goal or negative for hitting a wall.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Framework - Key Points}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item The agent learns through trial and error by exploring the environment.
+            \item The goal is to maximize cumulative rewards over time.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Mathematical Representation}
+        \begin{equation}
+            r = R(s, a)
+        \end{equation}
+        where \( R \) maps states and actions to rewards.
+
+        \begin{equation}
+            G_t = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \ldots
+        \end{equation}
+        \( G_t \) is the total expected reward from time \( t \), with \( \gamma \) as the discount factor.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Temporal-Difference Learning? - Part 1}
+    \begin{block}{Definition}
+        Temporal-Difference (TD) Learning is a fundamental concept in Reinforcement Learning (RL) that combines the advantages of Monte Carlo methods and Dynamic Programming. It enables agents to learn how to predict the future values of states through trial and error, using experience without requiring a model of the environment.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Learning from Experience:} Updates values based on its own experience immediately after taking an action.
+        \item \textbf{Bootstrapping:} Updates estimates based on other learned estimates for quicker convergence.
+        \item \textbf{Online Learning:} Allows for continual learning as more experiences are collected.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Temporal-Difference Learning? - Part 2}
+    \begin{block}{Distinction from Other RL Methods}
+        \begin{itemize}
+            \item \textbf{Monte Carlo Methods:} Wait for the end of an episode for updates; TD updates values after each step.
+            \item \textbf{Dynamic Programming (DP):} DP requires a complete model; TD learning can operate without complete knowledge.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Components}
+        \begin{itemize}
+            \item \textbf{State Value Function \( V(s) \):} Represents the expected return from state \( s \).
+            \item \textbf{TD Error \( \delta \):} Measures the difference between predicted and observed values:
+            \begin{equation}
+                \delta = R_t + \gamma V(S_{t+1}) - V(S_t)
+            \end{equation}
+            where:
+            \begin{itemize}
+                \item \( R_t \) is the reward after transitioning from state \( S_t \) to \( S_{t+1} \)
+                \item \( \gamma \) is the discount factor for balancing immediate and future rewards
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Temporal-Difference Learning? - Part 3}
+    \begin{exampleblock}{Example}
+        Imagine a robot navigating a grid. It receives a reward for reaching its goal:
+        \begin{itemize}
+            \item If the robot takes a step and receives a reward, it updates its value estimate for the current state using both the immediate reward and the predicted value of the next state.
+        \end{itemize}
+    \end{exampleblock}
+
+    \begin{block}{Conclusion}
+        \begin{itemize}
+            \item TD Learning is a powerful RL algorithm for predicting values and making decisions.
+            \item It enables agents to learn policies efficiently through interaction.
+            \item Immediate updates and bootstrapping result in faster learning compared to other methods.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Components of TD Learning - Introduction}
+    Temporal-Difference Learning (TD Learning) is a core method in Reinforcement Learning (RL) that combines ideas from dynamic programming and Monte Carlo methods. It allows agents to learn from raw experience without needing a model of the environment's dynamics.
+\end{frame}
+
+\begin{frame}[fragile]{Key Components of TD Learning - Value Functions}
+    \begin{block}{Value Functions}
+        Value functions estimate how good it is for an agent to be in a given state (state-value function, $V$) or to perform a certain action from a given state (action-value function, $Q$). They are essential for evaluating and improving policies.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{State-Value Function ($V$):}  
+        \begin{equation}
+            V(s) = \mathbb{E}[R_t | S_t = s]
+        \end{equation}
+        Represents the expected return from state $s$.
+
+        \item \textbf{Action-Value Function ($Q$):}  
+        \begin{equation}
+            Q(s, a) = \mathbb{E}[R_t | S_t = s, A_t = a]
+        \end{equation}
+        Represents the expected return from taking action $a$ in state $s$.
+    \end{itemize}
+    
+    \textbf{Key Point:} Value functions serve as the backbone of TD learning.
+\end{frame}
+
+\begin{frame}[fragile]{Key Components of TD Learning - Prediction and Update Rule}
+    \begin{block}{Prediction}
+        Prediction in TD learning estimates the value of a state or state-action pair based on the agent's experience, often using bootstrapping.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Bootstrapping:} Updates the value of a state based on the value of subsequent states.
+        \item \textbf{Example:} In chess, if a position is evaluated at 5 points and the next position is 7 points, the agent adjusts its estimate based on that information.
+    \end{itemize}
+
+    \begin{block}{TD Update Rule}
+        The update rule adjusts value estimates:
+        \begin{equation}
+            V(S_t) \gets V(S_t) + \alpha \left( R_{t+1} + \gamma V(S_{t+1}) - V(S_t) \right)
+        \end{equation}
+        where:
+        \begin{itemize}
+            \item $R_{t+1}$: Reward at time $t+1$,
+            \item $S_{t+1}$: Subsequent state,
+            \item $\gamma$: Discount factor,
+            \item $\alpha$: Learning rate.
+        \end{itemize}
+    \end{block}
+
+    \textbf{Key Point:} This dynamic update enables effective learning in uncertain environments.
+\end{frame}
+
+\begin{frame}[fragile]{Key Components of TD Learning - Summary and Transition}
+    \begin{block}{Summary}
+        Temporal-Difference Learning involves:
+        \begin{itemize}
+            \item Value functions,
+            \item Prediction via bootstrapping,
+            \item The TD update rule.
+        \end{itemize}
+        These elements are crucial for developing effective RL algorithms and aid in an agent's learning and decision-making processes.
+    \end{block}
+
+    \textbf{Next Slide Transition:} 
+    We will compare Temporal-Difference Learning with Monte Carlo methods to highlight their differences and applications.
+\end{frame}
+
+\begin{frame}[fragile]{TD vs. Monte Carlo Methods - Overview}
+    \begin{block}{Overview}
+        In Reinforcement Learning (RL), Temporal-Difference (TD) learning and Monte Carlo methods are two fundamental paradigms used for estimating value functions. While both methods aim to learn from experiences, they differ in:
+        \begin{itemize}
+            \item Approach to state transitions
+            \item Sample efficiency
+            \item Convergence properties
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{TD vs. Monte Carlo Methods - Key Differences}
+    \begin{block}{Key Differences}
+        \begin{enumerate}
+            \item \textbf{Learning Mechanism}:
+            \begin{itemize}
+                \item \textbf{Monte Carlo Methods}: Learn from complete episodes.
+                \item \textbf{TD Learning}: Learns incrementally at each time step.
+            \end{itemize}
+            \item \textbf{Sample Efficiency}:
+            \begin{itemize}
+                \item \textbf{Monte Carlo}: Less sample efficient; waits for the end of episodes.
+                \item \textbf{TD Learning}: More sample efficient; updates continuously.
+            \end{itemize}
+            \item \textbf{Bias vs. Variance}:
+            \begin{itemize}
+                \item \textbf{Monte Carlo}: Unbiased estimates.
+                \item \textbf{TD Learning}: Some bias, but lower variance.
+            \end{itemize}
+            \item \textbf{Convergence}:
+            \begin{itemize}
+                \item \textbf{Monte Carlo}: Convergence guaranteed with enough episodes.
+                \item \textbf{TD Learning}: Faster convergence, but more challenging in some scenarios.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{TD vs. Monte Carlo Methods - Example Use Cases}
+    \begin{block}{Example Use Cases}
+        \begin{itemize}
+            \item \textbf{Monte Carlo Method Example}: 
+            In Blackjack, returns are calculated at the end of the game to update state values.
+            \item \textbf{TD Learning Example}: 
+            In a maze, values are updated after each action as the agent moves from one position to another.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{TD vs. Monte Carlo Methods - Formulas}
+    \begin{block}{Formulas}
+        \begin{equation}
+            G_t = R_{t+1} + R_{t+2} + \ldots + R_T
+        \end{equation}
+        where $G_t$ is the return from time $t$ onwards.
+        
+        \begin{equation}
+            V(s) \leftarrow V(s) + \alpha (R + \gamma V(s') - V(s))
+        \end{equation}
+        where:
+        \begin{itemize}
+            \item $V(s)$ is the current value estimate of state $s$.
+            \item $R$ is the immediate reward.
+            \item $\gamma$ is the discount factor.
+            \item $s'$ is the next state.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{TD vs. Monte Carlo Methods - Conclusion}
+    \begin{block}{Conclusion}
+        Both Temporal-Difference and Monte Carlo methods are valuable for estimating values in RL. Understanding their differences helps in:
+        \begin{itemize}
+            \item Choosing the appropriate method based on the problem context
+            \item Considering sample availability and required accuracy
+        \end{itemize}
+    \end{block}
+    \begin{block}{Key Takeaway}
+        \begin{itemize}
+            \item Choose TD Learning for online, efficient updates and faster learning.
+            \item Choose Monte Carlo Methods for unbiased estimates when episodes can be completed.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The TD Algorithm}
+    \begin{block}{Overview of Temporal-Difference Learning}
+        Temporal-Difference (TD) Learning is a key method in Reinforcement Learning (RL) that combines ideas from dynamic programming and Monte Carlo methods. It allows agents to learn optimal policies by updating their value estimates based on experience without requiring a complete model of the environment.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{itemize}
+        \item \textbf{Value Function}: Represents the expected return (reward) for being in a given state and following a particular policy, primarily using the state-value function \( V(s) \).
+        \item \textbf{Bootstrapping}: A crucial aspect where the current value estimate is updated based on other current estimates, typically from the next state.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The TD Learning Algorithm}
+    \begin{enumerate}
+        \item \textbf{Initialization}: Start with an arbitrary value function \( V \) for all states in \( S \).
+        \item \textbf{Experience Sampling}: Interact with the environment by taking an action \( a \) in state \( s \), observing the reward \( r \) and the next state \( s' \).
+        \item \textbf{Update Rule}:
+        \begin{equation}
+            V(s) \leftarrow V(s) + \alpha \left[ r + \gamma V(s') - V(s) \right]
+        \end{equation}
+        \item \textbf{Iteration}: Repeat steps 2 and 3 for a large number of episodes or until convergence.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Walkthrough}
+    \begin{block}{Scenario}
+        \begin{itemize}
+            \item \textbf{Current State (s)}: (2, 2)
+            \item \textbf{Action Taken (a)}: Move to (2, 3) — Reward \( r = +1 \)
+            \item \textbf{Next State (s')}: (2, 3)
+        \end{itemize}
+    \end{block}
+    \begin{block}{Applying the TD Update Rule}
+        \begin{equation}
+            V(2, 2) \leftarrow 0.5 + 0.1 \left[ 1 + 0.9 \times 1.0 - 0.5 \right]
+        \end{equation}
+        New value estimate:
+        \begin{equation}
+            V(2, 2) \leftarrow 0.64
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item TD Learning can learn from incomplete episodes, unlike Monte Carlo methods.
+        \item The balance between immediate rewards and estimated future values is crucial.
+        \item TD's bootstrapping approach facilitates learning in environments with large state spaces, helping achieve faster convergence.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Temporal-Difference Methods}
+    \begin{block}{Overview of Temporal-Difference Learning}
+        Temporal-Difference (TD) learning methods are foundational in reinforcement learning, specifically designed to optimize policies based on experience. Unlike Monte Carlo methods, TD learning updates value estimates based on other learned estimates without waiting for final outcomes. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{TD(0) Method}
+    \begin{block}{Concept}
+        \begin{itemize}
+            \item **TD(0)** updates the value of being in a state $S$ based only on the immediate reward and the estimated value of the next state $S'$.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Formula}
+        The basic update rule for TD(0) is:
+        \[
+        V(S) \leftarrow V(S) + \alpha \left( R + \gamma V(S') - V(S) \right)
+        \]
+        Where:
+        \begin{itemize}
+            \item $V(S)$: Current value estimate of state $S$
+            \item $\alpha$: Learning rate (0 < $\alpha$ ≤ 1)
+            \item $R$: Immediate reward received after transitioning to state $S'$
+            \item $\gamma$: Discount factor (0 ≤ $\gamma$ < 1)
+            \item $V(S')$: Value estimate of the next state $S'$
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of TD(0)}
+    \begin{block}{Example}
+        Consider a grid world where an agent receives rewards based on its position:
+        \begin{itemize}
+            \item At state $S$, the agent receives a reward $R = 1$ after moving to state $S'$.
+            \item If $V(S') = 0.5$, $\alpha = 0.1$, and $\gamma = 0.9$, the new value for $V(S)$ is updated as:
+        \end{itemize}
+        \[
+        V(S) \leftarrow V(S) + 0.1 \left( 1 + 0.9 \times 0.5 - V(S) \right)
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{TD(λ) Method}
+    \begin{block}{Concept}
+        \begin{itemize}
+            \item **TD(λ)** uses eligibility traces, blending TD(0) updates with long-term information. The parameter $\lambda$ (0 ≤ $\lambda$ ≤ 1) determines the history of past states influencing current updates.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Formula}
+        The update combines immediate and past rewards weighted by eligibility traces:
+        \[
+        V(S) \leftarrow V(S) + \alpha \delta_t \cdot E(S)
+        \]
+        where the TD error $\delta_t$ is:
+        \[
+        \delta_t = R + \gamma V(S') - V(S)
+        \]
+        and eligibility traces are updated as:
+        \[
+        E(S) \leftarrow \gamma \lambda E(S) + 1
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of TD(λ)}
+    \begin{block}{Example}
+        In the same grid world scenario, if the agent transitions through several states:
+        \begin{itemize}
+            \item TD(λ) will accumulate evidence of state value based on recently visited states influenced by $\lambda$.
+            \item For $\lambda = 0.5$, more recent transitions are weighted more heavily.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item **TD(0)**: Direct updates based on next-state estimations; ideal for simple environments.
+            \item **TD(λ)**: Faster learning via eligibility traces; effective for complex environments with delayed rewards.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    \begin{block}{Summary Points}
+        \begin{itemize}
+            \item **TD(0)**: Immediate updates based on next-state value estimations.
+            \item **TD(λ)**: Enhanced learning speed through eligibility traces.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Visual Representation}
+        Consider including diagrams that illustrate the difference between TD(0) and TD(λ) updating mechanisms.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Temporal-Difference Learning}
+    \begin{block}{Overview}
+        Temporal-Difference (TD) Learning is a pivotal concept in Reinforcement Learning (RL) used to learn policies and value functions from an agent's experience. Below are practical applications across various domains.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Game Playing}
+    \begin{itemize}
+        \item \textbf{Example: Chess and Go}
+        \begin{itemize}
+            \item TD learning techniques have been employed in AI systems like AlphaGo, which defeated world champions. 
+            \item The system evaluates the value of game states and adjusts strategies based on simulated game outcomes.
+        \end{itemize}
+        \item \textbf{Key Point:} TD learning enables evaluations based on partial information rather than waiting for the end of a game.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Robotics and Finance}
+    \begin{itemize}
+        \item \textbf{Robotics: Robotic Navigation}
+        \begin{itemize}
+            \item Robots learn to navigate complex environments by adjusting actions based on reward signals.
+            \item TD learning aids in improving path planning with accumulated experience.
+        \end{itemize}
+        \item \textbf{Key Point:} Real-time learning makes TD methods suitable for dynamic tasks.
+    \end{itemize}
+
+    \begin{itemize}
+        \item \textbf{Finance: Stock Trading}
+        \begin{itemize}
+            \item Automated trading systems use TD learning to predict stock prices and make buy/sell decisions.
+            \item The model adjusts parameters based on market feedback for optimized strategies.
+        \end{itemize}
+        \item \textbf{Key Point:} Updating predictions on the fly is crucial for decision-making under uncertainty.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Healthcare and Online Learning}
+    \begin{itemize}
+        \item \textbf{Healthcare: Treatment Strategies}
+        \begin{itemize}
+            \item TD methods optimize treatment plans by evaluating expected long-term benefits of interventions.
+            \item Strategies adjust based on patient responses over time.
+        \end{itemize}
+        \item \textbf{Key Point:} Continuous learning enhances personalized treatment applications.
+    \end{itemize}
+
+    \begin{itemize}
+        \item \textbf{Online Learning Platforms: Recommendation Systems}
+        \begin{itemize}
+            \item Platforms like Netflix and Amazon use TD learning to improve recommendations based on user feedback.
+            \item The system adapts to maximize user engagement iteratively.
+        \end{itemize}
+        \item \textbf{Key Point:} Iterative learning enhances user experience through adaptive suggestions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    \begin{itemize}
+        \item Temporal-Difference Learning provides a framework for agents to learn incrementally from experiences.
+        \item Its adaptability is beneficial across diverse fields such as:
+        \begin{itemize}
+            \item Game playing
+            \item Robotics
+            \item Finance
+            \item Healthcare
+            \item Personalized learning experiences
+        \end{itemize}
+        \item The ability to predict future rewards and update actions based on feedback enhances flexibility and effectiveness.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Function Approximation}
+    \begin{block}{Overview}
+        Explore how Temporal-Difference (TD) learning relates to value function approximation in Reinforcement Learning (RL).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Value Function Approximation}
+    \begin{itemize}
+        \item Value function approximation estimates the value function using a simpler representation.
+        \item Generalizes across states in large or continuous state spaces.
+        \item \textbf{Value Function}: Measures the expected return from each state under a policy.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relation to Temporal-Difference Learning}
+    \begin{itemize}
+        \item TD learning incorporates concepts from Monte Carlo methods and dynamic programming.
+        \item Updates value estimates based on the reward difference.
+    \end{itemize}
+    \begin{block}{Update Formula}
+        \[
+        V(s) \leftarrow V(s) + \alpha \delta
+        \]
+        \begin{itemize}
+            \item \(V(s)\): Estimated value of state \(s\)
+            \item \(\alpha\): Learning rate
+            \item \(\delta = r + \gamma V(s') - V(s)\)
+            \item \(r\): Reward after transitioning to state \(s'\)
+            \item \(\gamma\): Discount factor
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Value Function Approximation}
+    \begin{itemize}
+        \item \textbf{Linear Approximation}: 
+        \[
+        V(s) \approx \theta^T \phi(s)
+        \]
+        where \(\theta\) are weights and \(\phi(s)\) is a feature vector.
+        
+        \item \textbf{Non-linear Approximation}: 
+        Uses complex functions (e.g., neural networks) to represent value functions.
+        
+        \item \textbf{Example}: In a grid world, an agent updates its value based on distance to the goal.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Value Function Approximation}
+    \begin{itemize}
+        \item \textbf{Efficiency}: Reduces memory and speeds up learning in large state spaces.
+        \item \textbf{Generalization}: Enables informed decisions in new states from similar experiences.
+    \end{itemize}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Crucial for managing complexity in RL.
+            \item TD learning enhances value function estimates with approximations.
+            \item Both linear and non-linear approximators can boost learning.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Value function approximation, in conjunction with TD learning, plays a pivotal role in efficiently solving reinforcement learning tasks by allowing agents to learn generalizable value functions instead of exhaustive state representations.
+    
+    For further clarifications or examples regarding this pivotal concept, feel free to reach out!
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policy Updates with TD Learning - Introduction}
+    \begin{itemize}
+        \item Temporal-Difference (TD) Learning is a key method in reinforcement learning (RL) that blends ideas from Monte Carlo methods and dynamic programming.
+        \item It allows agents to learn optimal actions through interactions with their environment, updating policies based on future expected rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policy Updates in RL}
+    \begin{itemize}
+        \item In reinforcement learning, a \textbf{policy} defines the agent's behavior at a given state. It can be deterministic or stochastic.
+        \item The goal of TD learning is to improve the policy by using value estimates to make informed decisions about which actions to take.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How TD Learning Updates Policies}
+    \begin{block}{Learning from Experience}
+        \begin{itemize}
+            \item TD learning utilizes experience sampled from the environment to update the value function of states or state-action pairs, guiding policy updates.
+            \item The key update rule involves learning \textbf{target values} based on current estimates and immediate rewards.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{TD Update Rule}
+    The general TD update formula for value function \( V(s) \) in state \( s \):
+    \begin{equation}
+        V(s) \leftarrow V(s) + \alpha \left( R + \gamma V(s') - V(s) \right)
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item \( \alpha \) is the learning rate.
+        \item \( R \) is the reward received after taking action.
+        \item \( \gamma \) is the discount factor.
+        \item \( s' \) is the next state after executing the action.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policy Improvement Process}
+    \begin{itemize}
+        \item As the value function becomes more accurate, the policy can be improved using:
+        \begin{itemize}
+            \item \textbf{Greedy Policy}: Select action \( a \) that maximizes \( V(s) \) at each state.
+            \item \textbf{Softmax Action Selection}: Allows more exploration while still exploiting high-value actions.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: Updating a Simple Policy}
+    \begin{itemize}
+        \item Consider an agent in a grid world with:
+            \begin{itemize}
+                \item Current state \( s \): (2, 3)
+                \item Next state \( s' \): (2, 2) after action "up."
+                \item Reward \( R \): +1
+            \end{itemize}
+        \item Using the TD update:
+            \begin{itemize}
+                \item Assume \( V(2, 3) = 0.4 \) and \( V(2, 2) = 0.5 \).
+                \item Learning rate \( \alpha = 0.1 \) and discount factor \( \gamma = 0.9 \):
+            \end{itemize}
+        \begin{equation}
+            V(2, 3) \leftarrow 0.4 + 0.1 \left( 1 + 0.9 \cdot 0.5 - 0.4 \right) \approx 0.445
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item TD learning effectively combines immediate rewards and future value estimates for dynamic policy updates.
+        \item Continuous learning through exploration is essential to refine the policy over time.
+        \item Adapting the policy based on updated value functions enhances the agent's performance in complex environments.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    TD learning is a foundational technique in RL, enabling the policy to evolve based on ongoing experiences. It balances exploration and exploitation, optimizing decision-making through temporal differences in reward information.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation in TD - Key Concepts}
+    \begin{block}{Exploration}
+        \begin{itemize}
+            \item Refers to the strategy of trying new actions to discover their outcomes.
+            \item Essential for gathering information about the environment and possible rewards.
+            \item Without exploration, the agent may converge to suboptimal policies by only exploiting known actions.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Exploitation}
+        \begin{itemize}
+            \item Involves choosing the best-known actions based on previously gathered information.
+            \item Aims to maximize the immediate reward using current knowledge.
+            \item May lead to stagnation if it prevents the agent from learning about other potentially better actions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exploration vs. Exploitation in TD - Trade-off and Example}
+    \begin{block}{The Exploration-Exploitation Trade-off}
+        \begin{itemize}
+            \item Balancing exploration and exploitation is critical for effective learning in temporal-difference (TD) learning.
+            \item The objective is to maximize cumulative rewards while still learning about the environment.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Illustrative Example}
+        Imagine an agent navigating a maze:
+        \begin{itemize}
+            \item \textbf{Exploration}: The agent randomly moves through different paths to discover shortcuts or dead ends.
+            \item \textbf{Exploitation}: After discovering a path that leads quickly to the exit, the agent continues to take that same path, maximizing its efficiency based on prior knowledge.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Methods to Encourage Exploration}
+    \begin{enumerate}
+        \item \textbf{ε-greedy Strategy}
+            \begin{itemize}
+                \item With probability $\epsilon$, choose a random action (exploration).
+                \item With probability $1-\epsilon$, choose the action that maximizes the expected rewards (exploitation).
+                \item \textbf{Formula}:
+                \begin{equation}
+                \text{Action} = 
+                \begin{cases} 
+                \text{random action} & \text{with probability } \epsilon \\ 
+                \text{argmax}_a Q(s, a) & \text{with probability } 1 - \epsilon 
+                \end{cases}
+                \end{equation}
+            \end{itemize}
+        
+        \item \textbf{Boltzmann Exploration}
+            \begin{itemize}
+                \item Actions are chosen based on a softmax probability distribution over the estimated action values:
+                \begin{equation}
+                P(a|s) = \frac{e^{Q(s,a)/T}}{\sum_{b} e^{Q(s,b)/T}}
+                \end{equation}
+                \item Here, $T$ (temperature) controls the level of exploration; high $T$ favors exploration, low $T$ favors exploitation.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Convergence Properties of TD Learning - Overview}
+    \begin{block}{Overview of Convergence in Temporal-Difference (TD) Learning}
+        Temporal-Difference Learning is a crucial method in Reinforcement Learning (RL) that combines ideas from Monte Carlo methods and dynamic programming. Understanding the convergence properties of various TD methods is essential for ensuring that our learned policies and value functions are stable and reliable.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Convergence Properties - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Convergence}:
+            \begin{itemize}
+                \item Refers to the process where estimated value functions approach true values as iterations progress.
+            \end{itemize}
+        \item \textbf{Value Function Estimates}:
+            \begin{itemize}
+                \item TD learning updates value function estimates based on the \textit{temporal-difference error}.
+                \item \textbf{TD Update Rule}:
+                \begin{equation} 
+                V(S_t) \leftarrow V(S_t) + \alpha \delta_t 
+                \end{equation}
+                where:
+                \[
+                \delta_t = R_t + \gamma V(S_{t+1}) - V(S_t)
+                \]
+            \end{itemize}
+        \item \textbf{Exploration-Exploitation Trade-off}:
+            \begin{itemize}
+                \item Balancing exploration and exploitation is vital for fast convergence.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{TD Methods and Their Convergence}
+    \begin{enumerate}
+        \item \textbf{TD(0)}:
+            \begin{itemize}
+                \item Converges under certain conditions and is significant for on-policy learning.
+            \end{itemize}
+        \item \textbf{SARSA}:
+            \begin{itemize}
+                \item Guaranteed to converge to the optimal policy with:
+                \begin{itemize}
+                    \item Properly decreasing learning rate \( \alpha \).
+                    \item Sufficient exploration (e.g., $\epsilon$-greedy policies).
+                \end{itemize}
+            \end{itemize}
+        \item \textbf{Q-Learning}:
+            \begin{itemize}
+                \item An off-policy method with strong convergence properties.
+                \item Learns the optimal action-value function regardless of the current policy.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Importance of Convergence Properties}
+    \begin{itemize}
+        \item \textbf{Stability}:
+            \begin{itemize}
+                \item Convergence leads to consistent performance and reliability for RL systems.
+            \end{itemize}
+        \item \textbf{Optimality}:
+            \begin{itemize}
+                \item Helps in designing algorithms to find optimal policies effectively.
+            \end{itemize}
+        \item \textbf{Efficiency}:
+            \begin{itemize}
+                \item Knowledge allows tuning of parameters to achieve quicker learning times.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example Code Snippet - Q-Learning}
+    \begin{lstlisting}[language=Python]
+def q_learning(env, num_episodes, learning_rate, discount_factor, epsilon):
+    Q = np.zeros((env.observation_space.n, env.action_space.n))
+    for episode in range(num_episodes):
+        state = env.reset()
+        done = False
+        while not done:
+            if np.random.uniform(0, 1) < epsilon:
+                action = env.action_space.sample()  # Exploration
+            else:
+                action = np.argmax(Q[state])  # Exploitation
+            next_state, reward, done, _ = env.step(action)
+            # Update rule
+            Q[state, action] += learning_rate * (reward + discount_factor * np.max(Q[next_state]) - Q[state, action])
+            state = next_state
+    return Q
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Summary}
+    \begin{itemize}
+        \item Convergence properties of TD learning ensure reliable and efficient learning.
+        \item Essential for implementing effective learning algorithms to achieve optimal policies.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study: TD Learning in Action}
+    \begin{block}{Introduction to Temporal-Difference (TD) Learning}
+        \begin{itemize}
+            \item \textbf{Temporal-Difference Learning} combines Monte Carlo ideas with dynamic programming concepts.
+            \item Agents learn from experience by predicting future rewards based on current estimations without waiting for complete episodes.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study: TD Learning for Game Playing}
+    \begin{enumerate}
+        \item \textbf{Objective}: Improve decision-making in competitive environments like chess.
+        \item \textbf{Environment Setup}:
+            \begin{itemize}
+                \item The chessboard represents the environment.
+                \item Each game state has an associated value indicating its potential success.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{TD Learning Implementation}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{TD Learning Implementation}:
+            \begin{itemize}
+                \item The agent plays chess and estimates the value of each board position using TD learning.
+                \item Value updates are based on the reward after each move:
+                \begin{itemize}
+                    \item Reward = +1 for a win, 0 for a draw, -1 for a loss.
+                \end{itemize}
+            \end{itemize}
+        \item \textbf{Algorithm}:
+            \begin{equation}
+                V(S_t) \leftarrow V(S_t) + \alpha \times (R_{t+1} + \gamma \times V(S_{t+1}) - V(S_t))
+            \end{equation}
+            Where:
+            \begin{itemize}
+                \item $V(S_t)$ = Value of the state at time $t$
+                \item $\alpha$ = Learning rate
+                \item $\gamma$ = Discount factor
+                \item $R_{t+1}$ = Reward received after moving to next state $S_{t+1}$
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Process and Key Points}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Learning Process}:
+            \begin{itemize}
+                \item The agent plays against itself or opponents, refining its value function.
+                \item Through iterations, it predicts which positions lead to favorable outcomes.
+            \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Online Learning}: Adjusts in real-time while interacting with the environment.
+            \item \textbf{Exploration vs. Exploitation}: Balancing new moves and optimizing known good moves.
+            \item \textbf{Effectiveness}: Provides continuous improvement in complex decision-making scenarios.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Conclusion}
+        This case study illustrates the effectiveness of TD learning in game playing. It showcases its ability to adapt to new information and refine strategies over time.
+    \end{block}
+
+    \begin{block}{Additional Notes}
+        \begin{itemize}
+            \item Consider other applications of TD learning, such as in robotics, finance, and autonomous systems.
+            \item Discuss how TD learning contrasts with other reinforcement learning methods.
+        \end{itemize}
+    \end{block}
+
+    \textbf{Next Steps}: Explore the challenges and limitations faced by TD learning in the following slide.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges and Limitations of Temporal-Difference Learning}
+    \begin{block}{Introduction}
+        Temporal-Difference (TD) learning is a fundamental approach in Reinforcement Learning (RL) that integrates ideas from Monte Carlo methods and dynamic programming. Despite its effectiveness, TD learning has several challenges and limitations.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Sample Efficiency}
+    \begin{itemize}
+        \item \textbf{Explanation}:
+        \begin{itemize}
+            \item TD learning often requires a large number of interactions with the environment to converge to the optimal policy.
+            \item This can be problematic in environments where data is costly or time-consuming to obtain.
+        \end{itemize}
+        \item \textbf{Example}:
+        \begin{itemize}
+            \item In a robotic control task, each episode may involve long execution times, thus slowing down learning.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Convergence Issues and Credit Assignment Problem}
+    \begin{itemize}
+        \item \textbf{Convergence Issues}:
+        \begin{itemize}
+            \item TD learning algorithms may fail to converge depending on the choice of learning parameters (e.g., learning rate).
+            \item High variance in updates can lead to oscillations, preventing stable learning.
+        \end{itemize}
+        \item \textbf{Example}:
+        \begin{itemize}
+            \item If a learning rate is too high, the Q-values may overshoot the optimal values, leading to erratic behavior.
+        \end{itemize}
+    \end{itemize}
+
+    \begin{itemize}
+        \item \textbf{Credit Assignment Problem}:
+        \begin{itemize}
+            \item TD learning struggles with assigning credit to actions taken during earlier states that influenced future rewards.
+            \item This can make learning slower and less effective.
+        \end{itemize}
+        \item \textbf{Example}:
+        \begin{itemize}
+            \item In a game of chess, a bad move may not immediately lead to a loss; thus, determining which earlier moves contributed negatively becomes challenging.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Function Approximation Challenges and Exploration vs. Exploitation}
+    \begin{itemize}
+        \item \textbf{Function Approximation Challenges}:
+        \begin{itemize}
+            \item When using function approximation (e.g., neural networks), TD learning can suffer from instability and divergence.
+            \item It’s critical to manage the bias-variance trade-off effectively.
+        \end{itemize}
+        \item \textbf{Example}:
+        \begin{itemize}
+            \item If a neural network generalizes poorly, it may approximate value functions inaccurately, leading to suboptimal policies.
+        \end{itemize}
+    \end{itemize}
+
+    \begin{itemize}
+        \item \textbf{Exploration vs. Exploitation Trade-off}:
+        \begin{itemize}
+            \item TD learning's performance is heavily influenced by the exploration strategies employed.
+            \item Insufficient exploration can lead to poor policy learning.
+        \end{itemize}
+        \item \textbf{Example}:
+        \begin{itemize}
+            \item Epsilon-greedy strategies can encourage exploration but may also waste resources on suboptimal actions.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Sample Efficiency}: High data requirement can slow learning.
+            \item \textbf{Convergence Issues}: Sensitive to learning rate and experience replay.
+            \item \textbf{Credit Assignment}: Difficulty in handling delayed rewards.
+            \item \textbf{Function Approximation}: Risks of instability with complex approximators.
+            \item \textbf{Exploration Strategies}: Need for careful balance to enhance learning.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Temporal-Difference learning is a powerful tool in Reinforcement Learning. Awareness of its challenges allows practitioners to mitigate issues and improve learning outcomes for more robust agents.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet Example}
+    \begin{lstlisting}[language=Python]
+# Simple TD(0) Update Rule
+def td_update(Q, state, action, reward, next_state, alpha, gamma):
+    # TD target
+    target = reward + gamma * max(Q[next_state]) 
+    # TD error
+    td_error = target - Q[state][action]
+    # Update rule
+    Q[state][action] += alpha * td_error
+    \end{lstlisting}
+    \begin{block}{Note}
+        This code demonstrates the update rule for a TD(0) algorithm. Adjusting $\alpha$ and $\gamma$ appropriately can greatly impact the convergence behavior.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ethical Considerations in TD Learning - Introduction}
+    \begin{block}{Overview}
+        Temporal-Difference (TD) Learning is a foundational aspect of Reinforcement Learning (RL) that helps machines learn from experiences and make decisions over time. However, deploying TD Learning in real-world applications raises several ethical considerations and societal impacts that must be carefully evaluated.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ethical Considerations in TD Learning - Implications}
+    \begin{block}{Ethical Implications}
+        \begin{enumerate}
+            \item \textbf{Data Privacy}
+            \begin{itemize}
+                \item \textit{Concern}: TD Learning often relies on large datasets, which may include sensitive personal information.
+                \item \textit{Example}: In a healthcare application, RL models could unintentionally expose patient data if appropriate measures aren’t implemented.
+            \end{itemize}
+            
+            \item \textbf{Bias in Decision-Making}
+            \begin{itemize}
+                \item \textit{Concern}: If the training data is biased, the TD Learning model can perpetuate or amplify these biases.
+                \item \textit{Example}: In credit scoring, historical bias may lead to unfair treatment of specific demographic groups.
+            \end{itemize}
+                
+            \item \textbf{Accountability and Responsibility}
+            \begin{itemize}
+                \item \textit{Concern}: Who is responsible for the actions of an RL agent?
+                \item \textit{Example}: An autonomous vehicle's unanticipated decision could raise questions about legal accountability.
+            \end{itemize}
+                
+            \item \textbf{Unintended Consequences}
+            \begin{itemize}
+                \item \textit{Concern}: TD Learning models can optimize for short-term rewards at the expense of long-term welfare.
+                \item \textit{Example}: A recommendation system might promote extreme content, leading to negative societal impacts.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ethical Considerations in TD Learning - Societal Impacts}
+    \begin{block}{Societal Impacts}
+        \begin{itemize}
+            \item \textbf{Job Displacement:} Automated systems powered by TD Learning may lead to significant changes or displacement in certain job sectors.
+            \item \textbf{Dependence on Algorithms:} Increased reliance on TD Learning models can lead to societal dependency, with misguided trust resulting in severe repercussions.
+            \item \textbf{Manipulation and Control:} The ability to influence behavior through personalized recommendations can be ethically dubious, especially among vulnerable populations.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Importance of ethical guidelines in developing TD Learning systems.
+            \item Need for transparency and explainability in decision-making processes.
+            \item Value of an interdisciplinary approach by collaborating with ethicists and sociologists.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Research Directions in TD Learning}
+    Explore potential research directions and advancements in temporal-difference learning.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Temporal-Difference Learning}
+    \begin{itemize}
+        \item Temporal-Difference (TD) Learning is a core technique in reinforcement learning.
+        \item It allows an agent to learn from incomplete episodes and predict future rewards.
+        \item Researchers are exploring various directions to enhance TD learning's efficacy and application.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Exploration vs. Exploitation Strategies}
+    \begin{block}{Concept}
+        Balancing exploration (trying new actions) with exploitation (choosing known beneficial actions).
+    \end{block}
+    \begin{block}{Research Direction}
+        Developing adaptive strategies that adjust exploration rates based on the learning phase.
+    \end{block}
+    \begin{block}{Example}
+        Algorithms like Upper Confidence Bound (UCB) or epsilon-greedy methods refined for dynamic environments.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Transfer Learning in TD}
+    \begin{block}{Concept}
+        Transfer learning utilizes knowledge from one task to improve related tasks.
+    \end{block}
+    \begin{block}{Research Direction}
+        Investigating techniques for transferring TD learning policies between environments.
+    \end{block}
+    \begin{block}{Example}
+        Using features from a driving simulation to enhance real-world vehicle navigation systems.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Integration with Deep Learning}
+    \begin{block}{Concept}
+        Combining TD learning with deep neural networks for breakthroughs in complex environments.
+    \end{block}
+    \begin{block}{Research Direction}
+        Enhancing TD learning with deep reinforcement learning techniques for larger state/action spaces.
+    \end{block}
+    \begin{equation}
+        Q(s, a) \gets Q(s, a) + \alpha \left( r + \gamma \max_a Q(s', a) - Q(s, a) \right)
+    \end{equation}
+    \begin{block}{Illustration}
+        The TD update rule visualizes how TD learning updates value functions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{4. TD Learning in Multi-Agent Systems}
+    \begin{block}{Concept}
+        Agents interact with others in multi-agent environments, complicating the learning process.
+    \end{block}
+    \begin{block}{Research Direction}
+        Developing TD methods that account for behaviors among agents, incorporating cooperation or competition.
+    \end{block}
+    \begin{block}{Example}
+        In multi-robot scenarios, TD learning enables collective learning of efficient paths optimizing group performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{5. Generalization and Function Approximation}
+    \begin{block}{Concept}
+        Generalization allows learning from limited experiences across broader states.
+    \end{block}
+    \begin{block}{Research Direction}
+        Improving function approximation techniques for robust learning models.
+    \end{block}
+    \begin{block}{Example}
+        Using tile coding or radial basis functions as a basis for approximating value functions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{6. Ethical and Societal Implications}
+    \begin{block}{Concept}
+        TD learning poses ethical challenges in applications like surveillance or autonomous systems.
+    \end{block}
+    \begin{block}{Research Direction}
+        Investigating fairness, accountability, and transparency in TD learning algorithms.
+    \end{block}
+    \begin{block}{Key Point}
+        Emphasizing responsible development and deployment to mitigate risks of bias and misuse.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    TD Learning is a rich research field with various potential directions for enhancing applicability and efficiency.
+    \begin{itemize}
+        \item Explore these areas to contribute to advancements in robustness, adaptability, and ethical soundness in TD Learning.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Trends in Reinforcement Learning}
+    \begin{block}{Overview}
+        As the field of reinforcement learning (RL) evolves, several emerging trends are poised to significantly impact Temporal-Difference (TD) learning methods. Understanding these trends is crucial for researchers and practitioners aiming to leverage TD learning in practical applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Trends Affecting TD Learning}
+    \begin{enumerate}
+        \item \textbf{Integration with Deep Learning}
+            \begin{itemize}
+                \item \textbf{Description:} Deep Reinforcement Learning (DRL) combines traditional RL techniques with deep neural networks.
+                \item \textbf{Example:} TD learning with neural networks enables systems like AlphaGo using deep Q-networks (DQN).
+            \end{itemize}
+        
+        \item \textbf{Multi-Agent Systems}
+            \begin{itemize}
+                \item \textbf{Description:} Autonomously coordinating agents require TD methods to learn from multiple interactions.
+                \item \textbf{Example:} Collaborative learning of optimal alarm strategies between smoke detectors in a smart building.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Trends Affecting TD Learning (cont.)}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Curriculum Learning}
+            \begin{itemize}
+                \item \textbf{Description:} Training on progressively challenging tasks enhances learning efficiency.
+                \item \textbf{Example:} Starting with simple maze navigation and progressing to complex environments.
+            \end{itemize}
+
+        \item \textbf{Hierarchical Reinforcement Learning}
+            \begin{itemize}
+                \item \textbf{Description:} Breaking complex tasks into simpler sub-tasks for efficient TD learning.
+                \item \textbf{Example:} A robot learning to move and avoid obstacles separately.
+            \end{itemize}
+        
+        \item \textbf{Meta-Reinforcement Learning}
+            \begin{itemize}
+                \item \textbf{Description:} Teaching agents to learn new tasks quickly based on prior experiences.
+                \item \textbf{Example:} An RL agent trained in various racing scenarios adapting to new tracks rapidly.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Trends Affecting TD Learning (cont.)}
+    \begin{itemize}
+        \item \textbf{Explainable AI (XAI)}
+            \begin{itemize}
+                \item \textbf{Description:} Enhancing transparency in RL decision-making processes to improve user trust.
+                \item \textbf{Example:} Visualization tools that illustrate TD updates influencing agent decisions.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implications for TD Learning}
+    \begin{itemize}
+        \item \textbf{Adaptability:} TD learning methods may need to evolve to handle increased complexity and variability.
+        \item \textbf{Efficiency:} New frameworks like hierarchical and meta-learning enhance learning efficiency and performance.
+        \item \textbf{Collaboration:} Multi-agent systems indicate a shift towards collaborative learning scenarios for TD methods.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    The landscape of reinforcement learning is rapidly changing, with advancements in related fields poised to reshape TD learning methods. By staying ahead of these trends, researchers and practitioners can leverage TD learning to develop more robust and versatile AI systems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Takeaways}
+    \begin{enumerate}
+        \item \textbf{Definition and Concept}
+        \begin{itemize}
+            \item Temporal-Difference (TD) Learning combines Monte Carlo methods with Dynamic Programming in Reinforcement Learning.
+            \item It enables agents to learn predictions about future rewards based solely on current state experiences.
+        \end{itemize}
+        
+        \item \textbf{Core Mechanism}
+        \begin{itemize}
+            \item TD Learning uses the TD error to update state values:
+            \begin{equation}
+            \delta_t = R_t + \gamma V(S_{t+1}) - V(S_t)
+            \end{equation}
+            where \( \delta_t \) is the TD error, \( R_t \) is the received reward, \( \gamma \) is the discount factor, and \( V(S_t) \) and \( V(S_{t+1}) \) are the values of the current and next states, respectively.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Learning Approaches and Advantages}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Learning Approaches}
+        \begin{itemize}
+            \item \textbf{TD(0)}: Utilizes the immediate reward and value of the next state.
+            \item \textbf{TD(λ)}: Combines eligibility traces from multiple past states for enhanced learning.
+        \end{itemize}
+        
+        \item \textbf{Advantages}
+        \begin{itemize}
+            \item TD Learning is model-free, suitable for environments lacking full models.
+            \item It exhibits sample efficiency, allowing for optimal policy learning with fewer interactions.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Applications and Challenges}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Applications}
+        \begin{itemize}
+            \item Used in robotics, game playing (e.g., AlphaGo), and economic modeling for state prediction.
+            \item Example: An agent learns to predict board positions in a game based on actions taken and received rewards.
+        \end{itemize}
+        
+        \item \textbf{Challenges and Future Directions}
+        \begin{itemize}
+            \item Managing large state spaces can be computationally demanding.
+            \item Research focuses on the exploration-exploitation balance.
+            \item Future trends may integrate TD methods with deep learning for more adaptive systems.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Engagement Points}
+    \begin{itemize}
+        \item Discuss potential real-world applications of TD Learning.
+        \item Reflect on how emerging trends in Reinforcement Learning may shape TD Learning strategies.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Q\&A Session - Opening the Floor}
+    \begin{block}{Objective}
+        Encourage active engagement and clarify any uncertainties about Temporal-Difference (TD) Learning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Q\&A Session - Key Concepts to Review}
+    \begin{enumerate}
+        \item \textbf{Temporal-Difference Learning Basics:}
+        \begin{itemize}
+            \item \textbf{Definition:} TD learning predicts future outcomes based on past experiences, merging supervised and reinforcement learning.
+            \item \textbf{Concepts:} Off-policy vs. On-policy learning, value functions, and action-value functions.
+        \end{itemize}
+
+        \item \textbf{TD Algorithms:}
+        \begin{itemize}
+            \item \textbf{Q-Learning:} An off-policy method that learns action-state pair values, continuously updating based on temporal differences.
+            \item \textbf{SARSA:} An on-policy method that updates based on the action taken.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Q\&A Session - Examples to Discuss}
+    \begin{block}{Example of Q-Learning}
+        Suppose an agent navigates a maze. It learns optimal actions by updating estimates (Q-values) based on received rewards:
+
+        \begin{equation}
+            Q(s, a) \leftarrow Q(s, a) + \alpha \left[R + \gamma \max Q(s', a') - Q(s, a)\right]
+        \end{equation}
+
+        Where:
+        \begin{itemize}
+            \item $Q(s, a)$ = current value of taking action 'a' in state 's'
+            \item $\alpha$ = learning rate (how quickly to update)
+            \item $R$ = immediate reward received
+            \item $\gamma$ = discount factor (influence of future rewards)
+            \item $s'$ = next state after action
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example of SARSA}
+        In a similar maze scenario, the agent updates its Q-value based on the action it actually takes, reflecting the current policy.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Q\&A Session - Discussion Points}
+    \begin{itemize}
+        \item What challenges do you foresee in implementing TD learning methods?
+        \item How do you differentiate between on-policy and off-policy methods, and what practical implications do they have?
+        \item Can you think of real-world applications where temporal-difference learning is advantageous?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Q\&A Session - Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Adaptability:} TD learning adapts to environments with unknown models.
+        \item \textbf{Exploration vs. Exploitation:} Discuss the balance between trying new actions (exploration) and using known rewarding actions (exploitation).
+        \item \textbf{Current Trends:} Share insights on recent advancements in TD learning, such as applications in robotics and gaming.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Q\&A Session - Encouragement for Participation}
+    \begin{itemize}
+        \item Invite questions about specifics of the algorithms discussed.
+        \item Encourage sharing experiences or knowledge related to TD learning, reinforcement learning, and AI.
+    \end{itemize}
+
+    This session aims to enhance understanding and application of concepts related to temporal-difference learning, fostering engaging discussions.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading - Overview}
+    \begin{block}{Temporal-Difference Learning}
+        Temporal-Difference (TD) Learning is a crucial concept in reinforcement learning that combines ideas from dynamic programming and Monte Carlo methods. 
+        It enables agents to learn through trial and error, updating their value estimates based on new experiences without needing a model of the environment.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading - Recommended Resources}
+    \begin{enumerate}
+        \item \textbf{Books:}
+        \begin{itemize}
+            \item \textit{"Reinforcement Learning: An Introduction" by Richard S. Sutton and Andrew G. Barto}\\
+            \textbf{Description:} Key concepts in reinforcement learning, including TD methods and practical examples.\\
+            \textbf{Key Section:} Chapter 6 focuses on Temporal-Difference Learning.
+            
+            \item \textit{"Artificial Intelligence: A Modern Approach" by Stuart Russell and Peter Norvig}\\
+            \textbf{Description:} A broad overview of AI with discussions on reinforcement learning.\\
+            \textbf{Key Section:} Chapter 21 explores machine learning and reinforcement learning techniques.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading - More Resources}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Research Papers:}
+        \begin{itemize}
+            \item \textit{"Learning from Delay" by D. Silver, A. Sutton, and C. Szepesvari (2008)}\\
+            \textbf{Description:} TD learning strategies and their applications in various environments.
+            
+            \item \textit{"Generalization in Reinforcement Learning: Safely Approaching Stochastic Optimal Control" by A. Tamar et al.}\\
+            \textbf{Description:} Approaches to reinforcement learning that generalize TD learning methods.
+        \end{itemize}
+        \item \textbf{Online Courses:}
+        \begin{itemize}
+            \item \textit{Coursera - "Reinforcement Learning Specialization" by the University of Alberta}\\
+            Comprehensive course covering RL fundamentals, including TD learning.
+            
+            \item \textit{edX - "Deep Reinforcement Learning" by UC Berkeley}\\
+            Focuses on deep learning combined with TD methods.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading - Additional Resources}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Tutorials \& Online Resources:}
+        \begin{itemize}
+            \item \textit{OpenAI Spinning Up in Deep RL: Temporal-Difference Learning}\\
+            Practical guide introducing reinforcement learning, including TD methods.\\
+            \textbf{Link:} \url{https://spinningup.openai.com/en/latest/}
+            
+            \item \textit{Towards Data Science Articles on TD Learning}\\
+            A collection of blog posts with explanations and visualizations of TD learning.\\
+            \textbf{Link:} \url{https://towardsdatascience.com}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Reading - Key Points}
+    \begin{itemize}
+        \item Temporal-Difference Learning is foundational for modern reinforcement learning.
+        \item Practical application through examples in literature and online courses helps solidify understanding.
+        \item Continuous exploration of resources enhances comprehension and encourages further inquiry.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Assessment Overview}
+    Outline assessment methods related to the application and understanding of temporal-difference learning.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Assessment Methods for Temporal-Difference Learning}
+    
+    \begin{enumerate}
+        \item \textbf{Understanding of Core Concepts}
+        \item \textbf{Application of TD Learning Algorithms}
+        \item \textbf{Simulation and Scenario-Based Assessments}
+        \item \textbf{Theoretical and Empirical Analysis}
+        \item \textbf{Peer Review}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding of Core Concepts}
+    \begin{itemize}
+        \item \textbf{Definition}: Temporal-Difference (TD) learning combines ideas from Monte Carlo methods and dynamic programming to estimate value functions.
+        \item \textbf{Assessment}: Quiz questions focused on key terms (e.g., TD(0), Value Function, Reward Signal) to evaluate foundational knowledge.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Application of TD Learning Algorithms}
+    \begin{itemize}
+        \item \textbf{Understanding Algorithms}: Implementing TD learning algorithms, e.g.:
+        
+        \begin{block}{TD(0)}
+            \begin{equation}
+            V(s) \leftarrow V(s) + \alpha \left[ R + \gamma V(s') - V(s) \right]
+            \end{equation}
+            where:
+            \begin{itemize}
+                \item $V(s)$ = value of current state
+                \item $R$ = reward received 
+                \item $\gamma$ = discount factor
+                \item $s'$ = next state
+            \end{itemize}
+        \end{block}
+
+        \begin{block}{SARSA}
+            \begin{equation}
+            Q(s, a) \leftarrow Q(s, a) + \alpha \left[ R + \gamma Q(s', a') - Q(s, a) \right]
+            \end{equation}
+        \end{block}
+
+        \item \textbf{Assessment}: Programming assignments to implement TD learning in Python or relevant languages.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Simulation and Scenario-Based Assessments}
+    \begin{itemize}
+        \item \textbf{Simulated Environments}: Use of tools like OpenAI Gym to solve practical problems using TD learning.
+        \item \textbf{Assessment}: Practical exams in simulated environments measuring performance with TD methods.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Theoretical and Empirical Analysis}
+    \begin{itemize}
+        \item \textbf{Understanding Convergence and Limitations}: Discuss conditions for convergence and issues like bootstrapping and bias.
+        \item \textbf{Assessment}: Written assignments analyzing TD learning effectiveness compared to other method alternatives.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Peer Review and Key Points}
+    \begin{itemize}
+        \item \textbf{Collaborative Learning}: Present findings for feedback.
+        \item \textbf{Assessment}: Peer insights foster a collaborative environment.
+    
+        \item \textbf{Key Points to Emphasize}:
+        \begin{itemize}
+            \item Interconnection of concepts in TD learning.
+            \item Importance of hands-on algorithm practice.
+            \item Encouragement of literature engagement.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

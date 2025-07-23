@@ -1,0 +1,63 @@
+\frametitle{Common Techniques for Encoding}
+    \begin{enumerate}
+        \item \textbf{Label Encoding}
+            \begin{itemize}
+                \item Converts categories into unique integers.
+                \item Example:
+                \begin{itemize}
+                    \item Red $\rightarrow$ 0
+                    \item Blue $\rightarrow$ 1
+                    \item Green $\rightarrow$ 2
+                \end{itemize}
+                \item Use case: Suitable for ordinal data.
+                \begin{lstlisting}[language=Python]
+from sklearn.preprocessing import LabelEncoder
+
+le = LabelEncoder()
+color = ['Red', 'Blue', 'Green']
+encoded_color = le.fit_transform(color) # Outputs: [2, 0, 1]
+\end{lstlisting}
+            \end{itemize}
+
+        \item \textbf{One-Hot Encoding}
+            \begin{itemize}
+                \item Creates binary columns for each category.
+                \item Example:
+                \begin{itemize}
+                    \item Original: [Red, Blue, Green]
+                    \item One-Hot:
+                    \begin{itemize}
+                        \item Red: [1, 0, 0]
+                        \item Blue: [0, 1, 0]
+                        \item Green: [0, 0, 1]
+                    \end{itemize}
+                \end{itemize}
+                \item Use case: Preferred for nominal data.
+                \begin{lstlisting}[language=Python]
+import pandas as pd
+
+df = pd.DataFrame({'Color': ['Red', 'Blue', 'Green']})
+one_hot_encoded = pd.get_dummies(df, columns=['Color'])
+\end{lstlisting}
+            \end{itemize}
+
+        \item \textbf{Binary Encoding}
+            \begin{itemize}
+                \item Combines label and one-hot encoding benefits.
+                \item Example:
+                \begin{itemize}
+                    \item Red $\rightarrow$ 0 $\rightarrow$ 00
+                    \item Blue $\rightarrow$ 1 $\rightarrow$ 01
+                    \item Green $\rightarrow$ 2 $\rightarrow$ 10
+                \end{itemize}
+                \item Each binary digit results in a new column.
+                \begin{lstlisting}[language=Python]
+!pip install category_encoders  # Make sure to install category_encoders package
+
+import category_encoders as ce
+df = pd.DataFrame({'Color': ['Red', 'Blue', 'Green']})
+encoder = ce.BinaryEncoder(cols=['Color'])
+binary_encoded_df = encoder.fit_transform(df)
+\end{lstlisting}
+            \end{itemize}
+    \end{enumerate}

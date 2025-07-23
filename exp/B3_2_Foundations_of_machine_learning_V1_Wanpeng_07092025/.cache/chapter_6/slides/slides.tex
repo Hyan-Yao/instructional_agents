@@ -1,0 +1,1342 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Decision Trees and Ensemble Methods]{Week 6: Decision Trees and Ensemble Methods}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Decision Trees}
+    \begin{block}{Overview}
+        Decision Trees are a popular and intuitive method used in machine learning for both classification and regression tasks. Their structure resembles a flowchart, making them easy to interpret, visualize, and understand how decisions are made based on input data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of Decision Trees}
+    \begin{itemize}
+        \item \textbf{Root Node:} Represents the entire dataset and is the starting point for the decision-making process.
+        \item \textbf{Internal Nodes:} Represent tests or splits based on the values of data features.
+        \item \textbf{Branches:} Connections between nodes indicating the outcome of a test.
+        \item \textbf{Leaf Nodes (Terminal Nodes):} Represent the final outcome or class label in classification tasks; in regression tasks, they indicate the predicted value.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Role in Machine Learning}
+    Decision Trees play a critical role in machine learning:
+    \begin{itemize}
+        \item They enable models to make decisions based on feature attributes.
+        \item They handle both numerical and categorical data effectively.
+        \item Applications include finance (credit scoring) and healthcare (diagnosis prediction).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Example}
+    \begin{itemize}
+        \item \textbf{Interpretability:} Clear visual representation of decisions aids in understanding model behavior.
+        \item \textbf{Non-Parametric:} No distribution assumption for the data ensures robustness.
+        \item \textbf{Feature Importance:} Insights into influential features for decision-making are inherently provided.
+    \end{itemize}
+
+    \textbf{Example:}
+    \begin{table}[]
+        \centering
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            Age  & Income & Student & Buys \\ \hline
+            <30  & High   & No      & No   \\ \hline
+            <30  & High   & Yes     & Yes  \\ \hline
+            30-40 & High   & No      & Yes  \\ \hline
+            >40  & Medium & No      & Yes  \\ \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Visualized}
+    Here is how the decision tree for the example might look:
+
+    \begin{center}
+        \texttt{
+            [Age] \\
+            / \\ 
+            <30 \\ 
+            / \\ 
+            [Income] \\ 
+            / \\ 
+            High \\ 
+            / \\ 
+            No \\ 
+            / \\ 
+            Yes \\
+            \\
+            >=30 \\ 
+            / \\ 
+            Yes \\ 
+            / \\ 
+            [Student] \\ 
+            / \\ 
+            Yes \\ 
+            / \\ 
+            No \\
+        }
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Decision Trees offer a powerful method for decision-making in machine learning, characterized by their clear structure and easy interpretation. 
+    They serve as the foundation for more advanced ensemble methods, which we will explore in the following slides.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code Snippet}
+    To create a Decision Tree in Python using \texttt{scikit-learn}, consider the following code:
+    \begin{lstlisting}[language=Python]
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.datasets import load_iris
+
+# Load dataset
+data = load_iris()
+X, y = data.data, data.target
+
+# Create Decision Tree model
+model = DecisionTreeClassifier()
+model.fit(X, y)
+
+# Visualize the tree
+from sklearn.tree import export_text
+print(export_text(model, feature_names=data.feature_names))
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of Decision Trees - Overview}
+    \begin{itemize}
+        \item Decision trees are used for classification and regression.
+        \item They have a tree-like structure with:
+        \begin{itemize}
+            \item Nodes: Points where decisions are made.
+            \item Leaves: Terminal nodes indicating the outcome.
+            \item Branches: Connections between nodes representing decisions.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of Decision Trees - Components}
+    \begin{block}{Key Components}
+        \begin{itemize}
+            \item \textbf{Nodes:}
+            \begin{itemize}
+                \item \textit{Decision Node:} Where a split occurs based on a feature.
+                \item \textit{Root Node:} The first decision node.
+            \end{itemize}
+            \item \textbf{Leaves:} Terminal nodes providing final predictions.
+            \item \textbf{Branches:} Connections representing outcomes of decisions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of Decision Trees - Splitting Criteria}
+    \begin{block}{Splitting Criteria}
+        The process of dividing data based on a feature is crucial:
+        \begin{itemize}
+            \item \textbf{Gini Impurity:}
+            \[
+            Gini(p) = 1 - \sum (p_i^2)
+            \]
+            \item \textbf{Entropy:}
+            \[
+            Entropy(S) = -\sum p_i \log_2(p_i)
+            \]
+            \item \textbf{Information Gain:}
+            \begin{itemize}
+                \item Reduction in entropy after a split.
+                \item Higher values indicate better splits.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of Decision Trees - Example}
+    \begin{block}{Example of a Decision Tree}
+        Consider a dataset for predicting product purchases:
+        \begin{itemize}
+            \item \textbf{Root Node:} Age (<= 30?)
+            \item \textbf{Branches:}
+            \begin{itemize}
+                \item If Yes: Further split by income.
+                \item If No: Leads directly to a purchasing class.
+            \end{itemize}
+            \item \textbf{Leaves:} Final outcomes - "Purchase" or "No Purchase".
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of Decision Trees - Key Points}
+    \begin{itemize}
+        \item Decision trees offer an interpretable structure.
+        \item Selection of robust splitting criteria is crucial for performance.
+        \item Avoid overfitting by managing tree depth and using pruning techniques.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building Decision Trees - Part 1}
+    \frametitle{Introduction}
+    Decision Trees are a popular machine learning technique used for classification and regression tasks. 
+    This slide outlines the step-by-step process of building a decision tree, from data input to feature selection and determining tree depth.
+\end{frame}
+
+\begin{frame}[fragile]{Building Decision Trees - Part 2}
+    \frametitle{Step 1: Data Input}
+    \begin{itemize}
+        \item \textbf{Definition}: Data input refers to the dataset used to train your decision tree.
+        \item \textbf{Considerations}:
+        \begin{itemize}
+            \item The dataset should include both features (independent variables) and the target variable (dependent variable).
+            \item \textbf{Example}: In predicting whether a customer will buy a product:
+            \begin{itemize}
+                \item Features: age, income, previous purchases
+                \item Target variable: "purchase" (yes/no)
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building Decision Trees - Part 3}
+    \frametitle{Step 2: Feature Selection}
+    \begin{itemize}
+        \item \textbf{Definition}: Choosing which features will be used to split the data at each node.
+        \item \textbf{Criteria}:
+        \begin{itemize}
+            \item \textbf{Gini Impurity}:
+            \begin{equation}
+                Gini = 1 - \sum (p_i^2)
+            \end{equation}
+            \item \textbf{Entropy}:
+            \begin{equation}
+                Entropy = - \sum (p_i \cdot \log_2(p_i))
+            \end{equation}
+        \end{itemize}
+        \item \textbf{Example}: For the dataset mentioned, determine which feature (age, income) best predicts "purchase" using the selected criteria.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building Decision Trees - Part 4}
+    \frametitle{Step 3: Splitting the Tree}
+    \begin{itemize}
+        \item \textbf{Process}: The feature that best splits the data is chosen, creating branches from the root node.
+        \item \textbf{Illustration}:
+        \begin{itemize}
+            \item \textbf{Root Node}: Initial dataset
+            \item \textbf{Branching}: Splits the data based on the selected feature, leading to child nodes (further splits).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building Decision Trees - Part 5}
+    \frametitle{Step 4: Determining Tree Depth}
+    \begin{itemize}
+        \item \textbf{Definition}: The maximum length from the root to any leaf node.
+        \item \textbf{Considerations}:
+        \begin{itemize}
+            \item Deeper trees can model more complex relationships but are prone to overfitting.
+            \item Common practice: Limit depth via parameters such as 'max\_depth' in libraries (e.g., Scikit-Learn).
+        \end{itemize}
+        \item \textbf{Example}: A maximum depth of 3 will create several layers of decisions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building Decision Trees - Part 6}
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Balance}: Balance complexity (tree depth) with model interpretability and generalization.
+        \item \textbf{Performance}: Use cross-validation techniques to assess the model's performance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Building Decision Trees - Part 7}
+    \frametitle{Summary and Next Steps}
+    \begin{itemize}
+        \item By following these steps—inputting data, selecting features, splitting based on criteria, and determining the optimal depth—we construct an effective decision tree model.
+        \item \textbf{Next Steps}: In the following slide, popular algorithms for building decision trees, including CART and ID3, will be discussed, providing insights into their advantages and limitations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Decision Tree Algorithms - Overview}
+    \begin{block}{Overview of Decision Tree Algorithms}
+        Decision trees are powerful tools used in data mining for classification and regression tasks. 
+        Two prominent algorithms are CART (Classification and Regression Trees) and ID3 (Iterative Dichotomiser 3). 
+        Understanding these algorithms provides insight into how decision trees make predictions based on input features.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{CART (Classification and Regression Trees)}
+    \begin{block}{Concept}
+        CART can handle both classification (categorical outcomes) and regression (continuous outcomes) tasks. 
+        It creates binary trees and selects the feature that best splits the data at each node.
+    \end{block}
+
+    \begin{block}{Splitting Criterion}
+        \begin{itemize}
+            \item For classification, CART uses the Gini impurity or entropy to evaluate the quality of a split.
+            \item For regression, it minimizes the mean squared error (MSE).
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Algorithm Steps}
+        \begin{enumerate}
+            \item Select the best feature to split on based on the chosen splitting criterion.
+            \item Split the dataset into subsets based on the feature.
+            \item Repeat steps 1 and 2 for each subset until stopping criteria are met (like maximum depth or minimum samples at leaf).
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Example of CART}
+    \begin{block}{Example}
+        Suppose we have a dataset of animals with features like "size" and "type" (mammal, reptile). 
+        CART might split first by "size". For size $\leq$ 10kg, it could further consider "type" to classify into "Mammal" or "Reptile".
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{ID3 (Iterative Dichotomiser 3)}
+    \begin{block}{Concept}
+        ID3 is primarily used for classification problems. 
+        It builds a tree top-down, recursively choosing the most informative feature at each step.
+    \end{block}
+
+    \begin{block}{Splitting Criterion}
+        ID3 uses information gain to determine the best attribute to split. 
+        Information gain measures how much knowing a feature reduces uncertainty about the outcome.
+    \end{block}
+
+    \begin{equation}
+        \text{Information Gain} = H(S) - \sum \left( \frac{|S_v|}{|S|} H(S_v) \right)
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item $H(S)$ is the entropy of the dataset,
+        \item $S_v$ represents subsets of data after the split based on feature $v$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Algorithm Steps for ID3}
+    \begin{block}{Algorithm Steps}
+        \begin{enumerate}
+            \item Calculate the entropy of the overall dataset.
+            \item For each feature, calculate the information gain when splitting on that feature.
+            \item Choose the feature with the highest information gain to split the dataset.
+            \item Repeat until all instances are classified or stopping criteria are reached.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Example of ID3}
+    \begin{block}{Example}
+        Consider a dataset of weather conditions (e.g., sunny, rainy) and whether to play a game (yes/no). 
+        ID3 may first split on "weather" if it provides the most information gain concerning the decision to play.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Flexibility}: CART can be used for both classification and regression, while ID3 focuses on classification.
+        \item \textbf{Interpretability}: Decision trees provide transparent decision-making paths.
+        \item \textbf{Handling Complexity}: Both algorithms can become overly complex if not pruned or controlled, leading to overfitting.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion}
+    By understanding these algorithms, you'll gain valuable insights into how decision trees function and how to leverage them effectively in predictive modeling. 
+    As we proceed, we will explore the advantages of decision trees further.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Decision Trees}
+    \begin{block}{Overview}
+        Decision Trees are a popular machine learning technique for both classification and regression tasks. Here, we discuss key advantages that make them a favored choice among data scientists.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Advantages of Decision Trees}
+    \begin{enumerate}
+        \item \textbf{Interpretability}
+        \item \textbf{Simplicity}
+        \item \textbf{Less Data Preprocessing Required}
+        \item \textbf{Handles Both Numerical and Categorical Data}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Interpretability}
+    \begin{itemize}
+        \item \textbf{Clear Visual Representation}
+            \begin{itemize}
+                \item Decision Trees provide graphical representations of the decision-making process.
+                \item Example: Predictions based on features, where each split represents a decision.
+            \end{itemize}
+        \item \textbf{Non-Technical Audiences}
+            \begin{itemize}
+                \item Easy for stakeholders without a technical background to understand.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Simplicity}
+    \begin{itemize}
+        \item \textbf{Easy to Implement}
+            \begin{itemize}
+                \item Minimal tuning required; straightforward implementation.
+                \item \textbf{Implementation Example in Python:}
+                \begin{lstlisting}[language=Python]
+from sklearn.tree import DecisionTreeClassifier
+# Create Decision Tree classifier object
+classifier = DecisionTreeClassifier()
+# Fit the classifier to the training data
+classifier.fit(X_train, y_train)
+                \end{lstlisting}
+            \end{itemize}
+        \item \textbf{No Complex Mathematics}
+            \begin{itemize}
+                \item Intuitive concept; involves simple conditional statements.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Less Data Preprocessing Required}
+    \begin{itemize}
+        \item \textbf{Handles Missing Values}
+            \begin{itemize}
+                \item Can deal with datasets containing missing values without extensive preprocessing.
+            \end{itemize}
+        \item \textbf{No Need for Feature Scaling}
+            \begin{itemize}
+                \item Decision Trees do not require normalization or standardization.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{4. Versatility}
+    \begin{itemize}
+        \item \textbf{Handles Both Numerical and Categorical Data}
+            \begin{itemize}
+                \item Efficiently works with both data types without special treatment for categorical variables.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Key Takeaways}
+        Decision Trees offer strong advantages such as:
+        \begin{itemize}
+            \item Ease of interpretation
+            \item Simplicity in implementation
+            \item Less need for data preprocessing
+            \item Versatility across different data types
+        \end{itemize}
+        Understanding these advantages can guide the selection of appropriate models for predictive tasks.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{References}
+    \begin{itemize}
+        \item "Introduction to Machine Learning" by Alpaydin, E.
+        \item Scikit-learn Documentation for Decision Trees
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Disadvantages of Decision Trees - Introduction}
+    While decision trees are popular due to their simplicity and interpretability, they also come with several drawbacks:
+    \begin{itemize}
+        \item Overfitting
+        \item Sensitivity to Data Variations
+        \item Bias
+    \end{itemize}
+    Understanding these disadvantages is key to selecting the right modeling approach for your data analysis needs.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Disadvantages of Decision Trees - Overfitting}
+    \begin{block}{Overfitting}
+        \textbf{Definition:} Overfitting occurs when a model learns the noise and details in the training data, negatively impacting performance on new data.
+    \end{block}
+    \begin{itemize}
+        \item Decision trees create complex models that capture intricate patterns in training data.
+        \item Example: A decision tree may perfectly classify every example in a training set, leading to poor generalization to unseen data.
+        \item Illustration: A tree path for each individual data point does not capture generalized patterns.
+    \end{itemize}
+    \begin{block}{Solution}
+        Techniques like pruning and constraining tree depth can combat overfitting.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Disadvantages of Decision Trees - Sensitivity to Data Variations}
+    \begin{block}{Sensitivity to Data Variations}
+        \textbf{Definition:} Decision trees are sensitive to small changes in training data.
+    \end{block}
+    \begin{itemize}
+        \item A slight data change can create a completely different decision tree structure.
+        \item Example: Adding high-value houses to a housing dataset may lead to disproportionate splits on price.
+    \end{itemize}
+    \begin{block}{Solution}
+        Using ensemble methods like Random Forests can reduce sensitivity and improve robustness.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Disadvantages of Decision Trees - Bias}
+    \begin{block}{Bias}
+        \textbf{Definition:} Bias refers to the model's tendency to miss relevant relationships between features and target outcomes.
+    \end{block}
+    \begin{itemize}
+        \item A shallow tree may overlook the complexity in the data (underfitting).
+        \item Example: A decision tree predicting exam performance based solely on study hours may ignore other impactful factors.
+        \item Key Points:
+        \begin{itemize}
+            \item Properly tuning the tree depth helps balance stability and complexity.
+            \item Understanding feature importance aids in capturing essential relationships.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Disadvantages of Decision Trees - Conclusion}
+    Recognizing the disadvantages of decision trees is crucial for practitioners:
+    \begin{itemize}
+        \item Drawbacks such as overfitting, sensitivity to data, and bias necessitate careful consideration.
+        \item Advanced ensemble methods can enhance predictive performance.
+    \end{itemize}
+    \textbf{Next Steps:} Dive into ensemble methods to learn how they can mitigate some weaknesses of decision trees.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ensemble Methods Overview}
+    \begin{block}{Understanding Ensemble Methods}
+        \textbf{Definition:} Ensemble methods combine the predictions from multiple models to enhance accuracy and robustness in predictive analytics. By leveraging the strengths of various models, ensemble techniques can lead to better performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance of Ensemble Methods}
+    \begin{itemize}
+        \item \textbf{Improved Predictive Accuracy:} 
+        \begin{itemize}
+            \item Aggregating various predictions minimizes errors, yielding more reliable results, particularly beneficial when models overfit or have high variance.
+            \item \textbf{Example:} Consider two models predicting house prices:
+            \begin{itemize}
+                \item Model A: $250,000
+                \item Model B: $300,000
+            \end{itemize}
+            The ensemble prediction would be:
+            \begin{equation}
+                \text{Ensemble Prediction} = \frac{250,000 + 300,000}{2} = 275,000
+            \end{equation}
+        \end{itemize}
+        
+        \item \textbf{Reduction of Overfitting:} 
+        \begin{itemize}
+            \item Combines multiple models to mitigate risks of overfitting, improving generalization on unseen data.
+        \end{itemize}
+        
+        \item \textbf{Robustness:}
+        \begin{itemize}
+            \item Less sensitive to noise; if one model fails, others stabilize the output.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Ensemble Methods}
+    \begin{itemize}
+        \item \textbf{Bagging (Bootstrap Aggregating):} 
+        \begin{itemize}
+            \item Creates subsets of training data to train models (often decision trees) in parallel. Each model votes for the final prediction, reducing variance.
+        \end{itemize}
+
+        \item \textbf{Boosting:} 
+        \begin{itemize}
+            \item A sequential technique where each model corrects the errors of its predecessor, significantly reducing bias.
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item \textbf{Collective Voting or Averaging:} Operates by voting or averaging predictions.
+            \item \textbf{Diversity in Models:} Effectiveness improves with model diversity.
+            \item \textbf{Applications Across Domains:} Used in finance, healthcare, and more.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    Ensemble methods are crucial for enhancing predictive performance, especially in situations where single models struggle due to overfitting or high variance. By leveraging multiple models, they yield more accurate, robust, and reliable predictions, laying the groundwork for more complex machine learning strategies.
+\end{frame}
+
+\begin{frame}[fragile]{Bagging Technique - Overview}
+    \begin{block}{What is Bagging?}
+        Bagging, or Bootstrap Aggregating, is an ensemble learning technique aimed at improving the stability and accuracy of machine learning algorithms. Primarily used with decision trees, bagging helps reduce variance, which is essential for models prone to overfitting.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Bagging Technique - How Does It Work?}
+    \begin{enumerate}
+        \item \textbf{Bootstrap Sampling:}
+        \begin{itemize}
+            \item Multiple subsets are created from the original dataset by randomly sampling with replacement.
+            \item Example: 10 subsets of 100 points each are created from an original dataset of 100 data points.
+        \end{itemize}
+
+        \item \textbf{Building Multiple Models:}
+        \begin{itemize}
+            \item For each bootstrapped subset, a separate decision tree model is trained.
+        \end{itemize}
+
+        \item \textbf{Aggregation of Predictions:}
+        \begin{itemize}
+            \item For regression tasks, predictions are averaged.
+            \item For classification tasks, the majority vote among predictions is taken.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Bagging Technique - Why Use Bagging?}
+    \begin{block}{Benefits of Bagging}
+        \begin{itemize}
+            \item \textbf{Reduces Variance:} Averaging models smooths predictions, lessening noise impact.
+            \item \textbf{Improved Performance:} Ensemble of trees typically performs better than a single tree.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Enhances accuracy of decision trees by addressing variance.
+            \item Uses diverse training datasets, leading to varied predictions.
+            \item Particularly beneficial when training datasets are small or when models are sensitive to variations.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Bagging Technique - Example Illustration}
+    \begin{block}{Original Dataset}
+        \begin{itemize}
+            \item [A, B, C, D, E]
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Bootstrapped Samples}
+        \begin{itemize}
+            \item Sample 1: [A, A, C, E, E]
+            \item Sample 2: [B, C, C, D, E]
+            \item Sample 3: [A, B, B, C, C]
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Predictions from Trees}
+        \begin{itemize}
+            \item Tree 1 predicts: Class X
+            \item Tree 2 predicts: Class Y
+            \item Tree 3 predicts: Class X
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Final Prediction (Classification)}
+        Majority Vote → Class X is selected.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Bagging Technique - Python Code Example}
+    \begin{lstlisting}[language=python]
+from sklearn.ensemble import BaggingClassifier
+from sklearn.tree import DecisionTreeClassifier
+
+# Creating a Bagging Classifier based on a Decision Tree
+bagging_model = BaggingClassifier(base_estimator=DecisionTreeClassifier(), n_estimators=50)
+
+# Fitting the model
+bagging_model.fit(X_train, y_train)
+
+# Making predictions
+predictions = bagging_model.predict(X_test)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Bagging Technique - Conclusion}
+    Bagging is a fundamental technique within ensemble methods that offers robustness and enhanced predictive performance. By leveraging multiple decision trees, it addresses overfitting and improves model stability and accuracy in various machine learning tasks.
+\end{frame}
+
+\begin{frame}[fragile]{Random Forests - Overview}
+    \begin{block}{What are Random Forests?}
+        Random Forests are an ensemble learning method predominantly used for classification and regression tasks. 
+        By utilizing a multitude of decision trees during training and outputting the mode (for classification) or 
+        mean prediction (for regression) of the individual trees, Random Forests effectively reduce the risk of 
+        overfitting, a common problem in single decision trees.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Random Forests - How Do They Work?}
+    \begin{enumerate}
+        \item \textbf{Creation of Bootstrap Samples}: Each tree is trained on a different random sample of the dataset, known as a 
+        ``bootstrap sample," drawn with replacement.
+        
+        \item \textbf{Random Feature Selection}: A random subset of features is considered when splitting nodes in each decision tree, 
+        ensuring diversity and reducing correlations.
+        
+        \item \textbf{Tree Building}: Each tree is constructed independently using the selected features from one of the bootstrap samples.
+        
+        \item \textbf{Aggregation of Predictions}: After training, predictions are averaged for regression tasks, 
+        or a majority vote is taken for classification tasks.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Random Forests - Advantages Over Single Decision Trees}
+    \begin{itemize}
+        \item \textbf{Reduced Overfitting}: Averages multiple trees to generalize better to unseen data.
+        
+        \item \textbf{Improved Accuracy}: Combining predictions often leads to superior performance.
+        
+        \item \textbf{Robustness to Noise}: Less sensitive to outliers and noise due to the ensemble approach.
+        
+        \item \textbf{Feature Importance}: Provides insights into the importance of features for prediction, aiding in feature 
+        selection.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Random Forests - Example Code Snippet}
+    \begin{lstlisting}[language=Python]
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Sample dataset
+X, y = ...  # feature matrix and labels
+
+# Split the dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create and train the model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Evaluate accuracy
+accuracy = accuracy_score(y_test, predictions)
+print(f'Accuracy: {accuracy:.2f}')
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Random Forests - Conclusion}
+    Random Forests provide a powerful alternative to single decision trees. By utilizing bagging and random feature 
+    selection, they build more generalized and accurate models. This highlights the strength of ensemble techniques 
+    in machine learning and their popularity among data scientists.
+\end{frame}
+
+\begin{frame}[fragile]{Boosting Technique - Introduction}
+    Boosting is a powerful ensemble machine learning technique that aims to improve the accuracy of models by combining multiple weak learners to create a strong learner. Unlike bagging methods like Random Forests, boosting works by sequentially training weak learners, where each learner attempts to correct the errors of its predecessor.
+\end{frame}
+
+\begin{frame}[fragile]{Boosting Technique - Purpose}
+    \begin{itemize}
+        \item \textbf{Enhance Model Accuracy}: Aggregating predictions from multiple learners reduces bias and variance.
+        \item \textbf{Focus on Misclassifications}: Boosting emphasizes instances previously misclassified, thus improving the model’s learning on difficult cases.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Boosting Technique - How It Works}
+    \begin{enumerate}
+        \item \textbf{Initialization}: Start with a dataset and assign equal weights to all samples.
+        \item \textbf{Training Weak Learners}: Train the first weak learner, calculate errors, and adjust weights to focus on misclassified points.
+        \item \textbf{Iterate}: Repeat for a predetermined number of iterations or until performance improves.
+        \item \textbf{Final Prediction}: Combine predictions from all weak learners using a weighted majority vote (for classification) or weighted average (for regression).
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Boosting Technique - Visualizing the Process}
+    \begin{block}{Example Scenario}
+        In each iteration, boosting focuses more on data points wrongly classified by the previous weak learner, akin to enhancing skills by addressing mistakes. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Boosting Technique - Key Points}
+    \begin{itemize}
+        \item \textbf{Weak Learners}: Simple models like decision stumps are commonly used.
+        \item \textbf{Model Complexity}: Boosting can lead to complex models needing careful tuning to avoid overfitting.
+        \item \textbf{Learning Rate}: Controls how much weight is given to each learner; a smaller rate can enhance robustness.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Boosting Technique - Formula}
+    The final prediction of a boosting algorithm can be expressed as: 
+    \begin{equation}
+        \hat{y} = \sum_{m=1}^{M} \alpha_m h_m(x) 
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item \( \hat{y} \) = final prediction
+        \item \( M \) = number of weak learners
+        \item \( \alpha_m \) = weight assigned to each weak learner
+        \item \( h_m(x) \) = prediction from the \( m \)-th weak learner for input \( x \)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Boosting Technique - Conclusion}
+    Boosting significantly enhances weak models to create strong predictive tools. Understanding boosting sets the stage for exploring specific algorithms like AdaBoost and Gradient Boosting, which will be discussed next.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Popular Boosting Algorithms - Overview}
+    \begin{block}{Overview of Boosting}
+        Boosting is a powerful ensemble learning technique that combines multiple weak learners to create a strong predictive model. 
+        \begin{itemize}
+            \item Focuses on errors of previous models.
+            \item Effectively reduces bias and variance.
+            \item Leads to improved accuracy.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Popular Boosting Algorithms - Key Algorithms}
+    \begin{enumerate}
+        \item \textbf{AdaBoost (Adaptive Boosting)}
+            \begin{itemize}
+                \item \textbf{Concept}: Sequentially applies a weak learning algorithm to weighted versions of the training data.
+                \item \textbf{How it Works}:
+                    \begin{itemize}
+                        \item Equal weights assigned initially.
+                        \item Misclassified instances' weights are increased.
+                        \item Combined model is formed through a weighted majority vote.
+                    \end{itemize}
+                \item \textbf{Formula}:
+                    \begin{equation}
+                    F(x) = \sum_{m=1}^{M} \alpha_m h_m(x)
+                    \end{equation}
+                \item \textbf{Example}: In binary classification, focus on misclassified instances to iteratively improve accuracy.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Popular Boosting Algorithms - Key Algorithms Continued}
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Gradient Boosting}
+            \begin{itemize}
+                \item \textbf{Concept}: Constructs new models to predict residuals of prior models.
+                \item \textbf{How it Works}:
+                    \begin{itemize}
+                        \item Start with a base model (mean of target values).
+                        \item Calculate residuals of predictions.
+                        \item Fit a new weak learner to the residuals.
+                        \item Update predictions based on new learner's predictions.
+                    \end{itemize}
+                \item \textbf{Formula}:
+                    \begin{equation}
+                    F(x) = F(x) + \eta \cdot h(x)
+                    \end{equation}
+                \item \textbf{Example}: A new tree targets errors made by the previous tree, progressively refining performance.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Popular Boosting Algorithms - Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Both algorithms rely on weak learners, which are slightly better than random guessing.
+            \item Boosting emphasizes learning from past errors, enhancing accuracy.
+            \item The learning rate in Gradient Boosting controls the contribution of new models.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Both AdaBoost and Gradient Boosting are effective methods for improving model performance. Understanding these algorithms aids in selecting appropriate techniques for various applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Model Evaluation Metrics - Introduction}
+    \begin{block}{Introduction to Model Evaluation}
+        When we develop models using decision trees and ensemble methods, it's crucial to evaluate their performance using quantifiable metrics. These metrics help us understand how well our model is making predictions and identify areas for improvement.
+    \end{block}
+    
+    Common metrics include:
+    \begin{itemize}
+        \item Accuracy
+        \item Precision
+        \item Recall
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Model Evaluation Metrics - Key Metrics}
+    \begin{block}{Accuracy}
+        \begin{itemize}
+            \item \textbf{Definition:} The ratio of correctly predicted observations to the total observations.
+            \item \textbf{Formula:}
+            \begin{equation}
+                \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Observations}}
+            \end{equation}
+            \item \textbf{Example:} If out of 100 predictions, 80 are correct, then accuracy is \( \frac{80}{100} = 0.80 \) or 80\%.
+            \item \textbf{Points to Consider:} Accuracy may be misleading for imbalanced datasets.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Model Evaluation Metrics - Precision and Recall}
+    \begin{block}{Precision}
+        \begin{itemize}
+            \item \textbf{Definition:} The ratio of correctly predicted positive observations to all predicted positives.
+            \item \textbf{Formula:}
+            \begin{equation}
+                \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+            \end{equation}
+            \item \textbf{Example:} If 60 positive cases are predicted, but only 45 are correct, Precision \( = \frac{45}{60} = 0.75 \) or 75\%.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Recall (Sensitivity)}
+        \begin{itemize}
+            \item \textbf{Definition:} The ratio of correctly predicted positive observations to all actual positives.
+            \item \textbf{Formula:}
+            \begin{equation}
+                \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+            \end{equation}
+            \item \textbf{Example:} If there are 50 actual positive cases and the model identifies 40, Recall \( = \frac{40}{50} = 0.80 \) or 80\%.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Model Evaluation Metrics - Balancing and Conclusion}
+    \begin{block}{Balancing Precision and Recall}
+        A trade-off exists between Precision and Recall. To find a balance, we often use the F1 Score, the harmonic mean of Precision and Recall:
+        \begin{equation}
+            F1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+        \end{equation}
+        \begin{itemize}
+            \item \textbf{Example:} If Precision is 0.75 and Recall is 0.80, then:
+            \begin{equation}
+                F1 = 2 \cdot \frac{0.75 \times 0.80}{0.75 + 0.80} = 0.77
+            \end{equation}
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Model evaluation is fundamental in validating decision trees and ensemble methods. Each metric provides insights into different aspects of model performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Applications of Decision Trees and Ensembles - Overview}
+    \begin{block}{Overview}
+        Decision trees and ensemble methods like Random Forests and Gradient Boosting have widespread applications across various industries. Their interpretability and effectiveness in handling complex datasets make these techniques valuable for classification and regression tasks.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Applications of Decision Trees and Ensembles - Key Application Areas}
+    \begin{block}{Key Application Areas}
+        \begin{enumerate}
+            \item \textbf{Healthcare}
+                \begin{itemize}
+                    \item \textit{Diagnosis and Prognosis}: Predict outcomes based on symptoms and medical history.
+                    \item \textit{Treatment Recommendations}: Improve treatment plans using large datasets.
+                \end{itemize}
+            \item \textbf{Finance}
+                \begin{itemize}
+                    \item \textit{Credit Scoring}: Assess creditworthiness by analyzing historical loan data.
+                    \item \textit{Fraud Detection}: Identify fraudulent activities through transaction data analysis.
+                \end{itemize}
+            \item \textbf{Retail}
+                \begin{itemize}
+                    \item \textit{Customer Segmentation}: Classify customers to enhance marketing strategies.
+                    \item \textit{Inventory Management}: Forecast demand to optimize stock levels.
+                \end{itemize}
+            \item \textbf{Manufacturing}
+                \begin{itemize}
+                    \item \textit{Quality Control}: Identify defect causes in production processes.
+                    \item \textit{Predictive Maintenance}: Analyze data to predict equipment failures.
+                \end{itemize}
+            \item \textbf{Telecommunications}
+                \begin{itemize}
+                    \item \textit{Churn Prediction}: Analyze usage patterns to retain customers.
+                    \item \textit{Network Optimization}: Optimize resources based on network usage.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Applications of Decision Trees and Ensembles - Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Interpretability}: Decision trees provide straightforward rules that stakeholders can easily understand.
+            \item \textbf{Robustness}: Ensemble methods improve performance by combining predictions from multiple models.
+            \item \textbf{Versatility}: Applicable across various data types and industries.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Decision trees and ensemble methods are powerful tools in data-driven decision-making, enhancing accuracy and providing valuable insights for strategic business advantages.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Ethical Considerations - Overview}
+    Ethical considerations in machine learning (ML) are crucial to ensure that algorithms like decision trees and ensemble methods do not perpetuate biases or cause harm. As these models are increasingly integrated into decision-making processes, it is vital to be aware of their potential ethical implications.
+\end{frame}
+
+\begin{frame}[fragile]{Key Ethical Concerns}
+    \begin{enumerate}
+        \item \textbf{Bias and Fairness}
+        \begin{itemize}
+            \item Bias occurs when a model exhibits prejudiced outcomes based on skewed training data.
+            \item Example: Decision trees trained on skewed data (e.g., gender/race) can lead to unfair treatment.
+        \end{itemize}
+        
+        \item \textbf{Transparency and Explainability}
+        \begin{itemize}
+            \item Understanding model conclusions is essential for trust and accountability.
+            \item Example: Decision trees are interpretable, but ensemble methods like Random Forest can obscure individual decision pathways.
+        \end{itemize}
+        
+        \item \textbf{Data Privacy}
+        \begin{itemize}
+            \item Collection and use of personal data must respect privacy rights.
+            \item Example: Using sensitive attributes without proper anonymization risks privacy violations.
+        \end{itemize}
+        
+        \item \textbf{Accountability}
+        \begin{itemize}
+            \item Responsibility for model outcomes must be clearly determined.
+            \item Example: In cases of incorrect predictions, roles must be defined (data scientist, organization, etc.).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Summary of Key Points}
+    \begin{itemize}
+        \item \textbf{Addressing Bias:} Evaluate training data for representativeness to reduce biases.
+        \item \textbf{Promoting Transparency:} Strive for model explainability; provide insights into decision-making.
+        \item \textbf{Ensuring Privacy:} Implement data protection protocols to safeguard personal information.
+        \item \textbf{Clarifying Accountability:} Define roles and responsibilities in model outcomes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Code Example for Assessing Bias}
+\begin{lstlisting}[language=Python]
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+
+# Sample data with potential bias
+data = pd.DataFrame({
+    'feature_1': [1, 2, 1, 2],
+    'gender': ['Male', 'Female', 'Male', 'Female'],
+    'target': [1, 0, 1, 0]
+})
+
+# Training a decision tree
+features = data[['feature_1', 'gender']]
+model = DecisionTreeClassifier()
+model.fit(features, data['target'])
+
+# Potential check for gender bias:
+predictions = model.predict(features)
+data['prediction'] = predictions
+print(data.groupby('gender')['prediction'].mean())
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion}
+    Ethical considerations in decision trees and ensemble methods are paramount. By prioritizing fairness, transparency, privacy, and accountability, we can foster responsible use of machine learning technologies. As stakeholders, we must advocate for ethical standards and practices.
+\end{frame}
+
+\begin{frame}[fragile]{Future Directions in Research - Overview}
+    \begin{block}{Overview}
+        In the rapidly evolving field of machine learning, decision trees and ensemble methods continue to garner significant attention. This slide discusses emerging trends and potential future research directions that will shape the development and application of these methodologies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Integrating Deep Learning with Decision Trees}
+    \begin{itemize}
+        \item \textbf{Concept:} Explore hybrid models that combine the interpretability of decision trees with the representation capacity of deep learning models.
+        \item \textbf{Example:} Using a decision tree as a feature extractor for input into a neural network can enhance performance on complex datasets like image recognition in medical imaging.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Automated Machine Learning (AutoML)}
+    \begin{itemize}
+        \item \textbf{Concept:} Development of frameworks that automate the selection and optimization of decision tree architectures and ensemble methods.
+        \item \textbf{Example:} Platforms such as Google Cloud AutoML or H2O.ai are creating tools that enable non-experts to leverage decision trees effectively without in-depth understanding.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Handling Imbalanced Datasets}
+    \begin{itemize}
+        \item \textbf{Concept:} Research advancements in enhancing the robustness of decision trees and ensemble methods against class imbalance.
+        \item \textbf{Techniques:}
+            \begin{itemize}
+                \item \textbf{Modified Sampling Methods:} Over-sampling the minority class or under-sampling the majority class before model training.
+                \item \textbf{Cost-sensitive Learning:} Assigning higher costs to misclassifying the minority class during training.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Explainability and Interpretability}
+    \begin{itemize}
+        \item \textbf{Concept:} As models grow complex, enhancing their interpretability becomes crucial, particularly in regulated industries.
+        \item \textbf{Future Direction:} Develop methods to explain ensemble predictions without losing accuracy, such as using SHAP (SHapley Additive exPlanations) values.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{The Impact of Big Data}
+    \begin{itemize}
+        \item \textbf{Concept:} Decision trees and ensemble methods are poised to handle larger datasets more efficiently.
+        \item \textbf{Future Efforts:} Enhancements in algorithms (like scalable Random Forests and Gradient Boosting) to accommodate big data in real-time analytics.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Key Points to Emphasize}
+    \begin{itemize}
+        \item The importance of improving decision tree interpretability, given their role in critical decision-making processes.
+        \item Integration of emerging technologies, such as AutoML and deep learning, providing access to more sophisticated models without the need for extensive expertise.
+        \item Continuous innovations targeting data imbalance, which remains a significant challenge for practitioners.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Sample Code Snippet}
+    \begin{lstlisting}[language=Python]
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Load your dataset
+X, y = load_your_data()
+
+# Split the dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a Random Forest Classifier
+rf = RandomForestClassifier(n_estimators=100)
+
+# Train the model
+rf.fit(X_train, y_train)
+
+# Make predictions
+predictions = rf.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, predictions)
+print(f"Accuracy: {accuracy:.2f}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Closing Thoughts}
+    \begin{block}{Closing Thoughts}
+        Research in decision trees and ensemble methods is diverse and multifaceted, with potential applications in every sector. As emerging challenges arise, continued innovation and ethical considerations will be pivotal in guiding future developments.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and Recap - Key Takeaways - Part 1}
+    \begin{enumerate}
+        \item \textbf{Understanding Decision Trees}:
+        \begin{itemize}
+            \item \textbf{Definition}: A decision tree is a flowchart-like structure for decision-making, where:
+            \begin{itemize}
+                \item Internal nodes represent decisions based on features.
+                \item Branches indicate the outcome of decisions.
+                \item Leaf nodes signify final outcomes or classes.
+            \end{itemize}
+            \item \textbf{Key Features}:
+            \begin{itemize}
+                \item \textbf{Simplicity}: Easy to interpret.
+                \item \textbf{Non-Parametric}: No assumptions about input data distribution.
+            \end{itemize}
+            \item \textbf{Example}: A tree classifying customer purchases based on age, income, etc.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and Recap - Key Takeaways - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{1} % Continue from previous frame
+        \item \textbf{Introduction to Ensemble Methods}:
+        \begin{itemize}
+            \item \textbf{Definition}: Combine multiple models for stronger performance.
+            \item \textbf{Types of Ensemble Methods}:
+            \begin{itemize}
+                \item \textbf{Bagging}: Increases stability and accuracy (e.g., Random Forest).
+                \item \textbf{Boosting}: Corrects errors from prior models (e.g., AdaBoost).
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Importance in Predictive Modeling}:
+        \begin{itemize}
+            \item Versatility: Applicable in classification and regression.
+            \item Performance: Reduces overfitting, improves generalization.
+            \item Feature Importance: Insights into feature relevance for modeling.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and Recap - Key Takeaways - Part 3}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Decision Trees are intuitive for both classification and regression.
+            \item Ensemble Methods enhance model performance through aggregation.
+            \item Understanding strengths and limitations guides strategy selection.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and Recap - Example Code Snippet}
+    \begin{block}{Example Code Snippet (Python)}
+    \begin{lstlisting}[language=Python]
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+# Sample dataset
+X = [[1, 2], [2, 3], [3, 1], [5, 4]]
+y = [0, 0, 1, 1]
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25)
+
+# Decision Tree Classifier
+classifier = DecisionTreeClassifier()
+classifier.fit(X_train, y_train)
+
+# Prediction
+predictions = classifier.predict(X_test)
+
+# Accuracy
+print("Accuracy:", accuracy_score(y_test, predictions))
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion and Recap - Final Thoughts}
+    \begin{block}{Final Thoughts}
+        Mastering decision trees and ensemble methods is crucial for effective machine learning. These techniques provide essential tools in predictive modeling, yielding substantial insights across various fields. Utilize these concepts to enhance your data science journey and decision-making processes.
+    \end{block}
+\end{frame}
+
+
+\end{document}

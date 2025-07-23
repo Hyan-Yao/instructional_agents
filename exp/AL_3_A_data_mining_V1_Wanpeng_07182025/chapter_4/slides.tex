@@ -1,0 +1,1096 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Classification Fundamentals]{Week 4: Classification Fundamentals}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Classification - Overview}
+    Classification is a fundamental data mining task that involves predicting the category or class of given data points based on training data. Unlike regression, which predicts continuous values, classification predicts discrete labels.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Classification - Importance}
+    \begin{block}{Importance of Classification in Real-World Problems}
+        \begin{itemize}
+            \item \textbf{Decision Making:} Helps businesses in customer segmentation and fraud detection.
+            \item \textbf{Healthcare:} Predicts diseases based on patient data for timely interventions.
+            \item \textbf{Spam Detection:} Filters out spam from legitimate messages in email services.
+            \item \textbf{Image Recognition:} Identifies objects or people in images.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Classification - Examples}
+    \begin{enumerate}
+        \item \textbf{Fraud Detection Example:} Banks classify transactions as 'legitimate' or 'fraudulent' using historical data.
+        
+        \item \textbf{Healthcare Example:} Tumor classification as benign or malignant based on histopathology images.
+        
+        \item \textbf{Spam Detection Example:} Emails are classified as 'spam' or 'not spam' using machine learning algorithms.
+        
+        \item \textbf{Image Recognition Example:} Social media tags individuals by classifying facial recognition data.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Classification Works}
+    \begin{block}{Phases of Classification}
+        \begin{itemize}
+            \item \textbf{Training Phase:} A model learns from labeled datasets.
+            \item \textbf{Testing Phase:} The model evaluates accuracy with unseen data.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Classification - Key Points}
+    \begin{block}{Types of Classification Algorithms}
+        \begin{itemize}
+            \item \textbf{Decision Trees:} Split data based on feature values.
+            \item \textbf{Support Vector Machines (SVM):} Find the hyperplane that separates classes.
+            \item \textbf{Neural Networks:} Mimic human brain for learning complex patterns.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Performance Metrics}
+        \begin{itemize}
+            \item \textbf{Accuracy:} Percentage of correct predictions.
+            \item \textbf{Precision and Recall:} Critical in uneven class distributions.
+        \end{itemize}
+        \begin{equation}
+            \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Samples}}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Classification - Conclusion}
+    Classification is pivotal in many sectors, providing solutions to essential problems and enhancing data-driven decision-making. Understanding its principles equips us to harness the power of data and derive meaningful insights.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Learning - Introduction}
+    \begin{block}{Understanding Learning Paradigms in Classification}
+        Learning in machine learning can be broadly classified into two categories: 
+        \textbf{Supervised Learning} and \textbf{Unsupervised Learning}. Each paradigm has distinct characteristics, applications, and techniques.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Learning - Supervised Learning}
+    \begin{block}{Definition}
+        Supervised learning involves training a model on a labeled dataset, meaning the input data is paired with corresponding output labels. The goal is for the model to learn to map inputs to outputs based on this training data.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Labeled Data:} Each training example consists of an input-output pair.
+        \item \textbf{Model Training:} The model is trained to minimize the error between its predictions and the actual labels.
+        \item \textbf{Applications:} Commonly used for classification and regression tasks.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Learning - Supervised Learning Examples}
+    \begin{block}{Examples of Classification Tasks}
+        \begin{itemize}
+            \item \textbf{Email Spam Detection:} Classifying emails as 'spam' or 'not spam' based on features (e.g., subject line, sender email).
+            \item \textbf{Credit Scoring:} Predicting whether an individual is a 'good' or 'bad' credit risk based on historical financial data.
+            \item \textbf{Image Classification:} Identifying objects in images (e.g., classifying whether an image contains a cat or dog).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Learning - Unsupervised Learning}
+    \begin{block}{Definition}
+        Unsupervised learning relies on data without labeled responses. The model attempts to identify hidden patterns or intrinsic structures within the input data without any prior labels.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Unlabeled Data:} The dataset contains inputs without any corresponding output labels.
+        \item \textbf{Pattern Recognition:} The model discovers patterns and groupings in the data independently.
+        \item \textbf{Applications:} Mainly used for clustering, dimensionality reduction, and anomaly detection.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Learning - Unsupervised Learning Examples}
+    \begin{block}{Examples of Indirect Classification Tasks}
+        \begin{itemize}
+            \item \textbf{Customer Segmentation:} Grouping customers based on purchasing behavior for targeted marketing initiatives.
+            \item \textbf{Anomaly Detection:} Identifying unusual patterns that do not conform to expected behavior (e.g., fraud detection in banking).
+            \item \textbf{Market Basket Analysis:} Discovering associations between products frequently bought together.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Learning - Summary and Conclusion}
+    \begin{block}{Summary}
+        \begin{itemize}
+            \item \textbf{Supervised Learning:} Uses labeled data to train models for precise prediction tasks (classification and regression).
+            \item \textbf{Unsupervised Learning:} Discovers patterns in unlabeled data, useful for exploratory data analysis and clustering.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Conclusion}
+        Understanding the distinction between supervised and unsupervised learning is crucial for selecting the appropriate approach for classification tasks in various real-world scenarios. This foundational knowledge sets the stage for diving deeper into specific classification algorithms in the next slide.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Classification Algorithms Overview}
+    \begin{block}{Introduction to Classification Algorithms}
+        Classification algorithms are crucial in machine learning and data science. They categorize data into predefined classes based on input features. This forms part of supervised learning, where the algorithm learns from labeled training data to make predictions on unseen data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Classification Algorithms - Part 1}
+    \begin{enumerate}
+        \item \textbf{Decision Trees}
+            \begin{itemize}
+                \item \textbf{Concept:} Flowchart-like structure with nodes representing decisions based on feature values.
+                \item \textbf{Example:} Classifying fruit based on color and size:
+                    \begin{itemize}
+                        \item Root Node: Is the fruit red?
+                        \item Yes: Is it small? $\rightarrow$ Apple
+                        \item No: $\rightarrow$ Orange
+                    \end{itemize}
+                \item \textbf{Properties:} 
+                    \begin{itemize}
+                        \item Easy to interpret and visualize.
+                        \item Handles categorical and continuous data.
+                    \end{itemize}
+                \item \textbf{Use Cases:} Credit scoring, medical diagnosis, customer segmentation.
+            \end{itemize}
+        
+        \item \textbf{Support Vector Machines (SVM)}
+            \begin{itemize}
+                \item \textbf{Concept:} Finds the optimal hyperplane to separate data points from different classes in high-dimensional space.
+                \item \textbf{Example:} Finding a hyperplane to separate data points representing dogs and cats.
+                \item \textbf{Properties:}
+                    \begin{itemize}
+                        \item Effective in high-dimensional spaces.
+                        \item Works well with clear margin of separation.
+                    \end{itemize}
+                \item \textbf{Use Cases:} Text classification, image recognition, bioinformatics.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Classification Algorithms - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue from the previous frame
+        \item \textbf{k-Nearest Neighbors (k-NN)}
+            \begin{itemize}
+                \item \textbf{Concept:} Classifies a new data point based on categories of its 'k' nearest neighbors.
+                \item \textbf{Example:} Classifying a new flower by looking at nearest neighbors based on features like petal width and height.
+                \item \textbf{Properties:}
+                    \begin{itemize}
+                        \item Simple to implement and understand.
+                        \item Non-parametric; does not assume any underlying distribution of data.
+                    \end{itemize}
+                \item \textbf{Use Cases:} Recommendation systems, anomaly detection, pattern recognition.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Formulas}
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Classification algorithms are foundational tools in machine learning for categorizing data.
+            \item Each algorithm has strengths and weaknesses depending on the data and task requirements.
+            \item Understanding these algorithms equips you for various real-world classification problems.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Formulas}
+        \begin{equation}
+            \text{For SVM: maximize } \frac{2}{\|\mathbf{w}\|} \text{, subject to } y_i(\mathbf{w} \cdot \mathbf{x}_i + b) \geq 1
+        \end{equation}
+        
+        \begin{equation}
+            \text{For k-NN: predicted class} = \text{mode}(y_{1}, y_{2}, \ldots, y_{k})
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding these classification algorithms empowers us to develop robust predictive models, enabling informed decisions based on data analysis. Next, we will dive deeper into Decision Trees, their implementation, and practical applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Decision Trees - Overview}
+    \begin{itemize}
+        \item Decision Trees are a supervised learning algorithm used for:
+        \begin{itemize}
+            \item Classification
+            \item Regression
+        \end{itemize}
+        \item They split data into subsets based on input feature values, forming a tree-like model of decisions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Decision Trees - Structure}
+    \begin{enumerate}
+        \item \textbf{Root Node}: Starting point representing the entire dataset.
+        \item \textbf{Internal Node}: Represents a feature test where data is split.
+        \item \textbf{Branches}: Connect nodes and represent the outcomes of tests (e.g., yes/no).
+        \item \textbf{Leaf Node}: Represents final decisions or classifications, indicating class labels.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Decision Trees - Example and Process}
+    \textbf{Simple Example: Animal Classification}
+    \begin{itemize}
+        \item \textbf{Root Node}: Can the animal fly?
+            \begin{itemize}
+                \item Yes
+                    \begin{itemize}
+                        \item Is it small?
+                            \begin{itemize}
+                                \item Yes → \textbf{Leaf Node}: It’s a Sparrow.
+                                \item No → \textbf{Leaf Node}: It’s an Eagle.
+                            \end{itemize}
+                    \end{itemize}
+                \item No
+                    \begin{itemize}
+                        \item Does it have fur?
+                            \begin{itemize}
+                                \item Yes → \textbf{Leaf Node}: It’s a Dog.
+                                \item No → \textbf{Leaf Node}: It’s a Lizard.
+                            \end{itemize}
+                    \end{itemize}
+            \end{itemize}
+    \end{itemize}
+    
+    \textbf{Recursive Partitioning Process:}
+    \begin{lstlisting}
+function build_tree(data):
+    if all examples belong to the same class:
+        return create_leaf_node(class)
+    if no features left:
+        return create_leaf_node(most_common_class(data))
+    
+    best_feature = select_best_feature(data)
+    tree = create_branch(best_feature)
+
+    for value in best_feature's values:
+        subset = split_data(data, best_feature, value)
+        subtree = build_tree(subset)
+        attach subtree to the tree with value
+    
+    return tree
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Support Vector Machines (SVM) - Overview}
+    \begin{itemize}
+        \item Support Vector Machines are a powerful class of supervised learning algorithms.
+        \item Primarily used for classification tasks, with applications in regression.
+        \item The main idea is to find the optimal hyperplane that separates different classes in feature space.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Support Vector Machines (SVM) - Working Principle}
+    \begin{enumerate}
+        \item \textbf{Hyperplane}:
+            \begin{itemize}
+                \item A flat affine subspace in an n-dimensional space.
+                \item SVM finds a hyperplane that separates data points into distinct classes.
+            \end{itemize}
+        \item \textbf{Margin}:
+            \begin{itemize}
+                \item Distance between the hyperplane and the nearest data point from either class.
+                \item SVM aims to maximize this margin for better classification resilience.
+            \end{itemize}
+        \item \textbf{Support Vectors}:
+            \begin{itemize}
+                \item Key data points closest to the hyperplane.
+                \item These points determine the hyperplane's position and orientation.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Support Vector Machines (SVM) - Mathematical Formulation}
+    \begin{block}{Optimization Problem}
+        Maximize: \( \frac{2}{\|w\|} \) \\
+        Subject to: \( y_i (w \cdot x_i + b) \geq 1 \quad \text{for all } i \)
+    \end{block}
+    \begin{itemize}
+        \item Where:
+            \begin{itemize}
+                \item \( w \) = coefficients vector
+                \item \( b \) = bias term
+                \item \( x_i \) = input features
+                \item \( y_i \) = class labels (+1 or -1)
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Support Vector Machines (SVM) - Effectiveness in High-Dimensional Spaces}
+    \begin{itemize}
+        \item \textbf{Kernel Trick}:
+            \begin{itemize}
+                \item Efficiently handles high-dimensional spaces.
+                \item Transforms data into a higher-dimensional space for better separation.
+            \end{itemize}
+        \item \textbf{Examples of Kernels}:
+            \begin{itemize}
+                \item \textbf{Linear Kernel}: Suitable for linearly separable data.
+                \item \textbf{Polynomial Kernel}: Models interactions between features.
+                \item \textbf{Radial Basis Function (RBF) Kernel}: Best for non-linear data separation.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Support Vector Machines (SVM) - Real-World Applications}
+    \begin{itemize}
+        \item \textbf{Text Classification}: Widely used for tasks like spam detection.
+        \item \textbf{Image Recognition}: Effective in facial and handwriting recognition.
+        \item \textbf{Bioinformatics}: Classifying genes based on various traits.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Support Vector Machines (SVM) - Example Code Snippet}
+    \begin{lstlisting}[language=Python]
+from sklearn import datasets
+from sklearn import svm
+import numpy as np
+
+# Load dataset
+iris = datasets.load_iris()
+X = iris.data[:, :2]  # take the first two features for visualization
+y = iris.target
+
+# Create SVM model
+model = svm.SVC(kernel='linear')
+model.fit(X, y)
+
+# Predict class for a new sample
+predicted_class = model.predict([[5.0, 3.0]])
+print(predicted_class)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{k-Nearest Neighbors (k-NN) - Overview}
+    \begin{block}{What is k-NN?}
+        k-Nearest Neighbors (k-NN) is a simple, non-parametric algorithm for classification and regression.
+        It operates on the principle that similar observations are close in feature space.
+    \end{block}
+    
+    \begin{block}{Key Phases}
+        \begin{itemize}
+            \item \textbf{Training Phase:} No explicit training; the entire dataset is stored.
+            \item \textbf{Prediction Phase:} 
+                \begin{enumerate}
+                    \item Compute distance to all training instances.
+                    \item Select 'k' nearest neighbors.
+                    \item Assign class label based on majority vote (or average for regression).
+                \end{enumerate}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{k-Nearest Neighbors (k-NN) - Distance Metrics}
+    \begin{block}{Selecting 'k' and Distance Metrics}
+        \begin{itemize}
+            \item \textbf{Select 'k':} Number of neighbors to consider.
+            \item \textbf{Distance Metrics:} Methods to calculate distance.
+        \end{itemize}
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Euclidean Distance:} 
+        \begin{equation}
+            d = \sqrt{\sum_{i=1}^{n}(x_i - y_i)^2}
+        \end{equation}
+
+        \item \textbf{Manhattan Distance:} 
+        \begin{equation}
+            d = \sum_{i=1}^{n}|x_i - y_i|
+        \end{equation}
+
+        \item \textbf{Minkowski Distance:} 
+        \begin{equation}
+            d = \left( \sum_{i=1}^{n}|x_i - y_i|^p \right)^{\frac{1}{p}} \quad (p=1 \, \text{for Manhattan, } p=2 \, \text{for Euclidean})
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{k-Nearest Neighbors (k-NN) - Example}
+    \begin{block}{Example Classification}
+        Consider a two-dimensional feature space with training data:
+        \begin{itemize}
+            \item Point A (5.5, 150) - Class 1
+            \item Point B (6.0, 130) - Class 0
+            \item Point C (5.0, 160) - Class 1
+            \item Point D (5.8, 140) - Class 0
+        \end{itemize}
+        To classify the point (5.7, 145):
+        \begin{enumerate}
+            \item Calculate distances to all training points.
+            \item Find closest 'k' points (let's say \(k=3\)).
+            \item Majority voting results (e.g., A, B, and D classify it as Class 0).
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{k-Nearest Neighbors (k-NN) - Benefits and Limitations}
+    \begin{block}{Key Benefits}
+        \begin{itemize}
+            \item \textbf{Simplicity:} Easy implementation with minimal parameters.
+            \item \textbf{Versatility:} Applicable to both classification and regression tasks.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Limitations}
+        \begin{itemize}
+            \item \textbf{Computational Cost:} Slow predictions on large datasets.
+            \item \textbf{Feature Scaling:} Sensitive to data scale; normalization is recommended.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Final Thoughts}
+        k-NN serves as a foundational algorithm for understanding classification via distance metrics and neighborhood concepts.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation Metrics for Classification - Introduction}
+  \begin{block}{Introduction to Evaluation Metrics}
+    When assessing the performance of a classification model, it's crucial to understand various metrics that determine how well your model is performing. Each metric provides unique insights and should be selected according to the context of your problem.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation Metrics for Classification - Key Metrics}
+  \begin{enumerate}
+    \item \textbf{Accuracy}
+      \begin{itemize}
+        \item \textbf{Definition}: The proportion of correctly predicted instances over the total instances.
+        \item \textbf{Formula}:
+          \[
+          \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+          \]
+        \item \textbf{Example}: If out of 100 samples, 90 were correctly classified, then accuracy = 90\%.
+      \end{itemize}
+
+    \item \textbf{Precision}
+      \begin{itemize}
+        \item \textbf{Definition}: The ratio of correctly predicted positive observations to the total predicted positives.
+        \item \textbf{Formula}:
+          \[
+          \text{Precision} = \frac{TP}{TP + FP}
+          \]
+        \item \textbf{Example}: If a model predicts 30 instances as positive, and 20 are actually positive, then precision = \( \frac{20}{30} \) = 0.67.
+      \end{itemize}
+
+    \item \textbf{Recall (Sensitivity)}
+      \begin{itemize}
+        \item \textbf{Definition}: The ratio of correctly predicted positive observations to all actual positives.
+        \item \textbf{Formula}:
+          \[
+          \text{Recall} = \frac{TP}{TP + FN}
+          \]
+        \item \textbf{Example}: If there are 40 actual positive cases, and the model identifies 30 correctly, then recall = \( \frac{30}{40} \) = 0.75.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Evaluation Metrics for Classification - F1 Score and Confusion Matrix}
+  \begin{enumerate}[resume]
+    \item \textbf{F1-Score}
+      \begin{itemize}
+        \item \textbf{Definition}: The weighted average of Precision and Recall, accounting for false positives and false negatives.
+        \item \textbf{Formula}:
+          \[
+          F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+          \]
+        \item \textbf{Example}: Suppose Precision = 0.67 and Recall = 0.75, then:
+          \[
+          F1 = 2 \times \frac{0.67 \times 0.75}{0.67 + 0.75} \approx 0.71
+          \]
+      \end{itemize}
+
+    \item \textbf{Confusion Matrix}
+      \begin{itemize}
+        \item \textbf{Definition}: A table to evaluate the performance of a classification model by displaying true vs. predicted labels.
+        \item \textbf{Structure}:
+          \begin{verbatim}
+                      Predicted Positive | Predicted Negative
+              -------------------------------------------
+              Actual Positive |        TP         |        FN
+              Actual Negative |        FP         |        TN
+          \end{verbatim}
+        \item \textbf{Interpretation}: Visualizes performance, helps to understand errors and analyze types of mistakes made by the model.
+      \end{itemize}
+  \end{enumerate}
+  
+  \begin{block}{Key Points to Remember}
+    \begin{itemize}
+      \item Importance of context in metric selection for classification problems.
+      \item Balance between Precision and Recall with F1-Score.
+      \item Utility of the Confusion Matrix for detailed analysis of predictions.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Cross-Validation Techniques - Introduction}
+    \begin{block}{Definition}
+        Cross-validation is a vital statistical method used in machine learning to assess the generalizability of a model. 
+        It helps ensure that our model performs well on unseen data, reducing overfitting and better approximating its performance in real-world scenarios.
+    \end{block}
+    
+    \begin{block}{Importance}
+        \begin{itemize}
+            \item \textbf{Assess Model Reliability:} Provides insight into how performance varies with different data subsets.
+            \item \textbf{Avoid Overfitting:} Ensures the model learns general patterns rather than memorizing training data.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Cross-Validation Methods}
+    \begin{enumerate}
+        \item \textbf{K-Fold Cross-Validation}
+        \begin{itemize}
+            \item Dataset is divided into \(k\) equal parts (folds).
+            \item Trained on \(k-1\) folds and validated on one fold.
+            \item Repeat \(k\) times.
+            \item \textbf{Key Formula:}
+                \begin{equation}
+                    \text{Average performance} = \frac{1}{k} \sum_{i=1}^{k} \text{Model Performance on fold } i
+                \end{equation}
+            \item \textbf{Example:} In a 5-fold cross-validation, if accuracies are 80\%, 85\%, 82\%, 90\%, and 88\%, the average accuracy is:
+                \begin{equation}
+                    \text{Average Accuracy} = \frac{80 + 85 + 82 + 90 + 88}{5} = 85\%
+                \end{equation}
+        \end{itemize}
+        
+        \item \textbf{Stratified K-Fold Cross-Validation}
+        \begin{itemize}
+            \item Preserves the percentage of samples for each class label.
+            \item Useful for imbalanced datasets.
+        \end{itemize}
+        
+        \item \textbf{Leave-One-Out Cross-Validation (LOOCV)}
+        \begin{itemize}
+            \item Each sample is its own fold, exhaustive but computationally expensive.
+        \end{itemize}
+
+        \item \textbf{Group K-Fold Cross-Validation}
+        \begin{itemize}
+            \item Ensures groups do not appear in both training and validation sets.
+            \item Prevents data leakage from the training set.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Code Example}
+    \begin{block}{Conclusion}
+        Incorporating cross-validation is essential for achieving robust and reliable classification models. 
+        Properly applying these techniques enhances the effectiveness of predictive modeling efforts.
+    \end{block}
+
+    \begin{block}{Code Example (K-Fold Cross-Validation in Python)}
+        \begin{lstlisting}[language=Python]
+from sklearn.model_selection import KFold
+from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
+import numpy as np
+
+# Sample data
+X = np.array([[...], [...], ...])  # Feature dataset
+y = np.array([...])  # Target variable
+
+# Initialize model and cross-validation
+model = RandomForestClassifier()
+kf = KFold(n_splits=5)
+
+# Perform cross-validation
+accuracies = []
+for train_index, test_index in kf.split(X):
+    X_train, X_test = X[train_index], X[test_index]
+    y_train, y_test = y[train_index], y[test_index]
+    
+    model.fit(X_train, y_train)
+    predictions = model.predict(X_test)
+    accuracies.append(accuracy_score(y_test, predictions))
+
+average_accuracy = np.mean(accuracies)
+print(f'Average Accuracy: {average_accuracy:.2f}')
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Selection and Tuning}
+    \begin{block}{Introduction}
+        Model selection and hyperparameter tuning are critical steps in classification tasks that directly impact performance.
+    \end{block}
+    This slide outlines strategies for selecting the best model and tuning hyperparameters effectively.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Model Selection}
+    \begin{block}{Definition}
+        Model selection is the process of choosing the most appropriate algorithm based on performance metrics.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Performance Metrics:} Assess models using accuracy, precision, recall, F1-score, and AUC.
+        \item \textbf{Cross-Validation:} Use k-fold cross-validation to evaluate model performance on unseen data.
+        \item \textbf{Complexity vs. Interpretability:} Balance complex models (e.g., neural networks) with simpler models (e.g., logistic regression).
+    \end{itemize}
+    
+    \begin{block}{Example}
+        In a medical diagnosis task, a neural network may provide high accuracy, but a decision tree offers better interpretability.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Hyperparameter Tuning}
+    \begin{block}{Definition}
+        Hyperparameter tuning involves adjusting model parameters to improve performance.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Grid Search:} Systematically explore a defined parameter grid.
+        \item \textbf{Random Search:} Randomly sample from the parameter space—faster than grid search.
+        \item \textbf{Bayesian Optimization:} Uses probabilistic models to optimize hyperparameters.
+    \end{itemize}
+    
+    \begin{block}{Code Example (Scikit-learn)}
+        \begin{lstlisting}[language=Python]
+from sklearn.model_selection import GridSearchCV
+from sklearn.tree import DecisionTreeClassifier
+
+# Define parameters for grid search
+param_grid = {'max_depth': [None, 10, 20, 30], 'min_samples_split': [2, 5, 10]}
+grid_search = GridSearchCV(estimator=DecisionTreeClassifier(), param_grid=param_grid, cv=5)
+grid_search.fit(X_train, y_train)
+
+# Output best parameters
+print("Best parameters found: ", grid_search.best_params_)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Model selection and hyperparameter tuning are essential for achieving optimal classification performance.
+            \item Emphasize careful consideration of application context and trade-offs between performance and interpretability.
+            \item Properly tuned hyperparameters can greatly enhance performance, sometimes outweighing model choice itself.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Classification - Introduction}
+    \begin{block}{Introduction}
+        Classification is a powerful tool used to categorize data into predefined classes or labels based on various features. It has numerous real-world applications across different industries, aiding organizations in making data-driven decisions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Classification - Healthcare}
+    \textbf{Use Case: Disease Diagnosis}
+    \begin{itemize}
+        \item \textbf{Example:} Classifying patient data to diagnose diseases such as diabetes, cancer, or heart disease.
+        \item \textbf{How It Works:} 
+        \begin{itemize}
+            \item Algorithms like Decision Trees or Support Vector Machines (SVM) analyze historical patient data (symptoms, test results).
+            \item These algorithms predict potential health outcomes based on the input data.
+        \end{itemize}
+        \item \textbf{Impact:} Early diagnosis significantly improves treatment outcomes and patient survival rates.
+    \end{itemize}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Enhanced decision-making for doctors.
+            \item Reduces diagnostic errors.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Classification - Finance and Customer Segmentation}
+    \textbf{1. Finance - Use Case: Credit Scoring}
+    \begin{itemize}
+        \item \textbf{Example:} Classifying loan applicants into categories: "approved" or "declined" based on creditworthiness.
+        \item \textbf{How It Works:} 
+        \begin{itemize}
+            \item Logistic Regression or Random Forests evaluate factors such as income, credit history, and debt-to-income ratio.
+        \end{itemize}
+        \item \textbf{Impact:} Helps banks minimize the risk of bad loans, ensuring financial stability.
+    \end{itemize}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Enables data-backed lending decisions.
+            \item Supports risk management strategies.
+        \end{itemize}
+    \end{block} 
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Classification - Customer Segmentation}
+    \textbf{2. Customer Segmentation - Use Case: Targeted Marketing}
+    \begin{itemize}
+        \item \textbf{Example:} Segmenting customers into distinct groups based on purchasing behaviors, demographics, or preferences.
+        \item \textbf{How It Works:} 
+        \begin{itemize}
+            \item Clustering algorithms like K-Means or classification models predict product appeal to specific customer segments.
+        \end{itemize}
+        \item \textbf{Impact:} Increases marketing effectiveness and enhances customer engagement.
+    \end{itemize}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Personalized marketing strategies lead to higher conversion rates.
+            \item Improved product offerings cater to customer needs.
+        \end{itemize}
+    \end{block} 
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Classification - Summary}
+    \begin{itemize}
+        \item \textbf{Classification} streamlines decision-making across healthcare, finance, and marketing by categorizing complex data.
+        \item \textbf{Real-World Applications} demonstrate the versatility and significance of classification techniques.
+        \item \textbf{Impact:} Improved outcomes in various sectors lead to better service delivery and customer satisfaction.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Applications of Classification - Further Exploration}
+    \begin{block}{Next Steps}
+        As we move to the next slide, we'll engage in a \textbf{Hands-On Practical Session} where you'll implement classification algorithms in Python or R to consolidate your understanding of these concepts in action.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-On Practical Session}
+    \begin{block}{Overview}
+        This session focuses on the implementation of classification algorithms using Python or R, covering essential concepts and practical steps.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Classification}
+    \begin{itemize}
+        \item Classification is a supervised learning technique used to categorize data into predefined classes.
+        \item It is fundamental in data science for making predictions based on input features.
+    \end{itemize}
+    \begin{block}{Key Objective}
+        Understand how to implement classification algorithms in Python or R and evaluate their performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Classification Algorithms}
+    \begin{enumerate}
+        \item Logistic Regression: Simple algorithm for binary classification.
+        \item Decision Trees: Splits data into branches based on feature values.
+        \item Random Forests: Ensemble method using multiple decision trees for improved accuracy.
+        \item Support Vector Machines (SVM): Finds optimal hyperplane to separate different classes.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Implementation Steps (Part 1)}
+    \begin{enumerate}
+        \setcounter{enumi}{1} % to continue from the previous frame
+        \item Select a Dataset: Start with a beginner-friendly dataset like the Iris dataset.
+        \item Install Required Libraries:
+        \begin{block}{Python}
+            \begin{lstlisting}[language=bash]
+pip install pandas scikit-learn matplotlib
+            \end{lstlisting}
+        \end{block}
+        \begin{block}{R}
+            \begin{lstlisting}[language=R]
+install.packages("caret")
+install.packages("ggplot2")
+            \end{lstlisting}
+        \end{block}
+        \item Load the Dataset:
+        \begin{block}{Python}
+            \begin{lstlisting}[language=Python]
+import pandas as pd
+data = pd.read_csv('iris.csv')
+            \end{lstlisting}
+        \end{block}
+        \begin{block}{R}
+            \begin{lstlisting}[language=R]
+data <- read.csv("iris.csv")
+            \end{lstlisting}
+        \end{block}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Implementation Steps (Part 2)}
+    \begin{enumerate}
+        \setcounter{enumi}{4} % to continue from the previous frame
+        \item Data Preprocessing: Clean and prepare the dataset (handle missing values, encode categorical variables).
+        \item Split the Data:
+        \begin{block}{Python}
+            \begin{lstlisting}[language=Python]
+from sklearn.model_selection import train_test_split
+X = data[['sepal_length', 'sepal_width', 'petal_length', 'petal_width']]
+y = data['species']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+            \end{lstlisting}
+        \end{block}
+        \begin{block}{R}
+            \begin{lstlisting}[language=R]
+library(caret)
+set.seed(42)
+trainIndex <- createDataPartition(data$species, p = .8, 
+                                  list = FALSE, 
+                                  times = 1)
+train_data <- data[trainIndex, ]
+test_data <- data[-trainIndex, ]
+            \end{lstlisting}
+        \end{block}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Implementation Steps (Part 3)}
+    \begin{enumerate}
+        \setcounter{enumi}{6} % to continue from the previous frame
+        \item Train the Model: Example using Random Forest in Python.
+        \begin{block}{Python}
+            \begin{lstlisting}[language=Python]
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+            \end{lstlisting}
+        \end{block}
+        \item Make Predictions:
+        \begin{block}{Python}
+            \begin{lstlisting}[language=Python]
+predictions = model.predict(X_test)
+            \end{lstlisting}
+        \end{block}
+        \item Evaluate the Model: Use metrics like accuracy, precision, recall, and F1-score.
+        \begin{block}{Python}
+            \begin{lstlisting}[language=Python]
+from sklearn.metrics import classification_report
+print(classification_report(y_test, predictions))
+            \end{lstlisting}
+        \end{block}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item Understand the importance of dataset quality on model performance.
+        \item Feature selection is crucial for classification success.
+        \item Always evaluate your model's predictions to ensure accuracy.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        This session provided practical activities demonstrating how to implement classification algorithms using Python or R, enhancing understanding and practical skills in data science.
+    \end{block}
+    \begin{block}{Next Steps}
+        Review model evaluation metrics and consider how different algorithms perform on various data types!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion \& Reflection - Key Takeaways}
+    \begin{enumerate}
+        \item \textbf{Understanding Classification}:
+        \begin{itemize}
+            \item Classification is a supervised learning technique to categorize data into predefined labels or classes.
+            \item Examples: classifying emails as 'spam' or 'not spam', predicting diseases based on diagnostic data.
+        \end{itemize}
+        
+        \item \textbf{Common Classification Algorithms}:
+        \begin{itemize}
+            \item \textbf{Decision Trees}: Simple models mapping features to outcomes (e.g., loan approval).
+            \item \textbf{Support Vector Machines (SVM)}: Finds the hyperplane that best separates classes.
+            \item \textbf{K-Nearest Neighbors (KNN)}: Classifies based on the majority class of 'K' closest data points.
+            \item \textbf{Logistic Regression}: Used for binary classification to predict probability of class labels.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion \& Reflection - Evaluating Performance}
+    \begin{enumerate}[resume]
+        \item \textbf{Evaluating Model Performance}:
+        \begin{itemize}
+            \item \textbf{Confusion Matrix}: Describes model performance via true positives, false positives, true negatives, and false negatives.
+            \item \textbf{Metrics}: 
+            \begin{itemize}
+                \item Key indicators: Accuracy, Precision, Recall, and F1 Score.
+                \item \textbf{Formula for F1 Score}:
+                \begin{equation}
+                F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall}
+                \end{equation}
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Feature Importance}:
+        \begin{itemize}
+            \item Identify which features contribute most to model predictions for performance improvement.
+            \item Techniques: feature elimination, permutation importance.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion \& Reflection - Reflective Practices}
+    \begin{itemize}
+        \item \textbf{Self-Assessment}:
+        \begin{itemize}
+            \item Reflect on understanding: Can you differentiate classification algorithms? How comfortable are you with model evaluation?
+        \end{itemize}
+
+        \item \textbf{Practical Application}:
+        \begin{itemize}
+            \item Identify real-world scenarios where classification could be useful. Consider accessible data and potential insights.
+        \end{itemize}
+
+        \item \textbf{Discussion and Interaction}:
+        \begin{itemize}
+            \item Engage with peers or forums to share experiences and strategies, fostering new ideas and deeper insights.
+        \end{itemize}
+
+        \item \textbf{Next Steps}:
+        \begin{itemize}
+            \item Hands-On Practice: Implement classification algorithms using Python or R. 
+            \item Continuous Learning: Explore advanced topics such as ensemble methods and deep learning.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

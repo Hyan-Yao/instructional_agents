@@ -1,0 +1,857 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    breaklines=true,
+    frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Chapter 9: Model Evaluation Metrics}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Model Evaluation Metrics}
+    Evaluating machine learning models is crucial for ensuring they perform well on unseen, real-world data. 
+    Evaluation metrics provide a quantitative way to assess model performance, aiding in model selection and optimization.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Generalization:} A model should generalize well to unseen data.
+        \item \textbf{Performance Insight:} Metrics provide insights into model performance (e.g., accuracy, precision).
+        \item \textbf{Comparative Analysis:} Objective comparison of different models using the same metrics.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Metrics}
+    \begin{block}{Examples of When Evaluation Metrics Are Important}
+        \begin{itemize}
+            \item \textbf{Classification Tasks:} E.g., email spam detection using accuracy and F1 score.
+            \item \textbf{Regression Tasks:} E.g., house price prediction using Mean Absolute Error (MAE) and Mean Squared Error (MSE).
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{No Single Metric:} Consider multiple metrics for a comprehensive understanding.
+            \item \textbf{Context Matters:} Choosing the right metric based on project goals (e.g., prioritize recall in medical diagnostics).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Metrics Overview}
+    \begin{itemize}
+        \item \textbf{Accuracy:} 
+        \begin{equation}
+        \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Samples}}
+        \end{equation}
+
+        \item \textbf{Precision:} 
+        \begin{equation}
+        \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+        \end{equation}
+
+        \item \textbf{Recall (Sensitivity):} 
+        \begin{equation}
+        \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+        \end{equation}
+
+        \item \textbf{F1 Score:} 
+        \begin{equation}
+        F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Model evaluation metrics are indispensable in the machine learning workflow. They assess performance, guide refinements, and ensure that deployed models yield reliable predictions. 
+    Understanding and applying the right metrics is essential for successful machine learning projects.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Model Evaluation Metrics?}
+    \begin{block}{Definition of Model Evaluation Metrics}
+        Model evaluation metrics are quantitative measures used to assess the performance of machine learning models. 
+    \end{block}
+    These metrics provide insights into how well a model predicts outcomes, helping to determine its effectiveness in real-world applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance in Machine Learning}
+    \begin{itemize}
+        \item \textbf{Performance Measurement}: Metrics quantify the accuracy of predictions, evaluating how close the model’s predictions are to actual target values.
+        \item \textbf{Model Improvement}: Understanding performance metrics allows practitioners to adjust features, parameters, and algorithms for better results.
+        \item \textbf{Informed Decision-Making}: Metrics enable stakeholders to make data-driven decisions regarding model deployment.
+        \item \textbf{Benchmarking}: They facilitate standardized comparisons across different algorithms and architectures.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Common Metrics}
+    \begin{block}{Classification Metrics}
+        \begin{itemize}
+            \item \textbf{Accuracy}:
+            \[
+            \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Samples}}
+            \]
+            \item \textbf{Precision}:
+            \[
+            \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+            \]
+            \item \textbf{Recall (Sensitivity)}:
+            \[
+            \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+            \]
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Common Metrics (cont.)}
+    \begin{block}{Regression Metrics}
+        \begin{itemize}
+            \item \textbf{Mean Squared Error (MSE)}:
+            \[
+            \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_{i} - \hat{y_{i}})^{2}
+            \]
+            \item \textbf{R-squared}:
+            \[
+            R^2 = 1 - \frac{\sum{(y_{i} - \hat{y_{i}})^2}}{\sum{(y_{i} - \bar{y})^2}}
+            \]
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding model evaluation metrics is crucial for any machine learning practitioner. 
+    With the right metrics, we can gauge model performance and refine it for better accuracy and effectiveness in practical applications.
+    
+    On the next slide, we will delve into the different types of evaluation metrics used for various tasks in machine learning.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Evaluation Metrics}
+    \begin{block}{Overview}
+        Model evaluation metrics are essential for measuring the performance of machine learning models. They help us understand how well our models are doing in terms of accuracy, precision, recall, and other performance indicators.
+    \end{block}
+    In this slide, we will explore the three main types of evaluation metrics:
+    \begin{enumerate}
+        \item Classification Metrics
+        \item Regression Metrics
+        \item Ranking Metrics
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Classification Metrics}
+    Classification metrics assess the performance of models that predict categorical outcomes, such as spam detection and image classification.
+
+    \begin{itemize}
+        \item \textbf{Accuracy}: Proportion of true results among total cases.
+        \begin{equation}
+            \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+        \end{equation}
+        
+        \item \textbf{Precision}: Proportion of true positives among predicted positives.
+        \begin{equation}
+            \text{Precision} = \frac{TP}{TP + FP}
+        \end{equation}
+        
+        \item \textbf{Recall}: Proportion of true positives among actual positives.
+        \begin{equation}
+            \text{Recall} = \frac{TP}{TP + FN}
+        \end{equation}
+        
+        \item \textbf{F1-Score}: Harmonic mean of precision and recall.
+        \begin{equation}
+            F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+        \end{equation}
+        
+        \item \textbf{ROC-AUC}: Curve representing the true positive rate against the false positive rate.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Regression Metrics}
+    Regression metrics evaluate models predicting continuous values, like predicting house prices.
+
+    \begin{itemize}
+        \item \textbf{Mean Absolute Error (MAE)}: Average of absolute differences between predicted and actual values.
+        \begin{equation}
+            MAE = \frac{1}{n} \sum |y_i - \hat{y}_i|
+        \end{equation}
+        
+        \item \textbf{Mean Squared Error (MSE)}: Average of squared differences.
+        \begin{equation}
+            MSE = \frac{1}{n} \sum (y_i - \hat{y}_i)^2
+        \end{equation}
+        
+        \item \textbf{R-squared (R²)}: Proportion of variance explained by the model; values range from 0 to 1.
+        \begin{block}{Interpretation}
+            Higher values indicate better model performance.
+        \end{block}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Ranking Metrics}
+    Ranking metrics evaluate the performance of models where the order of predictions matters, such as in search engines.
+
+    \begin{itemize}
+        \item \textbf{Mean Reciprocal Rank (MRR)}: Average of the reciprocal ranks of the first relevant item.
+        \begin{equation}
+            MRR = \frac{1}{|Q|} \sum \frac{1}{rank_i}
+        \end{equation}
+        
+        \item \textbf{Normalized Discounted Cumulative Gain (NDCG)}: Measures effectiveness of ranking based on graded relevance.
+        \begin{equation}
+            NDCG_k = \frac{DCG_k}{IDCG_k}
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Classification Metrics}
+    In machine learning, the effectiveness of a classification model is evaluated through various metrics. We introduce five key metrics to provide insights into model performance:
+    \begin{itemize}
+        \item Accuracy
+        \item Precision
+        \item Recall
+        \item F1-score
+        \item ROC-AUC
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy}
+    \begin{block}{Definition}
+        Accuracy measures the proportion of correctly predicted instances (both positive and negative) among the total number of instances.
+    \end{block}
+
+    \begin{equation}
+        \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item $TP$ = True Positives
+        \item $TN$ = True Negatives
+        \item $FP$ = False Positives
+        \item $FN$ = False Negatives
+    \end{itemize}
+
+    \begin{block}{Example}
+        In a spam detection scenario, if our model correctly classifies 80 emails as spam and 15 as not spam out of 100 total emails:
+        \[
+        \text{Accuracy} = \frac{80 + 15}{100} = 0.95 \quad (95\%)
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision, Recall, and F1-score}
+    \begin{block}{Precision}
+        Precision indicates the accuracy of positive predictions made by the model.
+        \begin{equation}
+            \text{Precision} = \frac{TP}{TP + FP}
+        \end{equation}
+        \begin{block}{Example}
+            In spam detection, if 100 emails are predicted as spam and only 80 are correct:
+            \[
+            \text{Precision} = \frac{80}{80 + 20} = 0.80 \quad (80\%)
+            \]
+        \end{block}
+    \end{block}
+
+    \begin{block}{Recall}
+        Recall measures the model's ability to identify all relevant positive instances.
+        \begin{equation}
+            \text{Recall} = \frac{TP}{TP + FN}
+        \end{equation}
+        \begin{block}{Example}
+            If there are 100 spam emails and the model identifies 80:
+            \[
+            \text{Recall} = \frac{80}{80 + 20} = 0.80 \quad (80\%)
+            \]
+        \end{block}
+    \end{block}
+
+    \begin{block}{F1-score}
+        The F1-score is the harmonic mean of precision and recall.
+        \begin{equation}
+            F1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+        \end{equation}
+        \begin{block}{Example}
+            If both precision and recall are 0.80:
+            \[
+            F1 = 2 \cdot \frac{0.80 \cdot 0.80}{0.80 + 0.80} = 0.80
+            \]
+        \end{block}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ROC-AUC}
+    \begin{block}{Definition}
+        The ROC curve plots the true positive rate (Recall) against the false positive rate at different thresholds. The AUC (Area Under Curve) indicates the model's discriminative ability.
+    \end{block}
+
+    \begin{itemize}
+        \item **ROC Curve**: X-axis = False Positive Rate (FPR), Y-axis = True Positive Rate (TPR) (Recall).
+        \item **AUC**: An AUC of 1.0 indicates a perfect model, while an AUC of 0.5 suggests random guessing.
+    \end{itemize}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Accuracy can be misleading in imbalanced datasets.
+            \item Precision and Recall are critical when false positives/negatives have different costs.
+            \item F1-score balances precision and recall for imbalanced classes.
+            \item ROC-AUC provides a comprehensive view of model performance across thresholds.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Confusion Matrix}
+    \begin{block}{What is a Confusion Matrix?}
+        The \textbf{confusion matrix} is a fundamental tool used to evaluate the performance of a classification model. 
+        It provides a comprehensive breakdown of the prediction results made by the model against actual outcomes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of a Confusion Matrix}
+    The confusion matrix is typically structured as a 2x2 table for binary classification:
+
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        & \textbf{Predicted Positive} & \textbf{Predicted Negative} \\
+        \hline
+        \textbf{Actual Positive} & True Positive (TP) & False Negative (FN) \\
+        \hline
+        \textbf{Actual Negative} & False Positive (FP) & True Negative (TN) \\
+        \hline
+    \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Breakdown of Terms}
+    \begin{enumerate}
+        \item \textbf{True Positives (TP)}: Correctly predicts positive class (e.g., predicting disease presence).
+        \item \textbf{False Positives (FP)}: Incorrectly predicts positive class (e.g., false alarm for disease).
+        \item \textbf{True Negatives (TN)}: Correctly predicts negative class (e.g., identifies healthy patient).
+        \item \textbf{False Negatives (FN)}: Incorrectly predicts negative class (e.g., misses a disease).
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of the Confusion Matrix}
+    \begin{itemize}
+        \item \textbf{Evaluation of Model Performance}: It allows for the calculation of key performance metrics such as Accuracy, Precision, Recall, and F1-Score.
+        \item \textbf{Identifying Areas for Improvement}: Helps in diagnosing model mistakes and informs future model tuning.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Metrics Derived from the Confusion Matrix}
+    1. \textbf{Accuracy}:
+    \begin{equation}
+    \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+    \end{equation}
+    
+    2. \textbf{Precision}:
+    \begin{equation}
+    \text{Precision} = \frac{TP}{TP + FP}
+    \end{equation}
+    
+    3. \textbf{Recall}:
+    \begin{equation}
+    \text{Recall} = \frac{TP}{TP + FN}
+    \end{equation}
+    
+    4. \textbf{F1-Score}:
+    \begin{equation}
+    \text{F1} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+    \end{equation}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: Using a Confusion Matrix}
+    Consider a binary classification model predicting spam emails:
+    \begin{itemize}
+        \item TP = 70 (Correctly identified spam)
+        \item FP = 10 (Spam identified incorrectly as non-spam)
+        \item TN = 50 (Correctly identified non-spam)
+        \item FN = 5 (Non-spam identified incorrectly as spam)
+    \end{itemize}
+    
+    \textbf{Calculating Metrics:}
+    \begin{itemize}
+        \item Accuracy: $\text{Accuracy} \approx 0.89 \text{ (or 89\%)}$
+        \item Precision: $\text{Precision} = 0.875 \text{ (or 87.5\%)}$
+        \item Recall: $\text{Recall} \approx 0.933 \text{ (or 93.3\%)}$
+        \item F1-Score: $\text{F1} \approx 0.903 \text{ (or 90.3\%)}$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    The confusion matrix is an essential tool in classification tasks:
+    \begin{itemize}
+        \item Provides insights into both correct and incorrect predictions.
+        \item Enables derivation of performance metrics for comprehensive evaluation.
+        \item Supports continuous model improvement based on diagnostic insights.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Key Regression Metrics}
+    In regression analysis, evaluating the performance of predictive models is crucial. We utilize various metrics, each providing unique insights. Here we focus on four key metrics: 
+    \begin{itemize}
+        \item Mean Absolute Error (MAE)
+        \item Mean Squared Error (MSE)
+        \item Root Mean Squared Error (RMSE)
+        \item R-squared (R²)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mean Absolute Error (MAE)}
+    \begin{itemize}
+        \item \textbf{Definition}: Measures the average magnitude of the errors in predictions, without considering direction.
+        
+        \item \textbf{Formula}:  
+        \begin{equation}
+            \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
+        \end{equation}
+        
+        \item \textbf{Implication}: Direct interpretation of error in the same units as the target variable.
+
+        \item \textbf{Example}: For predictions $200,000$, $250,000$, $300,000$ with actual prices $210,000$, $245,000$, $290,000$:
+        \begin{equation}
+            \text{MAE} = \frac{|200 - 210| + |250 - 245| + |300 - 290|}{3} = 8.33\text{K}
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mean Squared Error (MSE)}
+    \begin{itemize}
+        \item \textbf{Definition}: Measures the average of the squares of errors, emphasizing larger errors.
+        
+        \item \textbf{Formula}:  
+        \begin{equation}
+            \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+        \end{equation}
+        
+        \item \textbf{Implication}: Sensitive to outliers; beneficial or detrimental based on the application.
+
+        \item \textbf{Example}: Continuing from the same predictions:
+        \begin{equation}
+            \text{MSE} = \frac{(200 - 210)^2 + (250 - 245)^2 + (300 - 290)^2}{3} = 41.67\text{K}^{2}
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Root Mean Squared Error (RMSE) and R-squared (R²)}
+    \begin{itemize}
+        \item \textbf{RMSE}:
+        \begin{itemize}
+            \item \textbf{Definition}: Square root of MSE, provides error in the same units as the target variable.
+            \item \textbf{Formula}:  
+            \begin{equation}
+                \text{RMSE} = \sqrt{\text{MSE}} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2}
+            \end{equation}
+            \item \textbf{Example}: For the previous MSE:
+            \begin{equation}
+                \text{RMSE} = \sqrt{41.67} \approx 6.42\text{K}
+            \end{equation}
+        \end{itemize}
+    \end{itemize}
+
+    \begin{itemize}
+        \item \textbf{R-squared (R²)}:
+        \begin{itemize}
+            \item \textbf{Definition}: Proportion of variance in the dependent variable predictable from independent variables.
+            \item \textbf{Formula}:  
+            \begin{equation}
+                R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}}
+            \end{equation}  
+            Where:
+            \begin{itemize}
+                \item \(\text{SS}_{\text{res}} = \sum_{i=1}^{n} (y_i - \hat{y}_i)^2\)
+                \item \(\text{SS}_{\text{tot}} = \sum_{i=1}^{n} (y_i - \bar{y})^2\)
+            \end{itemize}
+            \item \textbf{Implication}: R² values range from 0 to 1; higher values indicate a better fit.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{MAE}: Easy to interpret, shows average error directly.
+        \item \textbf{MSE}: Sensitive to outliers, provides squared error.
+        \item \textbf{RMSE}: Balances error scale, amplifies larger discrepancies.
+        \item \textbf{R-squared}: Good fit measurement but doesn’t quantify errors directly.
+    \end{itemize}
+
+    Using these metrics effectively allows data scientists and analysts to evaluate which regression models are performing better, aiding in model selection and optimization.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Choosing the Right Metric - Overview}
+    \begin{block}{Overview}
+    Choosing the right evaluation metric is crucial for assessing the effectiveness of a predictive model accurately. Depending on whether the task is classification or regression, different metrics should be employed to obtain meaningful insights into model performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Choosing the Right Metric - 1. Nature of the Problem}
+    \begin{block}{1. Understanding the Nature of the Problem}
+        \begin{itemize}
+            \item \textbf{Classification Problems}
+            \begin{itemize}
+                \item \textbf{Accuracy}: 
+                \begin{itemize}
+                    \item Proportion of true results among total cases.
+                    \item Example: 80 out of 100 samples accurately classified → 80\% accuracy.
+                    \item Formula: 
+                    \begin{equation}
+                    \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+                    \end{equation}
+                \end{itemize}
+                
+                \item \textbf{Precision}: 
+                \begin{itemize}
+                    \item Ratio of true positives to total predicted positives.
+                    \item Example: 30 out of 40 predicted positives were correct → 75\% precision.
+                    \item Formula: 
+                    \begin{equation}
+                    \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+                    \end{equation}
+                \end{itemize}
+                
+                \item \textbf{Recall (Sensitivity)}: 
+                \begin{itemize}
+                    \item Ratio of true positives to total actual positives.
+                    \item Example: 30 out of 50 actual positives detected → 60\% recall.
+                    \item Formula: 
+                    \begin{equation}
+                    \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+                    \end{equation}
+                \end{itemize}
+                
+                \item \textbf{F1 Score}: 
+                \begin{itemize}
+                    \item Harmonic mean of precision and recall.
+                    \item Example: Precision = 0.75, Recall = 0.60 → F1 score ≈ 0.67.
+                    \item Formula: 
+                    \begin{equation}
+                    \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+                    \end{equation}
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Choosing the Right Metric - 2. Contextual Factors}
+    \begin{block}{2. Contextual Factors}
+        \begin{itemize}
+            \item \textbf{Business Objectives}
+            \begin{itemize}
+                \item Different contexts may require emphasizing certain metrics. 
+                \item Example: In medical diagnoses, recall might be prioritized over precision.
+            \end{itemize}
+            
+            \item \textbf{Data Characteristics}
+            \begin{itemize}
+                \item Class distribution (balanced vs. imbalanced datasets) affects which metrics are most informative.
+                \item In imbalanced datasets, accuracy can be misleading; focus on precision, recall, or F1 score may be warranted.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Align the choice of metric with project goals and data context.
+            \item Multiple metrics may provide a fuller picture.
+            \item Evaluate models using chosen metrics on a validation dataset to avoid overfitting.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Summary}
+        Selecting the appropriate evaluation metric is integral to understanding model performance and achieving desired outcomes. Make informed choices based on the problem type and context!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Limitations of Metrics - Introduction}
+    \begin{block}{Overview}
+        Model evaluation metrics are essential for quantifying machine learning performance, but reliance solely on them can lead to misleading conclusions about a model's effectiveness.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Limitations of Metrics - Key Limitations}
+    \begin{enumerate}
+        \item \textbf{Single-Metric Reliance}
+        \begin{itemize}
+            \item \textbf{Issue:} Focusing on one metric can skew model performance perception.
+            \item \textbf{Example:} In a binary classification with imbalanced classes, a model predicting all as class A could show 95\% accuracy, while failing to identify class B instances.
+        \end{itemize}
+
+        \item \textbf{Contextual Misalignment}
+        \begin{itemize}
+            \item \textbf{Issue:} Metrics may not align with business goals.
+            \item \textbf{Example:} In medical diagnosis, high recall is preferred over general accuracy.
+        \end{itemize}
+
+        \item \textbf{Sensitivity to Outliers}
+        \begin{itemize}
+            \item \textbf{Issue:} Metrics like MSE are distorted by outliers.
+            \item \textbf{Solution:} Use robust metrics such as Median Absolute Error (MAE).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Limitations of Metrics - Continued Key Limitations}
+    \begin{enumerate}[resume]
+        \item \textbf{Overfitting Indicators}
+        \begin{itemize}
+            \item \textbf{Issue:} Metrics can mislead during hyperparameter tuning.
+            \item \textbf{Example:} Overfitted models show excellent validation performance but fail on unseen data.
+        \end{itemize}
+
+        \item \textbf{Incompleteness of Evaluation}
+        \begin{itemize}
+            \item \textbf{Issue:} Metrics often ignore aspects like interpretability and fairness.
+            \item \textbf{Recommended Approach:} Use a suite of metrics (F1 Score, AUC-ROC) along with qualitative assessments.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Limitations of Metrics - Conclusion and Key Points}
+    \begin{block}{Conclusion}
+        To holistically evaluate models:
+        \begin{itemize}
+            \item Combine multiple metrics.
+            \item Align evaluations with real-world applications.
+            \item Consider model deployment context.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Metrics can misrepresent effectiveness when viewed in isolation.
+            \item Tailor evaluation strategies to specific contexts and challenges.
+            \item Use diverse metrics to capture model performance complexity.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Final Takeaway}
+        Incorporate a balanced evaluation strategy considering both quantitative metrics and qualitative insights to ensure robustness in real-world applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Studies - Introduction}
+    \begin{block}{Overview}
+        In this section, we explore real-world case studies illustrating the application of evaluation metrics in various machine learning scenarios. 
+        These examples demonstrate how different metrics are utilized based on:
+    \end{block}
+    \begin{itemize}
+        \item Nature of the problem
+        \item Model being used
+        \item Goals of the stakeholders involved
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 1: Medical Diagnosis}
+    \begin{block}{Problem}
+        Developing a classifier to detect a rare disease from patient data.
+    \end{block}
+    \begin{block}{Evaluation Metrics Used}
+        \begin{itemize}
+            \item \textbf{Accuracy}: Overall model performance but risky due to class imbalance.
+            \item \textbf{Precision}: Minimizing false positives—important to avoid unnecessary stress or treatments.
+            \item \textbf{Recall (Sensitivity)}: Identifying as many actual positive cases as possible is critical.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Findings}
+        \begin{itemize}
+            \item Achieved 95\% accuracy with a class imbalance (only 2\% had the disease).
+            \item Prioritized a model with 85\% recall to identify most disease cases with lower precision.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 2: Customer Churn Prediction}
+    \begin{block}{Problem}
+        Predicting which customers are likely to leave a subscription service.
+    \end{block}
+    \begin{block}{Evaluation Metrics Used}
+        \begin{itemize}
+            \item \textbf{F1 Score}: Balances precision and recall, as both false positives and negatives are costly.
+            \item \textbf{ROC-AUC Score}: Evaluates model performance across all classification thresholds.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Findings}
+        \begin{itemize}
+            \item F1 Score optimization minimized customer loss effectively.
+            \item ROC-AUC score of 0.87 indicated good performance, targeting at-risk customers better.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 3: Image Classification for Autonomous Vehicles}
+    \begin{block}{Problem}
+        Classifying objects in images from vehicle cameras.
+    \end{block}
+    \begin{block}{Evaluation Metrics Used}
+        \begin{itemize}
+            \item \textbf{Mean Average Precision (mAP)}: Measures object detection accuracy across classes.
+            \item \textbf{Intersection over Union (IoU)}: Assesses predicted bounding boxes against ground truth.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Findings}
+        \begin{itemize}
+            \item mAP helped understand model performance across various driving scenarios.
+            \item With IoU threshold set at 0.5, detection accuracy improved safety features in vehicles.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Context Matters}: Metric choice heavily depends on application context and stakeholder priorities.
+        \item \textbf{Limitations of Metrics}: Each metric has limitations; combinations provide comprehensive assessments.
+        \item \textbf{Iterative Improvement}: Ongoing evaluation and adjustments of models using selected metrics are vital for better performance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Summary}
+        These case studies illustrate how thoughtful application of evaluation metrics leads to:
+    \end{block}
+    \begin{itemize}
+        \item Better decision-making
+        \item Improved performance in real-world machine learning projects
+        \item Enhanced insight into model performance and effective implementations
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Best Practices - Overview}
+    In this chapter, we explored model evaluation metrics crucial for assessing machine learning model performance. Here are the key takeaways:
+
+    \begin{itemize}
+        \item Understanding different evaluation metrics is essential.
+        \item Selecting the appropriate metric aligns with the problem context.
+        \item Implementing cross-validation enhances model reliability.
+        \item Balancing bias and variance is vital to avoid common pitfalls.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion of Model Evaluation Metrics}
+    \begin{block}{Key Takeaways}
+        \begin{enumerate}
+            \item \textbf{Understanding Metrics}:
+                \begin{itemize}
+                    \item \textbf{Accuracy}: \( \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{Total Predictions}} \) 
+                    \item \textbf{Precision}: \( \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}} \)
+                    \item \textbf{Recall (Sensitivity)}: \( \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}} \)
+                    \item \textbf{F1 Score}: \( F1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}} \)
+                    \item \textbf{ROC-AUC}: Measures performance across all classification thresholds.
+                \end{itemize}
+            \item \textbf{Choosing the Right Metric}:
+                \begin{itemize}
+                    \item Align metrics with business objectives and error impacts.
+                \end{itemize}
+            \item \textbf{Cross-Validation}:
+                \begin{itemize}
+                    \item Utilize k-fold cross-validation for robust evaluations.
+                \end{itemize}
+            \item \textbf{Bias-Variance Trade-off}:
+                \begin{itemize}
+                    \item Understand how bias and variance affect model performance.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Model Evaluation}
+    \begin{block}{Best Practices}
+        \begin{enumerate}
+            \item \textbf{Multiple Metrics}: Assess models using a variety of evaluation metrics.
+            \item \textbf{Test on Unseen Data}: Evaluate models on data that hasn't been seen during training.
+            \item \textbf{Keep Business Context in Mind}: Ensure evaluations reflect real-world decision impacts.
+            \item \textbf{Regular Updates and Monitoring}: Re-evaluate and update models as data changes.
+            \item \textbf{Document Findings}: Maintain comprehensive records of model evaluations for future reference.
+        \end{enumerate}
+    \end{block}
+    
+    \begin{block}{Final Thoughts}
+        Effective model evaluation is essential in machine learning. By following these best practices, practitioners can create more reliable models.
+    \end{block}
+\end{frame}
+
+
+\end{document}

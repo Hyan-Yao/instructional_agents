@@ -1,0 +1,230 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Week 2 - Markov Decision Processes (MDPs)}
+    \begin{block}{Overview}
+        In this week, we will delve into the foundational concepts of Markov Decision Processes (MDPs), a crucial framework in decision-making and reinforcement learning. MDPs assist in modeling complex problems where outcomes are partly random and partly under the control of a decision-maker.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts of MDPs}
+    \begin{enumerate}
+        \item \textbf{Definition of MDP:}
+        \begin{itemize}
+            \item A tuple $(S, A, P, R, \gamma)$ where:
+            \begin{itemize}
+                \item $S$: Finite set of states.
+                \item $A$: Finite set of actions available at each state.
+                \item $P$: Transition probability function.
+                \item $R$: Reward function for actions taken in states.
+                \item $\gamma$: Discount factor (0 to 1) for future rewards.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples and Importance of MDPs}
+    \begin{block}{Importance of MDPs}
+        MDPs provide a formal framework for modeling decision-making in uncertain outcomes and are essential for developing algorithms in reinforcement learning.
+    \end{block}
+
+    \begin{block}{Example Scenario}
+        Consider a robot navigating through a grid world:
+        \begin{itemize}
+            \item \textbf{States (S)}: Each cell in the grid represents a state.
+            \item \textbf{Actions (A)}: The robot can move Up, Down, Left, or Right.
+            \item \textbf{Transition (P)}: Probability of slipping to a different cell.
+            \item \textbf{Rewards (R)}: Positive for reaching a goal, negative for hitting obstacles, and a small penalty for moves.
+            \item \textbf{Discount Factor ($\gamma$)}: Values immediate rewards versus future rewards.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding MDPs Through Formulas}
+    The \textbf{Bellman Equation} is central to solving MDPs:
+    \begin{equation}
+        V(s) = \max_{a \in A} \left( R(s, a) + \gamma \sum_{s' \in S} P(s'|s, a) V(s') \right)
+    \end{equation}
+    \begin{itemize}
+        \item $V(s)$: Value function representing the maximum expected reward from state $s$.
+        \item The equation indicates that the value of a state is the maximum expected reward obtainable by choosing an action $a$ and subsequently following the optimal policy.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize about MDPs}
+    \begin{itemize}
+        \item MDPs are integral to robotics, economics, and artificial intelligence.
+        \item Understanding MDP structure aids in developing efficient algorithms for decision-making problems.
+        \item Real-world applications include autonomous navigation, resource management, and game playing.
+    \end{itemize}
+    In the next slide, we will provide an overview of the key concepts related to MDPs, including their characteristics, value iteration, and policy iteration methods.
+\end{frame}
+
+\begin{frame}[fragile]{Overview of Markov Decision Processes (MDPs) - Part 1}
+    \frametitle{What is a Markov Decision Process (MDP)?}
+    \begin{itemize}
+        \item \textbf{Definition}: An MDP is a mathematical framework for modeling decision-making situations where outcomes are partly random and partly under the control of a decision-maker.
+        \item \textbf{Key Components}:
+        \begin{itemize}
+            \item \textbf{States (S)}: Set of all possible states. For example, in a game, this could represent the current position of a player.
+            \item \textbf{Actions (A)}: Set of all possible actions the agent can take, like moving left, right, or jumping.
+            \item \textbf{Transition Function (P)}: Probabilities of moving from one state to another given a particular action, denoted as \(P(s'|s, a)\).
+            \item \textbf{Reward Function (R)}: Assigns numerical values (rewards) to state-action pairs, symbolized as \(R(s, a)\).
+            \item \textbf{Discount Factor (\(\gamma\))}: A value between 0 and 1 that determines the importance of future rewards.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Overview of Markov Decision Processes (MDPs) - Part 2}
+    \frametitle{Key Concepts and Terminology}
+    \begin{itemize}
+        \item \textbf{Policy (\(\pi\))}: A strategy that the agent uses to decide actions based on the current state, represented as \(\pi(a|s)\).
+        \item \textbf{Value Function (V)}: Measures the goodness of a state under a specific policy:
+        \[
+        V^{\pi}(s) = \mathbb{E} \left[ \sum_{t=0}^{\infty} \gamma^t R(s_t, a_t) \big| s_0 = s, \pi \right]
+        \]
+        \item \textbf{Optimal Policy (\(\pi^*\))}: The policy that maximizes the expected sum of rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Overview of Markov Decision Processes (MDPs) - Part 3}
+    \frametitle{Example Scenario and Key Points}
+    \begin{itemize}
+        \item \textbf{Example Scenario}: 
+        \begin{itemize}
+            \item A grid world agent aims to reach a goal while avoiding obstacles. Each cell is a state, allowing movements of up, down, left, or right.
+        \end{itemize}
+        \item \textbf{Key Points}:
+        \begin{itemize}
+            \item MDPs are foundational for reinforcement learning algorithms.
+            \item Components of MDPs motivate solution techniques, including:
+            \begin{itemize}
+                \item \textbf{Dynamic Programming}: Uses Bellman equations for value functions and optimal policies.
+                \item \textbf{Monte Carlo Methods}: Estimates value functions through averaging returns from sampled episodes.
+                \item \textbf{Temporal Difference Learning}: Combines ideas from both dynamic programming and Monte Carlo methods.
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Conclusion}: Understanding MDPs facilitates learning about reinforcement learning algorithms and their application to real-world decisions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion - Summary of Key Concepts}
+    In this chapter, we explored \textbf{Markov Decision Processes (MDPs)}, a mathematical framework for sequential decision-making under uncertainty. MDPs model environments where outcomes are partly random and partly controlled.
+    
+    The key components of MDPs are:
+    \begin{itemize}
+        \item \textbf{States (S)}: Various configurations of the environment.
+        \item \textbf{Actions (A)}: Choices available to the decision-maker.
+        \item \textbf{Transition Function (P)}: Probability of moving from one state to another after taking an action.
+        \item \textbf{Reward Function (R)}: Feedback in terms of rewards for each transition.
+        \item \textbf{Discount Factor ($\gamma$)}: Represents the importance of future rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Mathematical Representation of MDPs}
+    The objective in an MDP is to find a policy $\pi$ that maximizes the expected sum of rewards over time. The \textbf{Optimal Value Function ($V^*$)} is defined as:
+    \begin{equation}
+    V^*(s) = \max_{\pi} \sum_{a \in A} \sum_{s' \in S} P(s'|s, a) [R(s, a) + \gamma V^*(s')]
+    \end{equation}
+\end{frame}
+
+\begin{frame}[fragile]{Example and Applications}
+    \textbf{Example:} Consider a grid world where an agent can move in four directions (up, down, left, right). The agent receives a reward for reaching a goal state (e.g., +10) and a penalty for falling into a trap (e.g., -10). 
+
+    \begin{itemize}
+        \item The agent’s goal is to find the optimal policy that maximizes its expected rewards while avoiding traps.
+        \item \textbf{Key Points:}
+        \begin{itemize}
+            \item Understanding MDPs is crucial for fields like machine learning and robotics.
+            \item \textbf{Value Iteration} and \textbf{Policy Iteration} are two primary algorithms used to find optimal policies.
+            \item MDPs are applicable in various domains such as robotics (path planning), finance (investment decisions), and healthcare (treatment planning).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Conclusion}
+    By mastering MDPs, you are prepared to tackle complex decision-making problems involving uncertainty. 
+
+    \begin{block}{Next Steps}
+        The next steps will involve implementing algorithms based on MDPs and applying them to practical scenarios for better understanding and real-world application.
+    \end{block}
+\end{frame}
+
+
+\end{document}

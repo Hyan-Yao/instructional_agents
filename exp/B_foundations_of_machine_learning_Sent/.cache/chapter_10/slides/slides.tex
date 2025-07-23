@@ -1,0 +1,758 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+basicstyle=\ttfamily\small,
+keywordstyle=\color{blue},
+commentstyle=\color{gray},
+stringstyle=\color{red},
+breaklines=true,
+frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Chapter 10: Neural Networks Basics}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Neural Networks}
+    
+    \begin{block}{Overview}
+        Neural Networks (NNs) are computational systems inspired by the human brain's structure and functioning. They consist of interconnected layers of nodes (neurons) that process input data to make predictions or classifications based on learned patterns.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    
+    \begin{enumerate}
+        \item \textbf{Neurons}: The basic units of a neural network analogous to biological neurons.
+        \item \textbf{Layers}:
+            \begin{itemize}
+                \item \textbf{Input Layer}: Receives initial data.
+                \item \textbf{Hidden Layers}: Intermediate layers that perform computations; their number can vary.
+                \item \textbf{Output Layer}: Produces output predictions.
+            \end{itemize}
+        \item \textbf{Weights and Biases}: Weights amplify or diminish input signals, while biases adjust the output.
+        \item \textbf{Activation Function}: Introduces non-linearity; examples include Sigmoid, ReLU, and Tanh.
+        \item \textbf{Learning Process}: Neural networks learn via training, adjusting weights through backpropagation and gradient descent.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance in Deep Learning}
+    
+    \begin{itemize}
+        \item Neural networks are pivotal in deep learning, enabling complex data handling.
+        \item They capture intricate relationships in raw datasets, facilitating advances in:
+        \begin{itemize}
+            \item Image and Video Processing: Object detection and facial recognition.
+            \item Natural Language Processing: Sentiment analysis, translation, and chatbots.
+            \item Game Playing and Decision Making: Examples like AlphaGo.
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Understanding neural networks lays the groundwork for exploring their development and applications; next, we will cover the history of neural networks and significant architectural advancements.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{History of Neural Networks - Overview}
+    \begin{block}{Overview}
+        Neural networks have undergone a remarkable evolution since their inception, transitioning from simple models to complex architectures. This presentation provides a brief timeline and highlights key milestones in the development of neural networks, setting the stage for an understanding of their current applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{History of Neural Networks - Key Milestones}
+    \begin{enumerate}
+        \item \textbf{1950s - The Perceptron Era}
+            \begin{itemize}
+                \item Introduced by Frank Rosenblatt in 1958, it was one of the earliest artificial neural networks.
+                \item Capable of binary classification using a step activation function.
+                \item Example: Classifying images into categories like "cat" or "not cat."
+            \end{itemize}
+        
+        \item \textbf{1960s - Limitations of Perceptrons}
+            \begin{itemize}
+                \item Minsky and Papert published "Perceptrons" (1969) highlighting limitations, particularly with non-linear problems (e.g., XOR problem).
+                \item Resulted in a decline of neural network research.
+            \end{itemize}
+
+        \item \textbf{1980s - The Renaissance with Backpropagation}
+            \begin{itemize}
+                \item Backpropagation (1986) revolutionized network training by enabling multi-layer networks.
+                \item Formula for weight updates:
+                \begin{equation}
+                    w_{ij} = w_{ij} - \eta \frac{\partial C}{\partial w_{ij}}
+                \end{equation}
+                \item Renewed interest in solving complex tasks.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{History of Neural Networks - Continued}
+    \begin{enumerate}[resume]
+        \item \textbf{1990s - Emergence of CNNs and RNNs}
+            \begin{itemize}
+                \item \textbf{Convolutional Neural Networks (CNNs)}: Used for image processing with spatial hierarchy for feature extraction.
+                \item \textbf{Recurrent Neural Networks (RNNs)}: Designed for sequential data, maintaining information over time (e.g., for time series, text).
+            \end{itemize}
+
+        \item \textbf{2000s - The Deep Learning Revolution}
+            \begin{itemize}
+                \item The resurgence of deep learning powered by advances in computing and large datasets.
+                \item Emergence of deep architectures, such as AlexNet (2012), improving image and speech recognition.
+            \end{itemize}
+        
+        \item \textbf{2010s - The Rise of Generative Models}
+            \begin{itemize}
+                \item Introduction of Generative Adversarial Networks (GANs) by Ian Goodfellow (2014), enabling the generation of realistic data.
+                \item Transformers such as BERT and GPT transformed natural language processing.
+            \end{itemize}
+        
+        \item \textbf{2020s - Ongoing Advancements}
+            \begin{itemize}
+                \item Focus on interpretability, efficiency, and ethical AI in neural networks.
+                \item Applications span across industries, from healthcare to autonomous vehicles.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Basic Structure of Neural Networks - Overview}
+    \begin{itemize}
+        \item \textbf{Neurons}: Fundamental building blocks, inspired by biological neurons.
+        \item \textbf{Layers}: Organized structure comprising input, hidden, and output layers.
+        \item \textbf{Activation Functions}: Introduce non-linearity, enabling the learning of complex patterns.
+        \item \textbf{Network Operation}: Forward and backward propagation for learning.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Neurons and Their Functionality}
+    \begin{block}{Neurons}
+        Neurons receive inputs, process them, and generate outputs.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Input}: Takes multiple features from the preceding layer.
+        \item \textbf{Weights}: Adjust influence of inputs.
+        \item \textbf{Bias}: Shift output function for better learning.
+        \item \textbf{Output}: Calculated using an activation function.
+        \begin{equation}
+            y = f(w_1 \cdot x_1 + w_2 \cdot x_2 + b)
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Layers and Activation Functions}
+    \begin{block}{Layer Organization}
+        \begin{itemize}
+            \item \textbf{Input Layer}: Receives raw data.
+            \item \textbf{Hidden Layers}: Process inputs, perform transformations.
+            \item \textbf{Output Layer}: Produces predictions.
+        \end{itemize}
+        \begin{center}
+            Input Layer $\rightarrow$ Hidden Layer(s) $\rightarrow$ Output Layer
+        \end{center}
+    \end{block}
+    
+    \begin{block}{Activation Functions}
+        Common functions include:
+        \begin{itemize}
+            \item \textbf{Sigmoid}: \(f(x) = \frac{1}{1 + e^{-x}}\)
+            \item \textbf{ReLU}: \(f(x) = \max(0, x)\)
+            \item \textbf{Softmax}: Converts outputs to probabilities for multi-class classification.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Network Operation and Learning}
+    \begin{block}{Network Operation}
+        \begin{itemize}
+            \item \textbf{Forward Propagation}: Data flows through the network layers.
+            \item \textbf{Backward Propagation}: Adjusts weights and biases based on output error.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Interconnected Nature: Outputs serve as inputs for next layers.
+            \item Learning Process: Iterative weight and bias adjustments.
+            \item Versatility: Adaptable structure for various problem complexities.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Application: Digit Recognition}
+    \begin{block}{Digit Recognition Example}
+        \begin{itemize}
+            \item \textbf{Input Layer}: Pixels of a 28x28 image (input features).
+            \item \textbf{Hidden Layer(s)}: Identify edges, shapes, and patterns.
+            \item \textbf{Output Layer}: Predicted digit represented by four neurons (for digits 0-9).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Types of Neural Networks - Overview}
+    \begin{block}{Overview of Neural Network Types}
+        Neural networks come in various forms, each designed to tackle specific types of tasks effectively. 
+        This slide introduces the essential types of neural networks:
+        \begin{itemize}
+            \item Feedforward Neural Networks (FNN)
+            \item Convolutional Neural Networks (CNN)
+            \item Recurrent Neural Networks (RNN)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Types of Neural Networks - Feedforward Neural Networks (FNN)}
+    \begin{block}{Definition}
+        Feedforward Neural Networks are the simplest type of artificial neural network. 
+        In this architecture, the information moves in one direction—from input nodes, through hidden layers (if any), to output nodes—without forming cycles.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Key Features:}
+        \begin{itemize}
+            \item Structure: Composed of input, hidden, and output layers.
+            \item Activation Functions: Each neuron applies an activation function, such as Sigmoid, ReLU, or Tanh.
+        \end{itemize}
+        \item \textbf{Example Application:} Classification tasks, such as recognizing handwritten digits using the MNIST dataset.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Types of Neural Networks - Convolutional and Recurrent Neural Networks}
+    \begin{block}{Convolutional Neural Networks (CNN)}
+        CNNs are specifically designed for processing structured grid data, like images. 
+        Unlike FNNs, they use convolutional layers that apply filters to input data to extract features.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Key Features:}
+        \begin{itemize}
+            \item Convolutional Layer: Applies filters to capture spatial hierarchies.
+            \item Pooling Layer: Reduces dimensionality by downsampling feature maps.
+            \item Fully Connected Layer: Typically follows the convolutional and pooling layers to perform classification.
+        \end{itemize}
+        \item \textbf{Example Application:} Image recognition, such as identifying objects within images (e.g., facial recognition).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Types of Neural Networks - Summary and Code Example}
+    \begin{block}{Recurrent Neural Networks (RNN)}
+        RNNs are designed for sequential data. They allow information to persist through cycles in their architecture, making them suitable for time series and natural language processing tasks.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Key Features:}
+        \begin{itemize}
+            \item Feedback Loops: Allows the network to maintain a memory of previous inputs.
+            \item Variations: LSTM and GRU are advanced RNNs designed to solve issues like vanishing gradients.
+        \end{itemize}
+        \item \textbf{Example Application:} Text generation based on training data.
+    \end{itemize}
+    
+    \begin{block}{Summary Points}
+        \begin{itemize}
+            \item FNNs: Best for simple tasks without temporal patterns.
+            \item CNNs: Excel at spatial data (images), cornerstone in computer vision.
+            \item RNNs: Tailored for data where context and sequence matter, like language.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Code Snippet}
+        \begin{lstlisting}[language=Python]
+# Feedforward Neural Network (FNN) Example
+from keras.models import Sequential
+from keras.layers import Dense
+
+model_fnn = Sequential()
+model_fnn.add(Dense(128, input_dim=784, activation='relu'))  # Input layer
+model_fnn.add(Dense(10, activation='softmax'))  # Output layer
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Process - Overview}
+    \begin{block}{Learning Mechanisms in Neural Networks}
+        Understanding the learning process is essential for neural networks. This process consists primarily of:
+        \begin{itemize}
+            \item \textbf{Forward Propagation}
+            \item \textbf{Backpropagation}
+            \item \textbf{Gradients}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Process - Forward Propagation}
+    \begin{block}{1. Forward Propagation}
+        \textbf{Definition:} The process by which input data passes through the layers to produce an output.
+        \begin{itemize}
+            \item Input data is fed into the input layer.
+            \item Neurons apply a weighted sum and pass the result through an activation function.
+        \end{itemize}
+        
+        \textbf{Mathematical Representation:}
+        \begin{equation}
+            z = w_1 x_1 + w_2 x_2 + ... + w_n x_n + b
+        \end{equation}
+    \end{block}
+    
+    \textbf{Example:} Predicting housing prices based on size and location.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Process - Backpropagation and Gradients}
+    \begin{block}{2. Backpropagation}
+        \textbf{Definition:} A method of updating weights based on the output error.
+        \begin{itemize}
+            \item Measures error by comparing predicted output to actual target.
+            \item Adjusts weights using the gradient descent algorithm.
+        \end{itemize}
+        
+        \textbf{Formula:}
+        \begin{equation}
+            w_{new} = w_{old} - \eta \cdot \frac{\partial L}{\partial w}
+        \end{equation}
+    \end{block}
+
+    \begin{block}{3. Gradients}
+        \textbf{Definition:} Indicate the direction and rate of change of the loss function regarding the weights.
+        \begin{itemize}
+            \item Help in adjusting weights during training.
+            \item Crucial for navigating the optimization landscape.
+        \end{itemize}
+    \end{block}
+
+    \textbf{Visual Representation:} Imagine a hill; the gradient tells how to move towards the lowest point (minimum loss).
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Neural Networks - Overview}
+    \begin{itemize}
+        \item Training a neural network adjusts parameters (weights and biases) 
+        \item Aim: Minimize the difference between predicted and actual outcomes
+        \item Driven by datasets and training methods
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Neural Networks - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Datasets}
+        \begin{itemize}
+            \item \textbf{Definition}: Collection of input-output pairs
+            \item \textbf{Types}:
+            \begin{itemize}
+                \item Training Set
+                \item Validation Set
+                \item Test Set
+            \end{itemize}
+            \item \textbf{Example}: Images of cats and dogs labeled accordingly
+        \end{itemize}
+        
+        \item \textbf{Epochs}
+        \begin{itemize}
+            \item \textbf{Definition}: A complete pass through the training dataset
+            \item \textbf{Role}: Adjust weights based on errors
+            \item \textbf{Example}: 1000 images, 10 epochs = 10 passes through all images
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Neural Networks - Batch Size and Final Points}
+    \begin{itemize}
+        \item \textbf{Batch Size}
+        \begin{itemize}
+            \item \textbf{Definition}: Number of samples processed before weight updates
+            \item \textbf{Role}: Smaller sizes lead to generalization, larger sizes exploit speed
+            \item \textbf{Example}: 1000 images, batch size 100 = 10 updates per epoch
+        \end{itemize}
+        
+        \item \textbf{Key Points to Emphasize}
+        \begin{itemize}
+            \item Importance of quality datasets
+            \item Choosing epochs and batch sizes wisely
+            \item Monitoring performance with validation datasets
+        \end{itemize}
+        
+        \item \textbf{Loss Calculation}
+        \begin{equation}
+            \text{Loss} = \frac{1}{N} \sum_{i=1}^{N}(y_i - \hat{y}_i)^2 
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Neural Networks - Conclusion}
+    \begin{itemize}
+        \item Effective training requires understanding of datasets, epochs, batch sizes
+        \item Careful consideration optimizes performance and reduces training time
+        \item Next: Challenges of overfitting and regularization techniques
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overfitting and Regularization - Part 1}
+    \begin{block}{What is Overfitting?}
+        \begin{itemize}
+            \item \textbf{Definition:} Overfitting occurs when a neural network learns the noise in the training data instead of the intended outputs. This leads to high accuracy on training data but poor performance on unseen data (validation/test sets).
+            \item \textbf{Characteristics:}
+            \begin{itemize}
+                \item Significant difference between training and validation/test accuracy.
+                \item Complex models with too many parameters tend to overfit the data.
+            \end{itemize}
+            \item \textbf{Example:} Imagine training a neural network to recognize cats in images. If the model memorizes every detail of the training images instead of learning general cat features, it might fail to recognize cats in new images.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Importance of Preventing Overfitting}
+        \begin{itemize}
+            \item \textbf{Generalization:} The goal of machine learning is to create models that generalize well to new, unseen data. Reducing overfitting helps achieve this objective.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overfitting and Regularization - Part 2}
+    \begin{block}{Techniques for Regularization}
+        \begin{enumerate}
+            \item \textbf{Dropout:}
+            \begin{itemize}
+                \item \textbf{Concept:} Randomly “dropping out” (setting to zero) a fraction of the neurons during training, forcing the network to learn more robust features and preventing co-adaptation of hidden units.
+                \item \textbf{Implementation:} A dropout rate (e.g., 0.5 for hidden layers) is chosen, meaning 50\% of the neurons will be ignored during each training iteration.
+                \item \textbf{Benefits:} Reduces reliance on specific neurons, leading to a more generalized model.
+            \end{itemize}
+
+            \begin{lstlisting}[language=Python]
+# Example in Keras
+from keras.layers import Dropout
+
+model.add(Dropout(0.5))  # Dropout layer with a rate of 50%
+            \end{lstlisting}
+
+            \item \textbf{L2 Regularization (Weight Decay):}
+            \begin{itemize}
+                \item \textbf{Concept:} Adds a penalty to the loss function for large weights, discouraging complex models by keeping weights small.
+                \item \textbf{Formula:} 
+                \begin{equation}
+                J(\theta) = J_{original} + \lambda \sum_{j=1}^{n} \theta_j^2
+                \end{equation}
+                Where:
+                \begin{itemize}
+                    \item \( J(\theta) \) is the total cost function, 
+                    \item \( J_{original} \) is the original cost,
+                    \item \( \lambda \) is the regularization parameter,
+                    \item \( \theta_j \) represents the weights.
+                \end{itemize}
+                \item \textbf{Benefits:} Keeps weight distributions small, promoting simpler models and improving generalization.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overfitting and Regularization - Part 3}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Balance Complexity:} Aim for a model that is complex enough to learn patterns in the data but simple enough to generalize well.
+            \item \textbf{Experiment with Techniques:} Combining dropout and L2 regularization can yield better results, and experimenting with their rates is key for optimal performance.
+            \item \textbf{Monitoring Performance:} Always track both training and validation performance to diagnose overfitting and adjust model training accordingly.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        By understanding and applying these regularization techniques, you can build neural networks that are both effective and robust, helping ensure accurate predictions on unseen data.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Common Applications of Neural Networks}
+    \begin{block}{Introduction to Neural Networks}
+        Neural networks are computational models inspired by the human brain. They consist of interconnected nodes (neurons) that process information in layers, allowing them to learn patterns and make predictions based on data.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Common Applications}
+    \begin{enumerate}
+        \item \textbf{Image Recognition}
+        \item \textbf{Natural Language Processing (NLP)}
+        \item \textbf{Game AI}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Image Recognition}
+    \begin{block}{Explanation}
+        Neural networks, particularly Convolutional Neural Networks (CNNs), excel at recognizing and classifying images. They automatically detect features (like edges, shapes, and textures) through layers of convolutions.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Example:} Applications include:
+            \begin{itemize}
+                \item Facial recognition systems
+                \item Medical image analysis (identifying tumors in MRIs)
+                \item Autonomous vehicles (recognizing road signs and pedestrians)
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Natural Language Processing (NLP)}
+    \begin{block}{Explanation}
+        Neural networks, especially Recurrent Neural Networks (RNNs) and Transformers, are used to understand, interpret, and generate human language.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Example:} Virtual assistants (like Siri and Alexa) and Google Translate.
+        \item \textbf{Key Point:} Attention mechanisms in Transformers allow models to focus on specific parts of the text for better context understanding.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Game AI}
+    \begin{block}{Explanation}
+        Neural networks are applied in developing AI that can learn and adapt in game environments. Through reinforcement learning, AI agents improve their gameplay by receiving feedback from interactions with the environment.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Example:} In games like AlphaGo, a neural network learned to play Go by analyzing game situations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet for Neural Network Training}
+    Here’s a basic code snippet in Python using TensorFlow:
+    \begin{lstlisting}[language=Python]
+import tensorflow as tf
+
+# Define a simple neural network model
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Dense(64, activation='relu', input_shape=(input_shape,)),
+    tf.keras.layers.Dense(10, activation='softmax')
+])
+
+# Compile the model
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Fit the model to your data
+model.fit(x_train, y_train, epochs=10)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item \textbf{Versatility:} Neural networks can be adapted to various fields, including healthcare, finance, and entertainment.
+        \item \textbf{Deep Learning:} Refers to "deep learning" when networks have many layers, allowing them to model complex patterns.
+        \item \textbf{Real-World Impact:} Deployment of neural networks transforms industries by enhancing accuracy and efficiency.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    Neural networks have become integral in various domains due to their ability to learn from data and make informed predictions. As we explore further, we must also consider the ethical implications of their use in society, paving the way for responsible AI development.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations in Neural Networks}
+    \begin{block}{Introduction}
+        As neural networks become increasingly integrated into various applications, it is crucial to address the ethical implications. Key areas of concern include:
+        \begin{itemize}
+            \item Bias
+            \item Fairness
+            \item Accountability
+        \end{itemize}
+        Understanding these challenges helps ensure responsible development and use of neural network technologies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Bias in Neural Networks}
+    \begin{block}{Definition}
+        Bias occurs when a model reflects prejudiced assumptions or stereotypes present in the training data.
+    \end{block}
+    \begin{block}{Illustrative Example}
+        If a facial recognition system is trained primarily on images of lighter-skinned individuals, it may perform poorly for individuals from other ethnic backgrounds, leading to disproportionate misidentification rates.
+    \end{block}
+    \begin{block}{Key Point}
+        Bias can result from both data selection and algorithmic design. It is crucial to validate models across diverse datasets to minimize bias.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Fairness and Accountability}
+    \begin{block}{Fairness}
+        \begin{itemize}
+            \item Definition: Fairness refers to the equitable treatment and outcomes produced by AI systems across different demographic groups.
+            \item Example: In lending applications, a neural network predicting creditworthiness should not disadvantage applicants based on race, gender, or economic background.
+            \item Key Point: Different fairness metrics (e.g., demographic parity, equal opportunity) should be considered during model evaluation to ensure outcomes are fair.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Accountability}
+        \begin{itemize}
+            \item Definition: Accountability involves determining who is responsible for decisions made by AI systems.
+            \item Example: If an autonomous vehicle's AI system makes an error leading to an accident, identifying liability (manufacturer, software developers) is crucial.
+            \item Key Point: Establishing clear frameworks for accountability is essential for ethical governance in high-stakes applications.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Additional Resources}
+    \begin{block}{Conclusion}
+        Ethical considerations in neural networks are critical components of responsible AI development. Engaging with these ethical dimensions promotes equitable, fair, and accountable systems.
+    \end{block}
+    
+    \begin{block}{Additional Resources}
+        \begin{itemize}
+            \item "Algorithms of Oppression" by Safiya Umoja Noble
+            \item Fairness in Machine Learning: \url{http://fairmlbook.org/}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future of Neural Networks - Overview}
+    \begin{block}{Key Areas of Advancement}
+        The field of neural networks, part of artificial intelligence, is rapidly evolving. Emerging trends indicate a promising horizon for technology in this domain.
+    \end{block}
+    \begin{itemize}
+        \item Continued Architectural Innovation
+        \item Improved Generalization and Transfer Learning
+        \item Interdisciplinary Integration
+        \item Enhanced Explainability and Interpretability
+        \item Scalability and Deployment
+        \item Ethical and Responsible AI
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future of Neural Networks - Key Trends}
+    \begin{enumerate}
+        \item \textbf{Continued Architectural Innovation}
+        \begin{itemize}
+            \item Transformers and Beyond
+            \item Neural Architecture Search (NAS)
+        \end{itemize}
+        
+        \item \textbf{Improved Generalization and Transfer Learning}
+        \begin{itemize}
+            \item One-Shot Learning
+            \item Domain Adaptation
+        \end{itemize}
+        
+        \item \textbf{Interdisciplinary Integration}
+        \begin{itemize}
+            \item Neuroscience and Machine Learning
+            \item Environmental and Social Applications
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future of Neural Networks - Ethical Considerations}
+    \begin{block}{Enhanced Explainability and Interpretability}
+        \begin{itemize}
+            \item Importance of model transparency for auditing and trust.
+            \item Development of tools for visualizing decisions.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Scalability and Deployment}
+        \begin{itemize}
+            \item Federated Learning for privacy-preserving AI.
+            \item Increased deployment on edge devices for real-time processing.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Ethical AI}
+        \begin{itemize}
+            \item Emphasis on fairness, accountability, and transparency.
+            \item Integration of regulatory frameworks in AI design.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Key Takeaways}
+    \begin{block}{Summary}
+        The future of neural networks holds vast potential with major advancements in architecture, adaptability, and ethical considerations shaping its path forward.
+    \end{block}
+    
+    \begin{itemize}
+        \item Architectural innovation like transformers improves efficiency.
+        \item Learning methods (one-shot, domain adaptation) enhance adaptability.
+        \item Applications expand across disciplines (climate, health).
+        \item Ethical considerations crucial for design and deployment.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Neural Network Architecture Shift}
+    \begin{block}{Comparison of Architectures}
+        \begin{itemize}
+            \item \textbf{Traditional CNNs:}
+            \begin{itemize}
+                \item Effective but computationally expensive.
+                \item Limited scaling capabilities.
+            \end{itemize}
+            \item \textbf{Vision Transformers:}
+            \begin{itemize}
+                \item Utilize self-attention mechanisms.
+                \item Improved performance and reduced training time.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,1241 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Probabilistic Reasoning}
+    \begin{block}{What is Probabilistic Reasoning?}
+        Probabilistic reasoning is a method used in artificial intelligence (AI) to handle uncertainty 
+        and make decisions based on incomplete or uncertain information. Unlike deterministic reasoning, 
+        which yields definitive outcomes, probabilistic reasoning allows systems to model and infer 
+        conclusions that encompass a range of possibilities.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Managing Uncertainty}
+    \begin{enumerate}
+        \item \textbf{Real-World Complexities}:
+            The real world is inherently uncertain. Probabilistic reasoning allows AI systems to make informed decisions despite a lack of complete data.
+        
+        \item \textbf{Risk Assessment}:
+            Systems can evaluate risks and probabilities, which is vital in sectors like healthcare, finance, and autonomous vehicles.
+        
+        \item \textbf{Improving Predictions}:
+            By incorporating uncertainty, probabilistic reasoning enhances the accuracy of predictions, leading to better decision-making.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts and Example}
+    \begin{block}{Key Concepts}
+        \begin{itemize}
+            \item \textbf{Probability}:
+                A numerical representation of the likelihood that an event will occur, ranging between 0 (impossibility) to 1 (certainty).
+
+            \item \textbf{Bayesian Inference}:
+                A statistical method that updates the probability for a hypothesis as more evidence or information becomes available.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example: Weather Prediction}
+        Consider a weather forecasting system predicting whether it will rain tomorrow. The system assigns probabilities based 
+        on various input factors such as:
+        \begin{itemize}
+            \item $P(\text{Rain} | \text{Clouds})$: Probability of rain given that the sky is cloudy (e.g., 70\%).
+            \item $P(\text{Rain} | \text{No Clouds})$: Probability of rain given that the sky is clear (e.g., 10\%).
+        \end{itemize}
+        The system can then estimate conditions and give a prediction, such as "There is a 60\% chance of rain tomorrow."
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways}
+    \begin{block}{Conclusion}
+        Probabilistic reasoning is an essential aspect of AI that allows for effective management of uncertainty through models and algorithms 
+        that quantify the likelihood of various outcomes. Understanding and applying these principles enables smarter decision-making 
+        in unpredictable environments.
+    \end{block}
+    
+    \begin{itemize}
+        \item Probabilistic reasoning offers a framework for navigating uncertainty in AI applications.
+        \item It enhances decision-making and prediction accuracy by considering various possible outcomes.
+        \item Techniques like Bayesian inference are fundamental to this approach.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{What is a Bayesian Network? - Definition}
+    A \textbf{Bayesian Network} (BN) is a graphical model that represents a set of variables and their conditional dependencies via a directed acyclic graph (DAG). It allows for the representation and manipulation of uncertain knowledge, making them a powerful tool in probabilistic reasoning and inference.
+\end{frame}
+
+\begin{frame}[fragile]{What is a Bayesian Network? - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Graphical Representation}: 
+            \begin{itemize}
+                \item \textbf{Nodes} represent random variables, which can be observed or unobserved (latent).
+                \item \textbf{Edges} represent the probabilistic dependencies between these variables. A directed edge from node A to node B indicates that A influences B.
+            \end{itemize}
+        \item \textbf{Conditional Independence}: 
+            \begin{itemize}
+                \item In a Bayesian Network, each node is conditionally independent of its non-descendants given its parents. This property significantly simplifies the computation of joint probabilities.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{What is a Bayesian Network? - Example}
+    \begin{block}{Example in Medical Diagnosis}
+        Consider a simplified example with:
+        \begin{itemize}
+            \item \textbf{A}: Smoking (Yes/No)
+            \item \textbf{B}: Coughing (Yes/No)
+            \item \textbf{C}: Lung Cancer (Yes/No)
+        \end{itemize}
+        
+        \textbf{Dependencies}:
+        \begin{itemize}
+            \item Smoking influences the probability of having Lung Cancer.
+            \item Lung Cancer influences the probability of Coughing.
+        \end{itemize}
+
+        This can be visually represented as:
+        \begin{lstlisting}
+             A (Smoking)
+              ↓ (influences)
+             C (Lung Cancer)
+              ↓ (influences)
+             B (Coughing)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What is a Bayesian Network? - Key Points}
+    \begin{enumerate}
+        \item \textbf{Inference}: Bayesian Networks facilitate reasoning under uncertainty by allowing the calculation of conditional probabilities. For example, knowing 'Coughing' can lead us to infer the likelihood of 'Lung Cancer' considering other factors.
+        \item \textbf{Learning}: Bayesian Networks can be learned from data. Parameters (the conditional probability distributions) can be estimated using various algorithms, allowing the network to adapt to new information.
+        \item \textbf{Applications}: Common applications include medical diagnosis, risk management, and decision-making in AI systems.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{What is a Bayesian Network? - Formulation}
+    The joint probability distribution of a set of variables represented in a Bayesian Network can be computed as:
+    \begin{equation}
+        P(X_1, X_2, \ldots, X_n) = \prod_{i=1}^{n} P(X_i | \text{Parents}(X_i))
+    \end{equation}
+    where \( X_i \) represents each variable and Parents(\(X_i\)) denotes its parent nodes in the graph.
+\end{frame}
+
+\begin{frame}[fragile]{What is a Bayesian Network? - Conclusion}
+    Bayesian Networks serve as a robust framework for understanding complex dependencies among variables and reasoning under uncertainty, establishing a vital intersection between graph theory and probability theory in artificial intelligence.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Components of Bayesian Networks - Overview}
+    Bayesian networks are powerful tools for modeling uncertainty and dependencies among variables. They consist of two primary components:
+    \begin{itemize}
+        \item \textbf{Nodes} - Represent random variables (discrete or continuous)
+        \item \textbf{Edges} - Illustrate conditional dependencies between nodes
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Components of Bayesian Networks - Nodes}
+    \begin{block}{1. Nodes}
+        \textbf{Definition}: Each node represents a random variable. These can be discrete (e.g., coin flips, gender) or continuous (e.g., height, temperature).
+    \end{block}
+    \textbf{Example}: In a medical diagnosis network:
+    \begin{itemize}
+        \item Node A: "Has Flu" (True/False)
+        \item Node B: "Cough" (True/False) - related to having a flu
+        \item Node C: "Fever" (True/False) - also related to having a flu
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Components of Bayesian Networks - Edges and Relationships}
+    \begin{block}{2. Edges}
+        \textbf{Definition}: Edges (arrows) indicate conditional dependencies between nodes. An edge from Node A to Node B signifies that the state of A influences the state of B.
+        \textbf{Example}: If "Has Flu" (Node A) is True, the likelihood of "Cough" (Node B) and "Fever" (Node C) increases.
+    \end{block}
+    
+    \begin{block}{3. Representing Relationships}
+        - Each node can have one or more parents and one or more children.
+        - \textbf{Key Point}: The graphical structure allows intuitive visualization of how variables affect each other.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Components of Bayesian Networks - Conditional Probability Tables}
+    \begin{block}{4. Conditional Probability Tables (CPTs)}
+        For every node, a Conditional Probability Table quantifies the relationships. The table specifies the probability of each possible state of a node given its parents' states.
+        
+        \textbf{Example} for "Cough":
+        \begin{center}
+        \begin{tabular}{|c|c|c|}
+        \hline
+        Has Flu & P(Cough=True) & P(Cough=False) \\
+        \hline
+        True & 0.8 & 0.2 \\
+        False & 0.1 & 0.9 \\
+        \hline
+        \end{tabular}
+        \end{center}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Graphical Representation}: Bayesian networks use directed acyclic graphs (DAGs), ensuring no feedback loops.
+            \item \textbf{Modularity}: Each node's dependencies are local; it simplifies complex systems into manageable parts.
+            \item \textbf{Inference}: Bayesian networks allow for probabilistic inference, enabling the prediction of unknown variables based on known ones.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Conclusion}
+        Understanding the components of Bayesian networks—nodes and edges—sets the foundation for using these models in probabilistic reasoning across various domains.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of Bayesian Networks - Introduction}
+    \begin{block}{Introduction to Directed Acyclic Graphs (DAGs)}
+        \begin{itemize}
+            \item \textbf{Definition:} A Directed Acyclic Graph (DAG) is a graph that is directed and contains no cycles. 
+            \item Each node is connected by edges, with each edge having a direction, and it is impossible to return to the same node by following the edges.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of Bayesian Networks - Role of DAGs}
+    \begin{block}{Role of DAGs in Bayesian Networks}
+        Bayesian networks use DAGs to represent the relationships among a set of random variables. 
+        \begin{itemize}
+            \item They model complex systems with dependencies among variables.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of Bayesian Networks - Key Components}
+    \begin{block}{Key Components of a DAG in Bayesian Networks}
+        \begin{enumerate}
+            \item \textbf{Nodes:}
+                \begin{itemize}
+                    \item Represent random variables.
+                    \item Can have discrete or continuous values.
+                    \item \textit{Example:} Nodes for symptoms, diseases, and test results in a medical diagnosis context.
+                \end{itemize}
+            \item \textbf{Edges:}
+                \begin{itemize}
+                    \item Indicate direct dependencies between variables.
+                    \item Directed edges imply a causal relationship. 
+                    \item \textit{Example:} An edge from "Weather" to "Traffic" indicates that weather influences traffic.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of Bayesian Networks - Characteristics}
+    \begin{block}{Characteristics of DAGs in Bayesian Networks}
+        \begin{itemize}
+            \item \textbf{Acyclic:} No loops or cycles ensure unidirectional relationships.
+            \item \textbf{Encoding Conditional Independence:} Absence of edges indicates conditional independence given their parents.
+        \end{itemize}
+        \begin{itemize}
+            \item \textit{Example:} A → B → C implies A and C are conditionally independent given B.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of Bayesian Networks - Mathematical Representation}
+    \begin{block}{Mathematical Representation}
+        The joint probability distribution of variables \( X_1, X_2, \ldots, X_n \) in a Bayesian Network can be expressed as:
+        \begin{equation}
+            P(X_1, X_2, \ldots, X_n) = \prod_{i=1}^{n} P(X_i | \text{Parents}(X_i))
+        \end{equation}
+        \begin{itemize}
+            \item This indicates that the joint probability is the product of the conditional probabilities of each node given its parents.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of Bayesian Networks - Example Illustration}
+    \begin{block}{Example Illustration}
+        Consider a scenario with:
+        \begin{itemize}
+            \item Nodes: \textbf{Rain} → \textbf{Traffic} → \textbf{Accident}
+            \item Here, "Traffic" depends on "Rain," and "Accident" depends on "Traffic."
+        \end{itemize}
+        The structure of this graph is:
+        \[
+        \text{Rain} \rightarrow \text{Traffic} \rightarrow \text{Accident}
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Structure of Bayesian Networks - Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item DAGs provide a clear visual representation of dependencies.
+            \item They facilitate reasoning about the joint probabilities of the system.
+            \item Understanding DAGs is crucial for constructing and interpreting Bayesian networks.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Conclusion}
+        The structure of Bayesian networks represented by DAGs is foundational for modeling relationships and dependencies in probabilistic reasoning, enabling effective application of conditional probability and inference in complex systems.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conditional Probability}
+  \begin{block}{Definition}
+    Conditional probability quantifies the probability of an event (A) occurring given that another event (B) has already occurred. It is denoted as \( P(A | B) \), which reads as "the probability of A given B".
+  \end{block}
+  
+  \begin{block}{Formula}
+    The conditional probability is calculated using the formula:
+    \begin{equation}
+    P(A | B) = \frac{P(A \cap B)}{P(B)}
+    \end{equation}
+    where:
+    \begin{itemize}
+      \item \( P(A \cap B) \) is the joint probability of both A and B occurring.
+      \item \( P(B) \) is the probability of B occurring.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points in Conditional Probability}
+  \begin{itemize}
+    \item If \( P(B) = 0 \), then \( P(A | B) \) is undefined.
+    \item Conditional probabilities update our beliefs about event A based on new information B.
+    \item They are essential in statistics, machine learning, and Bayesian networks.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example to Illustrate Conditional Probability}
+  \begin{block}{Scenario}
+    Consider events:
+    \begin{itemize}
+      \item A: "it is raining"
+      \item B: "there are clouds in the sky"
+    \end{itemize}
+  \end{block}
+
+  To find the probability that it is raining given that there are clouds, we calculate:
+  \begin{itemize}
+    \item From historical data:
+      \begin{itemize}
+        \item \( P(A \cap B) = 0.30 \) (30\% chance it is raining and there are clouds)
+        \item \( P(B) = 0.60 \) (60\% chance there are clouds)
+      \end{itemize}
+    \item Now calculate \( P(A | B) \):
+  \end{itemize}
+  \begin{equation}
+  P(A | B) = \frac{P(A \cap B)}{P(B)} = \frac{0.30}{0.60} = 0.50
+  \end{equation}
+  Therefore, there is a 50\% chance of rain given that clouds are present.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conditional Probability in Bayesian Networks}
+  \begin{itemize}
+    \item Bayesian Networks utilize conditional probability to model dependencies among variables, represented using Directed Acyclic Graphs (DAGs):
+      \begin{itemize}
+        \item Nodes represent variables.
+        \item Edges represent conditional dependencies.
+      \end{itemize}
+    \item For any node in the graph, its probability is computed based on its parent nodes using conditional probabilities:
+    \begin{equation}
+    P(X | \text{Parents}(X))
+    \end{equation}
+    \item This hierarchical structure allows complex joint probabilities to be calculated efficiently.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Summary and Next Steps}
+  \begin{itemize}
+    \item Conditional probability is pivotal for evaluating the likelihood of events given certain conditions.
+    \item It is foundational for Bayesian Networks, enabling them to infer and update beliefs based on observed data.
+    \item Mastery of conditional probability enhances understanding of predictive analytics and probabilistic reasoning.
+  \end{itemize}
+
+  \begin{block}{Next Steps}
+    Prepare for our upcoming slide on \textbf{D-separation}, where we will delve into how to determine independence between variables within Bayesian Networks!
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{D-separation - Overview}
+    \begin{block}{Understanding D-separation}
+        D-separation is a fundamental concept in Bayesian Networks, 
+        used to determine whether two variables are independent given a 
+        set of other variables. It helps us understand the conditional 
+        independence relationships that exist within the network’s structure.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{D-separation - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Bayesian Network:} A directed acyclic graph (DAG) where 
+        nodes represent random variables, and edges represent conditional dependencies.
+        
+        \item \textbf{Path:} A sequence of edges connecting two nodes, which may 
+        or may not indicate dependence.
+        
+        \item \textbf{D-separation (Directed Separation):} Two nodes $X$ and $Y$ 
+        are said to be d-separated given a set of nodes $Z$ if all paths 
+        between $X$ and $Y$ are blocked by $Z$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{D-separation - When Paths Are Blocked}
+    A path is blocked under the following conditions:
+    \begin{enumerate}
+        \item \textbf{Chain Structures:} $X \rightarrow Z \rightarrow Y$ is blocked if $Z$ is in set $Z$.
+        
+        \item \textbf{Fork Structures:} $Z \leftarrow X \rightarrow Y$ is blocked if $Z$ is in set $Z$.
+        
+        \item \textbf{Collider Structures:} $X \rightarrow Z \leftarrow Y$ is NOT blocked if $Z$ is in set $Z$, 
+        but all descendants of $Z$ must be included in $Z$ to block the path.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{D-separation - Example}
+    Consider a Bayesian Network with the following structure:
+    \begin{center}
+        \begin{verbatim}
+        A → B → C
+        A → D
+        E → B
+        \end{verbatim}
+    \end{center}
+    
+    To determine if variable $C$ is independent of $D$ given $B$:
+    \begin{enumerate}
+        \item Identify all paths between $C$ and $D$: 
+        \begin{itemize}
+            \item $C \leftarrow B \rightarrow D$
+        \end{itemize}
+        \item Since the path includes $B$, check if $B$ is in the conditioning set. 
+        \item If $B$ is conditioned on, the path is blocked, indicating that $C \perp D \mid B$.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{D-separation - Key Points}
+    \begin{itemize}
+        \item \textbf{Independence vs. Dependence:} D-separation defines independence—if 
+        $X$ is d-separated from $Y$ given $Z$, then knowing about $X$ provides no 
+        additional information about $Y$ once $Z$ is known.
+        
+        \item \textbf{Inference in Bayesian Networks:} D-separation is critical when 
+        performing inference in Bayesian networks, as it allows for simplification of 
+        calculations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{D-separation - Summary and Conclusion}
+    \begin{block}{Summary}
+        D-separation is an essential tool in probabilistic reasoning that allows 
+        practitioners to infer relationships and independence within Bayesian 
+        Networks effectively. Understanding d-separation can streamline inference 
+        processes and clarify the structure of complex probability networks.
+    \end{block}
+
+    \begin{block}{Conclusion}
+        As we progress to the next slide on inference in Bayesian Networks, keep 
+        in mind that understanding d-separation will empower you to recognize 
+        which variables contribute to your network’s dynamics and which can be 
+        treated as independent, leading to more efficient analysis and reasoning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Inference in Bayesian Networks - Introduction}
+    \begin{block}{Overview}
+        Inference in Bayesian Networks involves determining the posterior probabilities of variables, given evidence and prior information. 
+        This process is crucial for decision-making under uncertainty in fields such as AI, statistics, and machine learning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Inference in Bayesian Networks - Types of Inference}
+    \begin{itemize}
+        \item Inference can be broadly classified into:
+        \begin{enumerate}
+            \item Exact Inference
+            \item Approximate Inference
+        \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exact Inference Techniques}
+    \begin{block}{Exact Inference}
+        Exact inference provides precise answers to probabilistic queries using algorithms that explore the entire structure of the network.
+        While accurate, exact methods can be computationally expensive for large networks.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Variable Elimination:}
+        \begin{itemize}
+            \item Systematically eliminates variables by summing out non-evidence variables.
+            \item Example:
+            \[
+            P(X | \text{evidence}) = \sum_Y P(X, Y | \text{evidence})
+            \]
+        \end{itemize}
+        
+        \item \textbf{Junction Tree Algorithm:}
+        \begin{itemize}
+            \item Transforms the Bayesian Network into a tree structure (junction tree) for efficient computation of marginal distributions.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Approximate Inference Techniques}
+    \begin{block}{Approximate Inference}
+        Approximate inference techniques provide estimates of posterior probabilities when exact methods are impractical due to computational constraints or complex networks. 
+        These methods trade accuracy for efficiency.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Monte Carlo Methods:}
+        \begin{itemize}
+            \item Random sampling techniques that estimate probabilities from a large number of simulated samples.
+        \end{itemize}
+        
+        \item \textbf{Variational Inference:}
+        \begin{itemize}
+            \item Approximates the true posterior with a simpler distribution by minimizing the difference measured by Kullback-Leibler divergence.
+        \end{itemize}
+    \end{itemize}
+
+    \begin{block}{Key Point}
+        Choose the appropriate inference technique based on the trade-off between accuracy and computational efficiency.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Conclusion}
+    \begin{itemize}
+        \item Inference in Bayesian Networks facilitates decision-making by deducing probabilities based on evidence.
+        \item Exact inference methods ensure accuracy but are computationally intensive.
+        \item Approximate methods are faster for larger networks but may sacrifice precision.
+    \end{itemize}
+
+    \begin{block}{Bayes' Rule for Inference}
+        \[
+        P(X | E) = \frac{P(E | X) \cdot P(X)}{P(E)}
+        \]
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Understanding these inference techniques is fundamental for leveraging Bayesian Networks in practical applications, enabling robust decision-making in uncertain environments.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exact Inference Algorithms - Overview}
+    \begin{block}{Overview}
+        In probabilistic graphical models, exact inference algorithms are crucial for calculating probabilities of events given observed data. The two main types are:
+        \begin{itemize}
+            \item Variable Elimination
+            \item Junction Tree
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exact Inference Algorithms - Variable Elimination}
+    \begin{block}{Variable Elimination}
+        A systematic method for computing marginal probabilities in a Bayesian network:
+        \begin{enumerate}
+            \item Identify the Query: Determine the probability to compute, e.g., $P(X | E)$.
+            \item Create Factors: Utilize conditional probability distributions (CPDs).
+            \item Eliminate Variables: 
+                \begin{itemize}
+                    \item Select a variable not in the query.
+                    \item Sum over all values of this variable.
+                    \item Repeat until only query variable(s) and evidence remain.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Exact Inference Algorithms - Example and Junction Tree}
+    \begin{block}{Example}
+        For a Bayesian network with variables A, B, and C:
+        \begin{itemize}
+            \item Compute $P(B | A)$:
+            \item Create factors: $P(A)$, $P(B | A)$, $P(C | B)$.
+            \item Eliminate C by summing $P(B | A, C) \cdot P(C)$.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Junction Tree Algorithm}
+        \begin{itemize}
+            \item Transforms a Bayesian network into a tree structure for efficient inference.
+            \item Key steps: 
+                \begin{enumerate}
+                    \item Moralization
+                    \item Finding Cliques
+                    \item Building the Junction Tree
+                    \item Message Passing
+                \end{enumerate}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Final Thoughts}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Efficiency: Designed for efficient incorporation of observed data.
+            \item Applicability: Variable Elimination for smaller networks, Junction Trees for larger ones.
+            \item Understanding: Mastering these algorithms leads to deeper insights into probabilistic models.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Final Thoughts}
+        Exact inference is vital in fields like AI, medical diagnosis, and risk assessment. Understanding these foundational algorithms lays the groundwork for more complex techniques.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Approximate Inference Algorithms}
+  \begin{block}{Introduction to Approximate Inference}
+    In probabilistic reasoning, **exact inference** methods (e.g., Variable Elimination and Junction Trees) can be effective but often become computationally infeasible with increased complexity and data size. 
+    \\[1em]
+    **Approximate inference algorithms** enable conclusions from probabilistic models without exact calculations.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Sampling Methods}
+  \begin{block}{Concept}
+    Sampling methods estimate probability distributions by generating samples from the model. Exact probabilities are approximated through a finite number of samples.
+  \end{block}
+
+  \begin{block}{Common Types}
+    \begin{itemize}
+      \item **Monte Carlo Sampling**: Randomly generates samples from probability distributions.
+      \item **Importance Sampling**: Samples drawn from an easier distribution, weighted for bias.
+      \item **Markov Chain Monte Carlo (MCMC)**: Uses a Markov chain to produce samples from the target distribution.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Sampling Methods - Example & Key Points}
+  \begin{block}{Example}
+    To estimate the average outcome of rolling a six-sided die, we can roll it 100 times (our sample) and calculate the average based on these results, rather than rolling it many times for an exact average.
+  \end{block}
+
+  \begin{block}{Key Points}
+    \begin{itemize}
+      \item **Flexible**: Can handle high-dimensional and complex distributions.
+      \item **Efficient**: Often requires less computational resources than exact methods.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Expectation-Maximization (EM) Algorithm}
+  \begin{block}{Concept}
+    The EM algorithm is an iterative method for finding maximum likelihood estimates in models with latent variables (hidden information). It consists of two steps:
+    \begin{itemize}
+      \item **Expectation (E-step)**: Estimate the missing data based on current parameters.
+      \item **Maximization (M-step)**: Update parameters to maximize likelihood with estimated data.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Example}
+    In a Gaussian Mixture Model, we classify data points into two groups. In the E-step, we estimate probabilities for each data point belonging to each group; in the M-step, we update means and variances based on these probabilities.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{EM Algorithm - Key Points}
+  \begin{block}{Key Points}
+    \begin{itemize}
+      \item **Iterative**: Continues until convergence (i.e., minimal changes in parameters).
+      \item **Robust**: Useful with incomplete data.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Summary}
+    \begin{itemize}
+      \item **Approximate Inference Algorithms** address scalability issues of exact methods.
+      \item **Sampling Methods** estimate unknown distributions; the **EM Algorithm** manages latent variables in complex models.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Further Reading}
+  \begin{block}{Topics to Explore}
+    \begin{itemize}
+      \item Explore the application of **MCMC methods** in Bayesian statistics.
+      \item Understand the complete derivation of the **EM algorithm** with numerical examples.
+    \end{itemize}
+  \end{block}
+  
+  By employing approximate inference techniques, we can effectively manage the challenges posed by complex probabilistic models, paving the way for insights across various applications such as AI, healthcare, and more.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Applications of Bayesian Networks - Overview}
+  \begin{block}{Introduction to Bayesian Networks}
+    Bayesian networks (BNs) are powerful graphical models that represent a set of variables and their conditional dependencies via a directed acyclic graph (DAG). They are particularly useful for reasoning under uncertainty and are applied across various fields.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Applications of Bayesian Networks - Real-world Applications}
+  \begin{block}{1. Healthcare}
+    \begin{itemize}
+      \item \textbf{Disease Diagnosis:} BNs model relationships between symptoms, diseases, and risk factors.
+      \item \textbf{Example:} In cancer diagnosis, symptoms like weight loss and fatigue could help predict disease presence.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{2. Finance}
+    \begin{itemize}
+      \item \textbf{Credit Scoring:} BNs assess lending risk based on credit history and personal information.
+      \item \textbf{Example:} A BN can predict loan default likelihood based on previous loans and economic indicators.
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{3. AI Decision-Making Processes}
+    \begin{itemize}
+      \item \textbf{Autonomous Systems:} BNs support decision-making with uncertain inputs, essential in robotics.
+      \item \textbf{Example:} In self-driving cars, BNs process sensor data to inform driving decisions.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Applications of Bayesian Networks - Key Points}
+  \begin{itemize}
+    \item \textbf{Flexibility:} Can integrate various data types (quantitative and qualitative).
+    \item \textbf{Dynamic Updating:} Real-time updating of beliefs as new evidence comes in.
+    \item \textbf{Incorporation of Expert Knowledge:} Experts can refine the predictive capabilities through prior knowledge.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Applications of Bayesian Networks - Conclusion}
+  Bayesian networks provide a structured framework for reasoning about uncertain information across diverse applications. Their ability to model complex relationships and update beliefs dynamically makes them invaluable in sectors like healthcare, finance, and AI.
+  
+  \begin{block}{Reference Example of a Simple Bayesian Network Diagram}
+    (Imagine a diagram here with nodes representing 'Symptom A', 'Symptom B', and 'Disease', with directed edges showing dependencies, e.g., 'Disease' influences 'Symptom A' and 'Symptom B'.)
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Bayesian Networks - Introduction}
+    \begin{block}{Overview}
+        Bayesian Networks (BNs) are probabilistic graphical models that use a directed acyclic graph to represent a set of variables and their conditional dependencies via probability distributions. They enable reasoning under uncertainty, making them powerful tools in various domains.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Bayesian Networks - Key Advantages}
+    \begin{enumerate}
+        \item \textbf{Handling Uncertainty}
+            \begin{itemize}
+                \item BNs provide a structured way to address uncertainties in real-world scenarios.
+                \item \textbf{Example:} In medical diagnosis, uncertainties related to symptoms and test results can be modeled using BNs.
+            \end{itemize}
+        
+        \item \textbf{Incorporating Prior Knowledge}
+            \begin{itemize}
+                \item BNs integrate prior knowledge through prior probability distributions, crucial when data is scarce.
+                \item \textbf{Example:} In financial modeling, historical trends can be used as prior insights.
+            \end{itemize}
+        
+        \item \textbf{Updating Beliefs}
+            \begin{itemize}
+                \item BNs excel in dynamically updating beliefs as new data becomes available, enhancing decision-making.
+                \item \textbf{Example:} Weather forecasting gets refined with new meteorological data.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Bayesian Networks - Framework and Updates}
+    \begin{block}{Mathematical Framework}
+        Prior distributions, \(P(A)\), represent initial beliefs before observing evidence. The model is updated using Bayes' theorem:
+        \begin{equation}
+            P(H|E) = \frac{P(E|H) \cdot P(H)}{P(E)}
+        \end{equation}
+        where:
+        \begin{itemize}
+            \item \(H\) = hypothesis (e.g., stock price increase)
+            \item \(E\) = evidence (e.g., economic indicator)
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Flexibility:} Accommodates complex interdependencies among variables.
+            \item \textbf{Transparency:} Graphical structure aids in understanding relationships clearly.
+            \item \textbf{Robust Decision-Making:} Enables informed decisions in uncertain circumstances.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Limitations of Bayesian Networks - Overview}
+  Bayesian networks are powerful tools for probabilistic reasoning, but they come with certain limitations:
+  
+  \begin{itemize}
+    \item Complexity
+    \item Data Requirements
+    \item Computational Expense
+  \end{itemize}
+  
+  Understanding these limitations is crucial when considering Bayesian networks for practical applications.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Limitations of Bayesian Networks - Complexity}
+  
+  \begin{block}{Complexity}
+    \begin{itemize}
+      \item \textbf{Graph Structure:} Large networks can be complex and hard to manage.
+        \begin{itemize}
+          \item Example: Health outcomes based on various symptoms can become intricate with additional factors.
+        \end{itemize}
+      \item \textbf{Causality vs. Correlation:} Establishing causal relationships requires domain expertise, which can be subjective and error-prone.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Limitations of Bayesian Networks - Data Requirements}
+  
+  \begin{block}{Data Requirements}
+    \begin{itemize}
+      \item \textbf{Quality and Quantity of Data:} High-quality data is essential but often hard to obtain, especially in fields like healthcare.
+        \begin{itemize}
+          \item Example: Accurately predicting disease outbreaks requires reliable data across various regions.
+        \end{itemize}
+      \item \textbf{Prior Probabilities:} Defining priors can be difficult when empirical evidence is lacking, potentially leading to biases.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Limitations of Bayesian Networks - Computational Expense}
+  
+  \begin{block}{Computational Expense}
+    \begin{itemize}
+      \item \textbf{Inference Complexity:} The computational costs of inference grow exponentially with network size.
+        \begin{itemize}
+          \item Key Point: Large networks may require approximate inference methods, which can introduce inaccuracies.
+        \end{itemize}
+      \item \textbf{Learning Parameters:} Structure learning from data can be resource-intensive.
+        \begin{itemize}
+          \item Example: Algorithms like Hill Climbing and Bayesian Information Criterion (BIC) are useful but demand significant computational resources.
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Important Formula}
+  
+  The limitations in complexity, data requirements, and computational expenses of Bayesian networks need careful consideration. 
+
+  \begin{block}{Conclusion}
+    While offering significant advantages in probabilistic reasoning, understanding these limitations is crucial for effective application.
+  \end{block}
+
+  \begin{equation}
+  P(X_1, X_2, \ldots, X_n) = \prod_{i=1}^{n} P(X_i | \text{Parents}(X_i))
+  \end{equation}
+  
+  This formula represents the joint probability distribution of the Bayesian network.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Bayesian Networks vs Other Probabilistic Models}
+    
+    \begin{block}{Introduction to Probabilistic Models}
+        Probabilistic models represent uncertain knowledge and make predictions based on observed data. They are essential in fields like artificial intelligence, statistics, and data science.
+    \end{block}
+
+    \begin{itemize}
+        \item Represent reasoning under uncertainty
+        \item Aid in predictions and decision-making
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Bayesian Networks and Markov Chains}
+
+    \begin{block}{Bayesian Networks}
+        \begin{itemize}
+            \item \textbf{Definition:} Directed acyclic graphs (DAGs) that represent variables and their dependencies.
+            \item \textbf{Structure:} Nodes = variables, directed edges = dependencies.
+            \item \textbf{Key Feature:} Efficiently encodes joint probability distribution.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Markov Chains}
+        \begin{itemize}
+            \item \textbf{Definition:} Stochastic models that transition between states with the Markov property.
+            \item \textbf{Structure:} Represented as transition diagrams or matrices.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Differences}
+        \begin{itemize}
+            \item Dependencies: Markov Chains focus on sequential data; BNs capture complex relationships.
+            \item Applications: Markov Chains for time-based processes; BNs for complex causal inference.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Hidden Markov Models and Other Models}
+
+    \begin{block}{Hidden Markov Models (HMMs)}
+        \begin{itemize}
+            \item \textbf{Definition:} Statistical models assuming a Markov process with hidden states.
+            \item \textbf{Structure:} Comprises observable and hidden states.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Differences from BNs}
+        \begin{itemize}
+            \item Observability: BNs model visible variables; HMMs model hidden states influencing observables.
+            \item Focus: HMMs for temporal sequences; BNs model diverse dependencies.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Other Probabilistic Models}
+        \begin{itemize}
+            \item \textbf{Gaussian Mixture Models (GMMs):} Focus on density estimation and clustering.
+            \item \textbf{Naive Bayes Classifier:} Assumes independence among predictors; less flexible than BNs.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Flexibility in representing relationships
+            \item Expressiveness in multi-variable interactions
+            \item Ability to learn from data with Bayesian inference
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Studies in Probabilistic Reasoning}
+    \begin{block}{Introduction to Bayesian Networks}
+    Bayesian networks (BNs) are a powerful tool for modeling complex systems with uncertainty. They consist of:
+    \begin{itemize}
+        \item Nodes representing variables
+        \item Directed edges indicating probabilistic dependencies
+    \end{itemize}
+    BNs facilitate inference and decision-making across diverse applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 1: Medical Diagnosis}
+    \begin{block}{Overview}
+    Bayesian networks are widely used in healthcare for diagnosing diseases based on symptoms and patient history.
+    \end{block}
+
+    \begin{block}{Example}
+    Consider a Bayesian network for diagnosing pneumonia. The variables could include:
+    \begin{itemize}
+        \item Symptoms (e.g., cough, fever)
+        \item Patient risk factors (e.g., smoking history, age)
+        \item Diagnostic tests (e.g., chest X-ray results)
+    \end{itemize}
+    \end{block}
+
+    \begin{block}{Benefits}
+    \begin{itemize}
+        \item Integrates various sources of information
+        \item Provides probabilistic outcomes (e.g., likelihood of pneumonia given observed symptoms)
+    \end{itemize}
+    \end{block}
+
+    \begin{block}{Illustration}
+    \begin{verbatim}
+    Symptom1 (Cough) ---> Diagnosis (Pneumonia)
+    Symptom2 (Fever) ---> Diagnosis 
+    RiskFactor (Age) ---> Diagnosis
+    \end{verbatim}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 2: Finance and Risk Management}
+    \begin{block}{Overview}
+    In finance, Bayesian networks help assess risks and improve investment strategies.
+    \end{block}
+
+    \begin{block}{Example}
+    A financial institution uses a Bayesian network to evaluate the risk of loan default. Key variables may include:
+    \begin{itemize}
+        \item Credit score
+        \item Income level
+        \item Employment status
+    \end{itemize}
+    \end{block}
+
+    \begin{block}{Benefits}
+    \begin{itemize}
+        \item Dynamic updating of risk assessments (e.g., changes in income)
+        \item Supports decision-making under uncertainty
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study 3: Environmental Science}
+    \begin{block}{Overview}
+    Bayesian networks provide insights into environmental systems and facilitate policy development.
+    \end{block}
+
+    \begin{block}{Example}
+    A study on the impact of climate change on biodiversity utilizes a Bayesian network to connect:
+    \begin{itemize}
+        \item Global temperature rise
+        \item Habitat loss
+        \item Species extinction rates
+    \end{itemize}
+    \end{block}
+
+    \begin{block}{Benefits}
+    \begin{itemize}
+        \item Illustrates complex interactions in ecological systems
+        \item Supports scenario analysis for environmental policies
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Points}
+    \begin{itemize}
+        \item \textbf{Integration of Information:} Synthesize data from multiple sources.
+        \item \textbf{Probabilistic Inference:} Systematic way to update beliefs with new evidence.
+        \item \textbf{Flexibility and Adaptation:} Useful across diverse fields such as healthcare, finance, and environmental science.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Case studies illustrate the effective applications of Bayesian networks, highlighting their versatility and critical role in scenarios where uncertainty is prevalent. 
+
+    As we proceed, we will explore the ethical implications of probabilistic reasoning, including concerns about bias and fairness in decision-making processes.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations in Probabilistic Reasoning}
+    \begin{block}{Introduction}
+        Probabilistic reasoning involves using models to infer the likelihood of events based on uncertainties. However, the application of these models raises critical ethical implications, particularly concerning \textbf{bias} and \textbf{fairness}.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    
+    \begin{enumerate}
+        \item \textbf{Bias in Probabilistic Models}
+        \begin{itemize}
+            \item \textbf{Definition:} Bias occurs when a model systematically favors certain outcomes over others due to flawed assumptions or data shortcomings.
+            \item \textbf{Sources of Bias:}
+            \begin{itemize}
+                \item \textbf{Data Bias:} Historical data reflecting societal inequalities can lead to biased predictions.
+                \item \textbf{Model Bias:} Model design may inherently privilege certain demographics or outcomes.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Fairness in Probabilistic Reasoning}
+        \begin{itemize}
+            \item \textbf{Definition:} Fairness ensures model outcomes do not favor or discriminate against any particular group.
+            \item \textbf{Types of Fairness:}
+            \begin{itemize}
+                \item \textbf{Individual Fairness:} Similar individuals should be treated similarly (e.g., equal chances of acceptance).
+                \item \textbf{Group Fairness:} Demographic groups should receive equal treatment (e.g., hiring algorithms).
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Implications}
+    
+    \begin{itemize}
+        \item \textbf{Decisions with Consequences:} Models that influence hiring, criminal justice, or lending can have lasting impacts on lives. Misguided models can perpetuate discrimination.
+        \item \textbf{Accountability:} Developers of probabilistic models must be responsible for their algorithmic effects. Ethical practices should be implemented throughout the model lifecycle.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples}
+    
+    \begin{itemize}
+        \item \textbf{Predictive Policing:} Algorithms predicting crime hotspots may unfairly target minority neighborhoods based on historical arrest data.
+        \item \textbf{Credit Scoring Models:} Models trained on data reflecting socioeconomic disparities may disadvantage marginalized communities.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    
+    \begin{itemize}
+        \item \textbf{Importance of Diverse Data:} Use diverse and representative data to minimize bias when training models.
+        \item \textbf{Regular Audits:} Conduct regular checks and audits to assess fairness and mitigate emerging biases.
+        \item \textbf{Involvement of Stakeholders:} Engage diverse stakeholders in the development process to incorporate various perspectives and ethical considerations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    
+    As we advance in applying probabilistic reasoning, it's essential to remain vigilant about ethical implications. Fairness and reducing bias are moral imperatives impacting society.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Future Directions - Key Points Recap}
+  \begin{enumerate}
+    \item \textbf{Understanding Probabilistic Reasoning}:
+      \begin{itemize}
+        \item A framework for modeling uncertainty and inferring conclusions based on data.
+        \item Involves concepts from probability theory to aid decision-making under uncertainty.
+      \end{itemize}
+      
+    \item \textbf{Bayesian Inference}:
+      \begin{itemize}
+        \item A cornerstone of probabilistic reasoning for updating hypothesis probabilities.
+        \item Formula:
+        \begin{equation}
+          P(H|E) = \frac{P(E|H) \cdot P(H)}{P(E)}
+        \end{equation}
+      \end{itemize}
+
+    \item \textbf{Applications}:
+      \begin{itemize}
+        \item Used in machine learning, medical diagnosis, financial forecasting, and natural language processing.
+      \end{itemize}
+
+    \item \textbf{Ethical Considerations}:
+      \begin{itemize}
+        \item Importance of addressing bias and fairness in probabilistic models.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Future Directions - Future Directions}
+  \begin{enumerate}
+    \item \textbf{Integration with Machine Learning}:
+      \begin{itemize}
+        \item Combining probabilistic reasoning with deep learning for enhanced interpretability.
+      \end{itemize}
+    
+    \item \textbf{More Robust Bayesian Methods}:
+      \begin{itemize}
+        \item Research focused on improving Bayesian inference for high-dimensional data.
+      \end{itemize}
+    
+    \item \textbf{Causal Inference}:
+      \begin{itemize}
+        \item Developing methods to predict correlations and understand causative factors.
+      \end{itemize}
+    
+    \item \textbf{Explainable AI (XAI)}:
+      \begin{itemize}
+        \item Focus on transparency and understanding of probabilistic model decisions.
+      \end{itemize}
+    
+    \item \textbf{Ethical AI Development}:
+      \begin{itemize}
+        \item Emphasis on ethical practices and fairness-aware algorithms in AI.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Future Directions - Summary and Questions}
+  \begin{block}{Conclusion}
+    Probabilistic reasoning is a fundamental aspect of statistics and artificial intelligence, providing essential tools for managing uncertainty. With ongoing advancements, the integration of machine learning, ethical frameworks, and explainability will pave the way for improved decision-making.
+  \end{block}
+  \begin{itemize}
+    \item How can we balance the use of powerful probabilistic models with ethical concerns?
+    \item In what areas of research do you think probabilistic reasoning will have the most significant impact in the next decade?
+  \end{itemize}
+\end{frame}
+
+
+\end{document}

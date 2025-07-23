@@ -1,0 +1,1284 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Apache Kafka]{Week 8: Working with Apache Kafka}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Apache Kafka - Overview}
+    \begin{block}{What is Apache Kafka?}
+        Apache Kafka is a distributed event streaming platform designed for high-throughput and low-latency data processing. It is used for building real-time data pipelines and streaming applications that reliably and durably manage large volumes of data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Apache Kafka - Purpose in Real-Time Data Ingestion}
+    \begin{block}{Real-Time Data Ingestion}
+        Kafka enables users to publish and consume streams of records in real-time, effectively acting as a buffer, storing incoming data records until they are consumed by various applications.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Producers:} Applications or systems that send data to Kafka topics.
+        \item \textbf{Consumers:} Applications that read data from Kafka topics.
+        \item \textbf{Topics:} Categories or feeds to which records are published; split into partitions for parallel processing.
+    \end{itemize}
+    
+    \begin{block}{Example Use Case}
+        An e-commerce website tracks user clicks on product listings, generating events that need real-time processing. Kafka enables quick pushing of click events for analytics and updates.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Apache Kafka - Importance in Big Data Architecture}
+    \begin{enumerate}
+        \item \textbf{Scalability:} Kafka scales horizontally by adding more brokers and can handle hundreds of thousands of messages per second.
+        \item \textbf{Fault Tolerance:} Data is replicated across multiple brokers, ensuring safety and availability during hardware failures.
+        \item \textbf{Durability:} Data is persisted to disk, allowing for historical data analysis with configurable retention periods.
+        \item \textbf{Integration:} Kafka integrates seamlessly with other big data technologies like Apache Spark and Hadoop.
+    \end{enumerate}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Event Streaming:} Designed for event streaming, crucial for real-time analytics.
+            \item \textbf{Decoupling Systems:} Enables a modular and maintainable architecture.
+            \item \textbf{Asynchronous Processing:} Improves system performance and responsiveness.
+        \end{itemize}
+    \end{block}
+    
+\end{frame}
+
+\begin{frame}[fragile]{Kafka Architecture - Overview}
+    \begin{block}{Overview of Kafka Architecture}
+        Apache Kafka is designed for high-throughput, fault-tolerant, and scalable message processing. Its architecture consists of key components that work together to facilitate the transmission of data streams.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Kafka Architecture - Key Components}
+    \begin{enumerate}
+        \item \textbf{Brokers}
+        \begin{itemize}
+            \item \textit{Definition}: A Kafka broker is a server that stores messages. Each Kafka cluster is made up of one or more brokers.
+            \item \textit{Functionality}: Brokers handle storage, retrieval of data, manage client requests, and ensure durability through replication.
+            \item \textit{Example}: In a cluster with three brokers, data is distributed among them to ensure load balancing and reduce data loss.
+        \end{itemize}
+
+        \item \textbf{Topics}
+        \begin{itemize}
+            \item \textit{Definition}: A topic is a category or feed name to which records are published, acting as message queues.
+            \item \textit{Partitioning}: Each topic can have multiple partitions to allow parallelism; each immutable sequence of messages is ordered.
+            \item \textit{Example}: A topic named "sensor_data" may have multiple partitions based on sensor types (e.g., temperature, humidity).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Kafka Architecture - Further Components}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Start enumeration from 3
+        \item \textbf{Partitions}
+        \begin{itemize}
+            \item \textit{Definition}: Partitions allow Kafka to scale horizontally. Each partition can reside on a different broker.
+            \item \textit{Data Handling}: Each message within a partition has an offset, uniquely identifying its publication order.
+            \item \textit{Example}: In the "sensor_data" topic with three partitions, messages can be handled concurrently.
+
+        \end{itemize}
+
+        \item \textbf{Producers}
+        \begin{itemize}
+            \item \textit{Definition}: Producers are client applications that publish messages to Kafka topics.
+            \item \textit{Role}: They send data to topics and can decide which partition within a topic to use.
+            \item \textit{Example}: An IoT device might send data to different partitions based on device ID or reading type.
+        \end{itemize}
+        
+        \item \textbf{Consumers}
+        \begin{itemize}
+            \item \textit{Definition}: Consumers are apps that subscribe to Kafka topics and process published messages.
+            \item \textit{Groups}: Consumers can be organized into groups to distribute the workload, ensuring each message is read only once.
+            \item \textit{Example}: Applications processing "sensor_data" can split the load by reading from different partitions simultaneously.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Kafka Architecture - Key Takeaways}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Scalability}: Kafka’s architecture supports horizontal scaling through brokers and partitions.
+            \item \textbf{Durability}: Data is replicated across brokers for fault tolerance and high availability.
+            \item \textbf{High Throughput}: The partitioning model allows Kafka to handle massive amounts of data with low latency.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Diagram Suggestion}
+        Consider creating a visual model showing:
+        \begin{itemize}
+            \item Producers sending messages to topics
+            \item Topics divided into partitions
+            \item Brokers managing partitions
+            \item Consumers reading messages from partitions
+        \end{itemize}
+        Label key terms for clarity.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Kafka - Introduction}
+    Apache Kafka is a distributed streaming platform that enables the handling of real-time data feeds. Its architecture revolves around three core components: 
+    \begin{itemize}
+        \item Producers
+        \item Consumers
+        \item Brokers
+    \end{itemize}
+    Understanding these components is crucial for building efficient and scalable data pipelines.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Kafka - 1. Producers}
+    \textbf{Definition:} Producers are applications that send (or produce) data to Kafka topics.
+
+    \textbf{Key Functions:}
+    \begin{itemize}
+        \item \textbf{Data Generation:} Collect and send real-time data from various sources (e.g., sensors, logs).
+        \item \textbf{Topic Publication:} Choose the appropriate topic to send data based on application design.
+    \end{itemize}
+
+    \textbf{Example:} In an e-commerce application, a producer generates a message when a customer completes a purchase and sends it to the "transactions" topic.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Kafka - 2. Consumers}
+    \textbf{Definition:} Consumers are applications that subscribe to topics and read (or consume) data from them.
+
+    \textbf{Key Functions:}
+    \begin{itemize}
+        \item \textbf{Data Retrieval:} Read data from one or more topics at their own pace.
+        \item \textbf{Group Consumption:} Organize into consumer groups for parallel message processing.
+    \end{itemize}
+
+    \textbf{Example:} A consumer could subscribe to the "transactions" topic and process purchase information to update inventory.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Kafka - 3. Brokers}
+    \textbf{Definition:} Brokers are Kafka servers responsible for storing data and serving client requests.
+
+    \textbf{Key Functions:}
+    \begin{itemize}
+        \item \textbf{Message Storage:} Maintain durability and availability of messages through replication.
+        \item \textbf{Load Balancing:} Handle request distribution among multiple producers and consumers.
+    \end{itemize}
+
+    \textbf{Example:} A producer sends a purchase message to a broker, which stores the message in the "transactions" topic.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Kafka - Summary}
+    \begin{itemize}
+        \item \textbf{Producers:} Generate and send messages to Kafka topics.
+        \item \textbf{Consumers:} Subscribe to topics and read messages produced.
+        \item \textbf{Brokers:} Store messages and manage data distribution.
+    \end{itemize}
+
+    \textbf{Key Points to Remember:}
+    \begin{itemize}
+        \item Kafka enables decoupled data flow between producers and consumers.
+        \item Scalability is straightforward with the distributed nature of brokers.
+        \item Reliability and fault tolerance are achieved through message replication.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Kafka - Example Code Snippet}
+    This simple producer code snippet demonstrates how to send a message to a Kafka topic using Python:
+
+    \begin{lstlisting}[language=Python]
+from kafka import KafkaProducer
+
+producer = KafkaProducer(bootstrap_servers='localhost:9092')
+producer.send('transactions', b'User 123 purchased item ABC')
+producer.flush()
+    \end{lstlisting}
+    
+    By understanding the roles of Producers, Consumers, and Brokers, you will lay the groundwork for effective utilization of Kafka.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Topics and Partitions - Overview}
+    \begin{block}{Understanding Topics and Partitions in Apache Kafka}
+        - **Kafka Topics:** A category or feed name where records are published.
+        - **Partitions:** Ordered, immutable sequences within topics that support parallel processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Topics - Detailed Explanation}
+    \begin{itemize}
+        \item A \textbf{topic} is a category or feed name to which records are published. 
+        \item Topics are multi-subscriber, allowing multiple producers to write and multiple consumers to read from the same topic.
+    \end{itemize}
+    
+    \begin{block}{Example}
+        Suppose we have a topic called \texttt{Orders}. All order-related data (new orders, updates, etc.) will be published to this topic.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Partitions - Detailed Explanation}
+    \begin{itemize}
+        \item Each topic can be divided into \textbf{partitions}.
+        \item Partitions enable parallel processing and help scale Kafka horizontally.
+    \end{itemize}
+    
+    \begin{block}{Key Characteristics}
+        \begin{itemize}
+            \item \textbf{Order and Indexing:} Each record in a partition has a unique sequential ID called \texttt{offset}.
+            \item \textbf{Load Balancing:} Data across multiple partitions allows load balancing among consumers.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example}
+        If the \texttt{Orders} topic has 3 partitions (P0, P1, P2), records might be distributed as:
+        \begin{itemize}
+            \item P0: Order \#1, Order \#4, Order \#7
+            \item P1: Order \#2, Order \#5, Order \#8
+            \item P2: Order \#3, Order \#6, Order \#9
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Benefits of Topics and Partitions}
+    \begin{itemize}
+        \item \textbf{Scalability:} More partitions enable handling higher throughput with multiple consumers.
+        \item \textbf{Fault Tolerance:} Partitions can be replicated across brokers ensuring data durability.
+        \item \textbf{Data Flow Management:} Topics and partitions isolate data streams based on different use-cases.
+    \end{itemize}
+    
+    \begin{block}{Key Points}
+        - Each topic can be configured with a different number of partitions.
+        - Consider \textbf{hashing} or \textbf{round-robin} methods for effective partitioning.
+        - Understanding partitions is crucial for efficient Kafka application design.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Producers in Kafka - Overview}
+    \begin{block}{Key Concepts}
+        \begin{enumerate}
+            \item \textbf{Role of Producers:} Applications that publish data to Kafka topics, acting as the entry point of data into the Kafka ecosystem.
+            \item \textbf{Publishing Methods:} 
+                \begin{itemize}
+                    \item Synchronous vs Asynchronous Publishing
+                    \item Batch vs Single Message
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Producers in Kafka - Publishing Methods}
+    \begin{block}{Publishing Methods}
+        \begin{itemize}
+            \item \textbf{Synchronous Publishing:} Requires acknowledgment from Kafka, ensuring data integrity but may add latency.
+            \item \textbf{Asynchronous Publishing:} Sends messages without waiting for acknowledgment, faster but requires handling retries.
+            \item \textbf{Batch Sending:} Multiple messages sent in a single request for efficiency.
+            \item \textbf{Single Message:} Sending one message at a time, useful for immediate data flow.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Producers in Kafka - Data Integrity}
+    \begin{block}{Data Integrity Mechanisms}
+        \begin{enumerate}
+            \item \textbf{Acknowledgements via acks parameter:}
+                \begin{itemize}
+                    \item acks=0: No acknowledgment required.
+                    \item acks=1: Leader broker acknowledgment.
+                    \item acks=all: All replicas acknowledge (highest integrity).
+                \end{itemize}
+            \item \textbf{Message Keys:} Assigning keys ensures related messages are sent to the same partition, maintaining order.
+            \item \textbf{Retries and Idempotence:}
+                \begin{itemize}
+                    \item Retries: Automatic retries on failure.
+                    \item Idempotence: Prevents duplicate entries on retries.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Producers in Kafka - Example Code}
+    \begin{block}{Example Code Snippet}
+        \begin{lstlisting}[language=java]
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import java.util.Properties;
+
+public class ProducerExample {
+    public static void main(String[] args) {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", "localhost:9092");
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("acks", "all"); // Ensure all replicas acknowledge
+
+        Producer<String, String> producer = new KafkaProducer<>(props);
+        
+        // Sending a single message
+        producer.send(new ProducerRecord<>("topic-name", "key", "Hello, Kafka!"));
+
+        // Closing the producer
+        producer.close();
+    }
+}
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Consumers in Kafka - Overview}
+    \begin{itemize}
+        \item \textbf{Definition:} 
+        In Kafka, a consumer is an application or service that subscribes to one or more Kafka topics and processes the feed of published messages.
+        
+        \item \textbf{Primary Role:}
+        The main job of a consumer is to read records from Kafka topics, process them, and, if necessary, perform some actions based on that data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Consumers in Kafka - Consumer Groups}
+    \begin{itemize}
+        \item \textbf{Concept:}
+        A collection of consumers that work together to read data from Kafka topics as a single entity. Each consumer within the group consumes messages from the topic partitions in a balanced manner.
+        
+        \item \textbf{Key Benefits:}
+        \begin{itemize}
+            \item \textbf{Scalability:} Allows multiple consumers to share the workload and process data in parallel.
+            \item \textbf{Fault Tolerance:} If one consumer fails, the remaining consumers in the group can take over its responsibilities.
+        \end{itemize}
+        
+        \item \textbf{Example:} 
+        If you have a topic with 4 partitions and a consumer group with 2 consumers, each consumer will read from 2 partitions. If one consumer goes down, the remaining consumer will take over the partitions of the failed consumer.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Consumers in Kafka - Subscribing to Topics}
+    \begin{itemize}
+        \item \textbf{How Consumers Subscribe:}
+        Consumers utilize the Kafka Consumer API to define what topics they want to subscribe to and specify configurations like auto-offset reset strategies.
+        
+        \item \textbf{Subscription Models:}
+        \begin{itemize}
+            \item \textbf{Simple Subscription:} A consumer can subscribe to a single topic or multiple topics through the \texttt{subscribe()} method.
+            \begin{lstlisting}[language=Java]
+KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+consumer.subscribe(Arrays.asList("topic1", "topic2"));
+            \end{lstlisting}
+            
+            \item \textbf{Pattern-based Subscription:} Consumers can also use regex patterns to subscribe to a set of topics that match the pattern.
+            \begin{lstlisting}[language=Java]
+consumer.subscribe(Pattern.compile("topic.*"));
+            \end{lstlisting}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Consumers in Kafka - Key Points and Illustration}
+    \begin{itemize}
+        \item \textbf{Message Offset:}
+        Kafka keeps track of the offset (position) of messages that have been consumed, enabling consumers to resume reading from where they left off in case of restarts or failures.
+        
+        \item \textbf{Commit Strategies:}
+        Consumers can either:
+        \begin{itemize}
+            \item Commit offsets manually or 
+            \item Automatically. Automatic commits can lead to lost data if processing fails, while manual commits ensure data processing is confirmed before moving on.
+        \end{itemize}
+        
+        \item \textbf{Consumer Lag:}
+        This is the difference between the latest message produced in a topic and the last message that a consumer has processed. Monitoring consumer lag is crucial for performance tuning.
+        
+        \item \textbf{Illustration:}
+        Consider a diagram that depicts:
+        \begin{itemize}
+            \item A Kafka broker with several topics, each having multiple partitions.
+            \item A consumer group with several consumers binding to those topics, illustrating the load balancing mechanism among the consumers.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Flow in Kafka - Overview}
+    \begin{block}{Overview of Data Flow in Kafka}
+        Apache Kafka is a distributed event streaming platform used for building real-time data pipelines and streaming applications. The data flow in Kafka involves three components:
+    \end{block}
+    \begin{itemize}
+        \item Producers: Publish data to Kafka topics.
+        \item Topics: Named feeds that store records; partitioned for scalability.
+        \item Consumers: Subscribe to topics and process the data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Flow in Kafka - Key Components}
+    \begin{enumerate}
+        \item \textbf{Producers}:
+            \begin{itemize}
+                \item Applications that send data to Kafka topics from various sources.
+                \item Example: An e-commerce app sending transaction data.
+            \end{itemize}
+        \item \textbf{Topics}:
+            \begin{itemize}
+                \item Named feeds where records are published.
+                \item Scalable via partitioning, allowing multiple consumers.
+            \end{itemize}
+        \item \textbf{Consumers}:
+            \begin{itemize}
+                \item Applications that read and process messages from topics.
+                \item Example: A fraud detection service analyzing transactions.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Flow in Kafka - Process Visualization}
+    \begin{block}{Data Flow Process}
+        \textbf{Step 1: Data Production by Producers}
+        \begin{itemize}
+            \item Producers create messages (payloads) which include keys and values.
+            \item Example: Transactions sent to the "transactions" topic.
+        \end{itemize}
+        
+        \textbf{Step 2: Messages Sent to Topics}
+        \begin{itemize}
+            \item Messages are pushed to designated topics.
+            \item Visualization:
+            \end{itemize}
+            \begin{lstlisting}
+[Producer] ---> [transactions topic (Partition 0, Partition 1)]
+            \end{lstlisting}
+        
+        \textbf{Step 3: Consumption by Consumers}
+        \begin{itemize}
+            \item Consumers read messages from subscribed topics.
+            \item Visualization:
+            \end{itemize}
+            \begin{lstlisting}
+[transactions topic] ---> [Consumer Group 1] ---> [Consumer A]
+                                [Consumer B]
+            \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Kafka Use Cases}
+    % Overview of the presentation content
+    \begin{block}{Introduction}
+        Apache Kafka is a distributed streaming platform used for real-time data pipelines and streaming applications. This presentation covers three primary use cases: 
+        \begin{itemize}
+            \item Stream Processing
+            \item Event Sourcing
+            \item Data Pipeline Integration
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Kafka Use Cases - Stream Processing}
+    % Discussion of Stream Processing
+    \begin{block}{Definition}
+        Stream Processing refers to the continuous input, processing, and output of data streams in real-time.
+    \end{block}
+    
+    \begin{block}{How Kafka Helps}
+        \begin{itemize}
+            \item Enables real-time processing of data streams.
+            \item Kafka Streams API allows filtering, aggregating, and transforming data.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example}
+        In a financial trading application, Kafka processes tick data (real-time price changes) to execute trades within milliseconds.
+    \end{block}
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Low latency and high throughput are crucial.
+            \item Real-time analytics support quick decision-making.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Kafka Use Cases - Event Sourcing \& Data Pipeline Integration}
+    % Discussion of Event Sourcing and Data Pipeline Integration
+    \begin{block}{Event Sourcing}
+        \begin{itemize}
+            \item **Definition**: Capturing state changes as a sequence of events.
+            \item **How Kafka Helps**: Retains all events for state reconstruction and auditing.
+            \item **Example**: Logging customer actions in an e-commerce platform to reconstruct activities.
+            \item **Key Points**: Enhances data integrity and provides a historical record of changes.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Data Pipeline Integration}
+        \begin{itemize}
+            \item **Definition**: Connecting systems for seamless data movement.
+            \item **How Kafka Helps**: Acts as a hub for collecting and distributing data across systems.
+            \item **Example**: A retail company integrates customer data from various sources into a centralized data warehouse.
+            \item **Key Points**: Guarantees message delivery and ensures data consistency across systems.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Kafka Use Cases - Conclusion \& Resources}
+    % Conclusion and additional resources
+    \begin{block}{Conclusion}
+        Apache Kafka is a versatile tool that effectively addresses diverse use cases, improving data processing workflows and decision-making.
+    \end{block}
+    
+    \begin{block}{Additional Resources}
+        \begin{itemize}
+            \item Kafka Streams Documentation
+            \item Event Sourcing Patterns
+            \item Data Pipeline Architectures
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Integration with Big Data Tools}
+    \begin{block}{Overview of Kafka Integration}
+        Apache Kafka is a distributed event streaming platform that integrates seamlessly with big data processing frameworks for real-time data processing. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Frameworks}
+    \begin{enumerate}
+        \item \textbf{Apache Spark}
+        \begin{itemize}
+            \item Unified analytics engine for large-scale processing.
+            \item Integrates by serving Kafka as a streaming data source.
+            \item \textit{Example:} Retail companies use it to analyze real-time transactions for fraud detection.
+        \end{itemize}
+        \item \textbf{Apache Hadoop}
+        \begin{itemize}
+            \item A framework for distributed processing of large data sets.
+            \item Kafka acts as a message queue for Hadoop's ecosystem, allowing consumption of messages for batch processing.
+            \item \textit{Example:} A social media platform processes user activities stored in Kafka to gain insights.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Benefits of Kafka Integration}
+    \begin{itemize}
+        \item \textbf{Real-time Processing:} Immediate data processing and event reactions.
+        \item \textbf{Scalability:} Both Kafka and big data frameworks can scale horizontally.
+        \item \textbf{Decoupled Architecture:} Independent producers and consumers for flexible deployments.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        Integrating Apache Kafka with tools like Apache Spark and Hadoop allows organizations to handle, process, and analyze data in real-time, driving insights and innovation.
+    \end{block}
+    
+    \begin{lstlisting}[language=python]
+from pyspark.sql import SparkSession
+
+# Initialize Spark session
+spark = SparkSession.builder \
+    .appName("KafkaIntegrationExample") \
+    .getOrCreate()
+
+# Read from Kafka
+df = spark.readStream \
+    .format("kafka") \
+    .option("kafka.bootstrap.servers", "localhost:9092") \
+    .option("subscribe", "my-topic") \
+    .load()
+
+# Process data
+processed_df = df.selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
+
+# Write to console
+query = processed_df.writeStream \
+    .outputMode("append") \
+    .format("console") \
+    .start()
+
+# Await termination
+query.awaitTermination()
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Building Real-Time Applications with Apache Kafka}
+    \begin{block}{Introduction}
+        Apache Kafka is a powerful distributed streaming platform enabling real-time applications through high-throughput, fault-tolerant data ingestion and processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Steps to Build Real-Time Applications}
+    \begin{enumerate}
+        \item \textbf{Define Your Use Case}
+            \begin{itemize}
+                \item Identify the real-time problem (e.g., fraud detection, live analytics).
+                \item Example: Analyze purchase transactions in real time to detect shopping patterns.
+            \end{itemize}
+        
+        \item \textbf{Set Up Kafka Environment}
+            \begin{itemize}
+                \item Install Kafka on a server or use a managed service.
+                \item Basic components:
+                    \begin{itemize}
+                        \item \textbf{Kafka Broker(s)}: Manages messaging.
+                        \item \textbf{Zookeeper}: Manages the distributed system.
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Producing and Consuming Messages}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Produce Messages}
+            \begin{lstlisting}[language=Python]
+from kafka import KafkaProducer
+import json
+
+producer = KafkaProducer(bootstrap_servers='localhost:9092')
+transaction_data = {'user_id': 123, 'amount': 29.99}
+producer.send('transactions', json.dumps(transaction_data).encode('utf-8'))
+            \end{lstlisting}
+
+        \item \textbf{Consume Messages}
+            \begin{lstlisting}[language=Java]
+Properties props = new Properties();
+props.put("bootstrap.servers", "localhost:9092");
+props.put("group.id", "my-group");
+props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+
+KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+consumer.subscribe(Arrays.asList("transactions"));
+
+while (true) {
+    ConsumerRecords<String, String> records = consumer.poll(100);
+    for (ConsumerRecord<String, String> record : records) {
+        System.out.printf("Received transaction: %s\n", record.value());
+    }
+}
+            \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Processing and Outputting Data}
+    \begin{enumerate}
+        \setcounter{enumi}{5}
+        \item \textbf{Process Data in Real Time}
+            \begin{itemize}
+                \item Utilize frameworks such as Apache Kafka Streams or Apache Flink for on-the-fly processing.
+            \end{itemize}
+
+        \item \textbf{Output Processed Data}
+            \begin{itemize}
+                \item Send results to Kafka topics or external systems (e.g., databases, dashboards).
+                \item Example: Use Kafka's Connect API to integrate with PostgreSQL or Elasticsearch.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item \textbf{Fault Tolerance}: Data safety through replication for mission-critical applications.
+        \item \textbf{Scalability}: Distributed architecture allows for seamless scaling.
+        \item \textbf{Latency and Throughput}: Low latency requires careful design of the Kafka ecosystem.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        Building real-time applications with Apache Kafka involves setting up the environment, defining use cases, producing and consuming messages, and processing data effectively.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Kafka Implementation}
+    \begin{block}{Overview}
+        Apache Kafka is a powerful platform for building real-time data pipelines and streaming applications. However, implementing Kafka successfully can present several challenges. Understanding these obstacles and learning strategies to overcome them can greatly enhance your Kafka implementation efforts.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Challenges - Part 1}
+    \begin{enumerate}
+        \item \textbf{Complex Setup and Configuration}
+        \begin{itemize}
+            \item \textbf{Explanation:} Requires a robust configuration for brokers, topics, and partitions for optimal performance.
+            \item \textbf{Example:} Configuring replication factors and in-sync replicas (ISR) to maintain data availability and durability.
+            \item \textbf{Strategy:} Utilize tools like Kafka Manager or Confluent Control Center for simplified configuration.
+        \end{itemize}
+
+        \item \textbf{Data Consistency and Ordering}
+        \begin{itemize}
+            \item \textbf{Explanation:} Ensuring data consistency and the correct order of messages can be complex with multiple producers and consumers.
+            \item \textbf{Example:} Messages sent to multiple partitions may lose ordering.
+            \item \textbf{Strategy:} Use partition keys to direct related messages to the same partition.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Challenges - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Scalability Issues}
+        \begin{itemize}
+            \item \textbf{Explanation:} Improper partitioning can lead to bottlenecks or uneven load distribution despite horizontal scaling.
+            \item \textbf{Example:} Adding more brokers without balancing partitions can overwhelm one broker.
+            \item \textbf{Strategy:} Monitor load regularly and redistribute partitions using Kafka's tools.
+        \end{itemize}
+
+        \item \textbf{Monitoring and Maintenance}
+        \begin{itemize}
+            \item \textbf{Explanation:} Ongoing monitoring is required but can be resource-intensive.
+            \item \textbf{Example:} Not monitoring consumer lag may cause consumers to struggle with incoming messages.
+            \item \textbf{Strategy:} Implement solutions like Prometheus and Grafana for monitoring.
+        \end{itemize}
+
+        \item \textbf{Client Library and Compatibility Issues}
+        \begin{itemize}
+            \item \textbf{Explanation:} Version mismatches can affect communication between producers and consumers.
+            \item \textbf{Example:} An outdated client library may lack features from newer versions.
+            \item \textbf{Strategy:} Regularly update client libraries and test compatibility before deployment.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Planning and Configuration:} Proper planning of Kafka architecture is crucial.
+            \item \textbf{Monitoring is Essential:} Continuous monitoring helps catch issues early.
+            \item \textbf{Scaling Strategies:} Efficient scaling will mitigate performance problems as data loads increase.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        While implementing Kafka can be challenging, understanding common issues and employing strategies can help build resilient streaming applications harnessing real-time data processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Configuration Snippet}
+    \begin{lstlisting}[language=properties]
+# Example Kafka broker configuration
+broker.id=0
+listeners=PLAINTEXT://:9092
+log.dirs=/var/lib/kafka/logs
+num.partitions=3
+default.replication.factor=2
+min.insync.replicas=2
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Diagram: Kafka Architecture Overview}
+    % Placeholder for Diagram
+    \includegraphics[width=\linewidth]{kafka_architecture_diagram.png} % Ensure you have the diagram image in your project directory.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Monitoring and Management - Introduction}
+  \begin{block}{Importance of Monitoring}
+    Monitoring is crucial in maintaining the health and performance of Apache Kafka clusters. Proper monitoring can:
+    \begin{itemize}
+      \item Detect issues before they escalate
+      \item Optimize performance
+      \item Ensure high availability of services
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Monitoring and Management - Key Metrics}
+  \begin{block}{Key Metrics to Monitor}
+    \begin{enumerate}
+      \item \textbf{Broker Metrics:}
+        \begin{itemize}
+          \item \textit{Under-Replicated Partitions} - Keep this number at zero to ensure full replication.
+          \item \textit{Offline Partitions} - Monitor and address any partitions that are not available.
+        \end{itemize}
+      
+      \item \textbf{Producer Metrics:}
+        \begin{itemize}
+          \item \textit{Request Latency} - High latency indicates potential bottlenecks.
+          \item \textit{Error Rate} - Should ideally be close to zero.
+        \end{itemize}
+      
+      \item \textbf{Consumer Metrics:}
+        \begin{itemize}
+          \item \textit{Lag} - High lag signifies that consumers are falling behind.
+          \item \textit{Consumption Rate} - A decreasing rate requires investigation.
+        \end{itemize}
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Monitoring and Management - Tools and Techniques}
+  \begin{block}{Monitoring Tools}
+    \begin{itemize}
+      \item \textbf{Apache Kafka's JMX (Java Management Extensions)}
+        \begin{itemize}
+          \item Exposes Kafka metrics usable with Prometheus or Grafana.
+          \item Example command to enable JMX:
+          \begin{lstlisting}
+KAFKA_JMX_OPTS="-Dcom.sun.management.jmxremote 
+-Dcom.sun.management.jmxremote.port=9999
+-Dcom.sun.management.jmxremote.authenticate=false
+-Dcom.sun.management.jmxremote.ssl=false"
+          \end{lstlisting}
+        \end{itemize}
+
+      \item \textbf{Confluent Control Center}
+        \begin{itemize}
+          \item A graphical tool for real-time monitoring of Kafka clusters.
+        \end{itemize}
+      
+      \item \textbf{Open Source Tools}
+        \begin{itemize}
+          \item \textit{Kafka Manager} - Web-based solution for cluster management.
+          \item \textit{Burrow} - Monitors consumer group status and lag.
+        \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hands-On Lab: Kafka Setup}
+    \begin{block}{Introduction}
+        In this hands-on lab session, we will walk through the setup of an Apache Kafka environment. 
+        You will learn how to install Kafka, configure it, and perform basic operations such as creating topics, producing messages, and consuming messages. 
+        This hands-on experience will provide you with a foundational understanding of working with Kafka in a practical way.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Lab Objectives}
+    \begin{itemize}
+        \item \textbf{Install Kafka:} Understand the installation requirements and steps to set up Kafka on your local machine or a server.
+        \item \textbf{Configure Kafka:} Explore the configuration files to adjust settings according to your needs.
+        \item \textbf{Create Topics:} Learn how to create topics for organizing your data streams.
+        \item \textbf{Produce and Consume Messages:} Familiarize yourself with writing data to Kafka and reading data from it.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Setup Steps}
+    \begin{enumerate}
+        \item \textbf{Installation Requirements:}
+        \begin{itemize}
+            \item Java 8 or higher.
+            \item Apache Kafka binaries (download from the \url{https://kafka.apache.org/downloads}).
+        \end{itemize}
+
+        \item \textbf{Installation Process:}
+        \begin{lstlisting}
+tar -xzf kafka_2.12-2.8.0.tgz
+cd kafka_2.12-2.8.0
+        \end{lstlisting}
+
+        \item \textbf{Start Zookeeper:}
+        \begin{lstlisting}
+bin/zookeeper-server-start.sh config/zookeeper.properties
+        \end{lstlisting}
+
+        \item \textbf{Start Kafka Server:}
+        \begin{lstlisting}
+bin/kafka-server-start.sh config/server.properties
+        \end{lstlisting}
+
+        \item \textbf{Create a Topic:}
+        \begin{lstlisting}
+bin/kafka-topics.sh --create --topic test-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+        \end{lstlisting}
+
+        \item \textbf{Produce Messages:}
+        \begin{lstlisting}
+bin/kafka-console-producer.sh --topic test-topic --bootstrap-server localhost:9092
+        \end{lstlisting}
+        Type messages in the console, pressing Enter after each.
+
+        \item \textbf{Consume Messages:}
+        \begin{lstlisting}
+bin/kafka-console-consumer.sh --topic test-topic --from-beginning --bootstrap-server localhost:9092
+        \end{lstlisting}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Apache Kafka requires Zookeeper to manage the cluster and maintain metadata.
+        \item Topics are the fundamental abstraction in Kafka for organizing data streams.
+        \item Use the command-line tools provided by Kafka for interaction until you are comfortable with programming against the Kafka API.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Commands}
+    To reinforce your understanding, here’s a summary of the commands we'll be using:
+    \begin{lstlisting}
+# Start Zookeeper
+bin/zookeeper-server-start.sh config/zookeeper.properties
+
+# Start Kafka Broker
+bin/kafka-server-start.sh config/server.properties
+
+# Create a Topic
+bin/kafka-topics.sh --create --topic test-topic --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+# Produce Messages
+bin/kafka-console-producer.sh --topic test-topic --bootstrap-server localhost:9092
+
+# Consume Messages
+bin/kafka-console-consumer.sh --topic test-topic --from-beginning --bootstrap-server localhost:9092
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    By the end of this lab, you will have a hands-on understanding of how to set up a Kafka environment and execute basic operations, paving the way for more advanced topics and applications in future sessions.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Case Study: Kafka in Action}
+  This case study illustrates Kafka's impact on optimizing data processing in a major online retail company, focusing on real-time data analysis and improved operations.
+\end{frame}
+
+\begin{frame}
+  \frametitle{Overview of Kafka in Real-World Applications}
+  \begin{itemize}
+    \item Apache Kafka handles high-throughput data streams in real-time.
+    \item The case study showcases how a major online retail company leverages Kafka.
+    \item Focus areas:
+    \begin{itemize}
+      \item Customer engagement
+      \item Streamlined operations
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Retail Challenge}
+  The retail industry faces challenges in data processing from:
+  \begin{itemize}
+    \item Customer transactions
+    \item Website interactions
+    \item Inventory changes
+  \end{itemize}
+  
+  Before implementing Kafka:
+  \begin{itemize}
+    \item Delayed data analysis
+    \item Siloed systems causing inconsistent insights
+    \item Inability to respond to customer behavior in real-time
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Kafka Implementation}
+  How the retail company integrated Kafka:
+  
+  \begin{enumerate}
+    \item \textbf{Data Ingestion}
+      \begin{itemize}
+        \item Kafka Producers collect data from various sources.
+        \item Messages sent to topics: \texttt{customer-transactions}, \texttt{website-clicks}, \texttt{inventory-updates}.
+      \end{itemize}
+    \item \textbf{Stream Processing}
+      \begin{itemize}
+        \item Kafka Streams API enables real-time processing.
+        \item Example: Analyzing customer shopping patterns.
+      \end{itemize}
+    \item \textbf{Data Storage}
+      \begin{itemize}
+        \item Kafka buffers data before processing or storage.
+        \item Kafka Connect interfaces with data warehouses for reporting.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Outcomes}
+  Key outcomes from adopting Kafka:
+  
+  \begin{itemize}
+    \item \textbf{Real-Time Analytics:} Immediate insights into customer behaviors.
+    \item \textbf{Increased Efficiency:} Faster responses to customer needs.
+    \item \textbf{Scalability:} Seamless scaling as data volume increases.
+  \end{itemize}
+  
+  Emphasize:
+  \begin{itemize}
+    \item Real-time streaming of live data
+    \item Data decoupling for independent system functioning
+    \item Scalability and fault tolerance
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example Code Snippet for Kafka Producer}
+  \begin{lstlisting}[language=Java]
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
+
+import java.util.Properties;
+
+public class SimpleProducer {
+   public static void main(String[] args) {
+       Properties props = new Properties();
+       props.put("bootstrap.servers", "localhost:9092");
+       props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+       props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+       KafkaProducer<String, String> producer = new KafkaProducer<>(props);
+       ProducerRecord<String, String> record = new ProducerRecord<>("customer-transactions", "key1", "Purchase info");
+
+       producer.send(record, (RecordMetadata metadata, Exception e) -> {
+           if (e != null) {
+               e.printStackTrace();
+           }
+       });
+       producer.close();
+   }
+}
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  This case study demonstrates how Apache Kafka transforms business data handling, leading to:
+  \begin{itemize}
+    \item Enhanced customer experiences
+    \item Improved operational efficiency
+  \end{itemize}
+  
+  As companies adopt real-time data processing systems, Kafka is pivotal in this evolution.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways - Overview of Kafka}
+    \begin{block}{What is Apache Kafka?}
+        \begin{itemize}
+            \item \textbf{Definition:} A distributed event streaming platform capable of handling trillions of events a day.
+            \item \textbf{Core Components:}
+            \begin{itemize}
+                \item \textbf{Producers:} Applications or services that publish messages to Kafka topics.
+                \item \textbf{Consumers:} Applications that subscribe to topics and process the published messages.
+                \item \textbf{Kafka Brokers:} Servers that store and manage the messages in the topics, ensuring durability and availability.
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways - Kafka's Role}
+    \begin{block}{Kafka's Role in Data Processing}
+        \begin{itemize}
+            \item \textbf{Real-Time Data Handling:} Allows for real-time analytics and processing, crucial for applications needing immediate insights.
+            \item \textbf{Decoupling of Systems:} Enables independent operation of services via its publish-subscribe model, enhancing flexibility and scalability.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways - Key Features and Use Cases}
+    \begin{block}{Key Features of Apache Kafka}
+        \begin{itemize}
+            \item \textbf{Scalability:} Kafka can be scaled horizontally by adding more brokers to handle increasing data loads efficiently.
+            \item \textbf{Fault Tolerance:} Data is replicated across multiple brokers to ensure no message loss during failures.
+            \item \textbf{High Throughput:} Capable of processing millions of messages per second for high-performance applications.
+            \item \textbf{Retention Policies:} Developers can specify message retention duration for both real-time consumption and historical analysis.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Use Cases of Kafka}
+        \begin{itemize}
+            \item \textbf{Log Aggregation:} Centralizes log data from multiple services for analysis.
+            \item \textbf{Stream Processing:} Integrates with frameworks like Apache Flink and Spark for real-time computations.
+            \item \textbf{Event Sourcing:} Facilitates rebuilding application state from a log of events for complex applications.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Next Steps in Learning - Overview}
+  As we conclude our basic exploration of Apache Kafka, it's important to delve deeper into its advanced features and real-world applications. This section provides guidance for your ongoing learning journey.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Advanced Kafka Concepts}
+  \begin{itemize}
+    \item \textbf{Kafka Streams:} A library for processing records in real time, allowing easy transformation and enrichment of streaming data.
+    
+    \begin{block}{Example:}
+    \begin{lstlisting}[language=Java]
+    KStream<String, String> textLines = builder.stream("TextLinesTopic");
+    KTable<String, Long> wordCounts = textLines
+        .flatMapValues(value -> Arrays.asList(value.toLowerCase().split("\\W+")))
+        .groupBy((key, word) -> word)
+        .count();
+    \end{lstlisting}
+    \end{block}
+    
+    \item \textbf{Kafka Connect:} A tool for scalable streaming data between Kafka and other data systems, including databases and file systems.
+    
+    \item \textbf{Log Compaction:} Ensures no critical information is lost by keeping only the latest version of records with the same key.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Further Reading and Resources}
+  \begin{enumerate}
+    \item \textbf{Books:}
+      \begin{itemize}
+        \item *Kafka: The Definitive Guide* by Neha Narkhede, Gwen Shapira, and Todd Palino
+        \item *Processing and Managing Complex Data for Decision Making*
+      \end{itemize}
+      
+    \item \textbf{Online Courses:}
+      \begin{itemize}
+        \item \textit{Confluent Academy}: Offers interactive courses on Kafka fundamentals and advanced topics.
+        \item Udemy and Coursera: Look for courses focused on real-time data processing with Kafka.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points to Emphasize}
+  \begin{itemize}
+    \item \textbf{Community Involvement:} Engage with the Kafka community for ongoing support and best practices.
+   
+    \item \textbf{Hands-On Practice:} Set up a test environment for experiments with Kafka producers and consumers.
+    
+    \item \textbf{Stay Updated:} Regularly check the \textit{Apache Kafka documentation} for the latest updates and new features.
+  \end{itemize}
+\end{frame}
+
+
+\end{document}

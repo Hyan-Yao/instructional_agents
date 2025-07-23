@@ -1,0 +1,1058 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \title{Introduction to Logistic Regression}
+    \author{Your Name}
+    \date{\today}
+    \maketitle
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Logistic Regression}
+    Logistic regression is a statistical method used for binary classification tasks in data mining. It predicts the probability that a given input belongs to a particular category.
+    
+    \begin{itemize}
+        \item Efficient for binary outcomes (0 or 1).
+        \item Different from linear regression which predicts continuous outcomes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance in Classification}
+    \begin{itemize}
+        \item \textbf{Predictive Modeling:} A simple yet powerful method for evaluating event likelihood.
+        \item \textbf{Probabilistic Interpretation:} Outputs range from 0 to 1, helping users gauge prediction confidence.
+        \item \textbf{Applications:} 
+        \begin{itemize}
+            \item Healthcare: Predicting disease presence.
+            \item Finance: Estimating loan default risks.
+            \item Marketing: Identifying potential customers.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Logistic Regression Works}
+    \begin{enumerate}
+        \item \textbf{Logit Function:} Uses the logistic function to transform the linear combination of inputs into a probability:
+        \begin{equation}
+            P(Y=1|X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_nX_n)}}
+        \end{equation}
+        
+        \item \textbf{Decision Boundary:} Converts probability to binary outcome using a threshold (e.g., 0.5), where:
+        \begin{itemize}
+            \item If \( P > 0.5 \): Predict class 1
+            \item Otherwise: Predict class 0
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Scenario}
+    Predicting whether a student will pass an exam based on:
+    \begin{itemize}
+        \item Feature Variables: Hours studied, Attendance percentage
+        \item Target Variable: Pass (1) or Fail (0)
+    \end{itemize}
+    
+    A logistic regression model may suggest that increased study hours raise passing probabilities, often visualized as an S-shaped curve.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item Fundamental tool for binary classification.
+        \item Effectively models feature and binary outcome relationships.
+        \item Lays groundwork for understanding more complex methods (e.g., SVM, Neural Networks).
+    \end{itemize}
+    
+    \textbf{Conclusion:} Logistic regression is vital for students and practitioners in data mining, essential for tackling real-world classification challenges.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Suggested Next Steps}
+    Explore real-life case studies in the following slides to comprehend logistic regression applications across industries. This practical exploration reinforces the theoretical concepts introduced here.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Objectives for Week 4: Logistic Regression}
+    \begin{block}{Overview}
+        In this week's module, we focus on logistic regression as a critical tool in data mining for classification tasks. By the end of this week, students will have a comprehensive understanding of this model, its applications, and the foundational concepts that underlie it.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Objectives - Part 1}
+    \begin{enumerate}
+        \item \textbf{Understand the Fundamentals of Logistic Regression:}
+        \begin{itemize}
+            \item Define logistic regression and differentiate it from linear regression.
+            \item Recognize logistic regression as a method used for binary classification problems.
+            \item Acknowledge the significance of the logistic function and its role in mapping predicted values to probabilities.
+        \end{itemize}
+
+        \item \textbf{Mathematical Underpinnings:}
+        \begin{itemize}
+            \item Explore the logistic function:
+            \begin{equation}
+            P(Y=1 | X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_n X_n)}}
+            \end{equation}
+            \item Interpret the coefficients (β) in the context of odds ratios.
+            \item Understand how to compute and utilize odds in practical scenarios.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Learning Objectives - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Model Evaluation Techniques:}
+        \begin{itemize}
+            \item Learn how to evaluate the performance of a logistic regression model using metrics such as accuracy, precision, recall, F1-score, and AUC-ROC curves.
+            \item Understand how to interpret confusion matrices in binary classification problems.
+        \end{itemize}
+        
+        \item \textbf{Hands-On Practice:}
+        \begin{itemize}
+            \item Engage in an interactive class exercise: create a logistic regression model using real datasets (e.g., predicting heart disease risk).
+            \item Analyze results and refine the model iteratively based on evaluation metrics.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Basic Principles of Logistic Regression - Introduction}
+    \begin{itemize}
+        \item Logistic regression is a statistical method used for \textbf{binary classification problems}.
+        \item The outcome is \textbf{dichotomous} (e.g., yes/no, true/false, success/failure).
+        \item It estimates the relationship between \textbf{independent variables} and a \textbf{binary dependent variable}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Basic Principles of Logistic Regression - The Logistic Function}
+    \begin{block}{Mathematical Formulation}
+        The logistic function is defined as:
+        \begin{equation}
+            P(Y=1 | X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1X_1 + \beta_2X_2 + \ldots + \beta_nX_n)}}
+        \end{equation}
+        where:
+        \begin{itemize}
+            \item $P(Y=1 | X)$ is the probability that the dependent variable $Y$ equals one given the independent variables $X_i$.
+            \item $\beta_0$ is the intercept.
+            \item $\beta_i$ are the coefficients of the model corresponding to each predictor $X_i$.
+            \item $e$ is the base of the natural logarithm (approximately equal to 2.71828).
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Characteristics}
+        \begin{itemize}
+            \item Output values range between 0 and 1.
+            \item The curve is \textbf{S-shaped}, indicating a smooth transition from 0 to 1.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Basic Principles of Logistic Regression - Odds and Odds Ratio}
+    \begin{block}{Odds Definition}
+        The odds of an event is the ratio of the probability of the event occurring to the probability of it not occurring:
+        \begin{equation}
+            \text{Odds} = \frac{P(Y=1)}{P(Y=0)} = \frac{P(Y=1)}{1 - P(Y=1)}
+        \end{equation}
+    \end{block}
+
+    \begin{block}{Odds Ratio}
+        The odds ratio compares the odds of an event occurring in one group to the odds of it occurring in another group:
+        \begin{equation}
+            \text{Odds Ratio} = e^{\beta_i}
+        \end{equation}
+        \begin{itemize}
+            \item If $\beta_i > 0$: Odds of the event increase.
+            \item If $\beta_i < 0$: Odds of the event decrease.
+            \item If $\beta_i = 0$: Odds remain unchanged.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Basic Principles of Logistic Regression - Example and Key Points}
+    \begin{block}{Example}
+        Consider a healthcare scenario predicting the likelihood of a disease based on age and cholesterol level:
+        \begin{equation}
+            \text{Logit(P)} = \beta_0 + \beta_1 \cdot \text{Age} + \beta_2 \cdot \text{Cholesterol} 
+        \end{equation}
+        If $\beta_1 = 0.05$ and $\beta_2 = 0.03$, then:
+        \begin{equation}
+            \text{Odds Ratio for Age} = e^{0.05} \approx 1.051  
+        \end{equation}
+        Suggesting odds of disease increase by approximately 5\% for each additional year of age.
+    \end{block}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Logistic regression is used for \textbf{binary outcomes}.
+            \item The logistic function maps predicted values between \textbf{0 and 1}.
+            \item Odds and Odds Ratios are \textbf{crucial for interpreting predictors}.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Basic Principles of Logistic Regression - Conclusion}
+    \begin{itemize}
+        \item Logistic regression is a powerful tool in data analytics and predictive modeling.
+        \item It enables effective evaluation of relationships in binary classification tasks.
+        \item Understanding the logistic function and odds supports meaningful interpretation of model results.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formulating the Logistic Regression Model - Introduction}
+    Logistic regression is a statistical method for predicting binary classes. The main goal is to model the relationship between a dependent variable (outcome) and one or more independent variables (predictors). This slide covers how to properly formulate a logistic regression model.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formulating the Logistic Regression Model - Dependent Variable}
+    \begin{block}{Dependent Variable}
+        The dependent variable (outcome variable) is what you are trying to predict. 
+        In logistic regression, it is binary, taking values such as 0 or 1, True or False, Yes or No.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Example:} Predicting whether a student passes (1) or fails (0) an exam based on study hours and attendance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formulating the Logistic Regression Model - Independent Variables}
+    \begin{block}{Independent Variables}
+        Independent variables (predictor variables) are used to predict the dependent variable. 
+        These can be continuous (e.g., study hours) or categorical (e.g., gender).
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Example:} 
+        \begin{itemize}
+            \item Study hours (continuous)
+            \item Attendance rate (continuous)
+            \item Gender (categorical: Male or Female)
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Logistic Regression Model Equation}
+    The logistic regression model estimates the probability that the dependent variable equals one of the classes. The mathematical formulation is:
+    \begin{equation}
+        P(Y = 1 | X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1X_1 + \beta_2X_2 + ... + \beta_kX_k)}}
+    \end{equation}
+    \begin{itemize}
+        \item $P(Y = 1 | X)$: Probability of the event occurring (e.g., passing the exam).
+        \item $\beta_0$: Intercept of the model.
+        \item $\beta_1, \beta_2, \ldots, \beta_k$: Coefficients associated with independent variables $X_1, X_2, \ldots, X_k$.
+        \item $e$: Base of natural logarithm.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Walkthrough}
+    \begin{block}{Scenario}
+        A school wants to predict if students will pass an exam based on hours studied and their attendance rate.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Dependent Variable:} Pass (1) or Fail (0)
+        \item \textbf{Independent Variables:} 
+        \begin{itemize}
+            \item Study hours ($X_1$)
+            \item Attendance rate ($X_2$)
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Logistic Model}
+        Assume:
+        \begin{itemize}
+            \item $\beta_0 = -1.5$
+            \item $\beta_1 = 0.4$ (effect of study hours)
+            \item $\beta_2 = 0.8$ (effect of attendance)
+        \end{itemize}
+        The logistic regression would be:
+        \begin{equation}
+            P(\text{pass} | X) = \frac{1}{1 + e^{-(-1.5 + 0.4X_1 + 0.8X_2)}}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Next Steps}
+    Formulating a logistic regression model involves identifying a binary dependent variable and selecting appropriate independent variables. Understanding the structure of the logistic equation helps in interpreting how predictors influence the probability of the outcome. 
+
+    \begin{block}{Next Steps}
+        Prepare to learn about how to estimate the coefficients of the logistic regression model using the method of maximum likelihood estimation.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Estimating Coefficients - Overview}
+    \begin{block}{Maximum Likelihood Estimation (MLE)}
+        \begin{itemize}
+            \item Logistic Regression: Models probability of a binary outcome (e.g., success/failure).
+            \item MLE: Estimates model parameters that maximize the likelihood of observing given data.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Estimating Coefficients - MLE Steps}
+    \begin{enumerate}
+        \item \textbf{Define the Likelihood Function:}
+            \begin{equation}
+                L(\beta) = \prod_{i=1}^{n} P(Y_i | X_i; \beta)
+            \end{equation}
+            Where:
+            \begin{itemize}
+                \item \( P(Y_i | X_i; \beta) = \frac{e^{\beta^T X_i}}{1 + e^{\beta^T X_i}} \) for \( Y_i = 1 \)
+                \item \( P(Y_i | X_i; \beta) = 1 - P(Y_i | X_i; \beta) \) for \( Y_i = 0 \)
+            \end{itemize}
+        
+        \item \textbf{Transformation to Log-Likelihood:}
+            \begin{equation}
+                \log L(\beta) = \sum_{i=1}^{n} \left( Y_i \log(P(Y_i | X_i; \beta)) + (1 - Y_i) \log(1 - P(Y_i | X_i; \beta)) \right)
+            \end{equation}
+        
+        \item \textbf{Maximize the Log-Likelihood:} Use numerical optimization (e.g., Gradient Ascent).
+        
+        \item \textbf{Interpret Coefficients:} Each coefficient \( \beta_j \) indicates the change in log-odds per unit change in \( X_j \).
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Estimating Coefficients - Example Application}
+    \begin{block}{Scenario: Predicting Loan Defaults}
+        \begin{itemize}
+            \item Model whether a borrower will default on a loan (1 = Default, 0 = No Default).
+            \item Logistic regression model:
+                \begin{equation}
+                    \text{logit}(P(Y=1)) = \beta_0 + \beta_1 (\text{Income}) + \beta_2 (\text{Credit Score})
+                \end{equation}
+            \item Use historical data to apply MLE for optimal values of \( \beta_0, \beta_1, \) and \( \beta_2 \).
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item MLE is essential for estimating models like logistic regression.
+            \item Understanding MLE offers insights into model learning and variable importance.
+            \item Coefficient interpretation supports practical applications in decision-making, such as risk assessment.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Estimating Coefficients - Conclusion}
+    \begin{block}{Conclusion}
+        Mastering MLE for logistic regression equips you to analyze binary outcomes prevalent in various fields, including finance and healthcare.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Interpreting Results - Overview}
+    \begin{itemize}
+        \item Understanding coefficients and odds ratios from a logistic regression model
+        \item Importance of context in interpreting statistical results
+        \item Practical considerations for applying findings
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Interpreting Coefficients}
+    \begin{itemize}
+        \item **Coefficients** indicate the relationship between predictor variables and log-odds of the outcome.
+        \item Derived from maximum likelihood estimation, representing change in log-odds for a one-unit change in predictor.
+    \end{itemize}
+    
+    \begin{block}{Formula}
+        \begin{equation}
+        \text{log-odds}(Y) = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_k X_k
+        \end{equation}
+    \end{block}
+    
+    \begin{itemize}
+        \item Example: For a binary outcome (e.g., diabetes), if \( \beta_1 = 0.5 \):
+        \item Interpretation: Each additional year of age increases log-odds of diabetes by 0.5.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Transforming Coefficients to Odds Ratios}
+    \begin{itemize}
+        \item **Odds Ratio (OR)** measures the change in odds; calculated as:
+        \begin{equation}
+        OR = e^{\beta_i}
+        \end{equation}
+    \end{itemize}
+    
+    \begin{block}{Example}
+        Continuing the age example:
+        \begin{equation}
+        OR_{age} = e^{0.5} \approx 1.65
+        \end{equation}
+        Interpretation: Each additional year of age increases odds of diabetes by 65\%.
+    \end{block}
+    
+    \begin{itemize}
+        \item Key Points:
+            \begin{itemize}
+                \item Positive coefficient indicates increased log-odds.
+                \item Negative coefficient indicates decreased log-odds.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Considerations}
+    \begin{itemize}
+        \item Always interpret findings in context of research questions and data.
+        \item Check for statistical significance (e.g., p-value < 0.05).
+        \item Reminder: Validate findings with real datasets and consider confounding factors.
+    \end{itemize}
+    
+    \begin{block}{Summary}
+        Logistic regression coefficients and odds ratios provide insights on relationships between predictors and outcomes. Contextual interpretation is essential.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Assumptions of Logistic Regression - Introduction}
+    Logistic regression is a powerful statistical method used for binary classification but rests on several key assumptions that must be satisfied to ensure valid results. Understanding these assumptions allows researchers and data scientists to apply logistic regression effectively and interpret results correctly.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Assumptions of Logistic Regression - Key Assumptions}
+    \begin{enumerate}
+        \item \textbf{Linearity of the Logit:}
+        \begin{itemize}
+            \item The relationship between each predictor variable and the log-odds of the outcome is assumed to be linear.
+            \item Example: Increasing hours studied relates linearly to the log-odds of passing.
+            \item Check: Box-Tidwell test or plotting predicted probabilities.
+        \end{itemize}
+        
+        \item \textbf{Independence of Errors:}
+        \begin{itemize}
+            \item Observations need to be independent of each other; residuals should not be correlated.
+            \item Example: One patient's outcome should not affect another's.
+            \item Check: Durbin-Watson statistic for checking independent residuals.
+        \end{itemize}
+        
+        \item \textbf{Lack of Multicollinearity:}
+        \begin{itemize}
+            \item Predictor variables should not be highly correlated.
+            \item Example: "Age" and "years of driving experience" may show high multicollinearity.
+            \item Check: Variance Inflation Factor (VIF); values greater than 10 indicate high multicollinearity.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Assumptions of Logistic Regression - Key Points & R Example}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Importance of Assumptions: Violating these can lead to inaccurate predictions.
+            \item Model Validation: Always validate assumptions to ensure model robustness.
+            \item Transformation: Consider transforming predictors if assumptions are violated.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example of Checking Assumptions in R Code}
+        \begin{lstlisting}[language=R]
+# Check for linearity of the logit with the Box-Tidwell test
+library(car)
+boxTidwell(outcome ~ predictor1 + predictor2, data = dataset)
+
+# Check for multicollinearity 
+library(car)
+vif_model <- lm(outcome ~ predictor1 + predictor2 + predictor3, data = dataset)
+vif(vif_model)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Assumptions of Logistic Regression - Conclusion}
+    Understanding the assumptions of logistic regression is crucial for successful application and interpretation. Validating these assumptions ensures that the results from logistic regression are reliable and actionable.
+    
+    \textbf{Next Step:} In the following slide, we will evaluate how well our logistic regression models perform using various performance metrics.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - Introduction}
+    Evaluating the performance of logistic regression models is essential to understand how well the model predicts the outcome variable. This slide covers key performance metrics:
+    \begin{itemize}
+        \item \textbf{Accuracy}
+        \item \textbf{Precision}
+        \item \textbf{Recall}
+        \item \textbf{ROC Curve}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - Accuracy}
+    \begin{block}{Definition}
+        Accuracy measures the proportion of correct predictions (true positive + true negative) among the total predictions made:
+        \[
+        Accuracy = \frac{TP + TN}{TP + TN + FP + FN}
+        \]
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Interpretation}: An accuracy of 0.85 means 85\% of predictions were correct.
+        \item \textbf{Limitations}: In imbalanced datasets, high accuracy can be misleading.
+    \end{itemize}
+    \textbf{Example}: In a dataset of 100 patients, if 90 are disease-free and the model predicts all as negative, the accuracy would be 90\%. This would fail to identify any sick individuals.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - Precision and Recall}
+    \begin{block}{Precision}
+        Precision measures how many of the predicted positive instances were actually positive:
+        \[
+        Precision = \frac{TP}{TP + FP}
+        \]
+        \textbf{Interpretation}: A precision of 0.9 implies 90\% of the predicted positive cases are true positives.
+        \textbf{Example}: If a model predicts 50 patients as having a disease, and 45 actually have it, then:
+        \[
+        Precision = \frac{45}{45 + 5} = 0.9
+        \]
+    \end{block}
+
+    \begin{block}{Recall (Sensitivity)}
+        Recall measures the model’s ability to identify all relevant positive instances:
+        \[
+        Recall = \frac{TP}{TP + FN}
+        \]
+        \textbf{Interpretation}: A recall of 0.8 means the model identifies 80\% of actual positive cases.
+        \textbf{Example}: If there are 60 patients with the disease and the model correctly identifies 48:
+        \[
+        Recall = \frac{48}{48 + 12} = 0.8
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - ROC Curve}
+    \begin{block}{Definition}
+        The ROC curve plots the true positive rate (Recall) against the false positive rate (1 - Specificity) at various threshold settings.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Area Under the Curve (AUC)}: Summarizes model performance.
+        \begin{itemize}
+            \item AUC values range from 0 to 1.
+            \item 1 indicates a perfect model.
+        \end{itemize}
+        \item \textbf{Interpretation}:
+        \begin{itemize}
+            \item AUC of 0.5: model performs no better than random guessing.
+            \item AUC of 0.75: indicates good predictive capability.
+        \end{itemize}
+    \end{itemize}
+    \textbf{Example}: A model with varying thresholds may achieve different Recall and Precision values. The ROC curve helps identify the optimal threshold based on desired balance between sensitivity and specificity.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Model Performance - Key Points}
+    \begin{itemize}
+        \item Understand each metric’s relevance in context; for example, in medical diagnostics, \textbf{Recall} might be prioritized.
+        \item \textbf{Imbalanced datasets} can skew accuracy; complement it with Precision and Recall for a comprehensive view.
+        \item The \textbf{ROC curve} and \textbf{AUC} are powerful visual tools to compare multiple models regardless of classification thresholds.
+    \end{itemize}
+    \textbf{Conclusion:} Effective evaluation requires using multiple metrics to fully understand model performance, particularly in critical fields like medical diagnosis and financial predictions.
+\end{frame}
+
+\begin{frame}[fragile]{Practical Applications in Data Mining - Overview}
+    \begin{block}{Logistic Regression Overview}
+        Logistic regression is a statistical method used for binary classification tasks, predicting the probability of a binary outcome based on one or more predictor variables. It is particularly useful when the dependent variable is categorical and binary (e.g., yes/no, success/failure).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Practical Applications in Data Mining - Credit Scoring}
+    \frametitle{Credit Scoring}
+    
+    \begin{itemize}
+        \item \textbf{Concept:} Logistic regression is widely used by financial institutions to assess loan applications. The model predicts the likelihood of a borrower defaulting on their loan based on various factors.
+        \item \textbf{Key Variables:} 
+        \begin{itemize}
+            \item Income level
+            \item Credit history
+            \item Debt-to-income ratio
+            \item Employment status
+        \end{itemize}
+        \item \textbf{Output:} The model assigns a score (probability between 0 and 1) indicating the risk associated with lending to this borrower.
+    \end{itemize}
+    
+    \begin{block}{Example}
+        A logistic regression equation could look like:
+        \begin{equation}
+        P(\text{Default} = 1) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 \cdot \text{Income} + \beta_2 \cdot \text{Credit\_History} + \beta_3 \cdot \text{Debt\_to\_Income})}}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Practical Applications in Data Mining - Disease Prediction}
+    \frametitle{Disease Prediction}
+
+    \begin{itemize}
+        \item \textbf{Concept:} In healthcare, logistic regression can help in predicting the presence or absence of a disease based on patient data, aiding in early diagnosis and treatment decisions.
+        \item \textbf{Key Variables:}
+        \begin{itemize}
+            \item Age
+            \item Family medical history
+            \item Symptoms
+            \item Lifestyle choices (e.g., smoking, exercise)
+        \end{itemize}
+        \item \textbf{Output:} A probability score that indicates the likelihood of a patient having a particular disease.
+    \end{itemize}
+    
+    \begin{block}{Example}
+        For instance, a model predicting heart disease could take the form:
+        \begin{equation}
+        P(\text{Disease} = 1) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 \cdot \text{Age} + \beta_2 \cdot \text{Cholesterol} + \beta_3 \cdot \text{Blood\_Pressure})}}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Interpretable Model:} Logistic regression offers an easily interpretable output, beneficial in areas like healthcare and finance.
+        \item \textbf{Probabilistic Approach:} The output provides a probability, allowing for nuanced risk assessments.
+        \item \textbf{Feature Importance:} Coefficients reveal the importance of each predictor, aiding in feature selection.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        By integrating real-world examples into logistic regression concepts, we foster better understanding and retention of the material.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}
+    \frametitle{Introduction to Logistic Regression}
+    \begin{itemize}
+        \item Logistic Regression is a statistical method for binary classification problems.
+        \item It predicts a binary outcome (1/0, Yes/No).
+        \item Used widely in fields such as healthcare, finance, and marketing.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Software Tools Overview}
+    \begin{itemize}
+        \item We will use two programming languages: \textbf{R} and \textbf{Python}.
+        \item Both offer robust libraries for building and evaluating logistic regression models.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing Logistic Regression in R}
+    \begin{block}{Key Library}
+        \texttt{glm()} is the main function for generalized linear models in base R.
+    \end{block}
+    
+    \begin{lstlisting}[language=R]
+# Load necessary libraries
+data("iris")  # Load example dataset
+# Create a binary outcome (setosa vs non-setosa)
+iris$SpeciesBinary <- ifelse(iris$Species == "setosa", 1, 0)
+
+# Fit logistic regression model
+model <- glm(SpeciesBinary ~ Sepal.Length + Sepal.Width, data = iris, family = binomial)
+
+# Summary of the model
+summary(model)
+    \end{lstlisting}
+    
+    \begin{itemize}
+        \item \texttt{family = binomial} specifies logistic regression.
+        \item Outputs include coefficients indicating change in log-odds.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Implementing Logistic Regression in Python}
+    \begin{block}{Key Libraries}
+        \begin{itemize}
+            \item \texttt{scikit-learn} for machine learning.
+            \item \texttt{pandas} for data manipulation.
+        \end{itemize}
+    \end{block}
+    
+    \begin{lstlisting}[language=Python]
+# Import necessary libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report
+
+# Load dataset
+iris = pd.read_csv('iris.csv')
+iris['SpeciesBinary'] = (iris['Species'] == 'setosa').astype(int)
+
+# Split the data
+X = iris[['Sepal.Length', 'Sepal.Width']]
+y = iris['SpeciesBinary']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Fit logistic regression model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Make predictions
+predictions = model.predict(X_test)
+
+# Display classification report
+print(classification_report(y_test, predictions))
+    \end{lstlisting}
+    
+    \begin{itemize}
+        \item \texttt{train\_test\_split()} divides dataset into training and testing subsets.
+        \item \texttt{classification\_report()} provides performance metrics like precision and recall.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item R and Python provide essential tools for logistic regression implementation.
+        \item Mastering these tools helps in analyzing binary outcomes and making data-driven predictions effectively.
+    \end{itemize}
+    \textbf{Engagement:} Try the provided code snippets in R and Python with your own datasets to explore feature impact on the target variable.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Overview of Logistic Regression}
+    \begin{itemize}
+        \item Logistic regression is used for binary classification.
+        \item Models the probability of a binary response based on predictor variables.
+        \item Despite its popularity, it faces several challenges and limitations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Challenges: Large Datasets}
+    \begin{block}{Challenge}
+        Logistic regression can struggle with large datasets.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Computational Intensity}: Increased time and resources needed.
+        \item \textbf{Risk of Overfitting}: Especially with the number of features exceeding observations.
+    \end{itemize}
+    \begin{exampleblock}{Example}
+        With 100,000 observations and 10,000 features, the model may perform well on training data but poorly on unseen data.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Challenges: Model Overfitting}
+    \begin{block}{Challenge}
+        Overfitting occurs when the model captures noise instead of underlying trends.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Signs of Overfitting}:
+            \begin{itemize}
+                \item High training accuracy, but low validation accuracy.
+                \item Performance fluctuations with minor input variations.
+            \end{itemize}
+        \item \textbf{Strategies to Combat Overfitting}:
+            \begin{itemize}
+                \item Regularization techniques (Lasso, Ridge).
+                \item Cross-validation methods (e.g., k-fold).
+            \end{itemize}
+    \end{itemize}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.7\linewidth]{https://example.com/overfitting_graph}
+        \caption{Overfitting vs Underfitting Graph}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Challenges: Assumptions of Logistic Regression}
+    \begin{block}{Challenge}
+        Logistic regression relies on several assumptions.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Linearity}: Relationship between independent variables and log odds should be linear.
+        \item \textbf{Independence}: Observations must be independent.
+    \end{itemize}
+    \begin{block}{Implications}
+        Violating assumptions leads to biased estimates and incorrect inferences.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Understanding challenges of logistic regression is key for effective application.
+        \item Regularization and cross-validation mitigate overfitting risks.
+        \item Validate assumptions and manage large datasets to ensure robustness.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Navigating the challenges involves:
+    \begin{itemize}
+        \item Understanding data characteristics.
+        \item Applying appropriate techniques.
+        \item Being aware of model limitations.
+    \end{itemize}
+    Achieving accurate and reliable predictions is possible by considering these factors.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Suggested Code Snippet for Regularization (Python)}
+    \begin{lstlisting}[language=Python]
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+
+# Sample data
+X, y = load_data()  # Replace with actual data loading method
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+# L1 Regularization (Lasso)
+model = LogisticRegression(penalty='l1', solver='liblinear')
+model.fit(X_train, y_train)
+accuracy = model.score(X_test, y_test)
+print(f'Model Accuracy: {accuracy:.2f}')
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations - Introduction}
+    \begin{block}{Introduction}
+        Logistic regression is a powerful statistical method used for binary classification problems, but its application carries ethical implications that must be considered.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations - Key Areas}
+    \begin{enumerate}
+        \item \textbf{Data Privacy and Consent}
+            \begin{itemize}
+                \item Logistic regression requires sensitive personal data. 
+                \item Always obtain consent from individuals before using their data.
+                \item \textit{Example:} Using medical records without consent violates ethical norms (e.g., HIPAA).
+            \end{itemize}
+        \item \textbf{Bias and Fairness}
+            \begin{itemize}
+                \item Models can perpetuate biases in training data.
+                \item \textit{Example:} A loan acceptance model may favor certain demographics, leading to discrimination.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations - Transparency and Consequences}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Transparency and Interpretability}
+            \begin{itemize}
+                \item Logistic regression allows for interpretability, but clear communication of model functionality is crucial.
+                \item Ensure stakeholders understand prediction mechanisms and model parameters (e.g., odds ratios).
+            \end{itemize}
+        \item \textbf{Consequences of Decisions}
+            \begin{itemize}
+                \item Decisions based on predictions can have significant real-world impacts.
+                \item \textit{Example:} In healthcare, a false negative could result in a patient missing necessary treatment.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations - Responsible Use}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Use of the Model}
+            \begin{itemize}
+                \item Consider the intended purpose of logistic regression.
+                \item Misuse can lead to ethical breaches, such as manipulating outcomes in hiring.
+                \item Use models responsibly to empower decision-making.
+            \end{itemize}
+        \item \textbf{Conclusion}
+            \begin{itemize}
+                \item Ethical considerations extend beyond technical challenges.
+                \item Respect data privacy, combat bias, and assess decision consequences for a just application of statistical modeling.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Review - Recap of Vital Points}
+    
+    \begin{enumerate}
+        \item \textbf{Understanding Logistic Regression}:
+        \begin{itemize}
+            \item Definition: A statistical method for predicting binary classes (e.g., success/failure).
+            \item Formula:
+            \begin{equation}
+            P(Y=1 | X) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 X_1 + ... + \beta_n X_n)}}
+            \end{equation}
+            \item Detailed variables:
+            \begin{itemize}
+                \item \(P\): probability of the outcome.
+                \item \(\beta_0\): intercept, \(\beta_1, \ldots, \beta_n\): coefficients.
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Model Evaluation}:
+        \begin{itemize}
+            \item Confusion Matrix: Visualizes model performance (TP, TN, FP, FN).
+            \item Key Metrics:
+            \begin{itemize}
+                \item Accuracy: \(\frac{(TP + TN)}{(TP + TN + FP + FN)}\)
+                \item Precision: \(\frac{TP}{(TP + FP)}\)
+                \item Recall (Sensitivity): \(\frac{TP}{(TP + FN)}\)
+                \item F1 Score: Harmonic mean of precision and recall.
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Ethical Considerations}:
+        \begin{itemize}
+            \item Importance of avoiding bias in sensitive areas.
+            \item Need for transparency in decision-making processes.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Review - Next Steps for Project Work}
+    
+    \begin{itemize}
+        \item \textbf{Project Work}:
+        \begin{itemize}
+            \item Apply logistic regression using a dataset (binary classification).
+            \item Implement the model from scratch and review coefficients.
+            \item Assess model performance using confusion matrix metrics.
+        \end{itemize}
+        
+        \item \textbf{Assignments}:
+        \begin{itemize}
+            \item Complete assigned reading materials on logistic regression.
+            \item Prepare a short report (2-3 pages) summarizing findings:
+            \begin{itemize}
+                \item Practical exercises
+                \item Literature review on ethical considerations
+                \item Include relevant figures, tables, and code snippets.
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Review - Key Points to Emphasize}
+    
+    \begin{itemize}
+        \item Logistic regression is suited for binary outcome variables.
+        \item Evaluate models using multiple metrics for comprehensive performance analysis.
+        \item Consider ethical implications and societal impacts of models in critical fields.
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,852 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Evaluation of Classification Models}
+    \begin{block}{Overview}
+        In the field of data mining, evaluating classification models is crucial for determining how well these models perform in making predictions. Proper evaluation helps in identifying the strengths and weaknesses of a model, guiding further improvement and optimization.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Model Evaluation}
+    \begin{enumerate}
+        \item \textbf{Model Performance Assessment:}
+            \begin{itemize}
+                \item Evaluation measures the accuracy of predictions made by the model.
+                \item Understanding performance helps in selecting the best model for a given task.
+            \end{itemize}
+            
+        \item \textbf{Avoiding Overfitting:}
+            \begin{itemize}
+                \item A model that performs well on training data may not generalize to unseen data.
+                \item Evaluation on a separate test set is essential to ensure the model's robustness.
+            \end{itemize}
+            
+        \item \textbf{Trade-offs in Classification:}
+            \begin{itemize}
+                \item Different models may have various trade-offs between precision, recall, and other metrics.
+                \item Evaluating models helps in understanding the impact of these trade-offs on real-world applications.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Evaluation Metrics}
+    \begin{itemize}
+        \item \textbf{Accuracy:} The ratio of correctly predicted instances to total instances.
+        \begin{equation}
+            \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Instances}}
+        \end{equation}
+        
+        \item \textbf{Precision:} The ratio of true positive predictions to the sum of true and false positive predictions.
+        \begin{equation}
+            \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+        \end{equation}
+        
+        \item \textbf{Recall (Sensitivity):} The ratio of true positive predictions to the sum of true positives and false negatives.
+        \begin{equation}
+            \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+        \end{equation}
+        
+        \item \textbf{F1 Score:} The harmonic mean of precision and recall.
+        \begin{equation}
+            F1 \text{ Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+        \end{equation}
+        
+        \item \textbf{ROC Curve and AUC:} The Receiver Operating Characteristic (ROC) curve plots true positive rates against false positive rates. The Area Under the Curve (AUC) quantifies the model's ability to distinguish between classes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Application}
+    Consider a medical diagnosis model predicting whether a patient has a disease (Positive) or not (Negative):
+    
+    \begin{itemize}
+        \item True Positives: 80
+        \item True Negatives: 50
+        \item False Positives: 10
+        \item False Negatives: 5
+    \end{itemize}
+
+    From these, you can compute:
+    \begin{itemize}
+        \item Accuracy: \((80 + 50) / 145 = 0.896\)
+        \item Precision: \(80 / (80 + 10) = 0.889\)
+        \item Recall: \(80 / (80 + 5) = 0.941\)
+        \item F1 Score: \(2 \times \frac{0.889 \times 0.941}{0.889 + 0.941} \approx 0.914\)
+    \end{itemize}
+    
+    This analysis indicates that the model is reliable, but precision and recall could still be optimized for a better balance, depending on the importance of false positives vs. false negatives in the medical field.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    The evaluation of classification models is a foundational step in ensuring effective, reliable predictions in various applications. Using multiple metrics allows for a comprehensive understanding of the model's capabilities, guiding data scientists toward better decision-making in model selection and improvement.
+\end{frame}
+
+\begin{frame}[fragile]{What is a Confusion Matrix?}
+    \begin{block}{Definition}
+        A \textbf{confusion matrix} is a performance measurement tool for classification models. It enables the comparison between predicted and actual classifications by summarizing the results in a tabular format, thus providing insight into the model's performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Structure of a Confusion Matrix}
+    \begin{block}{Structure}
+        A confusion matrix for binary classification consists of four components organized in a 2x2 format:
+        \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            & \textbf{Predicted Positive (Yes)} & \textbf{Predicted Negative (No)} \\
+            \hline
+            \textbf{Actual Positive (Yes)} & True Positive (TP) & False Negative (FN) \\
+            \hline
+            \textbf{Actual Negative (No)} & False Positive (FP) & True Negative (TN) \\
+            \hline
+        \end{tabular}
+        \end{center}
+    \end{block}
+    
+    \begin{block}{Component Breakdown}
+        \begin{itemize}
+            \item \textbf{True Positive (TP)}: Correctly predicts the positive class.
+            \item \textbf{False Positive (FP)}: Incorrectly predicts the positive class (Type I error).
+            \item \textbf{False Negative (FN)}: Fails to predict the positive class (Type II error).
+            \item \textbf{True Negative (TN)}: Correctly predicts the negative class.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Significance and Key Metrics}
+    \begin{block}{Significance}
+        The confusion matrix provides several advantages:
+        \begin{itemize}
+            \item \textbf{Performance Insight}: Reveals accuracy and errors for better understanding of misclassifications.
+            \item \textbf{Computation of Metrics}: Important evaluation metrics like accuracy, precision, recall, and F1-score can be derived.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Metrics from Confusion Matrix}
+        1. \textbf{Accuracy}:
+        \[
+        \text{Accuracy} = \frac{TP + TN}{TP + FP + TN + FN}
+        \]
+
+        2. \textbf{Precision}:
+        \[
+        \text{Precision} = \frac{TP}{TP + FP}
+        \]
+
+        3. \textbf{Recall}:
+        \[
+        \text{Recall} = \frac{TP}{TP + FN}
+        \]
+
+        4. \textbf{F1 Score}:
+        \[
+        F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+        \]
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Example of a Confusion Matrix}
+    \begin{block}{Example}
+        Consider a medical diagnostic test for a disease:
+        \begin{itemize}
+            \item Out of 100 patients:
+                \begin{itemize}
+                    \item 70 have the disease (Positive)
+                    \item 30 do not have the disease (Negative)
+                \end{itemize}
+                
+            \item Model Results:
+                \begin{itemize}
+                    \item TP = 50
+                    \item TN = 25
+                    \item FP = 5
+                    \item FN = 20
+                \end{itemize}
+        \end{itemize}
+        The confusion matrix would look like:
+        \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            & \textbf{Predicted Positive} & \textbf{Predicted Negative} \\
+            \hline
+            \textbf{Actual Positive} & 50 & 20 \\
+            \hline
+            \textbf{Actual Negative} & 5 & 25 \\
+            \hline
+        \end{tabular}
+        \end{center}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Understanding True Positives and False Positives - Part 1}
+  \begin{block}{Key Definitions}
+    \begin{itemize}
+      \item \textbf{True Positives (TP):} Instances where the model correctly predicts the positive class.
+      \begin{itemize}
+        \item \textbf{Example:} In a medical test for a disease, if the test shows positive and the patient actually has the disease, it's a true positive.
+      \end{itemize}
+      \item \textbf{False Positives (FP):} Instances where the model incorrectly predicts the positive class when the true class is negative.
+      \begin{itemize}
+        \item \textbf{Example:} In the same medical test scenario, if the test shows positive but the patient does not have the disease, it's a false positive (often referred to as a "Type I error").
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Understanding True Positives and False Positives - Part 2}
+  \begin{block}{Interpretation of TPs and FPs}
+    \begin{itemize}
+      \item \textbf{True Positives (TP):}
+      \begin{itemize}
+        \item Indication of model accuracy in identifying the positive class.
+        \item Directly contributes to the model's recall (sensitivity) calculations.
+      \end{itemize}
+      \item \textbf{False Positives (FP):}
+      \begin{itemize}
+        \item Represents the cost of false alarms, which may lead to unnecessary actions.
+        \item Impacts the precision of the model and characterizes its tendency to label negatives as positives.
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Understanding True Positives and False Positives - Part 3}
+  \begin{block}{Evaluation Metrics}
+    \begin{itemize}
+      \item \textbf{Precision:} Indicates the accuracy of positive predictions.
+      \begin{equation}
+        \text{Precision} = \frac{TP}{TP + FP}
+      \end{equation}
+      \item \textbf{Recall (Sensitivity):} Measures the ability to find all relevant cases.
+      \begin{equation}
+        \text{Recall} = \frac{TP}{TP + FN}
+      \end{equation}
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Summary Points}
+    \begin{itemize}
+      \item \textbf{Balancing Act:} Achieving a high recall may increase false positives while aiming for higher precision might result in missed true cases.
+      \item \textbf{Domain-Specific:} The acceptable trade-off between TPs and FPs varies by application (e.g., medical diagnostics vs. spam filtering).
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Real-World Application Example}
+  \begin{block}{Spam Email Detection}
+    \begin{itemize}
+      \item \textbf{True Positives:} Legitimate spam emails identified as spam.
+      \item \textbf{False Positives:} Important emails incorrectly flagged as spam, which could lead to missed opportunities or crucial communications.
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Conclusion}
+    By understanding True Positives and False Positives, we can better evaluate classification models and make informed decisions about their deployment and effectiveness in real-world applications.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{True Negatives and False Negatives - Introduction}
+  \begin{block}{Introduction}
+    In the context of classification models, understanding True Negatives (TN) and False Negatives (FN) is crucial for evaluating model performance. These metrics help us interpret the effectiveness of a model by considering not just its correct positive classifications but also its ability to accurately identify negatives.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{True Negatives and False Negatives - Key Definitions}
+  \begin{itemize}
+    \item \textbf{True Negatives (TN)}:
+      \begin{itemize}
+        \item \textbf{Definition}: TN refers to instances where the model correctly predicts a negative class.
+        \item \textbf{Interpretation}: A high number of TN indicates that the model is accurately identifying non-relevant cases.
+      \end{itemize}
+    
+    \item \textbf{False Negatives (FN)}:
+      \begin{itemize}
+        \item \textbf{Definition}: FN are instances where the model fails to identify a positive class.
+        \item \textbf{Interpretation}: A high number of FN indicates that the model is missing positive instances, which can lead to critical failures in sensitive applications.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{True Negatives and False Negatives - Real-World Examples}
+  \begin{enumerate}
+    \item \textbf{Medical Diagnosis}:
+      \begin{itemize}
+        \item \textbf{True Negatives}: A test for a disease correctly identifies 100 patients as healthy who do not have the disease.
+        \item \textbf{False Negatives}: The test misses 10 patients who actually have the disease, leading to undetected cases.
+      \end{itemize}
+    
+    \item \textbf{Spam Detection}:
+      \begin{itemize}
+        \item \textbf{True Negatives}: An email filter successfully identifies 200 legitimate emails as not spam.
+        \item \textbf{False Negatives}: The filter incorrectly classifies 5 spam emails as legitimate ones, allowing them into the inbox.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{True Negatives and False Negatives - Importance}
+  \begin{itemize}
+    \item \textbf{Risk Assessment}: In fields like healthcare or security, a high FN rate can have severe consequences, indicating that critical cases are overlooked.
+    \item \textbf{Model Improvement}: Analyzing TN and FN rates helps data scientists refine models for better performance, focusing on reducing FN to capture more positive instances.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{True Negatives and False Negatives - Summary of Key Points}
+  \begin{itemize}
+    \item \textbf{True Negatives}: Correctly identified negatives; reflecting model reliability.
+    \item \textbf{False Negatives}: Missed positives; indicating potential risks.
+    \item \textbf{Balance}: A robust model requires a good balance of TN and low FN rates for optimal performance.
+  \end{itemize}
+  \begin{block}{Next Steps}
+    We will explore the calculation of precision, a key performance metric related to both TP and FN in the upcoming slide.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Calculating Precision}
+    \begin{block}{Understanding Precision}
+        Precision is a crucial metric in evaluating the performance of classification models. It quantifies the accuracy of the positive predictions made by the model, allowing us to understand how reliable the model is when it predicts a positive outcome.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formula for Precision}
+    The formula for calculating precision is:
+    \begin{equation}
+        \text{Precision} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Positives (FP)}}
+    \end{equation}
+    \begin{itemize}
+        \item \textbf{True Positives (TP)}: The number of correctly predicted positive instances.
+        \item \textbf{False Positives (FP)}: The number of incorrectly predicted positive instances.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relevance of Precision in Model Assessment}
+    \begin{itemize}
+        \item \textbf{Focus on Positive Cases}: Important where false positives are costly (e.g., medical diagnostics).
+        \item \textbf{Imbalance in Classes}: Offers clearer insight in datasets with class imbalance.
+        \item \textbf{Business Impact}: High precision is crucial in applications like fraud detection to minimize false alarms and retain legitimate customers.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Scenario}
+    Consider a binary classification model predicting spam emails:
+    
+    If the model predicts:
+    \begin{itemize}
+        \item 80 emails as spam \\
+        (TP = 60, FP = 20)
+    \end{itemize}
+    The precision can be calculated as:
+    \begin{equation}
+        \text{Precision} = \frac{60}{60 + 20} = \frac{60}{80} = 0.75 \text{ or } 75\%
+    \end{equation}
+    This indicates that 75\% of emails flagged as spam were actually spam.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item Precision is one part of a balanced evaluation metric alongside recall and F1 score.
+        \item It is critical where the cost of false positives outweighs that of false negatives.
+        \item Use evaluation metrics contextually, considering specific application requirements.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Conclusion}
+        Precision is an essential metric for assessing classification models, especially in situations where incorrect positive predictions have significant implications. Understanding and calculating precision aids data scientists in making informed decisions on model selection and deployment strategies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Recall - Definition}
+    \begin{block}{Definition}
+        Recall (also known as Sensitivity or True Positive Rate) is a metric that evaluates the effectiveness of a classification model. It measures the proportion of actual positive cases that are correctly identified by the model.
+    \end{block}
+    \begin{itemize}
+        \item Recall answers the question: \textbf{"Of all the actual positive samples, how many did we correctly classify as positive?"}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Recall - Calculation}
+    \begin{block}{Formula for Recall}
+        The formula for calculating recall is:
+        \begin{equation}
+            \text{Recall} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Negatives (FN)}}
+        \end{equation}
+    \end{block}
+    \begin{itemize}
+        \item \textbf{True Positives (TP)}: Number of positive samples correctly predicted by the model.
+        \item \textbf{False Negatives (FN)}: Number of actual positive samples incorrectly predicted as negative.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Recall - Importance and Example}
+    \begin{block}{Importance of Recall}
+        \begin{itemize}
+            \item Critical in Imbalanced Datasets: High recall ensures most actual positive cases are captured, especially in applications like medical diagnoses.
+            \item Focus on Actual Positives: Recall emphasizes identifying positive instances, making it vital in scenarios where false negatives are costly.
+            \item Evaluation of Model Effectiveness: It helps assess the trade-off between sensitivity and specificity in model tuning.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example of Recall Calculation}
+        Suppose you have a test that identifies a disease in a group of 100 people:
+        \begin{itemize}
+            \item 40 True Positives (TP)
+            \item 10 False Negatives (FN)
+        \end{itemize}
+        Using the recall formula:
+        \[
+        \text{Recall} = \frac{TP}{TP + FN} = \frac{40}{40 + 10} = \frac{40}{50} = 0.8
+        \]
+        This means the recall for this test is 0.8, or 80\%, indicating that 80\% of the positive cases were correctly identified.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{F1 Score: Balancing Precision and Recall}
+
+  \begin{block}{Understanding the F1 Score}
+    The F1 Score is a vital metric in classification tasks, especially for imbalanced datasets. It balances **Precision** and **Recall**:
+  \end{block}
+
+  \begin{itemize}
+    \item \textbf{Precision}: The ratio of true positives to total predicted positives.
+    \begin{equation}
+      \text{Precision} = \frac{TP}{TP + FP}
+    \end{equation}
+
+    \item \textbf{Recall}: The ratio of true positives to actual positives.
+    \begin{equation}
+      \text{Recall} = \frac{TP}{TP + FN}
+    \end{equation}
+
+    Where:
+    \begin{itemize}
+      \item \( TP \) = True Positives
+      \item \( FP \) = False Positives
+      \item \( FN \) = False Negatives
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{F1 Score Calculation}
+
+  The F1 Score combines Precision and Recall into a single metric:
+
+  \begin{equation}
+    \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+  \end{equation}
+
+  \begin{block}{Example Calculation}
+    Given the following values:
+    \begin{itemize}
+      \item \( TP = 80 \)
+      \item \( FP = 20 \)
+      \item \( FN = 30 \)
+    \end{itemize}
+
+    \textbf{Calculating Precision:}
+    \begin{equation}
+      \text{Precision} = \frac{80}{80 + 20} = 0.8
+    \end{equation}
+
+    \textbf{Calculating Recall:}
+    \begin{equation}
+      \text{Recall} = \frac{80}{80 + 30} \approx 0.727
+    \end{equation}
+
+    \textbf{Calculating F1 Score:}
+    \begin{equation}
+      \text{F1 Score} \approx 0.7619
+    \end{equation}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{When to Use the F1 Score}
+
+  \begin{itemize}
+    \item **Imbalanced Classes**: Prefer F1 when focusing on the minority class performance.
+    
+    \item **Balance in Costs**: Use F1 when balancing the cost of false negatives vs. false positives. 
+
+    \item **General Summary Metric**: The F1 Score is ideal for summarizing model performance when both Precision and Recall matter.
+
+    \item **Key Points**:
+    \begin{itemize}
+      \item F1 Score is a harmonic mean, rewarding models with similar Precision and Recall.
+      \item Provides a clearer picture of model performance compared to accuracy in imbalanced datasets.
+    \end{itemize}
+  \end{itemize}
+
+  Consider incorporating a visual representation to highlight the relationship between Precision, Recall, and the F1 Score.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparative Analysis of Metrics}
+    \begin{block}{Introduction}
+        In the evaluation of classification models, it is crucial to select appropriate metrics that truly reflect model performance. 
+        Three common metrics—\textbf{Precision}, \textbf{Recall}, and the \textbf{F1 Score}—each have their own strengths and weaknesses. 
+        This slide provides a comparative analysis of these metrics to help understand when to use each.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision}
+    \begin{block}{Definition}
+        \textbf{Precision} is the ratio of true positive predictions to the total predicted positives.
+    \end{block}
+    \begin{equation}
+        \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}} 
+    \end{equation}
+    \begin{itemize}
+        \item \textbf{Advantages:}
+            \begin{itemize}
+                \item High precision indicates a low false positive rate.
+                \item Useful where false positives can incur significant costs (e.g., spam detection).
+            \end{itemize}
+        \item \textbf{Disadvantages:}
+            \begin{itemize}
+                \item Does not consider false negatives, critical in some applications.
+                \item May mislead during class imbalances when positives are rare.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recall}
+    \begin{block}{Definition}
+        \textbf{Recall} (Sensitivity or True Positive Rate) is the ratio of true positive predictions to the total actual positives.
+    \end{block}
+    \begin{equation}
+        \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}} 
+    \end{equation}
+    \begin{itemize}
+        \item \textbf{Advantages:}
+            \begin{itemize}
+                \item High recall means most actual positives are identified.
+                \item Important when missing a positive instance is critical (e.g., disease detection).
+            \end{itemize}
+        \item \textbf{Disadvantages:}
+            \begin{itemize}
+                \item Does not account for false positives when quality is important.
+                \item Can provide misleadingly high values in cases of class imbalance.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1 Score}
+    \begin{block}{Definition}
+        The \textbf{F1 Score} is the harmonic mean of precision and recall.
+    \end{block}
+    \begin{equation}
+        F1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}} 
+    \end{equation}
+    \begin{itemize}
+        \item \textbf{Advantages:}
+            \begin{itemize}
+                \item Provides a single score that captures both metrics.
+                \item Useful when needing to balance precision and recall, especially in imbalanced datasets.
+            \end{itemize}
+        \item \textbf{Disadvantages:}
+            \begin{itemize}
+                \item Can obscure individual metric performance understanding.
+                \item If precision or recall is low, the F1 Score may not be informative.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Select Metrics Based on Goals:} 
+            \begin{itemize}
+                \item Prioritize precision when false positive costs are high.
+                \item Prioritize recall when false negative costs are critical.
+            \end{itemize}
+        \item \textbf{Understanding Trade-offs:} 
+            \begin{itemize}
+                \item Improving one metric often reduces the other.
+            \end{itemize}
+        \item \textbf{Use F1 Score When Necessary:} 
+            \begin{itemize}
+                \item The F1 Score provides a middle ground, especially in uneven class distributions.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Choosing the right evaluation metric is essential for interpreting the effectiveness of classification models.
+    Understanding the strengths and weaknesses of precision, recall, and the F1 Score allows for informed decision-making tailored to specific application needs.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study: Practical Evaluation}
+    \begin{block}{Introduction to Model Evaluation}
+        Model evaluation is crucial in assessing how well a classification model performs. In this case study, we will explore a practical scenario using a confusion matrix and various performance metrics.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study Overview: Email Spam Detection}
+    Imagine we developed a classification model to detect spam emails. We will evaluate the model's performance based on its predictions against the actual labels.
+    
+    \begin{itemize}
+        \item **True Positive (TP)**: Correctly predicted spam emails.
+        \item **True Negative (TN)**: Correctly predicted non-spam emails.
+        \item **False Positive (FP)**: Non-spam emails incorrectly classified as spam (Type I Error).
+        \item **False Negative (FN)**: Spam emails incorrectly classified as non-spam (Type II Error).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Confusion Matrix}
+    The confusion matrix for our model's predictions might look like this:
+
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        & \textbf{Predicted Spam} & \textbf{Predicted Not Spam} \\
+        \hline
+        \textbf{Actual Spam} & TP: 80 & FN: 20 \\
+        \hline
+        \textbf{Actual Not Spam} & FP: 10 & TN: 90 \\
+        \hline
+    \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Metrics}
+    Using the confusion matrix, we can derive several performance metrics:
+
+    \begin{enumerate}
+        \item \textbf{Accuracy}
+        \[
+        \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} = \frac{80 + 90}{80 + 90 + 10 + 20} = 85\%
+        \]
+
+        \item \textbf{Precision}
+        \[
+        \text{Precision} = \frac{TP}{TP + FP} = \frac{80}{80 + 10} = 88.89\%
+        \]
+        \begin{itemize}
+            \item Key Point: High precision means fewer false positives.
+        \end{itemize}
+
+        \item \textbf{Recall (Sensitivity)}
+        \[
+        \text{Recall} = \frac{TP}{TP + FN} = \frac{80}{80 + 20} = 80\%
+        \]
+        \begin{itemize}
+            \item Key Point: High recall indicates fewer false negatives.
+        \end{itemize}
+
+        \item \textbf{F1 Score}
+        \[
+        \text{F1 Score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}} \approx 84.21\%
+        \]
+        \begin{itemize}
+            \item Key Point: The F1 score balances precision and recall.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways}
+    In this case study, we have utilized a confusion matrix to evaluate a spam detection model. By calculating accuracy, precision, recall, and the F1 score, we can better understand our model's strengths and weaknesses, guiding further improvements and decisions.
+
+    \begin{itemize}
+        \item \textbf{Understanding Metrics:} Each metric provides unique insights into model performance.
+        \item \textbf{Confusion Matrix:} Essential for visualizing model predictions against true outcomes.
+        \item \textbf{Balancing Priorities:} Depending on the context, prioritize precision, recall, or a combination via the F1 score.
+    \end{itemize}
+
+    This case study illustrates that thorough evaluation is key to building effective classification models. In our next slide, we will summarize the critical takeaways regarding model evaluation strategies.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Summary}
+    \begin{block}{Summary of Key Takeaways}
+        In this chapter, we explored the methods and metrics used to evaluate the performance of classification models. Here are the pivotal points to remember:
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Model Evaluation Importance}
+    \begin{enumerate}
+        \item \textbf{Importance of Model Evaluation}
+        \begin{itemize}
+            \item Evaluation is crucial for assessing performance on unseen data.
+            \item Identifies models that generalize better instead of overfitting the training data.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Confusion Matrix}
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Confusion Matrix}
+        \begin{itemize}
+            \item An essential tool for a comprehensive breakdown of prediction results.
+            \item \textbf{Components:}
+            \begin{itemize}
+                \item True Positive (TP): Correctly predicted positive instances.
+                \item True Negative (TN): Correctly predicted negative instances.
+                \item False Positive (FP): Incorrectly predicted positive instances (Type I error).
+                \item False Negative (FN): Incorrectly predicted negative instances (Type II error).
+            \end{itemize}
+            \item \textbf{Example:}
+            \begin{table}[h]
+                \centering
+                \begin{tabular}{|c|c|c|}
+                    \hline
+                    & \textbf{Actual Positive} & \textbf{Actual Negative} \\
+                    \hline
+                    \textbf{Predicted Positive} & 70 (TP) & 10 (FP) \\
+                    \hline
+                    \textbf{Predicted Negative} & 30 (FN) & 90 (TN) \\
+                    \hline
+                \end{tabular}
+                \caption{Example of a Confusion Matrix}
+            \end{table}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Performance Metrics}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Key Performance Metrics}
+        \begin{itemize}
+            \item \textbf{Accuracy}: 
+            \begin{equation} 
+                \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN} 
+            \end{equation}
+            \item \textbf{Precision}: 
+            \begin{equation} 
+                \text{Precision} = \frac{TP}{TP + FP} 
+            \end{equation}
+            \item \textbf{Recall (Sensitivity)}: 
+            \begin{equation} 
+                \text{Recall} = \frac{TP}{TP + FN} 
+            \end{equation}
+            \item \textbf{F1 Score}: 
+            \begin{equation} 
+                F1 = 2 \times \frac{Precision \times Recall}{Precision + Recall} 
+            \end{equation}
+            \item \textbf{ROC-AUC}: Area Under the Curve (AUC) of the Receiver Operating Characteristic, evaluates trade-offs between True Positive Rate and False Positive Rate.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Choosing the Right Metric}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Choosing the Right Metric}
+        \begin{itemize}
+            \item Align metric choice with business goals:
+            \begin{itemize}
+                \item Use \textbf{Precision} when the cost of false positives is high.
+                \item Use \textbf{Recall} when the cost of false negatives is high.
+                \item \textbf{F1 Score} is preferred for a balance between Precision and Recall.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Real-life Applications and Continuous Evaluation}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item \textbf{Real-life Applications}
+        \begin{itemize}
+            \item Essential in fields like healthcare (high recall for disease diagnosis) and fraud detection (high precision).
+        \end{itemize}
+        \item \textbf{Continuous Evaluation}
+        \begin{itemize}
+            \item Regular evaluation with new data ensures model effectiveness and reliability over time.
+        \end{itemize}
+        \item \textbf{Final Note}
+        \begin{itemize}
+            \item Mastering these concepts enhances your ability to evaluate classification models and make informed decisions.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+
+\end{document}

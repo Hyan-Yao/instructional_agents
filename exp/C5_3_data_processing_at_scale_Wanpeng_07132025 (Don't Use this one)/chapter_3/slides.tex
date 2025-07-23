@@ -1,0 +1,1244 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Query Processing Fundamentals}
+    \begin{block}{Overview}
+        Query processing is a core component of database management systems (DBMS) that transforms high-level queries into low-level commands for execution. 
+        Understanding query processing is crucial for optimizing data retrieval and ensuring efficient resource usage across different database models including relational, NoSQL, and distributed databases.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance of Query Processing}
+    \begin{enumerate}
+        \item \textbf{Efficiency}
+        \begin{itemize}
+            \item Executes queries in the shortest time possible while optimally using system resources (CPU, memory, and I/O).
+            \item \textit{Example}: Efficient processing avoids scanning entire tables by using indexes.
+        \end{itemize}
+        
+        \item \textbf{Accuracy}
+        \begin{itemize}
+            \item Ensures results reflect user queries, involving semantic checks and data integrity validation.
+            \item \textit{Example}: Join operations must combine records based on the correct keys.
+        \end{itemize}
+        
+        \item \textbf{Optimization}
+        \begin{itemize}
+            \item Transforms queries into more efficient forms, selecting execution plans with the lowest cost.
+            \item \textit{Example}: Optimizers may rearrange joins to minimize intermediate results.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Query Processing}
+    \begin{itemize}
+        \item \textbf{Parsing}: Converts query strings into a structured format (parse tree).
+        \item \textbf{Logical Plan Generation}: Creates an intermediate representation of the query, abstracting implementation details.
+        \item \textbf{Physical Plan Generation}: Selects specific algorithms and methods for query execution.
+        \item \textbf{Execution}: Runs the physical plan and retrieves the required data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustrative Workflow of Query Processing}
+    \begin{enumerate}
+        \item \textbf{Input Query}: User submits SQL (or other query language) command.
+        \item \textbf{Parsing Stage}: The DBMS validates the query syntax.
+        \item \textbf{Optimization}: Analyzes different execution strategies and chooses the most efficient one.
+        \item \textbf{Execution}: Executes the chosen plan and returns the results to the user.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Understanding query processing fundamentals is essential for developing efficient applications. 
+    As we progress in this chapter, we will explore the specific objectives of query processing, focusing on methods for achieving efficiency and correctness across various database models.  
+    By mastering these core concepts and methods, you will build a strong foundation for delving deeper into query processing complexities and optimization opportunities.
+\end{frame}
+
+\begin{frame}[fragile]{Objectives of Query Processing - Overview}
+    \begin{block}{Overview}
+        Query processing is a critical component of database management systems, serving to interpret and execute database queries. The processing of queries must be performed accurately, efficiently, and optimally to ensure that user requests yield the desired information quickly and effectively.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Objectives of Query Processing - Primary Objectives}
+    \begin{block}{Primary Objectives}
+        \begin{enumerate}
+            \item \textbf{Accuracy}
+                \begin{itemize}
+                    \item \textbf{Definition}: Ensuring that the results returned from a query are correct and reflect the intended information.
+                    \item \textbf{Importance}: High accuracy is essential to maintain data integrity and user trust.
+                    \item \textbf{Example}: Querying for all orders from 'Customer A' during January 2023 should return only those orders.
+                \end{itemize}
+                
+            \item \textbf{Efficiency}
+                \begin{itemize}
+                    \item \textbf{Definition}: Efficient query processing maximizes resource utilization (CPU, memory, disk I/O) while minimizing response time.
+                    \item \textbf{Importance}: Reduces system load and improves user experience in high-traffic environments.
+                    \item \textbf{Example}: Utilizing indexes speeds up search queries rather than sequentially scanning records.
+                \end{itemize}
+                
+            \item \textbf{Optimization}
+                \begin{itemize}
+                    \item \textbf{Definition}: Refining query execution to achieve best performance through various strategies and algorithms.
+                    \item \textbf{Importance}: Reduces execution time and resource consumption, essential for application scalability.
+                    \item \textbf{Example}: Using a query optimizer to rewrite a complex SQL query can improve execution efficiency.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Objectives of Query Processing - Key Points & Summary}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Balancing Objectives}: Accuracy, efficiency, and optimization are vital, but trade-offs may occur. 
+            \item \textbf{Continuous Improvement}: Query processing may require monitoring and tuning to meet evolving requirements.
+            \item \textbf{Impact of Poor Query Processing}: Inefficient processing can lead to slowed performance, increased costs, and user dissatisfaction.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Summary}
+        Understanding the objectives of query processing—accuracy, efficiency, and optimization—sets the foundation for advanced concepts in query languages and database interactions. Mastering these principles is essential for database administrators and developers as databases grow.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Query Languages - Introduction}
+    \begin{block}{Introduction to Query Languages}
+        Query languages are essential for interacting with databases and performing operations such as data retrieval, manipulation, and management. Understanding the different types of query languages is crucial for working effectively with various data storage systems.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Query Languages - Common Query Languages}
+    \begin{enumerate}
+        \item \textbf{SQL (Structured Query Language)}
+        \begin{itemize}
+            \item \textbf{Overview}: Standard language for relational database management systems (RDBMS).
+            \item \textbf{Key Features}:
+            \begin{itemize}
+                \item Declarative syntax allows users to specify what they want, not how to get it.
+                \item Supports complex queries with JOINs, GROUP BY, and aggregate functions.
+            \end{itemize}
+            \item \textbf{Example}:
+            \begin{lstlisting}[language=SQL]
+SELECT name, age FROM employees WHERE department = 'Sales';
+            \end{lstlisting}
+        \end{itemize}
+        
+        \item \textbf{NoSQL Variants}
+        \begin{itemize}
+            \item \textbf{Overview}: Variety of technologies for specific data models and scalability.
+            \item \textbf{Examples}:
+            \begin{itemize}
+                \item \textbf{MongoDB (Document Store)}:
+                \begin{lstlisting}[language=JSON]
+db.employees.find({ "department": "Sales" }, { "name": 1, "age": 1 });
+                \end{lstlisting}
+                \item \textbf{Redis (Key-Value Store)}:
+                \begin{lstlisting}[language=bash]
+GET "user:1000:name"
+                \end{lstlisting}
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Query Languages - Graph Query Languages and Key Points}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Graph Query Languages}
+        \begin{itemize}
+            \item \textbf{Overview}: Designed for querying and manipulating graph structures.
+            \item \textbf{Example}:
+            \begin{lstlisting}[language=Cypher]
+MATCH (employee:Person)-[:WORKS_IN]->(department:Department {name: 'Sales'})
+RETURN employee.name, employee.age;
+            \end{lstlisting}
+        \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Purpose}: Allows access to data for insights and operations across various data storage systems.
+            \item \textbf{Selection}: Choice of query language depends on database architecture, use case requirements, and data type.
+            \item \textbf{Performance}: Understanding each language can significantly affect query execution efficiency.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        By mastering various query languages, you enhance your ability to interact with different data systems, enabling better data management and analytics capabilities.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relational Database Queries - Introduction}
+    \begin{block}{Understanding Relational Database Queries}
+        Relational databases use structured query languages (SQL) to retrieve and manipulate data stored in tables. A basic understanding of how these queries function is crucial for effectively interacting with relational databases.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relational Database Queries - Key Components}
+    \begin{block}{Key Components of SQL Queries}
+        \begin{enumerate}
+            \item \textbf{SELECT Statement}: Specifies the columns to retrieve.
+            \item \textbf{FROM Clause}: Indicates the table for data retrieval.
+            \item \textbf{WHERE Clause}: Filters records based on conditions.
+            \item \textbf{ORDER BY Clause}: Sorts the result set.
+            \item \textbf{GROUP BY Clause}: Aggregates data and groups results.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relational Database Queries - Examples}
+    \begin{block}{Example 1: Simple SELECT Query}
+        \begin{lstlisting}
+SELECT first_name, last_name
+FROM employees;
+        \end{lstlisting}
+        Explanation: Retrieves the `first_name` and `last_name` of all employees from the `employees` table.
+    \end{block}
+
+    \begin{block}{Example 2: SELECT with WHERE Clause}
+        \begin{lstlisting}
+SELECT first_name, last_name
+FROM employees
+WHERE department = 'Sales';
+        \end{lstlisting}
+        Explanation: Fetches names of employees who work in the 'Sales' department.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relational Database Queries - More Examples}
+    \begin{block}{Example 3: Using ORDER BY Clause}
+        \begin{lstlisting}
+SELECT first_name, last_name
+FROM employees
+ORDER BY last_name ASC;
+        \end{lstlisting}
+        Explanation: Employee names sorted in ascending order by `last_name`.
+    \end{block}
+
+    \begin{block}{Example 4: Grouping Data with GROUP BY}
+        \begin{lstlisting}
+SELECT department, COUNT(*) AS num_employees
+FROM employees
+GROUP BY department;
+        \end{lstlisting}
+        Explanation: Groups employees by department and counts how many are in each.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relational Database Queries - Important Points}
+    \begin{block}{Important Points to Remember}
+        \begin{itemize}
+            \item SQL Queries are case-insensitive.
+            \item Ensure data integrity by using transactions for multiple operations.
+            \item Validate input to prevent SQL injection attacks when dynamically creating queries.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relational Database Queries - Conclusion}
+    \begin{block}{Conclusion}
+        Understanding the basic structure and functionality of SQL queries is essential for effective data retrieval from relational databases. Practice writing various queries to reinforce these concepts.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{NoSQL Query Mechanisms - Overview}
+    \begin{block}{Overview of NoSQL Query Processing}
+        NoSQL databases diverge from traditional relational databases in structure, design, and query mechanisms. They are optimized for scalability, flexibility, and performance, which makes them preferable for handling large volumes of unstructured or semi-structured data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{NoSQL Query Mechanisms - Key Types}
+    \begin{block}{Key Types of NoSQL Databases}
+        \begin{enumerate}
+            \item \textbf{Key-Value Stores}
+            \begin{itemize}
+                \item \textbf{Description}: The simplest NoSQL model, where data is stored as a collection of key-value pairs.
+                \item \textbf{Query Mechanism}: Direct access via keys.
+                \item \textbf{Example}: Redis, Amazon DynamoDB.
+                \item \textbf{Key Point}: Efficiency in read/write operations makes key-value stores suitable for caching solutions.
+            \end{itemize}
+            
+            \item \textbf{Document Stores}
+            \begin{itemize}
+                \item \textbf{Description}: Stores data in documents (JSON, BSON, XML).
+                \item \textbf{Query Mechanism}: Uses document IDs or field-based queries.
+                \item \textbf{Example}: MongoDB, Couchbase.
+                \item \textbf{Key Point}: Flexibility to represent complex data without rigid schemas.
+            \end{itemize}
+            
+            \item \textbf{Column-Family Stores}
+            \begin{itemize}
+                \item \textbf{Description}: Data stored in columns rather than rows for high throughput.
+                \item \textbf{Query Mechanism}: Queries performed at the column family level.
+                \item \textbf{Example}: Apache Cassandra, HBase.
+                \item \textbf{Key Point}: Ideal for analytical queries and time-series data.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{NoSQL Query Processing - Key Considerations}
+    \begin{block}{Key Considerations in NoSQL Query Processing}
+        \begin{itemize}
+            \item \textbf{Scalability}: Designed for horizontal scaling to manage increasing data by adding servers.
+            \item \textbf{Flexibility}: Schema-less structures facilitate rapid development and changing data requirements.
+            \item \textbf{Performance}: Optimized for high availability and fast response times for real-time data processing.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Summary}
+        NoSQL databases employ varied query mechanisms tailored to their data models. Understanding these assists in selecting appropriate databases for effective data processing aligned with application needs.
+    \end{block}
+    
+    \begin{block}{Note}
+        Familiarity with APIs and query languages (e.g., MongoDB's query language) is essential for effective data manipulation and retrieval.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Graph Database Queries - Overview}
+    \begin{block}{Overview}
+        Graph databases are optimized for storing, querying, and retrieving inherently connected data. 
+        They utilize nodes, edges, and properties instead of traditional tables, which allows for complex relationships and more intuitive queries.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Graph Database Queries - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Nodes and Edges}:
+        \begin{itemize}
+            \item Nodes represent entities (e.g., people, places, events).
+            \item Edges represent relationships (e.g., friendships, ownership).
+        \end{itemize}
+        \item \textbf{Properties}:
+        \begin{itemize}
+            \item Nodes and edges can have properties that give additional information (e.g., a person with properties like name and age).
+        \end{itemize}
+        \item \textbf{Query Language}:
+        \begin{itemize}
+            \item Specialized query languages (e.g., Cypher for Neo4j) are used to express queries based on relationships.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Processing Queries - Structure and Example}
+    \begin{block}{Query Structure}
+        \begin{itemize}
+            \item \textbf{Pattern Matching}: Identifying relationships among nodes (e.g., friends of friends).
+            \item \textbf{Traversal}: Querying often involves traversing the graph through vertices and edges.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Example Query}
+        In Neo4j’s Cypher query language, to find friends of a specific person:
+        \begin{lstlisting}[language=SQL]
+MATCH (person:Person {name: 'Alice'})-[:FRIENDS]->(friend)
+RETURN friend.name
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Unique Querying Needs and Use Cases}
+    \begin{itemize}
+        \item \textbf{Unique Querying Needs}:
+        \begin{itemize}
+            \item Efficiency in traversing large datasets is crucial.
+            \item Recursive queries may be needed to explore connections (e.g., friends of friends).
+        \end{itemize}
+        \item \textbf{Performance Considerations}:
+        \begin{itemize}
+            \item Proper indexing enhances query performance.
+            \item Caching strategies can speed up complex queries.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-World Use Cases}
+    \begin{itemize}
+        \item \textbf{Real-World Use Cases}:
+        \begin{itemize}
+            \item \textbf{Social Networks}: Finding mutual friends or suggesting connections.
+            \item \textbf{Recommendation Systems}: Suggesting products based on user connections.
+            \item \textbf{Fraud Detection}: Analyzing relationships in transactions to uncover fraud.
+        \end{itemize}
+    \end{itemize}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Graph databases excel with connected data.
+            \item Understanding nodes and edges is critical for effective querying.
+            \item Performance optimizations (indexing and caching) are vital for large datasets.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Query Plan Generation - Overview}
+    \begin{block}{Definition}
+        Query plan generation is a critical phase in the query processing lifecycle where the database system transforms a high-level query (often SQL) into a series of operations that the database can execute. The generated query plan defines how data will be retrieved or modified.
+    \end{block}
+
+    \begin{block}{Importance}
+        Creating an efficient query plan is vital for reducing response time and resource consumption. An optimal query plan can significantly enhance performance, especially in large databases with complex queries. Optimization aims to minimize time complexity and resource usage.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Query Plan Generation - Steps}
+    \begin{enumerate}
+        \item \textbf{Parsing the Query:}
+            \begin{itemize}
+                \item The query is syntactically checked to ensure it adheres to the rules of the query language (e.g., SQL).
+                \item Example: The SQL query \texttt{SELECT name FROM employees WHERE department = 'Sales';} is parsed to verify its structure.
+            \end{itemize}
+
+        \item \textbf{Transforming the Query:}
+            \begin{itemize}
+                \item The parsed query is transformed into a logical representation, often an abstract tree of operations (logical plan).
+                \item The logical plan outlines what data operations are needed without specifying how they will be executed.
+            \end{itemize}
+
+        \item \textbf{Optimization:}
+            \begin{itemize}
+                \item The logical plan undergoes optimization, where various algorithms evaluate different execution strategies.
+                \item Optimizers consider factors such as indexes, data distributions, and statistics to choose the best approach.
+                \item \textbf{Example Optimization Techniques:}
+                    \begin{itemize}
+                        \item Predicate Pushdown: Moving filters closer to the data source to reduce the amount of data processed.
+                        \item Join Ordering: Determining the most efficient order to apply joins considering data sizes and indexes.
+                    \end{itemize}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Query Plan Generation - Final Steps}
+    \begin{enumerate}[resume]
+        \item \textbf{Generating the Physical Query Plan:}
+            \begin{itemize}
+                \item An optimal logical plan is converted into a physical plan, specifying the actual operations and access methods (e.g., sequential scans, index scans).
+                \item Each node in the physical plan corresponds to a specific algorithm or method to retrieve data.
+            \end{itemize}
+
+        \item \textbf{Execution Plan Selection:}
+            \begin{itemize}
+                \item The system selects the execution plan from the available physical plans based on cost estimates.
+                \item The cost is calculated based on factors like I/O operations, CPU usage, and memory requirements.
+            \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Efficiency: A well-optimized query plan directly impacts overall database performance.
+            \item Dynamic Nature: Query optimization is a dynamic process adapting to changes in data and schema.
+            \item Statistics Matter: Regularly updated statistics about data distributions and sizes are essential for effective optimization.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Execution Strategies for Queries - Overview}
+    \begin{block}{Overview of Execution Strategies}
+        Execution strategies are crucial in how databases process and fulfill query requests. They determine the method by which a database engine retrieves and manipulates data to provide results. Choosing an efficient execution strategy can dramatically affect performance, especially with large datasets. Below are key execution strategies used in database query processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Execution Strategies for Queries - Key Strategies}
+    \begin{enumerate}
+        \item \textbf{Sequential Scanning}
+        \begin{itemize}
+            \item \textbf{Definition}: The simplest form of execution where the database scans each row of a table sequentially.
+            \item \textbf{Use Case}: Best for small tables or simple queries with no filters.
+            \item \textbf{Example}:
+            \begin{lstlisting}
+SELECT * FROM Customers;
+            \end{lstlisting}
+            \item \textbf{Key Point}: For larger tables, sequential scans can be inefficient if a large portion of the data is not needed.
+        \end{itemize}
+
+        \item \textbf{Index-Based Access}
+        \begin{itemize}
+            \item \textbf{Definition}: Utilizes indexes to quickly locate rows, reducing the amount of data the system has to scan.
+            \item \textbf{Use Case}: Highly effective for queries with WHERE clauses.
+            \item \textbf{Example}:
+            \begin{lstlisting}
+SELECT * FROM Customers WHERE LastName = 'Smith';
+            \end{lstlisting}
+            \item \textbf{Key Point}: The speed-up occurs because the database can jump directly to the relevant entries instead of scanning through all the rows.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Execution Strategies for Queries - Additional Strategies}
+    \begin{enumerate}[resume]
+        \item \textbf{Join Strategies}
+        \begin{itemize}
+            \item \textbf{Definition}: Different methods to combine rows from two or more tables based on related columns.
+            \item \textbf{Types}:
+            \begin{itemize}
+                \item \textit{Nested Loop Join}: Suitable for smaller datasets, iteratively processes each row.
+                \item \textit{Hash Join}: Suitable for larger datasets; creates a hash table for one dataset and probes it for matches.
+                \item \textit{Merge Join}: Requires inputs to be sorted; efficiently combines datasets through merging.
+            \end{itemize}
+            \item \textbf{Example}:
+            \begin{lstlisting}
+SELECT * 
+FROM Orders 
+JOIN Customers ON Orders.CustomerID = Customers.CustomerID;
+            \end{lstlisting}
+        \end{itemize}
+
+        \item \textbf{Materialized Views}
+        \begin{itemize}
+            \item \textbf{Definition}: Precomputed results stored as a table that can be indexed and queried.
+            \item \textbf{Use Case}: Useful for complex queries that are executed frequently.
+            \item \textbf{Key Point}: Reduces execution time by avoiding repeated calculations.
+        \end{itemize}
+
+        \item \textbf{Query Caching}
+        \begin{itemize}
+            \item \textbf{Definition}: Stores the results of expensive queries and retrieves them for identical queries in future requests.
+            \item \textbf{Use Case}: Effective in applications where similar queries are frequent, enhancing response time.
+            \item \textbf{Key Point}: Cache invalidation strategies are essential to ensure data integrity.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Cost-Based Optimization}
+    
+    \begin{block}{Overview}
+        Cost-based optimization (CBO) is a database technique to determine the most efficient query execution plan by analyzing various execution strategies rather than relying on fixed rules.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Cost-Based Optimization}
+    
+    \begin{itemize}
+        \item CBO analyzes different execution plans.
+        \item It estimates costs based on:
+        \begin{itemize}
+            \item Processing time
+            \item Resource usage
+            \item Data distribution
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How CBO Works}
+    
+    \begin{enumerate}
+        \item \textbf{Generating Execution Plans}:
+            \begin{itemize}
+                \item Multiple plans for different strategies (joins, scans, indexes).
+            \end{itemize}
+        
+        \item \textbf{Cost Estimation}:
+            \begin{itemize}
+                \item Includes CPU, I/O, and Memory costs.
+            \end{itemize}
+        
+        \item \textbf{Statistics Gathering}:
+            \begin{itemize}
+                \item Maintains data distribution statistics for accurate estimates.
+            \end{itemize}
+        
+        \item \textbf{Plan Selection}:
+            \begin{itemize}
+                \item Selects the plan with the lowest estimated cost.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Cost-Based Optimization}
+    
+    \begin{block}{SQL Query}
+        \begin{lstlisting}[language=SQL]
+SELECT * 
+FROM Orders 
+JOIN Customers ON Orders.CustomerID = Customers.CustomerID 
+WHERE Customers.Country = 'USA';
+        \end{lstlisting}
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Plan Generation}:
+            \begin{itemize}
+                \item Plan 1: Filter Customers, then join.
+                \item Plan 2: Join first, then filter.
+            \end{itemize}
+        
+        \item \textbf{Cost Evaluation}:
+            \begin{itemize}
+                \item Evaluates matching rows and estimated costs.
+            \end{itemize}
+        
+        \item \textbf{Chosen Execution Plan}:
+            \begin{itemize}
+                \item Executes the plan minimizing costs.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Cost Formula}
+    
+    \begin{itemize}
+        \item \textbf{Dynamic}: Adapts to data changes.
+        \item \textbf{Efficiency}: Leads to faster query responses.
+        \item \textbf{Trade-offs}: Estimates may not reflect runtime performance accurately.
+    \end{itemize}
+    
+    \begin{block}{Formula for Cost Estimation}
+        \begin{equation}
+        \text{Total Cost} = \text{CPU Cost} + \text{I/O Cost} + \text{Memory Cost}
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    
+    \begin{block}{Summary}
+        Cost-based optimization is essential for efficient query execution in databases, improving overall performance. Understanding its principles enhances the ability to design efficient queries and utilize database capabilities effectively.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Distributed Query Processing}
+    \begin{block}{Introduction}
+        Distributed query processing involves executing database queries across multiple, interconnected nodes to optimize data handling and leverage parallel processing capabilities.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Frameworks for Distributed Query Processing}
+    Two popular frameworks used are:
+    \begin{enumerate}
+        \item \textbf{Apache Hadoop}
+        \begin{itemize}
+            \item \textbf{Hadoop MapReduce}
+            \begin{itemize}
+                \item Processes large datasets using a distributed algorithm.
+                \item \textit{Map function} emits intermediate key-value pairs.
+                \item \textit{Reduce function} merges values by intermediate key.
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Apache Spark}
+        \begin{itemize}
+            \item Unified analytics engine for big data with multi-module support (streaming, SQL, ML, graph).
+            \item \textit{Resilient Distributed Dataset (RDD)} abstracts distributed data.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Query Processing Frameworks}
+    \begin{block}{Apache Hadoop Pseudo-code}
+    \begin{lstlisting}[language=Python]
+def map_function(document):
+    for word in document.split():
+        emit(word, 1)  # Emit each word with a count of 1
+        
+def reduce_function(word, counts):
+    emit(word, sum(counts))  # Sum counts of the same word
+    \end{lstlisting}
+    \end{block}
+
+    \begin{block}{Apache Spark Pseudo-code}
+    \begin{lstlisting}[language=Python]
+from pyspark import SparkContext
+sc = SparkContext()
+lines = sc.textFile("hdfs:///path/to/textfile")
+counts = lines.flatMap(lambda line: line.split()) \
+              .map(lambda word: (word, 1)) \
+              .reduceByKey(lambda a, b: a + b)
+counts.saveAsTextFile("hdfs:///path/to/output")
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Concepts of Distributed Query Execution}
+    \begin{itemize}
+        \item \textbf{Data Locality}: Optimizes processing by performing computation where data is stored.
+        \item \textbf{Query Decomposition}: Divides a query into sub-queries for parallel execution.
+        \item \textbf{Load Balancing}: Ensures work is evenly distributed to maximize resource utilization.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Benefits and Challenges}
+    \begin{block}{Benefits}
+        \begin{itemize}
+            \item \textbf{Scalability}: Adapts to increasing data and user demands.
+            \item \textbf{Fault Tolerance}: Continues processing on other nodes if one fails.
+            \item \textbf{Performance}: Improves response times via parallel execution.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Challenges}
+        \begin{itemize}
+            \item \textbf{Network Latency}: Slows down query execution due to communication overhead.
+            \item \textbf{Data Partitioning}: Challenges in dividing data effectively.
+            \item \textbf{Consistency}: Issues maintaining data integrity across nodes.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    Distributed query processing enhances the capability to handle large-scale data in modern databases. Frameworks like Hadoop and Spark facilitate efficient query execution while addressing challenges in distributed environments.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Query Processing - Introduction}
+    \begin{block}{Overview}
+        Query processing is a critical phase in database management that involves transforming high-level query representations into executable formats. Various database architectures introduce unique challenges.
+    \end{block}
+    \begin{itemize}
+        \item Understanding these challenges is key to optimizing performance.
+        \item Ensures efficient data retrieval.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Query Processing - Common Issues}
+    \begin{enumerate}
+        \item Data Distribution and Location Transparency
+        \item Schema Heterogeneity
+        \item Query Optimization
+        \item Concurrency Control
+        \item Data Volume and Scalability
+        \item Inadequate Indexing
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Query Processing - Details}
+    \begin{itemize}
+        \item \textbf{Data Distribution and Location Transparency}
+            \begin{itemize}
+                \item Data is spread across multiple nodes.
+                \item Can lead to inefficient data retrieval paths.
+                \item \textbf{Example:} Aggregate functions on distributed data require data to be transferred for computation.
+            \end{itemize}
+        
+        \item \textbf{Schema Heterogeneity}
+            \begin{itemize}
+                \item Different schema designs complicate querying.
+                \item \textbf{Example:} Mismatched data types can lead to errors or transformations.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Query Processing - More Challenges}
+    \begin{itemize}
+        \item \textbf{Query Optimization}
+            \begin{itemize}
+                \item Generating efficient execution plans is complex.
+                \item Poor optimization leads to suboptimal resource utilization and performance issues.
+            \end{itemize}
+        
+        \item \textbf{Concurrency Control}
+            \begin{itemize}
+                \item Complexities arise with multiple simultaneous queries.
+                \item \textbf{Example:} Transaction conflicts may need locking or versioning.
+            \end{itemize}
+        
+        \item \textbf{Data Volume and Scalability}
+            \begin{itemize}
+                \item Increased data volume slows down processing.
+                \item \textbf{Illustration:} Scaling from thousands to millions of entries can cause bottlenecks.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Query Processing - Final Points}
+    \begin{itemize}
+        \item \textbf{Inadequate Indexing}
+            \begin{itemize}
+                \item Improper or missing indexes slow down queries.
+                \item \textbf{Example:} Full table scans instead of index use lead to increased I/O and longer execution times.
+            \end{itemize}
+        
+        \item \textbf{Summary}
+            \begin{itemize}
+                \item Understanding these challenges is crucial for optimizing database performance.
+                \item Addressing these issues enhances efficiency and user satisfaction.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Query Processing - Key Takeaway}
+    \begin{block}{Key Takeaway}
+        Properly designed query processing strategies and ongoing optimization efforts are essential to overcoming challenges in various database architectures. Addressing these challenges enhances the robustness and responsiveness of database systems.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Implications of Query Processing}
+    \begin{block}{Understanding Query Processing in Real-World Scenarios}
+        Query processing is a critical component of DBMS that determines how queries are executed to efficiently retrieve and manipulate data. Its practical implications allow database professionals to design, optimize, and manage databases better.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Query Optimization}
+            \begin{itemize}
+                \item \textbf{Definition}: The process of finding the most efficient execution plan for a given query.
+                \item \textbf{Real-World Implication}: A simple query could take hours to execute without optimization; indexes can reduce search time drastically.
+                \item \textbf{Example}: 
+                    \begin{itemize}
+                        \item Query without index: \texttt{SELECT * FROM Orders WHERE customer\_id = 123;}
+                        \item Query with index: Runs faster with an index on \texttt{customer\_id}.
+                    \end{itemize}
+            \end{itemize}
+        
+        \item \textbf{Execution Plans}
+            \begin{itemize}
+                \item \textbf{Definition}: A sequence of operations the DBMS performs to execute a query.
+                \item \textbf{Real-World Implication}: Understanding execution plans helps in diagnosing performance issues.
+                \item \textbf{Example}: Analyzing an execution plan might reveal full table scans instead of faster indexed scans.
+            \end{itemize}
+        
+        \item \textbf{Data Independence}
+            \begin{itemize}
+                \item \textbf{Definition}: Ability to change the schema at one level without changing the schema at another level.
+                \item \textbf{Real-World Implication}: Increases flexibility in application development and database management.
+                \item \textbf{Example}: Adding a new column should not require changes to queries that do not reference the new column.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Performance Matters}: Efficient query processing leads to faster data retrieval, crucial for user satisfaction and application performance.
+        \item \textbf{Cost of Poor Processing}: Inefficient queries can lead to excessive resource consumption and increased operational costs.
+        \item \textbf{Interactivity with Tools}: Using modern tools (e.g., indexing, caching) can significantly enhance query processing; tools like PostgreSQL query planner improve query design.
+    \end{itemize}
+
+    \begin{block}{Technologies \& Considerations}
+        \begin{itemize}
+            \item \textbf{Relational Databases}: Familiarize with SQL optimization techniques.
+            \item \textbf{NoSQL Databases}: Understand differences; e.g., MongoDB optimizes queries with schema design.
+            \item \textbf{Big Data}: Platforms like Apache Spark use distributed processing for large-scale data.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example Code Snippet (SQL)}
+        \begin{lstlisting}[language=SQL]
+EXPLAIN ANALYZE SELECT * FROM Orders 
+WHERE customer_id = 123 
+ORDER BY order_date DESC;
+        \end{lstlisting}
+    \end{block}
+    
+    By applying the principles of query processing, professionals can enhance performance, reliability, and scalability of their systems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Tools and Technologies for Query Processing - Overview}
+    \begin{itemize}
+        \item Query processing is essential for efficient data retrieval and manipulation.
+        \item Overview of key tools:
+        \begin{itemize}
+            \item PostgreSQL
+            \item MongoDB
+            \item Apache Spark
+        \end{itemize}
+        \item Each tool has unique strengths suited for different use cases.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{PostgreSQL}
+    \begin{itemize}
+        \item \textbf{Type}: Relational Database Management System (RDBMS)
+        \item \textbf{Key Features}:
+        \begin{itemize}
+            \item Supports SQL for querying data.
+            \item ACID compliance for transaction reliability.
+            \item Advanced indexing capabilities (B-trees, GiST).
+        \end{itemize}
+        \item \textbf{Example}:
+        \begin{lstlisting}[language=SQL]
+        SELECT name, age 
+        FROM users 
+        WHERE age > 25 
+        ORDER BY name;
+        \end{lstlisting}
+        \item \textbf{Use Cases}: Ideal for applications requiring complex transactions (e.g., banking systems, e-commerce).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MongoDB and Apache Spark}
+    \begin{itemize}
+        \item \textbf{MongoDB}
+        \begin{itemize}
+            \item \textbf{Type}: NoSQL Document Store
+            \item \textbf{Key Features}:
+            \begin{itemize}
+                \item Flexible schemas for dynamic data structures.
+                \item JSON-like documents for storage.
+                \item Powerful aggregation framework.
+            \end{itemize}
+            \item \textbf{Example}:
+            \begin{lstlisting}[language=JavaScript]
+            db.users.find({ age: { $gt: 25 } }).sort({ name: 1 });
+            \end{lstlisting}
+            \item \textbf{Use Cases}: Excellent for applications with rapidly changing data (e.g., content management systems).
+        \end{itemize}
+
+        \item \textbf{Apache Spark}
+        \begin{itemize}
+            \item \textbf{Type}: Unified Analytics Engine for Big Data Processing
+            \item \textbf{Key Features}:
+            \begin{itemize}
+                \item In-memory data processing for high performance.
+                \item Supports various structured and unstructured data sources.
+                \item APIs in Java, Scala, Python, and R.
+            \end{itemize}
+            \item \textbf{Example}:
+            \begin{lstlisting}[language=Python]
+            spark.sql("SELECT name, age FROM users WHERE age > 25 ORDER BY name").show()
+            \end{lstlisting}
+            \item \textbf{Use Cases}: Best for big data applications (e.g., real-time analytics, machine learning).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Summary}
+    \begin{itemize}
+        \item \textbf{Appropriateness of Use}:
+        \begin{itemize}
+            \item PostgreSQL: Structured relational data.
+            \item MongoDB: Flexible document-based structures.
+            \item Spark: Large-scale data processing.
+        \end{itemize}
+        \item \textbf{Performance}:
+        \begin{itemize}
+            \item Optimized for different scenarios affecting performance, scalability, and ease of use.
+        \end{itemize}
+        \item \textbf{Integration}:
+        \begin{itemize}
+            \item Tools can be combined, e.g., using Spark with MongoDB for processing unstructured data.
+        \end{itemize}
+        \item \textbf{Summary}:
+        \begin{itemize}
+            \item Understand strengths and weaknesses for selecting the right tool.
+            \item Each technology is vital for data-driven applications.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Case Studies in Query Processing}
+    \begin{block}{Introduction}
+        Query processing is crucial in DBMS for efficient data retrieval, optimizing performance, resource use, and user needs. Real-world case studies illustrate the impact of advanced query processing techniques.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Case Study 1: Google BigQuery}
+    \begin{itemize}
+        \item \textbf{Overview:} Fully managed data warehouse enabling fast SQL queries on Google’s infrastructure.
+        \item \textbf{Key Features:}
+        \begin{itemize}
+            \item Serverless architecture
+            \item Automatic scaling for large datasets
+        \end{itemize}
+        \item \textbf{Example:} Retail analysis of over a billion sales transactions in seconds.
+        \item \textbf{Impact:} Reduced query times for real-time business decision-making.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Case Study 2: Netflix}
+    \begin{itemize}
+        \item \textbf{Overview:} Custom-built query processing engine for viewer data analytics.
+        \item \textbf{Key Features:}
+        \begin{itemize}
+            \item Real-time analytics for instant recommendation updates
+            \item Complex algorithm optimizations using machine learning
+        \end{itemize}
+        \item \textbf{Example:} Post-show analyses suggest content before the user navigates away.
+        \item \textbf{Impact:} Enhanced user engagement and retention through personalized suggestions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Case Study 3: MongoDB at eBay}
+    \begin{itemize}
+        \item \textbf{Overview:} Utilization of MongoDB for flexible data model and scalability.
+        \item \textbf{Key Features:}
+        \begin{itemize}
+            \item Horizontal scaling to boost performance
+            \item Rich query language for varied query complexities
+        \end{itemize}
+        \item \textbf{Example:} Management of thousands of listings with effective search capabilities.
+        \item \textbf{Impact:} Improved search speed and responsiveness, heightening customer satisfaction and sales.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Points to Emphasize}
+    \begin{enumerate}
+        \item \textbf{Performance Optimization:} Diverse strategies enhance query performance across environments.
+        \item \textbf{Scalability:} Successful implementations must handle varying workloads effectively.
+        \item \textbf{Real-World Relevance:} Advanced query processing yields tangible business benefits, enhancing user experience and operational efficiency.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SQL Query for BigQuery Example}
+    \begin{block}{Query Illustration}
+        \begin{lstlisting}
+SELECT product_id, COUNT(*) AS total_sales 
+FROM sales 
+WHERE sale_date BETWEEN '2022-01-01' AND '2022-12-31' 
+GROUP BY product_id 
+ORDER BY total_sales DESC 
+LIMIT 10;
+        \end{lstlisting}
+        \textbf{Description:} Retrieves the top 10 products sold in 2022, showcasing BigQuery's aggregation and sorting capabilities.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Closing Thoughts}
+    Understanding these case studies reveals how powerful query processing strategies are implemented in various industries, highlighting the importance of robust technology and innovative thinking in database design and utilization.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction}
+    \begin{block}{Overview}
+        As database technologies evolve, query processing is also adapting to accommodate:
+        \begin{itemize}
+            \item Growing data volumes
+            \item Increasing complexity
+            \item Higher performance expectations
+        \end{itemize}
+        This section explores innovative trends shaping the future of query processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Innovations and Trends - Part 1}
+    \begin{enumerate}
+        \item **AI-Driven Optimization**
+        \begin{itemize}
+            \item Machine learning algorithms enhance query optimization.
+            \item Example: Google’s BigQuery leverages AI for optimal query execution.
+        \end{itemize}
+
+        \item **Serverless Architectures**
+        \begin{itemize}
+            \item Automatic scaling, managed infrastructure for developers.
+            \item Example: Amazon Athena allows SQL queries on S3 without setup.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Innovations and Trends - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item **Federated Query Processing**
+        \begin{itemize}
+            \item Query multiple data sources seamlessly.
+            \item Example: Presto enables real-time queries across MySQL, NoSQL, and Hadoop.
+        \end{itemize}
+
+        \item **Real-Time Analytics**
+        \begin{itemize}
+            \item Demand for low-latency processing and immediate insights.
+            \item Example: Apache Kafka combined with KSQL supports real-time data streams.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Innovations and Trends - Part 3}
+    \begin{enumerate}
+        \setcounter{enumi}{4}
+        \item **Distributed Query Processing**
+        \begin{itemize}
+            \item Processes queries in parallel across multiple nodes.
+            \item Example: Apache Spark executes queries across clusters for faster computation.
+        \end{itemize}
+
+        \item **Data Lakehouse Architecture**
+        \begin{itemize}
+            \item Unifies benefits of data lakes and warehouses.
+            \item Example: Delta Lake offers ACID transactions and supports batch/streaming.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item Dynamic query optimization using AI enhances performance.
+        \item Federated queries allow comprehensive views of disparate data.
+        \item Distributed and serverless architectures offer rapid scalability.
+        \item Real-time insights facilitate immediate data-driven decisions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Summary}
+        The future of query processing is set for significant transformations. Embracing these trends:
+        \begin{itemize}
+            \item Enhances performance
+            \item Facilitates strategic decision-making
+        \end{itemize}
+        Students can appreciate the dynamic landscape and leverage these innovations in practice.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Review - Overview}
+    \begin{block}{Overview of Query Processing Fundamentals}
+        In this chapter, we explored the essential aspects of query processing within database systems, which is critical for retrieving data efficiently and effectively. Let’s summarize the key concepts covered in our discussions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Review - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Query Processing Definition}:
+        \begin{itemize}
+            \item The set of operations performed by a DBMS to execute a user query: parsing, optimization, and execution.
+        \end{itemize}
+
+        \item \textbf{Parsing}:
+        \begin{itemize}
+            \item Converts SQL query into an internal representation (AST).
+            \item \textit{Example}: SQL query \texttt{SELECT * FROM Students WHERE Age > 18} produces a structured AST.
+        \end{itemize}
+
+        \item \textbf{Query Optimization}:
+        \begin{itemize}
+            \item Enhances performance by determining the most efficient execution plan.
+            \begin{itemize}
+                \item \textit{Cost-based Optimization}: Evaluates execution paths based on resource usage.
+                \item \textit{Rule-based Optimization}: Transforms queries using predefined rules.
+            \end{itemize}
+            \item \textit{Example}: Rewriting \texttt{SELECT * FROM A, B WHERE A.id = B.a_id} to utilize indexes.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Review - Execution and Key Takeaways}
+    \begin{enumerate}[resume]
+        \item \textbf{Execution}:
+        \begin{itemize}
+            \item The DBMS executes the optimal plan to retrieve the desired data, potentially using indexes for faster access.
+            \item \textit{Example}: Using an index on \texttt{Age} for quicker results than a full table scan.
+        \end{itemize}
+
+        \item \textbf{Performance Metrics}:
+        \begin{itemize}
+            \item \textit{Response Time}: Time from query initiation to result return.
+            \item \textit{Throughput}: Number of queries processed per unit time.
+        \end{itemize}
+
+        \item \textbf{Key Takeaways}:
+        \begin{itemize}
+            \item Query processing involves parsing, optimization, and execution stages.
+            \item Optimization significantly impacts performance and efficiency.
+            \item Understanding execution plans aids in better query and index design.
+        \end{itemize}
+        
+        \item \textbf{Next Steps}:
+        \begin{itemize}
+            \item Future exploration of trends in query processing, including machine learning innovations.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+
+\end{document}

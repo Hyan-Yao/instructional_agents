@@ -1,0 +1,1179 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Agents and Environments - Overview}
+    
+    \begin{block}{Key Concepts}
+        In reinforcement learning (RL), \textbf{agents} and \textbf{environments} are fundamental constructs that interact to facilitate learning.
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{Agent}: The learner or decision-maker that takes actions to achieve a goal and maximizes cumulative rewards.
+        \item \textbf{Environment}: The external context responding to the agent’s actions and determining subsequent state and reward.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Agent-Environment Interaction Dynamics}
+    
+    \begin{block}{Agent-Environment Loop}
+        The interaction can be visualized as a loop consisting of:
+    \end{block}
+
+    \begin{enumerate}
+        \item \textbf{Action (A)}: The agent takes an action.
+        \item \textbf{State (S)}: The environment transitions to a new state based on the agent's action.
+        \item \textbf{Reward (R)}: The environment provides feedback to the agent in the form of a reward.
+    \end{enumerate}
+    
+    This cycle continues, forming the foundation of the agent’s learning process.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: Navigating a Maze}
+    
+    Consider a scenario where the agent is a robot navigating a maze:
+    
+    \begin{itemize}
+        \item \textbf{Agent}: The robot navigating the maze.
+        \item \textbf{Environment}: The maze itself.
+        \item \textbf{Actions}: Moving forward, turning left, turning right.
+        \item \textbf{States}: Different locations within the maze.
+        \item \textbf{Rewards}: Positive reward for reaching the exit, negative reward for hitting walls.
+    \end{itemize}
+    
+    The robot learns to navigate effectively by adjusting actions based on the rewards received.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Learning Aspects}
+    
+    \begin{itemize}
+        \item The agent's goal is to \textbf{maximize cumulative rewards} over time.
+        \item The interaction involves not just reacting; agents use strategies (policies) based on experiences.
+        \item The learning method is often framed with \textbf{value functions} and \textbf{policies}.
+    \end{itemize}
+
+    \begin{block}{Mathematical Representation}
+        At time \(t\), the agent chooses an action \(A_t\) based on a policy \(\pi\):
+        \[
+        R_t = f(S_t, A_t)
+        \]
+        where \(f\) describes the reward based on the state and action.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    
+    Understanding the dynamics between agents and environments is crucial for grasping reinforcement learning. This interplay drives learning and defines how agents adapt their strategies for better performance over time.
+    
+    \textbf{Next Steps:}
+    Further discussions will delve into how this interactivity differs from other machine learning paradigms, leading to deeper explorations of algorithms and applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Overview - Definition}
+    \begin{block}{What is Reinforcement Learning?}
+        Reinforcement Learning (RL) is a machine learning paradigm where an agent learns to make decisions by performing actions in an environment to maximize cumulative reward. 
+        Unlike supervised learning, RL relies on the consequences of actions, rather than labeled examples.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Overview - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Agent:} The learner or decision-maker (e.g., a robot, software program).
+        \item \textbf{Environment:} Everything the agent interacts with (e.g., a game, physical world).
+        \item \textbf{Action (A):} The choices available to the agent at a given state.
+        \item \textbf{State (S):} A representation of the current situation of the agent in the environment.
+        \item \textbf{Reward (R):} Feedback from the environment, based on the agent's action; can be positive or negative.
+        \item \textbf{Policy ($\pi$):} A strategy used by the agent to decide the next action based on the current state.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reinforcement Learning Overview - Comparison with Other Paradigms}
+    \begin{block}{How RL Differs from Other Learning Paradigms}
+        \begin{enumerate}
+            \item \textbf{Supervised Learning:}
+            \begin{itemize}
+                \item \textbf{Data Type:} Uses labeled datasets (input-output pairs).
+                \item \textbf{Process:} Learns by minimizing the difference between predicted and actual outputs.
+                \item \textbf{Example:} Classifying emails as spam or not based on historical data.
+            \end{itemize}
+
+            \item \textbf{Unsupervised Learning:}
+            \begin{itemize}
+                \item \textbf{Data Type:} Uses unlabeled datasets.
+                \item \textbf{Process:} Learns patterns and structures within the data.
+                \item \textbf{Example:} Clustering customers into segments based on purchasing behavior.
+            \end{itemize}
+
+            \item \textbf{Reinforcement Learning:}
+            \begin{itemize}
+                \item \textbf{Data Type:} Interactions, rather than static datasets.
+                \item \textbf{Process:} Learns to optimize decisions through trial and error with feedback from rewards/penalties.
+                \item \textbf{Example:} A game-playing AI that learns optimal strategies through gameplay.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Terms in Reinforcement Learning}
+    \begin{block}{Understanding Core Terms}
+        In Reinforcement Learning (RL), certain terms form the foundation of the learning process. These key concepts are essential to navigate through RL systems effectively.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in RL}
+    \begin{enumerate}
+        \item \textbf{Agent}
+        \begin{itemize}
+            \item \textbf{Definition:} The learner or decision-maker that interacts with the environment to achieve a goal.
+            \item \textbf{Example:} In chess, the player or algorithm making strategic decisions.
+        \end{itemize}
+
+        \item \textbf{Environment}
+        \begin{itemize}
+            \item \textbf{Definition:} Everything the agent interacts with, including states and outcomes.
+            \item \textbf{Example:} In chess, the board, pieces, and opponent moves.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Continuing Key Concepts}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue numbering from the previous frame
+        
+        \item \textbf{State}
+        \begin{itemize}
+            \item \textbf{Definition:} A specific situation or configuration of the environment.
+            \item \textbf{Example:} Unique arrangements of chess pieces.
+        \end{itemize}
+
+        \item \textbf{Action}
+        \begin{itemize}
+            \item \textbf{Definition:} A choice made by the agent that changes the environment.
+            \item \textbf{Example:} Moving a knight or capturing a piece in chess.
+        \end{itemize}
+        
+        \item \textbf{Reward}
+        \begin{itemize}
+            \item \textbf{Definition:} A scalar feedback signal given after an action.
+            \item \textbf{Example:} Winning a piece yields a positive reward, losing incurs a negative reward.
+        \end{itemize}
+
+        \item \textbf{Policy}
+        \begin{itemize}
+            \item \textbf{Definition:} A strategy defining the agent's behavior, mapping states to actions.
+            \item \textbf{Example:} Responding to an opponent's queen move with a knight or bishop.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Mathematical Notation}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item The \textbf{agent} and \textbf{environment} interact in a cycle: perceive state, take actions, receive rewards, and update policy.
+            \item Effectiveness in RL depends on the agent's learning of the relationship between states, actions, and rewards.
+            \item \textbf{Policies} are crucial for defining agent actions under various circumstances.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Mathematical Notation}
+        A common notation in RL is the reward function:
+        \begin{equation}
+            R: S \times A \rightarrow \mathbb{R}
+        \end{equation}
+        Policies can be:
+        \begin{itemize}
+            \item Deterministic: \( \pi(s) = a \)
+            \item Stochastic: \( \pi(a | s) \)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Supervised Learning - Overview}
+    \begin{block}{Key Differences}
+        \begin{itemize}
+            \item **Learning Process**
+            \item **Data Availability**
+            \item **Feedback Type**
+            \item **Usage Domains**
+        \end{itemize}
+    \end{block}
+    \begin{block}{Objective}
+        \begin{itemize}
+            \item SL: Minimize prediction errors.
+            \item RL: Maximize cumulative rewards over time.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Supervised Learning - Learning Process}
+    \begin{enumerate}
+        \item **Supervised Learning (SL)**:
+            \begin{itemize}
+                \item Learns from a labeled dataset (input-output pairs).
+                \item Adjusts parameters based on prediction errors.
+            \end{itemize}
+        \item **Reinforcement Learning (RL)**:
+            \begin{itemize}
+                \item Agent interacts with the environment.
+                \item Learns through rewards or penalties.
+                \item Balances exploration and exploitation.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Supervised Learning - Examples}
+    \begin{block}{Supervised Learning Example}
+        \textbf{Task}: Classifying Emails as Spam or Not Spam.\\
+        \textbf{Process}: Trained on a labeled dataset containing emails and their corresponding labels.
+    \end{block}
+    
+    \begin{block}{Reinforcement Learning Example}
+        \textbf{Task}: A Robot Learning to Navigate a Maze.\\
+        \textbf{Process}: The robot explores its environment, receives rewards/penalties based on its actions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Supervised Learning - Notable Formulas}
+    \begin{equation}
+        V(s) = E[R_t | s]
+    \end{equation}
+    \begin{equation}
+        \pi = \arg\max_{\pi} E\left[\sum_{t=0}^{T} \gamma^t R_t \right]
+    \end{equation}
+    \begin{itemize}
+        \item $V(s)$: value function estimating future rewards.
+        \item $\gamma$: discount factor for future rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Unsupervised Learning - Overview}
+    \begin{block}{Understanding the Differences}
+        \begin{itemize}
+            \item Reinforcement Learning (RL) and Unsupervised Learning (UL) are distinct machine learning paradigms.
+            \item RL focuses on learning through interaction with an environment.
+            \item UL aims to extract patterns from unlabelled data.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Unsupervised Learning - Key Concepts}
+    \begin{columns}
+        \column{0.5\textwidth}
+            \begin{block}{Reinforcement Learning (RL)}
+                \begin{itemize}
+                    \item Agent learns to make decisions.
+                    \item Interacts with an environment to maximize cumulative rewards.
+                    \item Receives feedback through rewards or penalties.
+                \end{itemize}
+            \end{block}
+
+        \column{0.5\textwidth}
+            \begin{block}{Unsupervised Learning (UL)}
+                \begin{itemize}
+                    \item Identifies patterns in unlabeled data.
+                    \item Works without explicit feedback on correctness.
+                    \item Common techniques include clustering and dimensionality reduction.
+                \end{itemize}
+            \end{block}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Unsupervised Learning - Fundamental Differences}
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Aspect} & \textbf{Reinforcement Learning} & \textbf{Unsupervised Learning} \\ \hline
+        Learning Process & Agent-environment interaction, learns through rewards & No reward signals; learns from the data structure \\ \hline
+        Objective & Maximize cumulative reward through interaction & Discover hidden patterns or groupings in data \\ \hline
+        Feedback Type & Delayed and sparse feedback & No feedback; learns solely from data \\ \hline
+        Examples of Tasks & Game playing (e.g., chess, Go), robotic control & Customer segmentation, anomaly detection \\ \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Unsupervised Learning - Examples}
+    \begin{enumerate}
+        \item \textbf{Reinforcement Learning Example:}
+            \begin{itemize}
+                \item Problem: A robot navigating a maze.
+                \item Process: Positive reward for reaching the exit; negative reward for hitting walls. The robot learns the optimal path through trial and error.
+            \end{itemize}
+        
+        \item \textbf{Unsupervised Learning Example:}
+            \begin{itemize}
+                \item Problem: Grouping customers by purchasing behavior.
+                \item Process: Utilizes clustering algorithms like K-means to identify segments without prior labels.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Unsupervised Learning - Key Points}
+    \begin{itemize}
+        \item RL incorporates feedback from the environment via reward signals.
+        \item UL seeks to discover inherent structures within data without feedback.
+        \item RL is applied in environments that are dynamic, such as gaming and robotics.
+        \item UL is often used for exploratory data analysis and understanding distributions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison with Unsupervised Learning - Summary and Further Exploration}
+    \begin{block}{Summary}
+        Both Reinforcement Learning and Unsupervised Learning involve learning from data, but they employ different approaches: RL learns through interactions and rewards, while UL focuses on pattern detection without feedback.
+    \end{block}
+    
+    \begin{block}{Further Exploration}
+        Explore combining RL with UL techniques for tasks requiring both structured understanding and reward-driven learning.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Typical Structure of a Reinforcement Learning Problem - Overview}
+    \begin{block}{Overview of Reinforcement Learning (RL)}
+        Reinforcement Learning is a subfield of machine learning where an agent learns to make decisions by interacting with an environment. The primary goal is to learn a policy that maximizes the cumulative reward over time.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components of a Reinforcement Learning Problem}
+    \begin{itemize}
+        \item \textbf{Agent}:
+        \begin{itemize}
+            \item The learner or decision-maker.
+            \item Responsible for taking actions in the environment.
+            \item Learns from past experiences to improve future actions.
+        \end{itemize}
+
+        \item \textbf{Environment}:
+        \begin{itemize}
+            \item Everything the agent interacts with.
+            \item Provides feedback in the form of rewards and observations.
+            \item Can be dynamic and may change based on the agent's actions.
+        \end{itemize}
+
+        \item \textbf{State (s)}:
+        \begin{itemize}
+            \item A representation of the current situation of the agent.
+            \item Encapsulates all information necessary for decision-making.
+        \end{itemize}
+
+        \item \textbf{Action (a)}:
+        \begin{itemize}
+            \item A choice made by the agent affecting the environment's state.
+            \item Agents explore various actions to see their effects.
+        \end{itemize}
+
+        \item \textbf{Reward (r)}:
+        \begin{itemize}
+            \item A scalar value received post-action indicating the immediate benefit.
+            \item Guides the agent's learning process.
+        \end{itemize}
+
+        \item \textbf{Policy ($\pi$)}:
+        \begin{itemize}
+            \item A strategy defining action selection in any given state.
+            \item Can be deterministic or stochastic.
+        \end{itemize}
+
+        \item \textbf{Value Function ($V$)}:
+        \begin{itemize}
+            \item Estimates the goodness of being in a given state.
+            \item Helps the agent understand the long-term reward.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Flow of Interaction in Reinforcement Learning}
+    \begin{enumerate}
+        \item \textbf{Initialization}: The agent starts in an initial state.
+        \item \textbf{Observation}: The agent observes the current state of the environment.
+        \item \textbf{Decision}: The agent selects an action based on its policy.
+        \item \textbf{Action}: The agent performs the action, causing a new state transition.
+        \item \textbf{Feedback}: The environment provides a reward based on the action and the new state.
+        \item \textbf{Learning}: The agent updates its policy based on the feedback received.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Reinforcement Learning}
+    \begin{block}{Example: Agent Navigating a Grid World}
+        \begin{itemize}
+            \item \textbf{State (s)}: Current position on the grid (e.g., (2, 3)).
+            \item \textbf{Action (a)}: Moving up, down, left, or right.
+            \item \textbf{Reward (r)}: 
+            \begin{itemize}
+                \item +10 for reaching a goal,
+                \item -1 for hitting a wall,
+                \item 0 otherwise.
+            \end{itemize}
+            \item \textbf{Policy ($\pi$)}: Preferences for moving toward cells with positive rewards.
+            \item \textbf{Value Function ($V$)}: Expected reward estimates for each grid position.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Reinforcement learning involves a cycle of interaction where an agent learns and adapts over time.
+            \item The reward structure is crucial for guiding the agent's learning process.
+            \item Understanding states, actions, and policies is fundamental to designing effective RL solutions.
+        \end{itemize}
+    \end{block}
+    Reinforcement Learning exemplifies a dynamic interplay between agents and their environments, allowing for adaptive learning through trial and error.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Role of Agents - Part 1}
+    \section{Understanding Agents in Reinforcement Learning}
+    
+    \begin{block}{Definition of an Agent}
+        An **Agent** is an entity that perceives its environment through sensors and acts upon it through actuators. In reinforcement learning (RL), the agent aims to maximize cumulative rewards over time.
+    \end{block}
+
+    \begin{block}{Key Functions of Agents}
+        \begin{itemize}
+            \item \textbf{Perception:} Gathers information about the environment (e.g., temperature, location).
+            \item \textbf{Decision-Making:} Decides actions based on perceived data, using learned strategies.
+            \item \textbf{Learning:} Improves performance through trial and error by adapting strategies based on feedback.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Role of Agents - Part 2}
+    \section{Decision-Making Capabilities}
+
+    \begin{block}{Algorithms for Decision-Making}
+        Agents evaluate potential actions using various algorithms:
+        \begin{itemize}
+            \item \textbf{Policy-based methods:} Learn a direct mapping from states to actions.
+            \item \textbf{Value-based methods:} Estimate expected return (value) of actions in specific states.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example of Agent Behavior}
+        Consider a simple \textbf{game-playing agent}:
+        \begin{itemize}
+            \item \textbf{Environment:} The game board.
+            \item \textbf{State:} Current configuration (e.g., positions of pieces).
+            \item \textbf{Actions:} Possible moves (e.g., moving a piece).
+            \item \textbf{Rewards:} Points scored or favorable positions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Role of Agents - Part 3}
+    \section{Optimizing Decision-Making}
+
+    \begin{block}{Q-learning Formula}
+    The update of the action-value function in Q-learning is given by:
+    \begin{equation}
+        Q(s, a) \gets Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item \( Q(s, a) \): Current estimate of value for action \( a \) in state \( s \).
+        \item \( \alpha \): Learning rate (speed of learning).
+        \item \( r \): Reward after taking action \( a \).
+        \item \( \gamma \): Discount factor (importance of future rewards).
+        \item \( s' \): New state after action \( a \).
+    \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Agents bridge perception and action in RL, continuously adapting to maximize rewards, essential for developing effective applications in gaming, robotics, and beyond.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{The Role of Environments}
+    In AI and reinforcement learning, environments shape agent behavior by providing feedback through states and rewards. Understanding this interaction is key to mastering learning and decision-making.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Concepts}
+    \begin{itemize}
+        \item \textbf{Environment:} The surroundings in which the agent operates, including everything it can perceive and interact with.
+        \item \textbf{Feedback Mechanisms:}
+        \begin{itemize}
+            \item \textbf{States:} The current situation of the environment encapsulating information for decision-making.
+            \item \textbf{Rewards:} Numerical representation of success or failure guiding actions to desirable outcomes.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Interaction Between Agents and Environments}
+    \begin{block}{Decision Process}
+        Agents perceive the current state, choose actions based on their policy, and execute these actions. The environment responds with a new state and a reward.
+    \end{block}
+
+    \begin{block}{Example Scenario}
+        \textbf{Self-driving Car:}
+        \begin{itemize}
+            \item \textbf{State:} Current location, speed, traffic conditions, and obstacle proximity.
+            \item \textbf{Action:} The car can accelerate, brake, or turn.
+            \item \textbf{Reward:} Successful navigation leads to a positive reward; accidents result in negative rewards.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Relevant Formulas and Pseudo-Code}
+    \begin{block}{Return Definition}
+        The aggregate reward received from time step \( t \):
+        \begin{equation}
+            G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \ldots
+        \end{equation}
+        where \( \gamma \) is the discount factor.
+
+    \end{block}
+
+    \begin{lstlisting}
+def choose_action(state):
+    # Explore or exploit based on policy
+    if random.random() < exploration_rate:
+        return random_action()
+    else:
+        return best_action_based_on_policy(state)
+
+def update_environment(action):
+    new_state, reward = environment.step(action)
+    return new_state, reward
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding States and Actions - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{States}:
+        \begin{itemize}
+            \item A specific configuration or situation within the environment that an agent observes.
+            \item Encapsulates all relevant information required for decision-making.
+            \item \textit{Example}: In a chess game, the arrangement of pieces on the board represents the current state.
+        \end{itemize}
+
+        \item \textbf{Actions}:
+        \begin{itemize}
+            \item A decision made by the agent that alters the state of the environment.
+            \item Choices available at a given state.
+            \item \textit{Example}: Moving a pawn in chess from one square to another.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding States and Actions - Importance in Reinforcement Learning}
+    \begin{itemize}
+        \item \textbf{Interaction with the Environment}:
+        \begin{itemize}
+            \item Agents transition between states due to actions, often with uncertain outcomes.
+        \end{itemize}
+
+        \item \textbf{Policy and Decision Making}:
+        \begin{itemize}
+            \item A policy maps states to actions and is refined through feedback from rewards after executing actions.
+        \end{itemize}
+
+        \item \textbf{Feedback Loop}:
+        \begin{itemize}
+            \item The interplay between states, actions, and rewards informs the agent of the long-term value of choices.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding States and Actions - Summary and Conclusion}
+    \begin{itemize}
+        \item \textbf{Definition Clarity}:
+        \begin{itemize}
+            \item States and actions are foundational concepts crucial to understanding reinforcement learning.
+        \end{itemize}
+
+        \item \textbf{Dynamic Interaction}:
+        \begin{itemize}
+            \item The dynamic nature of these concepts influences learning and adaptability in real-world applications.
+        \end{itemize}
+
+        \item \textbf{Examples Matter}:
+        \begin{itemize}
+            \item Diverse examples from robotics, video games, and finance illustrate how states and actions manifest across domains.
+        \end{itemize}
+
+        \item \textbf{Conclusion}:
+        \begin{itemize}
+            \item A firm grasp of states and actions is pivotal for effectively leveraging reinforcement learning.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Rewards and Policies - Overview}
+    \begin{block}{Key Concepts}
+        \begin{itemize}
+            \item \textbf{Rewards}: Scalar feedback signal guiding actions.
+            \item \textbf{Policies}: Strategy for selecting actions based on the state.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Rewards - Details}
+    \begin{block}{Definition}
+        In reinforcement learning (RL), a reward is a scalar feedback signal received by an agent after it takes an action in a given state. 
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Purpose}: Guides the agent in learning which actions yield positive outcomes. 
+        \item \textbf{Objective}: Maximize cumulative reward over time.
+    \end{itemize}
+
+    \begin{block}{Types of Rewards}
+        \begin{itemize}
+            \item \textbf{Immediate Reward}: Received after taking an action (denoted as \( r_t \)).
+            \item \textbf{Cumulative Reward}: Total reward over series of actions given by
+            \begin{equation}
+                G_t = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \ldots
+            \end{equation}
+            where \( \gamma \) (0 ≤ \( \gamma \) < 1) is the discount factor.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policies - Details}
+    \begin{block}{Definition}
+        A policy is a mapping from states of the environment to the actions the agent should take. It can be:
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Deterministic Policy}: Specific action for a state, \( \pi(s) = a \).
+        \item \textbf{Stochastic Policy}: Actions selected based on probabilities, \( \pi(a|s) \).
+    \end{itemize}
+    
+    \begin{block}{Purpose}
+        The policy defines the agent's behavior to maximize expected rewards.
+    \end{block}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Rewards refine policies through feedback.
+            \item An effective policy is essential for maximizing long-term rewards.
+            \item Reward design is vital to shape agent behavior.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Rewards and Policies}
+    \begin{block}{Scenario}
+        \textbf{A robot navigating through a maze.}
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Rewards}: 
+        \begin{itemize}
+            \item +10 points for reaching the goal.
+            \item -1 point for each step taken.
+        \end{itemize}
+        \item \textbf{Policy}: 
+        The robot uses \( \pi \) based on experiences to decide moves.
+    \end{itemize}
+
+    \begin{block}{Formula Recap}
+        \begin{equation}
+            G_t = r_t + \gamma G_{t+1} 
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item \( G_t \) = Cumulative return from time \( t \).
+            \item \( r_t \) = Immediate reward at time \( t \).
+            \item \( G_{t+1} \) = Future return following state \( s \).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Summary}
+        Understanding rewards and policies is crucial for developing effective reinforcement learning agents. 
+        \begin{itemize}
+            \item Careful design of rewards and refinement of policies enhance agent performance.
+            \item Aim for maximizing cumulative rewards over time through strategic learning.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Reinforcement Learning - Introduction}
+    \begin{block}{Overview}
+        Reinforcement Learning (RL) is a fundamental approach to machine learning, where an agent learns to make decisions by interacting with an environment.
+        \begin{itemize}
+            \item Core components include:
+            \begin{itemize}
+                \item Agent
+                \item Environment
+                \item State
+                \item Action
+                \item Reward
+                \item Policy
+            \end{itemize}
+        \end{itemize}
+        Understanding the interplay among these elements is crucial for grasping how RL systems operate.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Reinforcement Learning - Details}
+    \begin{enumerate}
+        \item \textbf{Agent}
+            \begin{itemize}
+                \item Learner/decision-maker.
+                \item Aims to maximize cumulative rewards.
+                \item Example: A robot navigating a maze.
+            \end{itemize}
+        \item \textbf{Environment}
+            \begin{itemize}
+                \item Everything the agent interacts with.
+                \item Responds to actions and presents states and rewards.
+                \item Example: The maze structure including walls and goals.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Reinforcement Learning - Continued}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{State}
+            \begin{itemize}
+                \item Representation of the environment at a specific time.
+                \item Provides context for agent decisions.
+                \item Example: "The robot is at position (2,3) in the maze."
+            \end{itemize}
+        \item \textbf{Action}
+            \begin{itemize}
+                \item Choices made by the agent affecting the state.
+                \item Actions lead to state transitions.
+                \item Example: Moving left, right, up, or down in the maze.
+            \end{itemize}
+        \item \textbf{Reward}
+            \begin{itemize}
+                \item Scalar feedback signal received after actions.
+                \item Guides the learning process.
+                \item Example: +10 points for reaching the exit or -1 for hitting a wall.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Reinforcement Learning - Final Parts}
+    \begin{enumerate}
+        \setcounter{enumi}{5}
+        \item \textbf{Policy}
+            \begin{itemize}
+                \item Strategy for determining the next action based on the current state.
+                \item Can be deterministic or stochastic.
+                \item Example: Randomly choosing actions amongst options.
+            \end{itemize}
+    \end{enumerate}
+    
+    \begin{block}{Cycle of Interaction}
+        The agent observes the current state, selects an action based on its policy, receives a reward and the new state, and updates its policy over time. This is a continuous loop that improves decision-making.
+    \end{block}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Encapsulates interaction between agents and environments mimicking intelligent behavior.
+            \item Performance is influenced by exploration (trying new actions) versus exploitation (using known rewarding actions).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Components of Reinforcement Learning - Conclusion}
+    Understanding the core components of Reinforcement Learning is essential for:
+    \begin{itemize}
+        \item Designing effective reinforcement learning systems.
+        \item Analyzing system performance.
+    \end{itemize}
+    As we explore deeper, we will see how these components integrate to form robust learning algorithms.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Reinforcement Learning - Overview}
+    \begin{block}{Introduction}
+        Reinforcement Learning (RL) is an exciting area of artificial intelligence, but it comes with unique challenges. Understanding these challenges is essential for developing effective RL systems. This slide discusses the common hurdles, focusing on exploration vs. exploitation.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Reinforcement Learning - Key Challenges}
+    \begin{enumerate}
+        \item \textbf{Exploration vs. Exploitation}
+        \begin{itemize}
+            \item Definition: Trade-off between trying new actions (exploration) and using known actions (exploitation).
+            \item Illustration: 
+                \begin{itemize}
+                    \item Exploration: Trying different routes in a new city.
+                    \item Exploitation: Taking a known fast route repeatedly.
+                \end{itemize}
+            \item Example: In Chess, deciding to try a new move or using a known successful strategy.
+            \item Formula:
+            \begin{equation}
+                a = 
+                \begin{cases} 
+                \text{random action} & \text{with probability } \epsilon \\
+                \text{best action} & \text{with probability } 1 - \epsilon 
+                \end{cases}
+            \end{equation}
+            where \( \epsilon \) is the exploration rate.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Reinforcement Learning - Continued}
+    \begin{enumerate}
+        \setcounter{enumi}{1} % resume enumeration
+        \item \textbf{Sparse Rewards}
+        \begin{itemize}
+            \item Definition: Feedback is infrequent or only given under certain conditions.
+            \item Example: In a maze, the agent only receives a reward at the goal.
+        \end{itemize}
+        
+        \item \textbf{Delayed Rewards}
+        \begin{itemize}
+            \item Definition: Rewards may come after several actions, complicating the understanding of what actions were beneficial.
+            \item Example: In games where outcomes depend on strategic moves, evaluation must occur over multiple actions.
+        \end{itemize}
+        
+        \item \textbf{Non-Stationary Environments}
+        \begin{itemize}
+            \item Definition: Environments that change over time require continuous adaptation.
+            \item Example: Stock market trading strategies need to evolve with emerging trends.
+        \end{itemize}
+        
+        \item \textbf{Scalability}
+        \begin{itemize}
+            \item Definition: Increased complexity leads to greater computational resource demands.
+            \item Example: Large-scale robotics face numerous potential states, complicating optimal policy convergence.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Reinforcement Learning - Key Points}
+    \begin{itemize}
+        \item Balancing exploration and exploitation is fundamental to effective RL.
+        \item Sparse and delayed rewards complicate the learning process and may hinder efficient policy training.
+        \item Adaptability is necessary in non-stationary environments to maintain optimal performance.
+        \item Increased complexity in environments demands robust algorithms that can manage scalability.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Reinforcement Learning - Conclusion}
+    \begin{block}{Conclusion}
+        Understanding and addressing these challenges is vital for developing more efficient and effective reinforcement learning systems. By focusing on these hurdles, researchers can work towards solutions that enhance RL applications across various domains.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations - Overview}
+    \begin{block}{Ethical Challenges in Reinforcement Learning (RL)}
+        RL is a powerful framework for creating intelligent agents that make decisions by interacting with their environment. However, several ethical considerations emerge that must be addressed:
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations - Autonomy and Decision-making}
+    \begin{itemize}
+        \item \textbf{Autonomy and Decision-making}
+            \begin{itemize}
+                \item RL agents operate autonomously, raising accountability questions.
+                \item \textbf{Example:} 
+                In autonomous vehicles, if an RL-based system makes a decision causing an accident, it can be challenging to ascertain who is liable (the developer, the manufacturer, or the driver?).
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations - Bias and Fairness}
+    \begin{itemize}
+        \item \textbf{Bias and Fairness}
+            \begin{itemize}
+                \item RL agents learn from data that may exhibit societal biases.
+                \item \textbf{Example:} 
+                An RL agent in automated hiring may favor certain demographics, leading to discrimination against qualified candidates based on biased historical data.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations - Dangerous Behaviors and Safety Risks}
+    \begin{itemize}
+        \item \textbf{Exploration of Dangerous Behaviors}
+            \begin{itemize}
+                \item RL often requires exploring various actions, which can lead to harmful behaviors.
+                \item \textbf{Example:} 
+                An RL agent in gaming could learn to exploit game mechanics in unethical ways.
+            \end{itemize}
+
+        \item \textbf{Safety and Security Risks}
+            \begin{itemize}
+                \item Unintended consequences can arise from deploying agents in high-stakes environments.
+                \item \textbf{Example:} 
+                In healthcare, a miscalibrated RL agent could suggest harmful treatment plans based solely on metrics.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Ethical Considerations - Transparency and Key Points}
+    \begin{itemize}
+        \item \textbf{Transparency and Explainability}
+            \begin{itemize}
+                \item Many RL algorithms are black boxes. It is crucial that stakeholders understand decision processes.
+                \item \textbf{Example:} 
+                In finance, stakeholders must trace the rationale behind investment recommendations to maintain trust.
+            \end{itemize}
+    \end{itemize}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Accountability and liability for RL decisions.
+            \item Mitigation of biases in learning processes.
+            \item Safe exploration mechanisms to prevent harmful actions.
+            \item Transparency in RL models to uphold trust and safety.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Further Considerations}
+    To address ethical challenges, researchers are exploring frameworks that integrate ethical guidelines into RL training:
+    \begin{itemize}
+        \item Define reward structures that prioritize ethical outcomes.
+        \item Impose safety constraints during learning processes.
+        \item Ensure diverse training data to mitigate biases.
+    \end{itemize}
+
+    Emphasizing ethical considerations in the development and deployment of RL technologies promotes responsible advancement that aligns with societal values.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Reinforcement Learning - Introduction}
+    \begin{itemize}
+        \item Reinforcement Learning (RL) is rapidly evolving.
+        \item Key driving factors: 
+            \begin{itemize}
+                \item Advancements in algorithms
+                \item Increased computational power
+                \item Growing complexity of environments
+            \end{itemize}
+        \item Future trends will shape agent-environment interactions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Reinforcement Learning - Key Trends}
+    \begin{enumerate}
+        \item \textbf{Scaling Up: From Simple to Complex Environments}
+            \begin{itemize}
+                \item Generalization and sim-to-real transfer
+                \item Multi-task learning for efficient adaptation
+            \end{itemize}
+            
+        \item \textbf{Hierarchical Reinforcement Learning}
+            \begin{itemize}
+                \item Structured learning breaking tasks into sub-tasks
+                \item Temporal abstraction for long-term decision-making
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Reinforcement Learning - Key Trends (cont'd)}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Improved Sample Efficiency}
+            \begin{itemize}
+                \item Model-Based RL for fewer interactions
+                \item Simulated experience for better learning
+                \item \begin{equation}
+                    V(s) = \mathbb{E}_\pi\left[R + \gamma V(s')\right]
+                \end{equation}
+            \end{itemize}
+
+        \item \textbf{Safe and Ethical Reinforcement Learning}
+            \begin{itemize}
+                \item Ensuring safety and ethical constraints
+                \item Aligning agents with human values
+            \end{itemize}
+            
+        \item \textbf{Integration with Other AI Fields}
+            \begin{itemize}
+                \item Cross-disciplinary innovations
+                \item Collaborative agents for complex goals
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Reinforcement Learning - Conclusion}
+    \begin{itemize}
+        \item The future of RL includes improved scalability, efficiency, and safety.
+        \item Addressing limitations and ethical considerations is crucial.
+        \item The focus will reshape RL systems for responsible deployment across various domains.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Reinforcement Learning - Key Points}
+    \begin{itemize}
+        \item Generalization and transfer learning are essential for real-world applications.
+        \item Hierarchical structures enhance learning for complex tasks.
+        \item Clean methods for safety and efficiency will direct future research.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion - Key Points Recap}
+  \begin{enumerate}
+    \item \textbf{Definition of Agents:}
+    \begin{itemize}
+      \item An agent perceives its environment through sensors and acts using actuators.
+      \item Example: A self-driving car with cameras as sensors and a steering wheel as an actuator.
+    \end{itemize}
+
+    \item \textbf{Understanding Environments:}
+    \begin{itemize}
+      \item The environment includes all entities the agent interacts with, defined by states, actions, and rewards.
+      \item Example: In a game, the environment consists of the game board, rules, and feedback based on actions taken.
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion - Interaction and Types of Agents}
+  \begin{enumerate}[resume]
+    \item \textbf{Agent-Environment Interaction:}
+    \begin{itemize}
+      \item The interaction can be framed as a loop:
+      \item The agent observes a current state, selects an action via a policy, and the environment responds, transitioning to a new state and providing a reward.
+      \end{itemize}
+      \begin{equation}
+        S' = f(S, A)
+      \end{equation}
+      \begin{equation}
+        R = g(S, A)
+      \end{equation}
+
+    \item \textbf{Types of Agents:}
+    \begin{itemize}
+      \item \textbf{Reactive Agents:} Respond instantly to their environment.
+      \begin{itemize}
+        \item Example: A game character that moves toward the nearest opponent.
+      \end{itemize}
+      \item \textbf{Deliberative Agents:} Use memory of past states/actions to make decisions.
+      \begin{itemize}
+        \item Example: A chess program that evaluates potential moves before acting.
+      \end{itemize}
+    \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion - Policies, Challenges, and Final Thoughts}
+  \begin{enumerate}[resume]
+    \item \textbf{Policy and Value Functions:}
+    \begin{itemize}
+      \item \textbf{Policy} (\(\pi\)): A mapping from states to actions.
+      \item \textbf{Value Function} (V): Estimates the expected return for each state.
+    \end{itemize}
+
+    \item \textbf{Challenges in Reinforcement Learning:}
+    \begin{itemize}
+      \item Exploration vs. Exploitation: Balancing trying new actions versus sticking to known rewarding actions.
+      \item The dynamic nature of environments that influence agent behavior unpredictably.
+    \end{itemize}
+  \end{enumerate}
+
+  \begin{block}{Final Thoughts}
+    The interaction of agents and environments forms the backbone of reinforcement learning. Understanding these concepts is fundamental for developing effective algorithms and applications in diverse fields.
+  \end{block}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,782 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Custom Commands
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Title Page Information
+\title[Hadoop Ecosystem]{Week 4: Hadoop Ecosystem and Advanced Features}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Hadoop Ecosystem}
+    \begin{block}{Overview of Hadoop}
+        Hadoop is an open-source framework designed for storing and processing large volumes of data in a distributed computing environment. It is particularly well-suited for big data applications, enabling organizations to harness the power of their data efficiently and cost-effectively. Hadoop's architecture allows for easy scaling from a single server to thousands of machines.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Main Components of Hadoop}
+    \begin{enumerate}
+        \item \textbf{Hadoop Distributed File System (HDFS)}
+        \begin{itemize}
+            \item \textbf{Description}: Primary storage system of Hadoop, designed for large files and high-throughput access.
+            \item \textbf{Functionality}: Splits large files into smaller blocks (128 MB or 256 MB), distributes them across the cluster, and replicates each block for fault tolerance.
+            \item \textbf{Key Point}: Optimized for ingesting large datasets and effective for handling multi-terabyte workloads.
+        \end{itemize}
+
+        \item \textbf{MapReduce}
+        \begin{itemize}
+            \item \textbf{Description}: Programming model for processing large data sets using two main functions: Map and Reduce.
+            \item \textbf{Functionality}:
+            \begin{itemize}
+                \item \textbf{Map Function}: Processes input data into key-value pairs.
+                \item \textbf{Reduce Function}: Aggregates results from the Map phase.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce Example}
+    \begin{block}{Simple Example}
+        Imagine counting the number of occurrences of each word in a large document:
+        \begin{itemize}
+            \item \textbf{Map}: Split the document into words and emit each word with a count of one.
+            \item \textbf{Reduce}: Sum the counts for each unique word.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Code Snippet}
+    \begin{lstlisting}[language=Python]
+# Map function
+def map_function(input):
+    for word in input.split():
+        emit(word, 1) # Emit each word with count 1
+
+# Reduce function
+def reduce_function(word, counts):
+    total = sum(counts) # Sum counts
+    emit(word, total)   # Emit word with total count
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance in Large-Scale Data Processing}
+    \begin{itemize}
+        \item \textbf{Scalability}: Allows easy scaling by adding nodes, handling increases in data volume.
+        \item \textbf{Cost-Effectiveness}: Reduces infrastructure costs by utilizing commodity hardware.
+        \item \textbf{Fault Tolerance}: HDFS's data replication ensures data availability and continued processing during node failures.
+    \end{itemize}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Supports many data types: structured, semi-structured, and unstructured.
+            \item Integration of additional tools (e.g., Hive, Pig, HBase) enhances capabilities.
+            \item Understanding HDFS and MapReduce is fundamental for leveraging Hadoop for big data challenges.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hadoop Distributed File System (HDFS)}
+    \begin{block}{Overview}
+        HDFS is the fundamental storage system of Hadoop, designed to store large files across multiple machines. 
+        It provides high-throughput access to application data and is optimized for large data sets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding HDFS Architecture}
+    \begin{itemize}
+        \item \textbf{NameNode}: The master server managing metadata (file names, directories, permissions).
+        \item \textbf{DataNodes}: Worker nodes that store actual data blocks and report status to NameNode.
+        \item \textbf{Block Structure}: Files are divided into fixed-size blocks (default 128 MB), each replicated across DataNodes for fault tolerance (default replication factor 3).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{File Storage Methodology and Advantages}
+    \begin{itemize}
+        \item \textbf{Write Once, Read Many}: High-throughput applications with immutable data storage; files read multiple times.
+        \item \textbf{Data Distribution}: Data is spread across DataNodes, supporting parallel processing and enhancing performance.
+        \item \textbf{Advantages}:
+            \begin{enumerate}
+                \item Scalability: Easily add DataNodes for increased storage and processing power.
+                \item Fault Tolerance: Replication ensures data availability even if a DataNode fails.
+                \item High Throughput: Optimized for large data sets via parallel processing.
+                \item Flexibility in Storage: Supports a variety of large files (video, audio, logs).
+                \item Cost-Efficiency: Operates on commodity hardware.
+            \end{enumerate}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustrative Example and Key Takeaways}
+    \begin{block}{Illustrative Example}
+        A Big Data application processes terabytes of web server logs. Instead of using a traditional database:
+        \begin{itemize}
+            \item HDFS stores logs in blocks across various DataNodes.
+            \item Blocks replicated ensure data safety in case of machine failure.
+            \item Frameworks like MapReduce enable fast read access for analyses.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Understanding the roles of NameNode and DataNodes is crucial.
+            \item Block-based storage enhances efficiency and fault tolerance.
+            \item HDFS is ideal for managing large-scale data environments.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce Framework - Overview}
+    \begin{itemize}
+        \item **Definition**: MapReduce is a programming model used for processing large data sets across distributed computer clusters.
+        \item **Key Functions**:
+        \begin{itemize}
+            \item **Map**: Transforms input key-value pairs into intermediate key-value pairs.
+            \item **Reduce**: Merges intermediate values to provide a smaller set of values.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{MapReduce Workflow}
+    \begin{enumerate}
+        \item **Input Splitting**: 
+          - Divides input data into splits, processed independently.
+        \item **Mapping**: 
+          - Generates intermediate key-value pairs.
+          \begin{block}{Example: Word Count}
+          \begin{lstlisting}[language=Python]
+def mapper(document):
+    for word in document.split():
+        emit(word, 1)
+          \end{lstlisting}
+          \end{block}
+        \item **Shuffling and Sorting**: 
+          - Groups intermediate values by output keys.
+        \item **Reducing**: 
+          - Combines intermediate values.
+          \begin{block}{Example: Summing Counts}
+          \begin{lstlisting}[language=Python]
+def reducer(word, counts):
+    sum_counts = sum(counts)
+    emit(word, sum_counts)
+          \end{lstlisting}
+          \end{block}
+        \item **Output**: 
+          - Results written to the distributed file system (HDFS).
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Use Cases and Key Points}
+    \begin{itemize}
+        \item **Use Cases**:
+        \begin{itemize}
+            \item Search Engines: Word counts, indexing.
+            \item Data Analysis: Aggregating logs.
+            \item Machine Learning: Distributing computations over large datasets.
+        \end{itemize}
+        \item **Key Points**:
+        \begin{itemize}
+            \item **Scalability**: Capable of processing petabytes of data.
+            \item **Fault Tolerance**: Handles task failures gracefully.
+            \item **Flexibility**: Adaptable to various data types and processing needs.
+        \end{itemize}
+        \item **Example Code**:
+        \begin{block}{Simplified Hadoop Job Configuration}
+        \begin{lstlisting}[language=Java]
+Job job = new Job(conf, "word count");
+job.setJarByClass(YourMainClass.class);
+job.setMapperClass(YourMapper.class);
+job.setReducerClass(YourReducer.class);
+job.setOutputKeyClass(Text.class);
+job.setOutputValueClass(IntWritable.class);
+FileInputFormat.addInputPath(job, new Path("input_path"));
+FileOutputFormat.setOutputPath(job, new Path("output_path"));
+job.waitForCompletion(true);
+        \end{lstlisting}
+        \end{block}
+        \item **Conclusion**: 
+          - MapReduce framework enables efficient data processing in distributed environments.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Performance Tuning Techniques}
+    \begin{block}{Introduction to Performance Tuning in Hadoop}
+        Performance tuning in Hadoop is critical for optimizing processing speed, resource utilization, and efficiency of big data tasks. Understanding key concepts and applying various techniques can significantly enhance the performance of your Hadoop ecosystem.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Configuration Settings}
+        \begin{itemize}
+            \item Tuning Hadoop configuration parameters can improve performance.
+            \item Critical parameters include:
+            \begin{itemize}
+                \item \texttt{mapreduce.map.memory.mb}: Memory allocation for mapper tasks.
+                \item \texttt{mapreduce.reduce.memory.mb}: Memory allocation for reducer tasks.
+                \item \texttt{mapreduce.task.io.sort.factor}: Number of streams to merge simultaneously in sort.
+            \end{itemize}
+        \end{itemize}
+        \item \textbf{Data Locality}
+        \begin{itemize}
+            \item Process data as close to where it is stored to reduce data transfer time.
+            \item Hadoop's architecture assigns tasks to nodes that store data blocks.
+        \end{itemize}
+        \item \textbf{Resource Management}
+        \begin{itemize}
+            \item Use YARN for resource allocation based on workload requirements.
+            \item Monitor and adjust resource utilization dynamically.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Optimization Strategies}
+    \begin{enumerate}
+        \item \textbf{Tweak the Number of Reducers}
+        \begin{itemize}
+            \item Right number of reducers prevents bottlenecks.
+            \item Example: For 1 TB dataset, start with 4-5 reducers.
+        \end{itemize}
+        \item \textbf{Combine Small Files}
+        \begin{itemize}
+            \item Use larger files for better performance. 
+            \item Tools like Apache Hadoop Archives (HAR) can be used.
+        \end{itemize}
+        \item \textbf{Adjusting Block Size}
+        \begin{itemize}
+            \item Increase default block size (128 MB) to reduce splits and decrease overhead.
+            \item Consider 256 MB for processing images or large logs.
+        \end{itemize}
+        \item \textbf{Speculative Execution}
+        \begin{itemize}
+            \item Enable to re-run slow tasks across the cluster.
+            \item Configurable via \texttt{mapreduce.map.speculative} and \texttt{mapreduce.reduce.speculative}.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code Snippet}
+    \begin{block}{Setting up Memory Allocation in \texttt{mapred-site.xml}}
+    \begin{lstlisting}[language=XML]
+<configuration>
+    <property>
+        <name>mapreduce.map.memory.mb</name>
+        <value>2048</value> <!-- Allocate 2 GB to mappers -->
+    </property>
+    <property>
+        <name>mapreduce.reduce.memory.mb</name>
+        <value>4096</value> <!-- Allocate 4 GB to reducers -->
+    </property>
+</configuration>
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item Effective performance tuning is essential for optimizing Hadoop operations.
+        \item Focus on configuration settings, data locality, and resource management to improve performance.
+        \item Regularly monitor and adjust settings based on specific workloads and operational characteristics.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        Implementing these performance tuning techniques can greatly enhance the efficiency and effectiveness of your Hadoop ecosystem.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Processing Architectures}
+    \begin{block}{Overview}
+        Data processing architectures are essential frameworks that facilitate the efficient handling, storage, and analysis of large datasets in Hadoop. 
+        Focuses on:
+        \begin{itemize}
+            \item \textbf{Scalability}: Ability to grow with data.
+            \item \textbf{Integration}: Capability to work with various data sources and types.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components of Hadoop Ecosystem}
+    \begin{enumerate}
+        \item \textbf{Hadoop Distributed File System (HDFS)}:
+            \begin{itemize}
+                \item \textbf{Purpose}: Stores data across multiple nodes in a distributed manner.
+                \item \textbf{Scalability}: Automatically splits large files into blocks and distributes them across different servers.
+                \item \textbf{Integration}: Works with computing frameworks (e.g., MapReduce, Spark).
+            \end{itemize}
+
+        \item \textbf{MapReduce}:
+            \begin{itemize}
+                \item \textbf{Purpose}: Programming model for processing large datasets.
+                \item \textbf{Scalability}: Processes petabytes of data via divided tasks.
+                \item \textbf{Integration}: Integrates with tools like Pig and Hive.
+            \end{itemize}
+
+        \item \textbf{Apache Spark}:
+            \begin{itemize}
+                \item \textbf{Purpose}: In-memory data processing alternative to MapReduce.
+                \item \textbf{Scalability}: Uses distributed RAM for large-scale processing.
+                \item \textbf{Integration}: Compatible with HDFS, HBase, and Hive.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Lambda Architecture}
+    \begin{block}{Overview}
+    Lambda Architecture combines batch processing with real-time processing to handle big data workloads.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Batch Layer}: Processes historical data and stores it in HDFS.
+        \item \textbf{Speed Layer}: Processes live data using Spark Streaming or Storm.
+        \item \textbf{Serving Layer}: Combines batch and real-time processing results for queries.
+    \end{itemize}
+
+    \begin{block}{Illustration of Lambda Architecture}
+        \includegraphics[width=0.8\linewidth]{lambda_architecture.png} % Add an image for visual illustration if required
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Real-world Applications of Hadoop}
+    % Overview of Hadoop Utilization
+    \begin{block}{Overview}
+        Hadoop, an open-source framework, enables organizations to handle large volumes of data through distributed storage and processing. 
+        This presentation highlights real-world applications of Hadoop, showcasing its impact across various industries.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Applications of Hadoop}
+    % Key applications
+    \begin{enumerate}
+        \item \textbf{Retail - Walmart}
+            \begin{itemize}
+                \item \textbf{Use Case:} Customer data analysis for better inventory management and personalized marketing.
+                \item \textbf{Outcome:} Enhanced stock levels and tailored promotions through sales data analysis.
+                \item \textbf{Impact:} Increased customer satisfaction and improved supply chain efficiency.
+            \end{itemize}
+        
+        \item \textbf{Healthcare - CERN}
+            \begin{itemize}
+                \item \textbf{Use Case:} Analyzing massive medical datasets for research.
+                \item \textbf{Outcome:} Improved insight generation from research datasets, such as those from the Large Hadron Collider.
+                \item \textbf{Impact:} Facilitated advances in scientific research while managing storage costs.
+            \end{itemize}
+        
+        \item \textbf{Finance - American Express}
+            \begin{itemize}
+                \item \textbf{Use Case:} Real-time fraud detection and prevention.
+                \item \textbf{Outcome:} Identified patterns in transaction data to detect anomalies.
+                \item \textbf{Impact:} Enhanced customer trust and reduced losses.
+            \end{itemize}
+        
+        \item \textbf{Telecommunications - Vodafone}
+            \begin{itemize}
+                \item \textbf{Use Case:} Improving customer experience through call detail analysis.
+                \item \textbf{Outcome:} Real-time analysis of call records for network issue identification.
+                \item \textbf{Impact:} Improved network performance and better customer retention.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    % Key Points
+    \begin{itemize}
+        \item \textbf{Scalability:} Handles vast amounts of data across distributed systems, enabling seamless operations.
+        \item \textbf{Cost-Effectiveness:} Reduces operational costs via commodity hardware compared to traditional databases.
+        \item \textbf{Real-Time Insights:} Integration with tools like Apache Hive and Spark allows for timely decision-making.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    % Conclusion
+    The varied implementations of Hadoop across sectors illustrate its flexibility and capacity to manage big data.
+    Companies like Walmart, CERN, American Express, and Vodafone showcase operational improvements and competitive advantages.
+    Understanding these real-world applications is essential for fostering innovation through data-driven strategies.
+    
+    \textbf{Note:} Before we move to the next topic, "Integration with Other Technologies," remember that these examples of Hadoop applications prepare the ground for understanding its collaborative potential with other big data tools.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Integration with Other Technologies - Overview}
+    \begin{block}{Overview}
+        Hadoop is a powerful framework enabling distributed processing of vast data across computer clusters using simple programming models. Its full potential is realized when integrated with other big data technologies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Integration with Hadoop - Key Technologies}
+    \begin{itemize}
+        \item \textbf{Apache Spark}
+        \begin{itemize}
+            \item \textbf{Description:} An open-source data processing engine designed for speed. 
+            \item \textbf{Integration:} Runs on top of Hadoop, accessing HDFS, and utilizes YARN for resource management.
+            \item \textbf{Example:} Retail analytics for customer purchase patterns using Spark for real-time streaming data processing.
+        \end{itemize}
+
+        \item \textbf{HBase}
+        \begin{itemize}
+            \item \textbf{Description:} A distributed NoSQL database on HDFS for real-time data access.
+            \item \textbf{Integration:} Provides low-latency access and supports Hadoop jobs.
+            \item \textbf{Example:} Social media platforms using HBase for user activity logs and real-time queries.
+        \end{itemize}
+
+        \item \textbf{Hive}
+        \begin{itemize}
+            \item \textbf{Description:} A data warehouse solution for querying large datasets with SQL-like syntax.
+            \item \textbf{Integration:} Translates SQL queries into MapReduce jobs for easier data querying.
+            \item \textbf{Example:} E-commerce analytics on sales data using Hive to identify consumer trends.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Integration with Hadoop - Additional Technologies}
+    \begin{itemize}
+        \item \textbf{Apache Flume}
+        \begin{itemize}
+            \item \textbf{Description:} A distributed service for collecting and aggregating log data.
+            \item \textbf{Integration:} Pushes streaming data to HDFS for batch processing or HBase for real-time access.
+            \item \textbf{Example:} Gathering web server logs for analysis using Flume.
+        \end{itemize}
+
+        \item \textbf{Apache Pig}
+        \begin{itemize}
+            \item \textbf{Description:} A platform for developing programs on Hadoop using Pig Latin.
+            \item \textbf{Integration:} Converts Pig scripts into MapReduce jobs for simplified programming.
+            \item \textbf{Example:} Data analysts using Pig for processing large datasets from user interactions on websites.
+        \end{itemize}
+    \end{itemize}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Enhanced Performance:} Integration with Spark and other technologies improves processing speed.
+            \item \textbf{Versatile Data Management:} Multiple storage solutions enhance flexibility in handling various data types.
+            \item \textbf{Real-Time Capabilities:} Technologies like Spark and HBase enable real-time data processing for quick decision-making.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in the Hadoop Ecosystem}
+    \begin{block}{Overview of Challenges}
+        The Hadoop Ecosystem is a powerful framework for processing and storing large datasets. Despite its strengths, several challenges can impede its effectiveness, particularly in production environments.
+        \\[0.2cm]
+        This slide discusses three key challenges:
+        \begin{itemize}
+            \item Data Locality
+            \item Cluster Management
+            \item Resource Allocation
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Data Locality}
+    \begin{block}{Concept}
+        Data locality refers to the Hadoop philosophy of processing data on the same node where it is stored, minimizing network traffic and enhancing performance.
+    \end{block}
+    
+    \begin{block}{Challenges}
+        \begin{itemize}
+            \item Not all data is stored optimally.
+            \item Performance suffers when data shuffles over the network due to non-optimal storage.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example}
+        If a query requires analyzing data stored on multiple nodes, the managed transfer can drastically slow down processing.
+    \end{block}
+    
+    \begin{block}{Key Point to Emphasize}
+        Enhancing data locality can significantly reduce latency and improve overall efficiency of data processing.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Cluster Management}
+    \begin{block}{Concept}
+        Cluster management in Hadoop entails coordinating the execution of tasks across various nodes in a cluster, ensuring they work efficiently and avoid resource contention.
+    \end{block}
+    
+    \begin{block}{Challenges}
+        \begin{itemize}
+            \item Managing resources like CPU, memory, and storage can be complex, especially with dynamic workloads.
+            \item Inefficient resource allocation may lead to bottlenecks or resource starvation during peak processing times.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example}
+        Running multiple jobs simultaneously can lead to increased job completion times if resource allocation isn't monitored intelligently.
+    \end{block}
+
+    \begin{block}{Key Point to Emphasize}
+        Effective cluster management tools, such as YARN (Yet Another Resource Negotiator), can mitigate these issues but require proper configuration.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Resource Allocation}
+    \begin{block}{Concept}
+        Resource allocation refers to how physical resources (CPU cycles, memory, storage) are distributed among jobs to ensure optimal performance.
+    \end{block}
+    
+    \begin{block}{Challenges}
+        \begin{itemize}
+            \item Uneven resource allocation can lead to inefficiencies.
+            \item In heterogeneous clusters, powerful nodes may remain underutilized while weaker nodes become bottlenecks.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example}
+        Assigning a heavy computation job to an underpowered node can prolong completion times and affect the throughput of other jobs.
+    \end{block}
+
+    \begin{block}{Key Point to Emphasize}
+        Implementing resource management strategies can help optimize resource allocation for varying workloads.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Addressing these challenges is critical for achieving high performance in the Hadoop Ecosystem. By enhancing data locality, improving cluster management, and fine-tuning resource allocation, organizations can significantly improve their Hadoop implementations and overall data processing efficiency.
+\end{frame}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction}
+    As the demand for data processing continues to rise, the Hadoop ecosystem and big data technologies are adapting to meet new challenges and opportunities. 
+    This slide explores emerging trends in the big data landscape and discusses Hadoop's evolving role in this dynamic environment.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Trends in Big Data Technologies}
+    \begin{enumerate}
+        \item \textbf{Cloud Adoption}
+        \begin{itemize}
+            \item Organizations are increasingly moving their data processing to the cloud for scalability, flexibility, and reduced infrastructure costs.
+            \item \textit{Example:} Platforms like Amazon EMR and Google Cloud Dataproc enable users to run Hadoop and Spark applications in the cloud, eliminating the need for on-premise cluster management.
+        \end{itemize}
+        
+        \item \textbf{Integration of Machine Learning}
+        \begin{itemize}
+            \item Combining Hadoop with Machine Learning frameworks (e.g., Apache Spark MLlib, TensorFlow) enables advanced analytics and predictive modeling.
+            \item \textit{Example:} Using Spark with Hadoop’s data storage capabilities allows data scientists to analyze large datasets efficiently and deploy machine learning models.
+        \end{itemize}
+        
+        \item \textbf{Data Streaming}
+        \begin{itemize}
+            \item Technologies like Apache Kafka and Apache Flink are gaining popularity for real-time data processing, complementing traditional Hadoop batch processing.
+            \item \textit{Example:} A company might use Kafka for ingesting streaming data and store it in HDFS, then process it in real-time with Flink.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Trends in Big Data Technologies (cont'd)}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Data Governance and Security}
+        \begin{itemize}
+            \item With growing concerns about data privacy and compliance (e.g., GDPR), tools for data governance are becoming imperative.
+            \item \textit{Example:} Apache Ranger provides centralized security administration, allowing organizations to manage access controls and data governance policies across their Hadoop ecosystem.
+        \end{itemize}
+        
+        \item \textbf{Serverless Data Processing}
+        \begin{itemize}
+            \item Emerging serverless frameworks allow users to run data processing jobs without managing the underlying infrastructure.
+            \item \textit{Example:} AWS Lambda can trigger processing jobs in response to data events, reducing operational complexity and costs.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evolving Role of Hadoop}
+    \begin{itemize}
+        \item \textbf{From Storage to the Processing Hub:} Hadoop is increasingly being viewed as a central hub for data processing and analytics rather than just a storage solution.
+        \item \textbf{Compatibility with Modern Frameworks:} Integration with technologies such as Kubernetes for orchestration and various machine learning frameworks.
+        \item \textbf{Continued Relevance:} Hadoop remains a key player in data processing due to its vast ecosystem and adaptability.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Points}
+    \begin{block}{Conclusion}
+        The future of Hadoop is interconnected with the rapid evolution of big data technologies. By leveraging cloud capabilities, integrating machine learning, and addressing data governance, Hadoop can continue to play a vital role in the big data landscape.
+    \end{block}
+    
+    \begin{itemize}
+        \item Cloud migration enhances flexibility and cost-effectiveness.
+        \item Machine Learning and data analytics integration enhances predictive insight.
+        \item Real-time data processing complements existing Hadoop batch frameworks.
+        \item Ongoing evolution in data governance is crucial for compliance and security.
+        \item Serverless computing represents a shift in how organizations approach data processing infrastructure.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Next Steps - Part 1}
+    
+    \begin{block}{Conclusion: Key Insights from the Chapter}
+    Throughout Week 4, we delved deeply into the \textbf{Hadoop Ecosystem} and its \textbf{Advanced Features}. Here are the main takeaways:
+    \end{block}
+
+    \begin{enumerate}
+        \item \textbf{Hadoop Ecosystem Overview}:
+        \begin{itemize}
+            \item Comprises various components, each pivotal in managing and processing large datasets.
+            \item Key components include:
+            \begin{itemize}
+                \item \textbf{Hadoop Distributed File System (HDFS)}: Manages data storage, ensuring reliability and fault tolerance.
+                \item \textbf{MapReduce}: Programming model for parallel processing of large datasets.
+                \item \textbf{Apache YARN}: Resource management framework dynamically allocating resources across applications.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Advanced Features}:
+        \begin{itemize}
+            \item Data processing with tools like Apache Spark for real-time analytics.
+            \item Data management through Hive and Pig for easier SQL-like querying.
+            \item Integration capabilities with various data sources and formats, including NoSQL databases.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Next Steps - Part 2}
+    
+    \begin{enumerate}[resume]
+        \item \textbf{Emerging Trends}:
+        \begin{itemize}
+            \item Future of Hadoop involves adapting to new technologies to remain relevant in an evolving data landscape.
+        \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Next Steps: Upcoming Topics for Exploration}
+    In our next session, we will delve into the following topics:
+    \end{block}
+
+    \begin{enumerate}
+        \item \textbf{Advanced Data Processing Techniques}:
+        \begin{itemize}
+            \item In-depth exploration of \textbf{Apache Spark}, its architecture, benefits over MapReduce, and real-time analytics use cases.
+        \end{itemize}
+
+        \item \textbf{Data Warehousing Solutions}:
+        \begin{itemize}
+            \item Concepts of data warehousing and how \textbf{Apache Hive} enables SQL queries over large datasets.
+        \end{itemize}
+
+        \item \textbf{Real-Time Data Processing}:
+        \begin{itemize}
+            \item Frameworks such as \textbf{Apache Kafka} and \textbf{Apache Flink} for handling streaming data.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Next Steps - Part 3}
+    
+    \begin{enumerate}[resume]
+        \item \textbf{Hadoop Security}:
+        \begin{itemize}
+            \item Understanding security measures within the Hadoop ecosystem, focusing on authentication and data encryption.
+        \end{itemize}
+        
+        \item \textbf{Case Studies}:
+        \begin{itemize}
+            \item Review of real-world applications of Hadoop for practical understanding.
+        \end{itemize}
+    \end{enumerate}
+    
+    \begin{block}{Key Points to Emphasize}
+    - Recognize the synergy between Hadoop components and other big data tools.
+    - Adapt and evolve with emerging technologies.
+    - Appreciate Hadoop’s versatility in data processing.
+    \end{block}
+
+    \begin{block}{Reminder}
+    - Foundational knowledge of architecture and integration will be critical in understanding complex data solutions as we move forward.
+    \end{block}
+\end{frame}
+
+
+\end{document}

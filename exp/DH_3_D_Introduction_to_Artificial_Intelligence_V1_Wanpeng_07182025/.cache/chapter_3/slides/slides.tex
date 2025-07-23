@@ -1,0 +1,819 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Supervised vs Unsupervised Learning}
+    \begin{block}{Overview of Learning Paradigms}
+        In artificial intelligence (AI) and machine learning (ML), learning paradigms primarily include:
+        \begin{itemize}
+            \item \textbf{Supervised Learning}
+            \item \textbf{Unsupervised Learning}
+        \end{itemize}
+        Understanding these paradigms is fundamental for effective application of ML techniques.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance in AI}
+    \begin{block}{Supervised Learning}
+        Involves learning a function mapping input features to output labels based on historical data. It's primarily used for:
+        \begin{itemize}
+            \item \textbf{Classification}: E.g., distinguishing between spam and non-spam emails.
+            \item \textbf{Regression}: E.g., predicting housing prices.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Unsupervised Learning}
+        Discovers hidden patterns in input data without labeled outputs. Key applications include:
+        \begin{itemize}
+            \item \textbf{Clustering}: E.g., segmenting customers based on purchasing behavior.
+            \item \textbf{Dimensionality Reduction}: E.g., reducing the number of features while retaining important information.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Objectives of This Chapter}
+    \begin{enumerate}
+        \item \textbf{Compare and Contrast}: Distinguish between supervised and unsupervised learning.
+        \item \textbf{Explore Applications}: Discuss real-world scenarios showcasing each paradigm's strengths.
+        \item \textbf{Introduce Mathematical Foundations}: Basic algorithms, metrics, and loss functions for supervised tasks.
+        \item \textbf{Prepare for Deep Dives}: Build a foundation for understanding advanced topics relevant to these learning methods.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Mathematical Insights}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item \textbf{Labeled Data}: Essential for supervised learning; absent in unsupervised learning.
+            \item \textbf{Algorithms}:
+                \begin{itemize}
+                    \item \textbf{Supervised Learning}: Decision Trees, SVM, Neural Networks.
+                    \item \textbf{Unsupervised Learning}: K-Means, Hierarchical Clustering, PCA.
+                \end{itemize}
+            \item \textbf{Common Applications}:
+                \begin{itemize}
+                    \item Supervised: Fraud detection, medical diagnosis.
+                    \item Unsupervised: Market basket analysis, genetic clustering.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mathematical Insight}
+    \begin{block}{Supervised Learning Example}
+        Given a dataset with features \( X \) and labels \( Y \):
+        \begin{equation}
+            \hat{f} = \arg \min_f L(f(X), Y)
+        \end{equation}
+        where \( L \) is the loss function.
+    \end{block}
+    
+    \begin{block}{Unsupervised Learning Example (K-Means)}
+        Minimize the within-cluster variance:
+        \begin{equation}
+            \text{Objective} = \sum_{j=1}^{k} \sum_{x_i \in C_j} || x_i - \mu_j ||^2
+        \end{equation}
+        where \( \mu_j \) is the centroid of cluster \( C_j \).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Defining Supervised Learning}
+    \begin{block}{What is Supervised Learning?}
+        Supervised learning is a machine learning paradigm where an algorithm learns from labeled training data to make predictions or classifications. This approach relies heavily on the input-output mapping, where the system is 'supervised' using input data (features) alongside correct outputs (labels).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Characteristics of Supervised Learning}
+    \begin{enumerate}
+        \item \textbf{Labeled Data}:
+            \begin{itemize}
+                \item Each training example is accompanied by a label — the correct output (e.g., an image of a cat is labeled “cat”).
+                \item Labeled data informs the model of the expected output during training.
+            \end{itemize}
+        
+        \item \textbf{Training Set}:
+            \begin{itemize}
+                \item The training set contains features and corresponding labels (e.g., predicting house prices based on the number of rooms, location, and the label being the price).
+            \end{itemize}
+        
+        \item \textbf{Objective}:
+            \begin{itemize}
+                \item The main goal is to approximate the mapping from inputs to outputs, making accurate predictions for new, unseen data.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Use Cases and Performance Metrics}
+    \begin{block}{Example Use Cases}
+        \begin{itemize}
+            \item \textbf{Classification}: Email spam detection (labels: 'spam' or 'not spam').
+            \item \textbf{Regression}: Predicting house prices based on various features (continuous numerical output).
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Dependence on labeled data: The quality and quantity of labeled data are critical for model performance.
+            \item Performance Metrics: Evaluation is done using metrics like accuracy, precision, recall, or mean squared error.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mathematical Formula and Code Snippet}
+    \begin{block}{Formula (Simple Linear Regression)}
+        For a linear regression model, the relationship can be expressed as:
+        \begin{equation}
+            y = \beta_0 + \beta_1 x + \epsilon
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item $y$ is the predicted label (output).
+            \item $x$ represents the feature (input).
+            \item $\beta_0$ is the intercept; $\beta_1$ is the coefficient for the feature(s).
+            \item $\epsilon$ captures the error term.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Code Snippet (Python, Simple Linear Regression)}
+        \begin{lstlisting}[language=Python]
+        from sklearn.model_selection import train_test_split
+        from sklearn.linear_model import LinearRegression
+        import pandas as pd
+
+        # Load dataset
+        data = pd.read_csv('housing_data.csv')
+        X = data[['num_rooms', 'location']]  # Features
+        y = data['price']  # Label
+
+        # Split data into training and test sets
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+        # Train model
+        model = LinearRegression()
+        model.fit(X_train, y_train)
+
+        # Predict
+        predictions = model.predict(X_test)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Techniques in Supervised Learning - Overview}
+  \begin{block}{Overview of Supervised Learning}
+    Supervised learning is a type of machine learning where models are trained on labeled datasets. The input data is paired with the correct output, enabling the model to learn patterns and make predictions on new, unseen data.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Techniques in Supervised Learning - Key Techniques}
+  \begin{itemize}
+    \item \textbf{Regression}
+      \begin{itemize}
+        \item Predicts continuous values (e.g., price of a house).
+        \item \textbf{Common Algorithms:}
+          \begin{itemize}
+            \item \textbf{Linear Regression}
+              \begin{itemize}
+                \item Formula: \( y = mx + b \)
+                \item Best-fit line minimizing the distance to data points.
+                \item Example: Estimating sales based on advertising spend.
+              \end{itemize}
+            \item \textbf{Polynomial Regression}
+              \begin{itemize}
+                \item Fits a polynomial equation to data.
+                \item Example: Forecasting population growth.
+              \end{itemize}
+          \end{itemize}
+      \end{itemize}
+    \item \textbf{Classification}
+      \begin{itemize}
+        \item Predicts discrete labels (e.g., spam vs. not spam emails).
+        \item \textbf{Common Algorithms:}
+          \begin{itemize}
+            \item \textbf{Decision Trees}
+              \begin{itemize}
+                \item Tree-like model for decisions.
+                \item Example: Classifying health conditions based on symptoms.
+              \end{itemize}
+            \item \textbf{Support Vector Machines (SVM)}
+              \begin{itemize}
+                \item Finds hyperplane separating different classes.
+                \item Example: Image recognition (cats vs. dogs).
+              \end{itemize}
+          \end{itemize}
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points and Example Code in Supervised Learning}
+  \begin{block}{Key Points to Emphasize}
+    \begin{itemize}
+      \item Requires labeled data; model's predictions depend on the dataset's quality and size.
+      \item Selection between regression and classification based on target variable's nature.
+      \item Common performance metrics: Mean Squared Error (regression), Accuracy or F1 Score (classification).
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Linear Regression Python Code Example}
+  \begin{lstlisting}[language=Python]
+from sklearn.linear_model import LinearRegression
+import numpy as np
+
+# Sample data
+X = np.array([[1], [2], [3], [4]])  # Feature: size
+y = np.array([1, 2, 3, 4])   # Target: price
+
+# Create and fit the model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predicting new value
+prediction = model.predict([[5]])
+print(prediction)  # Output: Predicted price for size 5
+  \end{lstlisting}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Supervised Learning - Introduction}
+    \begin{block}{Introduction to Supervised Learning}
+        Supervised learning is a type of machine learning where the model is trained using labeled data. The model learns to map input features to output labels, allowing it to make predictions on new, unseen data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Supervised Learning - Real-World Applications}
+    \begin{enumerate}
+        \item \textbf{Email Filtering}
+            \begin{itemize}
+                \item \textbf{Description:} Used in spam detection systems.
+                \item \textbf{Technique:} Classification algorithms (e.g., Naïve Bayes, Support Vector Machines).
+                \item \textbf{Example:} Model trained on 1,000 emails—300 labeled as spam.
+            \end{itemize}
+        \item \textbf{Speech Recognition}
+            \begin{itemize}
+                \item \textbf{Description:} Converts spoken language into text (e.g., Siri, Google Assistant).
+                \item \textbf{Technique:} Neural networks (e.g., RNNs, CNNs) trained on audio samples.
+                \item \textbf{Example:} Learning to recognize phonemes from thousands of labeled voice samples.
+            \end{itemize}
+        \item \textbf{Financial Forecasting}
+            \begin{itemize}
+                \item \textbf{Description:} Predicts market trends and assesses loan risks using historical data.
+                \item \textbf{Technique:} Regression analysis (e.g., Linear Regression).
+                \item \textbf{Example:} Model trained on historical prices leading to stock movement predictions.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Supervised Learning - Key Points & Formula}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Labeled Data:} The cornerstone of supervised learning is labeled datasets.
+            \item \textbf{Diverse Applications:} Found in technology, finance, healthcare, etc.
+            \item \textbf{Impact:} Promotes efficiency, accuracy, and better decision-making across industries.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Illustrative Summary}
+        Here's a formula to express the supervised learning process mathematically:
+        \begin{equation}
+            f(x) = \sum_{i=1}^{n} w_i \cdot x_i + b
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item \( f(x) \): The predicted output
+            \item \( w_i \): Weights of the features
+            \item \( x_i \): Input features
+            \item \( b \): Bias term
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Defining Unsupervised Learning}
+    
+    \begin{block}{What is Unsupervised Learning?}
+        Unsupervised Learning is a type of machine learning where the model is trained using data that is not labeled. 
+        The algorithm discovers patterns and relationships in the data without explicit output labels.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Characteristics of Unsupervised Learning}
+    
+    \begin{itemize}
+        \item \textbf{Unlabeled Data:} 
+        Utilizes vast amounts of unlabeled data—data without predefined categories.
+        
+        \item \textbf{Self-Discovery:} 
+        The algorithm identifies hidden structures in the data independently, providing new insights.
+        
+        \item \textbf{No Supervision:} 
+        Unlike supervised learning, there's no guidance from labeled outcomes; learning is based on the data's structure.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Terms and Techniques}
+    
+    \begin{block}{Key Terms}
+        \begin{itemize}
+            \item \textbf{Unlabeled Data:} Data that has not been pre-categorized (e.g., images without tags).
+            \item \textbf{Clustering:} Grouping similar objects together (e.g., market segmentation).
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Techniques Used}
+        Unsupervised learning techniques include:
+        \begin{itemize}
+            \item \textbf{Clustering Algorithms:} K-means, Hierarchical Clustering, DBSCAN.
+            \item \textbf{Dimensionality Reduction:} PCA (Principal Component Analysis), t-SNE.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Unsupervised Learning}
+    
+    \begin{enumerate}
+        \item \textbf{Customer Segmentation:} 
+        Grouping customers based on spending patterns.
+        
+        \item \textbf{Document Clustering:} 
+        Grouping articles by topics for easier retrieval.
+        
+        \item \textbf{Anomaly Detection:} 
+        Identifying unusual patterns that may indicate fraud or faults.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustrative Example and K-means Formula}
+    
+    \begin{block}{Illustrative Example}
+        Consider a retail dataset of customer transactions. An unsupervised learning algorithm can:
+        \begin{itemize}
+            \item Identify customer segments based on purchasing habits.
+            \item Discover product affinities indicating frequently bought items together.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{K-means Clustering Formula}
+        The K-means algorithm minimizes the within-cluster variance represented as:
+        \begin{equation}
+        J = \sum_{i=1}^{k} \sum_{j=1}^{n} \|x_j^{(i)} - \mu_i\|^2
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item \(J\) = within-cluster variance
+            \item \(k\) = number of clusters
+            \item \(n\) = number of data points
+            \item \(x_j^{(i)}\) = data point \(j\) in cluster \(i\)
+            \item \(\mu_i\) = centroid of cluster \(i\)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    
+    Unsupervised learning is a powerful method for extracting meaningful structures and patterns from data without predefined labels. 
+    Its applications span numerous domains, including marketing and finance, forming the basis for advanced machine learning techniques.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques in Unsupervised Learning - Introduction}
+    \begin{block}{Overview}
+        Unsupervised learning identifies patterns in data without pre-labeled outcomes. 
+        Common techniques include:
+    \end{block}
+    \begin{itemize}
+        \item Clustering
+        \item Association Analysis
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques in Unsupervised Learning - Clustering}
+    \begin{block}{Clustering}
+        Clustering divides a dataset into groups based on similarities among data points.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Distance Metrics:} Measures like Euclidean distance determine similarity.
+        \item \textbf{Centroids:} In methods like K-means, each cluster is represented by a central point.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Clustering Algorithms - K-means}
+    \begin{block}{K-means Clustering}
+        \textbf{Process:} Partitions data into K clusters by minimizing variance within clusters.
+        \begin{enumerate}
+            \item Select K initial centroids.
+            \item Assign each data point to the nearest centroid.
+            \item Recalculate centroids as the mean of points in clusters.
+            \item Repeat until centroids stabilize.
+        \end{enumerate}
+    \end{block}
+    \begin{lstlisting}
+Initialize K centroids randomly
+Repeat until convergence:
+    Assign each point to the nearest centroid
+    Update centroids based on current clusters
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Clustering Algorithms - Hierarchical Clustering}
+    \begin{block}{Hierarchical Clustering}
+        Builds a tree of clusters using:
+        \begin{itemize}
+            \item \textbf{Agglomerative (Bottom-Up):} Start with each data point as a cluster and merge until one cluster remains.
+            \item \textbf{Divisive (Top-Down):} Start with one cluster and split until each data point is in its own cluster.
+        \end{itemize}
+    \end{block}
+    \includegraphics[width=0.7\textwidth]{dendrogram_example.png}
+    \begin{block}{Dendrogram}
+        A tree-like diagram representing the arrangement of clusters.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Techniques in Unsupervised Learning - Association Analysis}
+    \begin{block}{Association Analysis}
+        Identifies relationships among items in large datasets, commonly used in market basket analysis.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Support:} Frequency of an itemset in the data.
+        \item \textbf{Confidence:} Likelihood that items appear together.
+        \item \textbf{Lift:} Ratio of observed support to expected support if items are independent.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Association Analysis Example}
+    \begin{block}{Example}
+        Analyzing shopping cart data reveals patterns:
+        \begin{itemize}
+            \item Customers buying bread also tend to buy butter.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Algorithm: Apriori}
+        \textbf{Process:} Iteratively identifies itemsets meeting a minimum support threshold.
+    \end{block}
+    \begin{lstlisting}
+For each itemset of size k:
+    Generate candidate itemsets
+    Check support for each candidate
+    Keep itemsets that meet minimum support
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item Unsupervised learning uncovers hidden structures in data.
+        \item Clustering techniques like K-means and hierarchical clustering group similar data.
+        \item Association analysis reveals relationships between items.
+        \item Understanding these techniques is crucial for real-world applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Conclusion}
+        Mastery of unsupervised learning techniques such as clustering and association analysis equips us to handle complex datasets effectively, allowing for impactful data explorations and insights.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Unsupervised Learning}
+    \begin{block}{Introduction to Unsupervised Learning}
+        Unsupervised learning is a type of machine learning that deals with unlabeled data. Its main goal is to discover patterns and structures from this data without prior training with labels.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Applications - Part 1}
+    \begin{enumerate}
+        \item \textbf{Market Segmentation}
+            \begin{itemize}
+                \item \textbf{Description:} Identify distinct groups within a customer base to tailor marketing strategies.
+                \item \textbf{Technique Example:} Clustering algorithms like K-means.
+                \item \textbf{Illustration:} Visualize customer data as points on a graph; each cluster represents a unique segment.
+            \end{itemize}
+            
+        \item \textbf{Social Network Analysis}
+            \begin{itemize}
+                \item \textbf{Description:} Understand relationships and interactions among users.
+                \item \textbf{Technique Example:} Hierarchical Clustering to visualize user relationships.
+                \item \textbf{Illustration:} Network graph where nodes are users and edges are interactions; clusters reveal communities.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Applications - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue enumeration
+        \item \textbf{Anomaly Detection}
+            \begin{itemize}
+                \item \textbf{Description:} Identifying rare items or events, crucial in finance, healthcare, and cybersecurity.
+                \item \textbf{Technique Example:} DBSCAN for detecting anomalies outside dense data regions.
+                \item \textbf{Illustration:} In credit card transactions, normal transactions cluster, while fraudulent ones appear isolated.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Benefits and Conclusion}
+    \begin{itemize}
+        \item \textbf{Insight Discovery:} Unsupervised learning reveals patterns that supervised learning might miss.
+        \item \textbf{Flexibility:} It adapts to various data types without needing labeled examples.
+        \item \textbf{Cost-Effective:} Requires less human effort for labeling, valuable where labeling is expensive.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Unsupervised learning plays a vital role in data analysis, providing insights across diverse fields, from consumer behavior understanding to anomaly detection.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet - Simple K-means Implementation}
+    \begin{lstlisting}[language=Python]
+from sklearn.cluster import KMeans
+import numpy as np
+
+# Sample data (e.g., customer spending behavior)
+data = np.array([[1, 1], [1, 2], [1, 0],
+                 [4, 4], [4, 5], [4, 6]])
+
+# Apply K-means
+kmeans = KMeans(n_clusters=2, random_state=0).fit(data)
+
+# Predict the cluster for each data point
+clusters = kmeans.predict(data)
+print("Clusters:", clusters)
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Differences Between Supervised and Unsupervised Learning - Overview}
+    \begin{itemize}
+        \item Supervised and unsupervised learning are the two primary categories of machine learning.
+        \item Understanding their differences is essential for algorithm selection tailored to specific tasks.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Differences in Machine Learning}
+    \begin{table}[ht]
+        \centering
+        \begin{tabular}{|l|l|l|}
+            \hline
+            \textbf{Aspect}              & \textbf{Supervised Learning}                               & \textbf{Unsupervised Learning}                             \\ \hline
+            Data Usage                  & Uses labeled datasets (input-output pairs)                & Uses unlabeled datasets (only inputs)                       \\ \hline
+            Outcome                     & Predicts an outcome based on input data                   & Discovers patterns or structures in the data                \\ \hline
+            Use Cases                   & Classification, regression tasks                          & Clustering, association, anomaly detection                   \\ \hline
+            Examples                    & Spam detection, house price prediction                     & Customer segmentation, market basket analysis               \\ \hline
+            Learning Type               & Requires training phase with feedback                      & Learns from data without explicit feedback                  \\ \hline
+            Evaluation                  & Metrics like accuracy, precision, F1-score                & Metrics like silhouette score, Davies–Bouldin index        \\ \hline
+            Common Algorithms           & Linear regression, decision trees, SVM, neural networks   & K-means clustering, hierarchical clustering, PCA            \\ \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusions}
+    \begin{itemize}
+        \item Supervised learning is primarily predictive, focused on generating specific outcomes.
+        \item Unsupervised learning is exploratory, aimed at identifying patterns without predefined labels.
+        \item The choice of learning method greatly impacts model performance and should align with project goals.
+        \item Understanding the nature of data (labeled vs. unlabeled) is crucial for selecting the right learning approach.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        To effectively leverage machine learning, clarifying the objective—whether focusing on prediction or pattern discovery—is key to successful applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{When to Use Supervised vs Unsupervised Learning}
+    \begin{block}{Understanding the Fit for Each Learning Paradigm}
+        Choosing between supervised and unsupervised learning depends significantly on the problem context and the nature of the data available. Below are guidelines to help you determine which approach is most suitable for your project.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Supervised Learning}
+    \begin{block}{Definition}
+        In supervised learning, models are trained on labeled datasets, where the input data is paired with the correct output.
+    \end{block}
+    \begin{block}{Use Cases}
+        \begin{enumerate}
+            \item \textbf{Predictive Modeling}: Predict an outcome based on existing data.
+                \begin{itemize}
+                    \item Example: Predicting house prices based on size, location, and number of rooms.
+                \end{itemize}
+                
+            \item \textbf{Classification Problems}: Assign labels to data.
+                \begin{itemize}
+                    \item Example: Classifying emails as "spam" or "not spam" based on content.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Guidelines for Supervised Learning}
+    \begin{block}{Guidelines}
+        \begin{itemize}
+            \item \textbf{Availability of Labeled Data}: Ensure you have a sufficiently large labeled dataset (e.g., user ratings for recommendations).
+            \item \textbf{Clear Objective}: Define specific performance metrics (accuracy, F1 score) to evaluate the model's predictions.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Common Algorithms}
+        \begin{itemize}
+            \item Linear Regression
+            \item Decision Trees
+            \item Support Vector Machines (SVM)
+            \item Neural Networks
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Unsupervised Learning}
+    \begin{block}{Definition}
+        Unsupervised learning works with data that has not been labeled. The model tries to learn the underlying patterns in the data without explicit guidance on what to predict.
+    \end{block}
+    \begin{block}{Use Cases}
+        \begin{enumerate}
+            \item \textbf{Data Clustering}: Group similar data points without pre-existing labels.
+                \begin{itemize}
+                    \item Example: Customer segmentation based on purchasing behavior.
+                \end{itemize}
+                
+            \item \textbf{Dimensionality Reduction}: Reduce the number of features while retaining key information.
+                \begin{itemize}
+                    \item Example: Using Principal Component Analysis (PCA) for data visualization.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Guidelines for Unsupervised Learning}
+    \begin{block}{Guidelines}
+        \begin{itemize}
+            \item \textbf{No Labeled Data}: Use when labeled examples are scarce or unavailable.
+            \item \textbf{Exploratory Analysis}: Ideal for finding hidden patterns or structures in a dataset.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Common Algorithms}
+        \begin{itemize}
+            \item K-Means Clustering
+            \item Hierarchical Clustering
+            \item DBSCAN
+            \item Autoencoders
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Remember}
+    \begin{itemize}
+        \item Use Supervised Learning when you have labeled data and specific predictions to make.
+        \item Use Unsupervised Learning when exploring data without predefined labels to find natural groupings or structures.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Illustration}
+    Consider a project on customer reviews:
+    \begin{itemize}
+        \item \textbf{Supervised}: Train a model to classify reviews as positive or negative based on labeled data.
+        \item \textbf{Unsupervised}: Group customers based on review sentiments to identify trends without using labeled outputs.
+    \end{itemize}
+    This structured approach to selecting the appropriate learning paradigm will help data scientists and machine learning practitioners efficiently solve practical problems.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Overview}
+    \begin{block}{Summary of Chapter 3}
+        Understanding the two primary learning paradigms of Artificial Intelligence—Supervised Learning and Unsupervised Learning—forms the foundation of effective AI application. This chapter explored each type, emphasizing their characteristics, advantages, and appropriate contexts for use.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Supervised Learning}
+    \begin{itemize}
+        \item \textbf{Definition}: A method where the model learns from labeled data. Each training example is paired with an output label.
+        \item \textbf{Examples}:
+        \begin{itemize}
+            \item \textbf{Classification Tasks}: E.g., Email spam detection (spam or not spam).
+            \item \textbf{Regression Tasks}: E.g., Predicting house prices based on features like square footage and location.
+        \end{itemize}
+        \item \textbf{Key Formula}:
+        \begin{equation}
+            y = f(x) + \epsilon
+        \end{equation}
+        where \(y\) is the output, \(f(x)\) the predicted function, and \(\epsilon\) represents noise.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Unsupervised Learning}
+    \begin{itemize}
+        \item \textbf{Definition}: A method where the model learns from unlabeled data, identifying inherent patterns or clustering of the data.
+        \item \textbf{Examples}:
+        \begin{itemize}
+            \item \textbf{Clustering Tasks}: E.g., Customer segmentation for targeted marketing.
+            \item \textbf{Dimensionality Reduction}: E.g., Principal Component Analysis (PCA) to reduce the number of variables.
+        \end{itemize}
+        \item \textbf{Key Concept}: The goal here is to find structure in the data without any explicit feedback on outcomes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Understanding Both Learning Types}
+    \begin{itemize}
+        \item \textbf{Model Selection}: Choosing between supervised and unsupervised learning affects the model's ability to learn effectively.
+        \item \textbf{Hybrid Approaches}: In practice, many applications benefit from combining both learning types, such as semi-supervised learning or reinforcement learning.
+        \item \textbf{Real-World Applications}: Understanding whether data is labeled or unlabeled is crucial for model performance in various applications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Remember}
+    \begin{itemize}
+        \item \textbf{Data Labeling}: Availability or absence of labeled data is a critical determination point.
+        \item \textbf{Performance Evaluation}: 
+        \begin{itemize}
+            \item Supervised models can be evaluated against known outcomes.
+            \item Unsupervised models require different metrics (e.g., silhouette scores for clustering).
+        \end{itemize}
+        \item \textbf{Future Learning}: Advancements in AI will continue to leverage both types of learning, expanding what machines can learn from available data.
+    \end{itemize}
+\end{frame}
+
+
+\end{document}

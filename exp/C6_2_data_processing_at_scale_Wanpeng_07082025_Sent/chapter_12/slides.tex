@@ -1,0 +1,1371 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Evaluating Machine Learning Models]{Week 12: Evaluating Machine Learning Models}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Evaluating Machine Learning Models}
+    \begin{block}{Importance of Model Evaluation}
+        Model evaluation is a crucial step in the machine learning lifecycle, serving as the foundation for selecting the most effective algorithm for a given problem. Proper evaluation ensures models perform well on training data while generalizing effectively to unseen data.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Generalization}: The ability of a model to perform well on new, unseen data rather than being accurate only on the training dataset.
+        
+        \item \textbf{Bias-Variance Tradeoff}:
+        \begin{itemize}
+            \item \textbf{Bias}: Errors from overly simplistic assumptions in the learning algorithm leading to underfitting.
+            \item \textbf{Variance}: Errors from overly complex models capturing noise in the training data leading to overfitting.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluation Techniques}
+    \begin{itemize}
+        \item \textbf{Holdout Method}: Split the dataset into training and testing sets (commonly a 70-30 or 80-20 split) to test model performance on unseen data.
+        
+        \item \textbf{Cross-Validation}: Techniques like k-fold cross-validation where the data is divided into k subsets. The model is trained k times, each time leaving one subset for testing.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Evaluation Metrics}
+    \begin{itemize}
+        \item \textbf{Accuracy}: The fraction of correct predictions made by the model. Useful for balanced datasets.
+        \begin{equation}
+            \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Samples}}
+        \end{equation}
+        
+        \item \textbf{Precision, Recall, F1-Score}:
+        \begin{itemize}
+            \item \textbf{Precision}: Measures the quality of positive predictions.
+            \item \textbf{Recall (Sensitivity)}: Measures the model's ability to identify all relevant instances.
+            \item \textbf{F1 Score}: The harmonic mean of precision and recall, providing a balance between the two.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example}
+    Consider a binary classification problem predicting if an email is spam:
+    \begin{itemize}
+        \item If our model predicts 70 emails as spam, and 10 of them are actual spam, then:
+        \begin{itemize}
+            \item \textbf{Precision} = \( \frac{10}{70} = 0.14 \)
+            \item \textbf{Recall} = \( \frac{10}{10 + (\text{total spam emails} - 10)} \)
+            \item \textbf{F1 Score} is calculated to balance precision and recall.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Impact on Model Selection}
+    \begin{itemize}
+        \item \textbf{Assessing Performance}: A model with high accuracy might not be the best choice if it has low recall or precision.
+        \item \textbf{Informed Decisions}: Model evaluations guide us in tweaking algorithms or selecting different models based on performance metrics.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item Model evaluation is essential for ensuring effective performance in machine learning.
+        \item Understanding the bias-variance tradeoff is crucial for choosing the right model complexity.
+        \item Various evaluation techniques and metrics (accuracy, precision, recall, F1-score) inform model selection and adjustment.
+    \end{itemize}
+    By mastering these evaluation methods, you can develop robust machine learning models that meet real-world demands effectively.
+\end{frame}
+
+\begin{frame}[fragile]{Learning Objectives - Part 1}
+    \frametitle{Objectives for Week 12: Evaluating Machine Learning Models}
+    
+    In this week’s lessons, we will focus on the essential aspects of evaluating machine learning models. Here are the key learning goals we aim to achieve:
+    
+    \begin{enumerate}
+        \item \textbf{Understand Model Evaluation Techniques}
+        \item \textbf{Select Appropriate Metrics for Evaluation}
+        \item \textbf{Interpret Model Evaluation Results}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Learning Objectives - Part 2}
+    \frametitle{Understand Model Evaluation Techniques}
+    
+    Familiarize yourself with various methods for evaluating machine learning models. Common techniques include:
+    
+    \begin{itemize}
+        \item \textbf{Cross-Validation}
+        \begin{itemize}
+            \item A method that partitions the dataset into a training set and a test set multiple times to ensure model generalizability.
+            \item \textit{Example}: In k-fold cross-validation, the dataset is split into 'k' subsets; each subset is used as a validation set once while the remaining subsets form the training set.
+        \end{itemize}
+        
+        \item \textbf{Train-Test Split}
+        \begin{itemize}
+            \item A straightforward approach where you divide the dataset into two parts to assess performance.
+        \end{itemize}
+        
+        \item \textbf{Bootstrapping}
+        \begin{itemize}
+            \item A statistical method that involves repeatedly sampling from the dataset with replacement to create multiple training data sets.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Learning Objectives - Part 3}
+    \frametitle{Select Appropriate Metrics for Evaluation}
+    
+    Gain insight into various performance metrics tailored for different types of machine learning tasks:
+    
+    \begin{itemize}
+        \item \textbf{Classification Metrics}:
+        \begin{itemize}
+            \item Accuracy, precision, recall, F1-score, and ROC-AUC.
+            \item \textit{Example}: For a binary classification problem:
+            \begin{equation}
+                \text{Precision} = \frac{TP}{TP + FP} = \frac{70}{70 + 10} = 0.875
+            \end{equation}
+        \end{itemize}
+        
+        \item \textbf{Regression Metrics}:
+        \begin{itemize}
+            \item Mean Absolute Error (MAE), Mean Squared Error (MSE), and R-squared.
+            \item \textit{Example}: For a regression model predicting house prices:
+            \begin{equation}
+                \text{MAE} = \frac{|200 - 180| + |300 - 310|}{2} = \frac{20 + 10}{2} = 15
+            \end{equation}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Why Evaluate Machine Learning Models? - Part 1}
+    \begin{block}{Clear Explanations of Concepts}
+        Evaluating machine learning models is essential to:
+    \end{block}
+    \begin{enumerate}
+        \item \textbf{Ensure Predictive Performance}: Assess a model's accuracy before deployment.
+        \item \textbf{Generalization}: Ability to perform well on unseen data and avoid overfitting.
+        \item \textbf{Comparison}: Enables comparison of various algorithms and configurations.
+        \item \textbf{Stakeholder Trust}: Builds confidence with stakeholders on model reliability.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Why Evaluate Machine Learning Models? - Part 2}
+    \begin{block}{Example Scenario}
+        Imagine predicting housing prices with a model trained on 1,000 houses. If it poorly predicts new houses, it indicates poor generalization. Evaluating it on another dataset could prevent impactful errors.
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Importance of a Hold-Out Set}: Ensures that model performance is not just from overfitting training data.
+            \item \textbf{Cross-Validation}: Partitions data to use every observation for training and validation.
+            \item \textbf{Choice of Metrics}: Align evaluation with project goals.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Why Evaluate Machine Learning Models? - Part 3}
+    \begin{block}{Evaluation Metrics}
+        \begin{itemize}
+            \item \textbf{Accuracy}: Useful for balanced datasets.
+            \item \textbf{Precision \& Recall}: Important for imbalanced classes.
+            \item \textbf{F1 Score}: Balances precision and recall; useful for significant false positives/negatives.
+            \item \textbf{AUC-ROC}: Measures model's ability to distinguish between classes.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Evaluating machine learning models is crucial for ensuring functionality, accuracy, and relevance before deployment. Effective evaluation enhances model reliability, leading to better real-world outcomes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Evaluation Metrics - Introduction}
+    \begin{block}{Introduction to Model Evaluation Metrics}
+        Evaluating machine learning models is critical to understand their performance and reliability. 
+        Here, we will explore key evaluation metrics that help quantify and understand the model's predictive capabilities:
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Evaluation Metrics - Accuracy and Precision}
+    \begin{enumerate}
+        \item \textbf{Accuracy}
+        \begin{itemize}
+            \item \textbf{Definition}: Ratio of correctly predicted observations to the total observations.
+            \item \textbf{Formula}:
+            \begin{equation}
+                \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+            \end{equation}
+            \item \textbf{Example}: In a dataset of 100 patients, if a model correctly identifies 90, the accuracy is 90\%.
+        \end{itemize}
+
+        \item \textbf{Precision}
+        \begin{itemize}
+            \item \textbf{Definition}: The proportion of positive identifications that were actually correct.
+            \item \textbf{Formula}:
+            \begin{equation}
+                \text{Precision} = \frac{TP}{TP + FP}
+            \end{equation}
+            \item \textbf{Example}: If a model predicts 80 positive cases but only 70 are correct, the precision is 87.5\%.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Evaluation Metrics - Recall, F1-score, and AUC-ROC}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % Continue enumeration
+        \item \textbf{Recall (Sensitivity)}
+        \begin{itemize}
+            \item \textbf{Definition}: Measures the ability of a model to find all relevant cases (true positives).
+            \item \textbf{Formula}:
+            \begin{equation}
+                \text{Recall} = \frac{TP}{TP + FN}
+            \end{equation}
+            \item \textbf{Example}: If there are 100 actual positive cases and the model identifies 70, the recall is 70\%.
+        \end{itemize}
+
+        \item \textbf{F1-Score}
+        \begin{itemize}
+            \item \textbf{Definition}: Combines precision and recall into a single metric.
+            \item \textbf{Formula}:
+            \begin{equation}
+                \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+            \end{equation}
+            \item \textbf{Example}: For precision of 0.8 and recall of 0.6, the F1-score is 0.69.
+        \end{itemize}
+
+        \item \textbf{AUC-ROC}
+        \begin{itemize}
+            \item \textbf{Definition}: Performance measurement for classification problems at various thresholds.
+            \item \textbf{Interpretation}: Ranges from 0 to 1, with 1 indicating perfect accuracy and 0.5 indicating no predictive power.
+            \item \textbf{Usage}: Especially useful in binary classification to evaluate performance under different classification thresholds.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Evaluation Metrics - Key Points}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Avoid Misleading Metrics}: High accuracy might coexist with poor precision or recall, especially in imbalanced datasets.
+            \item \textbf{Context Matters}: Choose the right metric based on the problem; e.g., for medical diagnoses, high recall might be more critical than precision.
+            \item \textbf{Use Visualizations}: Implement visuals like ROC curves to demonstrate model performance and threshold effects.
+        \end{itemize}
+    \end{block}
+    These metrics equip you with the essential tools to assess and compare model performance adequately, ensuring informed decisions about which models to deploy in real-world applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Definition}
+    \begin{block}{Definition of Accuracy}
+        \begin{itemize}
+            \item \textbf{Accuracy} is a metric used to evaluate the performance of a machine learning model.
+            \item It is defined as the ratio of the number of correct predictions to the total number of predictions made:
+            \begin{equation}
+                \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+            \end{equation}
+            \item Where:
+            \begin{itemize}
+                \item TP: True Positives (correctly predicted positive cases)
+                \item TN: True Negatives (correctly predicted negative cases)
+                \item FP: False Positives (incorrectly predicted as positive)
+                \item FN: False Negatives (incorrectly predicted as negative)
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Importance and Misleading Aspects}
+    \begin{block}{Importance of Accuracy in Model Evaluation}
+        \begin{itemize}
+            \item \textbf{Simplicity}: Easy to understand and calculate.
+            \item \textbf{Global Performance Indicator}: Useful for balanced datasets.
+            \item \textbf{Benchmarking}: Serves as a baseline to compare different models.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{When Accuracy Might Be Misleading}
+        \begin{itemize}
+            \item \textbf{Class Imbalance}: Can give misleading high accuracy in imbalanced datasets. Example:
+            \begin{itemize}
+                \item Dataset: 1000 instances (950 Negative, 50 Positive) 
+                \item Model predicts all Negative → Accuracy = 95\%
+                \item Highlights the need for other metrics: Precision, Recall, F1 Score.
+            \end{itemize}
+
+            \item \textbf{Overlapping Classes}: Fails to capture nuances where classes are not easily separable.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Key Points and Visualization}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Consider precision, recall, and F1-score in addition to accuracy.
+            \item Use accuracy as a starting point; complement it with other metrics.
+            \item Visualization tools, such as confusion matrices, provide valuable context.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Visual Example}
+        \begin{itemize}
+            \item Include a confusion matrix diagram to illustrate accuracy components (TP, TN, FP, FN).
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        \begin{itemize}
+            \item Understanding accuracy is important but necessitates a holistic view with additional metrics.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision and Recall - Definitions}
+    \begin{itemize}
+        \item \textbf{Precision}: The ratio of correctly predicted positive observations to the total predicted positives.
+        \begin{itemize}
+            \item Answers: "Of all instances classified as positive, how many were actually positive?"
+            \item \textbf{Formula}:
+            \begin{equation}
+            \text{Precision} = \frac{TP}{TP + FP}
+            \end{equation}
+            where:
+            \begin{itemize}
+                \item $TP$ = True Positives
+                \item $FP$ = False Positives
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Recall (Sensitivity)}: The ratio of correctly predicted positive observations to all actual positives.
+        \begin{itemize}
+            \item Addresses: "Of all actual positive instances, how many did we correctly identify?"
+            \item \textbf{Formula}:
+            \begin{equation}
+            \text{Recall} = \frac{TP}{TP + FN}
+            \end{equation}
+            where:
+            \begin{itemize}
+                \item $FN$ = False Negatives
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision and Recall - Importance}
+    \begin{itemize}
+        \item \textbf{Balancing Act}: 
+        \begin{itemize}
+            \item Precision and recall often have an inverse relationship.
+            \item Enhancing one may decrease the other.
+        \end{itemize}
+        
+        \item \textbf{Context Matters}:
+        \begin{itemize}
+            \item The importance of precision vs. recall may vary by application.
+            \begin{itemize}
+                \item Example: In medical diagnoses, recall is critical.
+                \item Example: In spam detection, precision is prioritized.
+            \end{itemize}
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision and Recall - Example Scenario}
+    \begin{itemize}
+        \item \textbf{Scenario}:
+        \begin{itemize}
+            \item Disease screening test results for 100 patients:
+            \begin{itemize}
+                \item True Positives (TP): 80
+                \item False Positives (FP): 20
+                \item True Negatives (TN): 50
+                \item False Negatives (FN): 10
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Calculations}:
+        \begin{itemize}
+            \item \textbf{Precision}:
+            \begin{equation}
+            \text{Precision} = \frac{80}{80 + 20} = 0.80 \text{ (80\%)}
+            \end{equation}
+            \item \textbf{Recall}:
+            \begin{equation}
+            \text{Recall} = \frac{80}{80 + 10} = 0.89 \text{ (89\%)}
+            \end{equation}
+        \end{itemize}
+        
+        \item \textbf{Interpretation}:
+        \begin{itemize}
+            \item High recall but lower precision is acceptable in medical diagnostics.
+            \item Identifying actual cases is crucial in this context.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1-Score - Understanding}
+
+    The F1-score is a vital metric in machine learning, particularly for evaluating classification models, especially when dealing with imbalanced datasets.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1-Score - Definition and Formula}
+
+    \begin{block}{What is the F1-Score?}
+        \begin{itemize}
+            \item \textbf{Definition}: The F1-score is the harmonic mean of precision and recall, combining them into a single metric for a comprehensive evaluation of model performance.
+        \end{itemize}
+        
+        \begin{equation}
+            F1 = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+        \end{equation}
+        
+        Where:
+        \begin{itemize}
+            \item \textbf{Precision} = $\frac{TP}{TP + FP}$ (True Positives/(True Positives + False Positives))
+            \item \textbf{Recall} = $\frac{TP}{TP + FN}$ (True Positives/(True Positives + False Negatives))
+            \item \textbf{TP}: True Positives
+            \item \textbf{FP}: False Positives
+            \item \textbf{FN}: False Negatives
+        \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1-Score - Key Characteristics and Applications}
+
+    \begin{block}{Key Characteristics of F1-Score}
+        \begin{enumerate}
+            \item \textbf{Balanced Approach}: Balances the trade-off between precision and recall for a clearer performance picture.
+            \item \textbf{Range}: Ranges from 0 to 1:
+            \begin{itemize}
+                \item An F1-score of 1 indicates perfect precision and recall.
+                \item An F1-score of 0 indicates poor performance in terms of precision or recall.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+    
+    \begin{block}{Why Use F1-Score?}
+        \begin{itemize}
+            \item \textbf{Imbalance Sensitivity}: Important in imbalanced datasets to focus on minority class performance.
+            \item \textbf{Applicability}: Useful when false positives and false negatives have significant costs.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1-Score - Example Scenario}
+
+    Consider a model predicting fraudulent transactions:
+    \begin{itemize}
+        \item 100 transactions total
+        \item 10 actual fraudulent (positive class)
+        \item Model identifies 8 as fraudulent, with:
+        \begin{itemize}
+            \item 2 false positives
+            \item 2 false negatives
+        \end{itemize}
+    \end{itemize}
+    
+    \textbf{Calculating Precision and Recall}:
+    \begin{itemize}
+        \item Precision = $\frac{6}{6 + 2} = 0.75$
+        \item Recall = $\frac{6}{6 + 2} = 0.75$
+    \end{itemize}
+
+    \textbf{Calculating F1-Score}:
+    \begin{equation}
+        F1 = 2 \cdot \frac{0.75 \cdot 0.75}{0.75 + 0.75} = 0.75
+    \end{equation}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1-Score - Conclusion}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item The F1-score is particularly useful in imbalanced scenarios.
+            \item Optimization of the F1-score requires careful model tuning and understanding of precision and recall dynamics.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        The F1-score provides a single metric that encapsulates both precision and recall, allowing for more informed decisions in model evaluation, especially where class distribution is skewed. Use it as a key indicator of your model's predictive power!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Confusion Matrix - Overview}
+  
+  \begin{block}{What is a Confusion Matrix?}
+    A \textbf{Confusion Matrix} is a performance measurement tool for classification models. 
+    It provides a summary of prediction results, allowing us to visualize the performance of a model by comparing the actual versus predicted outcomes.
+  \end{block}
+  
+  \begin{block}{Components of a Confusion Matrix}
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \hline
+      & \textbf{Predicted Positive} & \textbf{Predicted Negative} \\
+      \hline
+      \textbf{Actual Positive} & True Positive (TP) & False Negative (FN) \\
+      \hline
+      \textbf{Actual Negative} & False Positive (FP) & True Negative (TN) \\
+      \hline
+    \end{tabular}
+    \end{center}
+    \begin{itemize}
+      \item True Positive (TP): Correctly predicted positives
+      \item True Negative (TN): Correctly predicted negatives
+      \item False Positive (FP): Incorrectly predicted positives (Type I Error)
+      \item False Negative (FN): Incorrectly predicted negatives (Type II Error)
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Confusion Matrix - Metrics}
+  
+  \begin{block}{How Does It Help?}
+    The confusion matrix helps in calculating essential evaluation metrics for model performance:
+  \end{block}
+  
+  \begin{itemize}
+    \item \textbf{Accuracy:} 
+      \begin{equation}
+        \text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}
+      \end{equation}
+      
+    \item \textbf{Precision (Positive Predictive Value):} 
+      \begin{equation}
+        \text{Precision} = \frac{TP}{TP + FP}
+      \end{equation}
+      - Indicates accuracy of positive predictions.
+      
+    \item \textbf{Recall (Sensitivity or True Positive Rate):}
+      \begin{equation}
+        \text{Recall} = \frac{TP}{TP + FN}
+      \end{equation}
+      - Measures captured actual positives.
+      
+    \item \textbf{F1 Score:} 
+      \begin{equation}
+        \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+      \end{equation}
+      - Harmonic mean of precision and recall, useful for imbalanced datasets.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Confusion Matrix - Example and Conclusion}
+  
+  \begin{block}{Example}
+    Consider a binary classification model for email spam detection:
+    \begin{center}
+    \begin{tabular}{|c|c|c|}
+      \hline
+      & \textbf{Predicted Spam (Positive)} & \textbf{Not Spam (Negative)} \\
+      \hline
+      \textbf{Actual Spam} & 80 (TP) & 20 (FN) \\
+      \hline
+      \textbf{Actual Not Spam} & 5 (FP) & 95 (TN) \\
+      \hline
+    \end{tabular}
+    \end{center}
+    
+    Key Metrics:
+    \begin{itemize}
+      \item Accuracy = 0.87 (or 87\%)
+      \item Precision = 0.94 (or 94\%)
+      \item Recall = 0.80 (or 80\%)
+      \item F1 Score = 0.86 (or 86\%)
+    \end{itemize}
+  \end{block}
+
+  \begin{block}{Conclusion}
+    A \textbf{Confusion Matrix} is crucial for evaluating classification models, highlighting errors made, and guiding improvements. 
+    It serves as a foundation for understanding complex evaluations, especially in imbalanced datasets.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{AUC-ROC Curve - Understanding}
+    The AUC-ROC (Area Under the Curve - Receiver Operating Characteristic) curve is a crucial metric for evaluating binary classification models.
+    
+    \begin{itemize}
+        \item It illustrates the trade-off between the True Positive Rate (TPR) and the False Positive Rate (FPR) across various thresholds.
+        \item \textbf{True Positive Rate (TPR)}:
+        \begin{equation}
+            \text{TPR} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+        \end{equation}
+        \item \textbf{False Positive Rate (FPR)}:
+        \begin{equation}
+            \text{FPR} = \frac{\text{False Positives}}{\text{False Positives} + \text{True Negatives}}
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{AUC-ROC Curve - Area Under the Curve (AUC)}
+    \begin{itemize}
+        \item The AUC quantifies the overall performance of a classifier by measuring the area under the ROC curve.
+        \item AUC values range from 0 to 1:
+        \begin{itemize}
+            \item \textbf{AUC = 1}: Perfect model – predicts all positives and negatives correctly.
+            \item \textbf{AUC = 0.5}: Random model – no better than guessing.
+            \item \textbf{AUC < 0.5}: Indicates an inverted classification.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{AUC-ROC Curve - Interpretation and Key Points}
+    \begin{enumerate}
+        \item \textbf{Higher AUC indicates better performance}:
+        \begin{itemize}
+            \item A model with an AUC of 0.85 is better than one with 0.70.
+        \end{itemize}
+        \item \textbf{Threshold Selection}:
+        \begin{itemize}
+            \item ROC curve aids in selecting an optimal model based on TPR versus FPR.
+        \end{itemize}
+        \item \textbf{Visual Representation}:
+        \begin{lstlisting}
+          |
+      1.0 |                    ● (True Positive Rate)
+          |                 ●
+          |              ●
+          |            ●
+          |          ●
+      0.0 |______________●_______________
+         0.0             1.0
+                False Positive Rate
+        \end{lstlisting}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Cross-Validation Techniques - Introduction}
+    \begin{block}{What is Cross-Validation?}
+        Cross-validation is a statistical method used to estimate the skill of machine learning models. It involves partitioning the original dataset into:
+        \begin{itemize}
+            \item A training set for training the model
+            \item A test set for evaluating its performance
+        \end{itemize}
+        This technique is particularly useful in mitigating overfitting, where a model performs well on training data but poorly on unseen data.
+    \end{block}
+    \begin{block}{Why Use Cross-Validation?}
+        \begin{itemize}
+            \item \textbf{Reduces Overfitting:} Ensures the model generalizes well beyond the training dataset.
+            \item \textbf{More Reliable Evaluation:} Provides robust insight into model performance.
+            \item \textbf{Maximizes Data Usage:} Effectively utilizes limited data by validating on various subsets.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Cross-Validation Techniques - Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Train-Test Split:} 
+        	\begin{itemize}
+            	\item Basic validation method that splits dataset into training and testing parts.
+                \item \textit{Example:} 100 samples, 80 for training, 20 for testing.
+            \end{itemize}
+
+        \item \textbf{Repeated Random Subsampling:} 
+        	\begin{itemize}
+            	\item Randomly splits dataset multiple times into training and testing sets.
+            \end{itemize}
+        
+        \item \textbf{K-Fold Cross-Validation:} 
+        	\begin{itemize}
+            	\item Dataset is divided into 'K' equal parts.
+            	\item Trained on K-1 folds and tested on the remaining fold, repeated K times.
+            	\item \textit{Example Illustration:} Consider K = 5.
+            	\begin{itemize}
+                 	\item Iteration 1: Train on folds 1, 2, 3, 4; test on fold 5.
+                 	\item Iteration 2: Train on folds 1, 2, 3, 5; test on fold 4.
+                 	\item ...
+            	\end{itemize}
+            \end{itemize}
+
+        \item \textbf{Leave-One-Out Cross-Validation (LOOCV):} 
+        	\begin{itemize}
+            	\item A special case of K-Fold with K equal to the number of data points; ideal for small datasets.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Cross-Validation Techniques - Additional Considerations}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Systematic approach is essential for effective model evaluation.
+            \item K-Fold and LOOCV balance computational efficiency with accuracy.
+            \item Choice of K is critical:
+                \begin{itemize}
+                    \item Larger K increases variability and cost, usually offering better approximation.
+                    \item Smaller K may lead to bias in performance estimation.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Important Considerations}
+        \begin{itemize}
+            \item Apply cross-validation only to training data to prevent data leakage.
+            \item Average performance metrics across folds for comprehensive evaluation.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example Code Snippet for K-Fold}
+        \begin{lstlisting}[language=Python]
+from sklearn.model_selection import KFold
+from sklearn.linear_model import LogisticRegression
+from sklearn.datasets import load_iris
+from sklearn.metrics import accuracy_score
+
+# Load dataset
+data = load_iris()
+X, y = data.data, data.target
+
+# Initialize KFold
+kf = KFold(n_splits=5)
+
+model = LogisticRegression(max_iter=200)
+
+accuracies = []
+
+for train_index, test_index in kf.split(X):
+    X_train, X_test = X[train_index], X[test_index]
+    y_train, y_test = y[train_index], y[test_index]
+    
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    accuracies.append(accuracy_score(y_test, y_pred))
+
+print(f'Average accuracy: {sum(accuracies) / len(accuracies)}')
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{K-Fold Cross-Validation}
+    \begin{block}{Overview}
+        K-Fold Cross-Validation is a resampling technique used to assess the performance and generalization ability of machine learning models.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is K-Fold Cross-Validation?}
+    \begin{itemize}
+        \item Resampling technique for model evaluation.
+        \item Splits the dataset into 'K' smaller subsets (or folds).
+        \item Each data point is used for both training and validation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Process of K-Fold Cross-Validation}
+    \begin{enumerate}
+        \item \textbf{Data Splitting}
+            \begin{itemize}
+                \item Divide dataset into 'K' equal-sized folds.
+                \item Common K values: 5 or 10.
+            \end{itemize}
+        \item \textbf{Model Training \& Validation}
+            \begin{itemize}
+                \item For each of the 'K' iterations, select one fold as validation and the rest as training data.
+            \end{itemize}
+        \item \textbf{Performance Aggregation}
+            \begin{itemize}
+                \item Average performance metrics across all K iterations.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{K-Fold Validation Example}
+    \begin{block}{Example}
+        Considering a dataset with 100 samples and choosing K=5:
+        \begin{itemize}
+            \item Split into 5 folds (each with 20 samples).
+            \item Use folds 1-4 for training and fold 5 for validation (and repeat).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points of K-Fold Cross-Validation}
+    \begin{itemize}
+        \item \textbf{Avoids Overfitting}: Assesses model's performance more reliably.
+        \item \textbf{Generalization}: Insight into performance on unseen data.
+        \item \textbf{Bias-Variance Tradeoff}: Balanced dataset in each fold helps understand bias and variance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of K-Fold Cross-Validation}
+    \begin{itemize}
+        \item \textbf{Comprehensive Use of Data}: Each sample is used for training and validation exactly once.
+        \item \textbf{Flexibility}: Works with any machine learning model.
+        \item \textbf{Better Performance Evaluation}: More reliable than a single train-test split.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Considerations}
+    \begin{itemize}
+        \item \textbf{Computationally Intensive}: More folds increase computation time.
+        \item \textbf{Choosing K}: Consider dataset size and model complexity.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet for K-Fold Cross-Validation}
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import KFold
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import load_iris
+from sklearn.metrics import accuracy_score
+
+# Load dataset
+X, y = load_iris(return_X_y=True)
+kf = KFold(n_splits=5)
+
+model = RandomForestClassifier()
+scores = []
+
+for train_index, test_index in kf.split(X):
+    X_train, X_test = X[train_index], X[test_index]
+    y_train, y_test = y[train_index], y[test_index]
+    
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    scores.append(accuracy_score(y_test, y_pred))
+
+print(f'Average accuracy: {sum(scores)/len(scores)}')
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    By employing K-Fold Cross-Validation, we gain a more accurate understanding of our machine learning model's expected performance on unseen data.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Train-Test Split}
+    \begin{block}{Understanding Train-Test Split}
+        The train-test split is a fundamental technique in machine learning used to assess how well a model generalizes to unseen data by dividing the dataset into training and testing subsets.
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{How It Works}
+    \begin{enumerate}
+        \item \textbf{Divide the Dataset:}
+        \begin{itemize}
+            \item Typically, 70-80\% for training and 20-30\% for testing.
+            \item Example: 800 samples for training and 200 for testing from a dataset of 1000 samples.
+        \end{itemize}
+        
+        \item \textbf{Model Training:}
+        \begin{itemize}
+            \item The model learns patterns from the training set.
+        \end{itemize}
+        
+        \item \textbf{Model Evaluation:}
+        \begin{itemize}
+            \item The model's performance is evaluated using the test data to measure accuracy and generalization capability.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Limitations of Train-Test Split}
+    \begin{itemize}
+        \item \textbf{Variance in Results:}
+        \begin{itemize}
+            \item Performance metrics can vary with different splits; a single split may not represent true model capability.
+        \end{itemize}
+
+        \item \textbf{Data Inefficiency:}
+        \begin{itemize}
+            \item Only a small fraction of data is utilized for training.
+        \end{itemize}
+
+        \item \textbf{Overfitting Risk:}
+        \begin{itemize}
+            \item A model tailored to training data may perform poorly on test data.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Best Practices}
+    \begin{itemize}
+        \item \textbf{Multiple Splits:} Use multiple train-test splits or additional validation methods like K-Fold Cross-Validation.
+        \item \textbf{Stratified Sampling:} In classification tasks, maintain class distribution in both training and testing sets.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Code Snippet}
+    Here is a Python code snippet using Scikit-Learn for train-test splitting:
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import train_test_split
+from sklearn.datasets import load_iris
+from sklearn.ensemble import RandomForestClassifier
+
+# Load dataset
+data = load_iris()
+X = data.data
+y = data.target
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Train the model
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+# Evaluate model
+accuracy = model.score(X_test, y_test)
+print(f"Model Accuracy: {accuracy:.2f}")
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    The train-test split is crucial for validating machine learning models. Understanding its execution, benefits, and limitations is essential for effective evaluation and selection. Always consider additional validation methods for robust results.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Selection Criteria - Introduction}
+    In machine learning, selecting the right model is crucial for optimal performance. 
+    This involves evaluating models based on specific criteria and metrics.
+    \begin{itemize}
+        \item Focus on evaluation metrics
+        \item Considerations related to the bias-variance tradeoff
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Selection Criteria - Key Concepts}
+    \begin{block}{1. Evaluation Metrics}
+        Common metrics used to assess machine learning models include:
+        \begin{itemize}
+            \item \textbf{Accuracy}: 
+            \[
+            \text{Accuracy} = \frac{\text{True Positives + True Negatives}}{\text{Total Instances}}
+            \]
+            \item \textbf{Precision}: 
+            \[
+            \text{Precision} = \frac{\text{True Positives}}{\text{True Positives + False Positives}}
+            \]
+            \item \textbf{Recall (Sensitivity)}: 
+            \[
+            \text{Recall} = \frac{\text{True Positives}}{\text{True Positives + False Negatives}}
+            \]
+            \item \textbf{F1 Score}:
+            \[
+            \text{F1 Score} = 2 \times \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision + Recall}}
+            \]
+            \item \textbf{Mean Squared Error (MSE)}:
+            \[
+            \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+            \]
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Model Selection Criteria - Conclusion}
+    \begin{block}{Key Takeaways}
+        \begin{itemize}
+            \item Evaluate multiple metrics for a holistic understanding of model performance.
+            \item Balance between bias and variance is critical to avoid underfitting and overfitting.
+            \item Employ validation techniques for robust model evaluations.
+        \end{itemize}
+    \end{block}
+    Model selection is a key step in the machine learning workflow that enhances the model's predictive power and generalizability.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Examples: Evaluating Machine Learning Models}
+    \begin{block}{Overview}
+        In this slide, we explore practical examples on how to apply evaluation metrics and techniques in real-world machine learning scenarios, highlighting the importance of selecting appropriate evaluation methods based on the context of each problem.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Evaluation Metrics}
+    \begin{itemize}
+        \item \textbf{Accuracy}:
+        \begin{equation}
+            \text{Accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+        \end{equation}
+        \item \textbf{Precision}:
+        \begin{equation}
+            \text{Precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+        \end{equation}
+        \item \textbf{Recall (Sensitivity)}:
+        \begin{equation}
+            \text{Recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
+        \end{equation}
+        \item \textbf{F1 Score}:
+        \begin{equation}
+            \text{F1 Score} = 2 \cdot \frac{\text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}
+        \end{equation}
+        \item \textbf{ROC AUC}: Area under the Receiver Operating Characteristic curve, balancing true positive against false positive rates.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Studies}
+    \textbf{Case Study 1: Spam Email Classification}
+    \begin{itemize}
+        \item \textbf{Problem Context}: Classifying emails as spam or not.
+        \item \textbf{Metrics Used}: Precision and Recall.
+        \item \textbf{Insights}: 
+            \begin{itemize}
+                \item High precision crucial to minimize false positives.
+                \item Recall important to ensure spam emails are identified.
+            \end{itemize}
+        \item \textbf{Example Outcome}: 
+            A model with 95\% precision is preferable to avoid misclassifying legitimate emails.
+    \end{itemize}
+
+    \textbf{Case Study 2: Medical Diagnosis}
+    \begin{itemize}
+        \item \textbf{Problem Context}: Identifying presence of disease (e.g., cancer).
+        \item \textbf{Metrics Used}: Recall and F1 Score.
+        \item \textbf{Insights}:
+            \begin{itemize}
+                \item High recall ensures most actual cases are detected.
+                \item F1 balances precision and recall for robust evaluation.
+            \end{itemize}
+        \item \textbf{Example Outcome}:
+            A model with an F1 score of 0.85 can balance identifying patients requiring intervention while avoiding unnecessary alarms for healthy patients.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Selecting the right evaluation metric is critical and should align with business goals and model impact.
+            \item Understanding metric implications enables informed decisions on model selection and deployment.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Real-world applications of machine learning necessitate a nuanced approach to model performance evaluation. By carefully selecting and interpreting evaluation metrics, practitioners can optimize models to effectively meet specific needs.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Pitfalls in Model Evaluation}
+    Understanding the common pitfalls in model evaluation is crucial for ensuring that your machine learning models are effective and reliable. Below are some key mistakes and strategies to avoid them:
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Pitfalls - Part 1}
+    \begin{enumerate}
+        \item \textbf{Overfitting to the Evaluation Data}
+        \begin{itemize}
+            \item \textbf{Explanation:} When a model performs well on the evaluation dataset but poorly on unseen data, it reflects learning noise instead of patterns.
+            \item \textbf{How to Avoid:} 
+            \begin{itemize}
+                \item Use cross-validation (e.g., k-fold).
+                \item Maintain a separate test set not seen during training.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Ignoring Class Imbalance}
+        \begin{itemize}
+            \item \textbf{Explanation:} In cases where one class is underrepresented, accuracy can be misleading.
+            \item \textbf{How to Avoid:}
+            \begin{itemize}
+                \item Use metrics like precision, recall, F1-score, or AUC-ROC.
+                \item Resample techniques to balance the class distribution.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Pitfalls - Part 2}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Using the Wrong Evaluation Metric}
+        \begin{itemize}
+            \item \textbf{Explanation:} Each task has specific metrics for success; inappropriate metrics can misguide conclusions.
+            \item \textbf{How to Avoid:}
+            \begin{itemize}
+                \item Define your goals before evaluation.
+            \end{itemize}
+        \end{itemize}
+
+        \item \textbf{Neglecting Hyperparameter Tuning}
+        \begin{itemize}
+            \item \textbf{Explanation:} Without tuning hyperparameters, performance may be suboptimal.
+            \item \textbf{How to Avoid:}
+            \begin{itemize}
+                \item Use grid search or random search methods.
+                \item Utilize tools like Scikit-learn’s GridSearchCV or RandomizedSearchCV.
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Failure to Assess Generalization}
+        \begin{itemize}
+            \item \textbf{Explanation:} Good performance on one dataset doesn't guarantee real-world efficacy.
+            \item \textbf{How to Avoid:}
+            \begin{itemize}
+                \item Test the model in real-world conditions.
+                \item Validate with diverse datasets.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points & Example Code}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Validate your model with cross-validation.
+            \item Choose metrics aligned with business objectives.
+            \item Address class imbalance in classification.
+            \item Regularly tune hyperparameters for optimization.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Example Code Snippet for Cross-Validation}
+    \begin{lstlisting}[language=Python]
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestClassifier
+
+# Model
+model = RandomForestClassifier()
+
+# Cross-validation
+scores = cross_val_score(model, X, y, cv=5, scoring='f1_macro')
+print(f'Average F1 Score across folds: {scores.mean()}')
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Being aware of these common pitfalls and implementing strategies to avoid them will significantly enhance the reliability of your model evaluations and, consequently, the performance of your machine learning projects.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Key Takeaways - Part 1}
+  
+  \begin{block}{Summary of Key Points Discussed}
+    \begin{enumerate}
+      \item \textbf{Model Evaluation Importance}:
+        \begin{itemize}
+          \item Evaluating machine learning models is essential to understand their performance.
+          \item Proper evaluation identifies strengths, weaknesses, and opportunities for improvement.
+        \end{itemize}
+        
+      \item \textbf{Common Pitfalls in Evaluation}:
+        \begin{itemize}
+          \item Misleading conclusions can arise from biased datasets, overlooking overfitting, and inappropriate metrics.
+        \end{itemize}
+        
+      \item \textbf{Choosing the Right Metric}:
+        \begin{itemize}
+          \item Metrics must align with project goals, varying by problem type (classification, regression).
+        \end{itemize}
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Key Takeaways - Part 2}
+
+  \begin{block}{Importance of Choosing the Right Metric}
+    \begin{enumerate}
+      \item \textbf{Alignment with Objectives}:
+        \begin{itemize}
+          \item Select metrics reflecting business or research objectives (e.g., sensitivity in health diagnostics).
+        \end{itemize}
+        
+      \item \textbf{For Classification Problems}:
+        \begin{itemize}
+          \item \textbf{Accuracy}: Overall correctness; misleading with imbalanced classes.
+          \item \textbf{Precision}: Insight into positive prediction quality; critical in spam detection.
+          \item \textbf{Recall}: Captures all positive instances; vital for disease detection.
+        \end{itemize}
+        
+      \item \textbf{For Regression Problems}:
+        \begin{itemize}
+          \item \textbf{Mean Absolute Error (MAE)}: Average prediction error interpretation.
+          \item \textbf{Mean Squared Error (MSE)}: Heavily penalizes larger errors.
+          \item \textbf{R² Score}: Proportion of variance explained by the model, indicating fit.
+        \end{itemize}
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion and Key Takeaways - Part 3}
+
+  \begin{block}{Using Confusion Matrix}
+    \begin{itemize}
+      \item Visual representation of true vs. predicted classifications:
+      \begin{center}
+      \begin{tabular}{|c|c|c|}
+        \hline
+                         & \textbf{Predicted Positive} & \textbf{Predicted Negative} \\
+        \hline
+        \textbf{Actual Positive} & True Positives (TP) & False Negatives (FN) \\
+        \hline
+        \textbf{Actual Negative} & False Positives (FP) & True Negatives (TN) \\
+        \hline
+      \end{tabular}
+      \end{center}
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Key Points to Emphasize}
+    \begin{itemize}
+      \item Tailor metrics according to the use case; no one-size-fits-all metric.
+      \item Employ cross-validation for thorough evaluation across data subsets.
+      \item Continuous evaluation post-deployment is crucial due to potential data drift.
+    \end{itemize}
+  \end{block}
+  
+  \begin{block}{Questions for Reflection}
+    \begin{itemize}
+      \item What evaluation metric would be most important for your next project and why?
+      \item Can you identify a recent project where a different metric could improve evaluation?
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\end{document}

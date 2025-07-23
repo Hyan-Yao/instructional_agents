@@ -1,0 +1,898 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Time Series Analysis]{Week 9: Time Series Analysis}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Time Series Analysis}
+    \begin{block}{Overview}
+        Time Series Analysis involves statistical techniques that analyze time-ordered data points to identify patterns and make predictions. Data points are typically collected at regular intervals (e.g., daily stock prices, monthly sales figures).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Time Series Analysis in Forecasting}
+    \begin{enumerate}
+        \item \textbf{Forecasting Future Values:}
+            \begin{itemize}
+                \item Time series analysis helps predict future trends based on historical data.
+                \item \textit{Example:} A retail store analyzes sales data over the last five years.
+            \end{itemize}
+        
+        \item \textbf{Identifying Patterns and Trends:}
+            \begin{itemize}
+                \item Identifies:
+                    \begin{enumerate}
+                        \item Trends
+                        \item Seasonality
+                        \item Cyclic behavior
+                        \item Irregularities
+                    \end{enumerate}
+            \end{itemize}
+        
+        \item \textbf{Enhancing Decision-Making:}
+            \begin{itemize}
+                \item Insights from analysis aid strategic decision-making.
+                \item \textit{Illustration:} Businesses predict recessions using historical data.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Tools and Techniques in Time Series Analysis}
+    \begin{block}{Common Methods}
+        \begin{itemize}
+            \item \textbf{Moving Averages:} Smoothens data by averaging a set of values.
+            \item \textbf{Exponential Smoothing:} Applies decreasing weights to past observations.
+            \item \textbf{ARIMA:} Combines autoregression and moving averages for complex data analysis.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Crucial for forecasting.
+            \item Helps identify trends and patterns in data.
+            \item Applications in finance, economics, and inventory management.
+            \item A range of statistical tools are available.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Next Steps}
+    \begin{block}{Conclusion}
+        Understanding time series analysis is essential for interpreting data over time and leveraging insights for effective forecasting. This foundational knowledge sets the stage for applying more complex methods.
+    \end{block}
+    
+    \begin{block}{Call to Action}
+        Next, we will dive deeper into what constitutes a time series, including its key characteristics such as trend, seasonality, cyclicity, and irregularity.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What is a Time Series? - Definition}
+    \begin{block}{Definition of Time Series Data}
+        A \textbf{time series} is a sequence of data points collected or recorded at successive points in time. It is often used to analyze patterns over time, particularly in fields like economics, finance, environmental studies, and any discipline where monitoring of metrics is critical.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What is a Time Series? - Key Characteristics}
+    \begin{block}{Key Characteristics of Time Series Data}
+        \begin{enumerate}
+            \item \textbf{Trend}
+            \begin{itemize}
+                \item \textbf{Definition}: Represents long-term movement or direction in the data over time.
+                \item \textbf{Example}: Gradual increase in global temperatures over decades.
+            \end{itemize}
+
+            \item \textbf{Seasonality}
+            \begin{itemize}
+                \item \textbf{Definition}: Refers to periodic fluctuations occurring at regular intervals due to seasonal effects (e.g., quarters of a year, months).
+                \item \textbf{Example}: Retail sales increase during holiday seasons, such as Christmas.
+            \end{itemize}
+
+            \item \textbf{Cyclicity}
+            \begin{itemize}
+                \item \textbf{Definition}: Occurs at irregular intervals, influenced by economic or other external factors.
+                \item \textbf{Example}: Economic recession and recovery cycles, which can last several years.
+            \end{itemize}
+
+            \item \textbf{Irregularity (Randomness)}
+            \begin{itemize}
+                \item \textbf{Definition}: Unpredictable fluctuations in data due to random factors, not attributable to trend, seasonality, or cycles.
+                \item \textbf{Example}: Sudden spikes in sales caused by unexpected events, like a viral marketing campaign.
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]{What is a Time Series? - Key Points and Formula}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Time series data provides insight into historical patterns crucial for future forecasting.
+            \item Understanding characteristics enables better predictive models and preparation for future changes.
+            \item Accurate modeling requires recognizing trends, seasonality, cyclicity, and irregularities.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Summary Formula}
+        To analyze a time series, one might use the additive model:
+        \begin{equation}
+            Y_t = T_t + S_t + C_t + I_t 
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item $Y_t$: Observed value at time $t$
+            \item $T_t$: Trend component at time $t$
+            \item $S_t$: Seasonal component at time $t$
+            \item $C_t$: Cyclic component at time $t$
+            \item $I_t$: Irregular component at time $t$
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Terminologies - Stationarity}
+    \begin{block}{1. Stationarity}
+        \begin{itemize}
+            \item \textbf{Definition:} A time series is stationary if its statistical properties (mean, variance, autocorrelation) are constant over time, indicating no trends or seasonal patterns.
+            \item \textbf{Importance:} Many time series forecasting models assume stationarity to avoid unreliable predictions.
+            \item \textbf{Types of Stationarity:}
+                \begin{itemize}
+                    \item \textbf{Strict Stationarity:} Properties unchanged across any time periods.
+                    \item \textbf{Weak Stationarity:} Only mean and variance are constant over time.
+                \end{itemize}
+            \item \textbf{Example:} Monthly sales data with an upward trend is non-stationary. Transformations like differencing can help achieve stationarity.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Terminologies - Autocorrelation}
+    \begin{block}{2. Autocorrelation}
+        \begin{itemize}
+            \item \textbf{Definition:} Measures the correlation of a time series with its own past values, indicating similarity between observations at different time lags.
+            \item \textbf{Importance:} Crucial for determining relationships between values at different times and for model selection, especially in autoregressive models.
+            \item \textbf{Key Measure:} Autocorrelation Function (ACF) quantifies autocorrelation, ranging from -1 to 1 (near 1 indicates strong positive correlation).
+            \item \textbf{Example:} Daily temperatures with strong positive autocorrelation at lag 1 indicate today's temperature relates closely to yesterday's.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Terminologies - Seasonality}
+    \begin{block}{3. Seasonality}
+        \begin{itemize}
+            \item \textbf{Definition:} Systematic and predictable changes that recur over a specific period (daily, weekly, monthly, yearly).
+            \item \textbf{Importance:} Identifying seasonal patterns enables more accurate forecasting by accounting for predictable fluctuations.
+            \item \textbf{Example:} Retail sales peak during the holiday season yearly; recognizing this helps in inventory planning.
+            \item \textbf{Illustration:} Sales charts often show distinct peaks during November and December.
+        \end{itemize}
+        \begin{block}{Key Points to Emphasize}
+            \begin{itemize}
+                \item \textbf{Stationarity} is foundational for many time series analysis techniques.
+                \item \textbf{Autocorrelation} helps leverage the data's temporal structure.
+                \item \textbf{Seasonality} captures periodic fluctuations in time series.
+            \end{itemize}
+        \end{block}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Time Series Models}
+    % Overview of Time Series Models
+    Time series analysis involves techniques to analyze time-ordered data points. There are several forecasting models that we can use, each suited for different types of data and analysis requirements. This slide introduces three common time series models: ARIMA, Exponential Smoothing, and Seasonal Decomposition.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. ARIMA Model (AutoRegressive Integrated Moving Average)}
+    \begin{itemize}
+        \item \textbf{Components}:
+        \begin{itemize}
+            \item \textbf{Autoregression (AR)}: Uses the relationship between an observation and lagged observations.
+            \item \textbf{Integrated (I)}: Differencing the data to achieve stationarity.
+            \item \textbf{Moving Average (MA)}: Models the relationship between an observation and residual errors from a moving average model.
+        \end{itemize}
+        \item \textbf{Key Formula}:
+        \begin{equation}
+            Y_t = c + \phi_1 Y_{t-1} + \phi_2 Y_{t-2} + ... + \theta_1 \varepsilon_{t-1} + ... + \varepsilon_t
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item $Y_t$ = value at time $t$
+            \item $c$ = constant
+            \item $\phi$ = coefficients of the autoregressive model
+            \item $\theta$ = coefficients of the moving average model
+            \item $\varepsilon$ = error term
+        \end{itemize}
+        \item \textbf{Example}: Stock prices over time can be modeled using ARIMA to predict future prices based on past values.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{2. Exponential Smoothing}
+    \begin{itemize}
+        \item \textbf{Description}: A family of forecasting methods that weigh past observations with exponentially decreasing weights, giving more influence to recent observations.
+        \item \textbf{Types}:
+        \begin{itemize}
+            \item Simple Exponential Smoothing: For data without trend/seasonality.
+            \item Holt’s Linear Trend Model: For data with a trend but no seasonality.
+            \item Holt-Winters Seasonal Model: For data with both trend and seasonality.
+        \end{itemize}
+        \item \textbf{Key Formula for Simple Exponential Smoothing}:
+        \begin{equation}
+            S_t = \alpha Y_t + (1 - \alpha) S_{t-1}
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item $S_t$ = smoothed value for time $t$
+            \item $Y_t$ = actual value at time $t$
+            \item $\alpha$ = smoothing constant (0 < $\alpha$ < 1)
+        \end{itemize}
+        \item \textbf{Example}: Monthly sales data can be forecasted using Holt-Winters to account for both trends and seasonal variations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{3. Seasonal Decomposition}
+    \begin{itemize}
+        \item \textbf{Description}: Decomposes a time series into three components:
+        \begin{itemize}
+            \item \textbf{Trend}: Long-term movement in the data.
+            \item \textbf{Seasonal}: Repeated patterns over specific periods.
+            \item \textbf{Irregular}: Random noise not accounted for by the trend or seasonal components.
+        \end{itemize}
+        \item \textbf{Key Approaches}:
+        \begin{itemize}
+            \item Additive Model: $Y_t = Trend_t + Seasonality_t + Irregular_t$
+            \item Multiplicative Model: $Y_t = Trend_t \times Seasonality_t \times Irregular_t$
+        \end{itemize}
+        \item \textbf{Example}: Electricity consumption data can be decomposed to analyze overall consumption trends while identifying seasonal spikes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Time Series Models}
+    Understanding these models is critical for effective time series forecasting:
+    \begin{itemize}
+        \item \textbf{ARIMA}: Versatile for non-stationary data.
+        \item \textbf{Exponential Smoothing}: Effectively captures trends and seasonality.
+        \item \textbf{Seasonal Decomposition}: Helps isolate different influences on the time series data.
+    \end{itemize}
+    These foundational models will prepare you for deeper analyses and forecasting challenges in time series analysis. Feel free to explore each model in greater detail in the subsequent slides!
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ARIMA Model - Overview}
+    \begin{block}{Overview of ARIMA Model}
+        The ARIMA (AutoRegressive Integrated Moving Average) model is a popular statistical method used for time series forecasting. 
+        It combines three key components: Autoregression (AR), Integration (I), and Moving Average (MA). ARIMA is particularly useful when the data exhibits trends but no clear seasonal patterns.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ARIMA Model - Components}
+    \begin{block}{Components of ARIMA}
+        \begin{enumerate}
+            \item \textbf{Autoregression (AR)}:
+                \begin{itemize}
+                    \item \textbf{Definition}: The autoregressive component predicts future values based on past values.
+                    \item \textbf{Formula}:
+                    \begin{equation}
+                    AR(p) = \phi_1 Y_{t-1} + \phi_2 Y_{t-2} + \ldots + \phi_p Y_{t-p} + \epsilon_t
+                    \end{equation}
+                    \item \textbf{Example}: In a sales dataset, past sales figures influence future sales.
+                \end{itemize}
+
+            \item \textbf{Integrated (I)}:
+                \begin{itemize}
+                    \item \textbf{Definition}: Addresses non-stationarity by differencing the data.
+                    \item \textbf{Formula}:
+                    \begin{equation}
+                    Y'_t = Y_t - Y_{t-1}
+                    \end{equation}
+                    \item \textbf{Example}: Differencing can reveal stable patterns in steadily increasing sales.
+                \end{itemize}
+
+            \item \textbf{Moving Average (MA)}:
+                \begin{itemize}
+                    \item \textbf{Definition}: Uses past forecast errors to predict future values.
+                    \item \textbf{Formula}:
+                    \begin{equation}
+                    MA(q) = \theta_1 \epsilon_{t-1} + \theta_2 \epsilon_{t-2} + \ldots + \theta_q \epsilon_{t-q}
+                    \end{equation}
+                    \item \textbf{Example}: Past sales spikes can adjust predictions for similar future events.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ARIMA Model - Notation and Summary}
+    \begin{block}{Putting it All Together: ARIMA Notation}
+        An ARIMA model is denoted as \textbf{ARIMA(p, d, q)}, where:
+        \begin{itemize}
+            \item \textbf{p} = number of autoregressive terms
+            \item \textbf{d} = degree of differencing
+            \item \textbf{q} = number of moving average terms
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Choose appropriate \(p, d, q\) values using ACF and PACF methods.
+            \item ARIMA is suitable for univariate time series data.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Illustrative Code Snippet (Python)}
+    \begin{lstlisting}[language=Python]
+import pandas as pd
+from statsmodels.tsa.arima.model import ARIMA
+
+# Assume data is a Pandas Series of time series data
+model = ARIMA(data, order=(p, d, q))
+model_fit = model.fit()
+print(model_fit.summary())
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Seasonal Decomposition of Time Series}
+    \begin{block}{Understanding Seasonal Decomposition}
+        Time series data can exhibit various patterns over time, making it crucial to break it down into its fundamental components. 
+        \textbf{Seasonal decomposition} allows us to analyze these components: \textbf{trend}, \textbf{seasonal}, and \textbf{residual}.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Components of a Time Series}
+    \begin{enumerate}
+        \item \textbf{Trend (T)}:
+        \begin{itemize}
+            \item The long-term movement or direction in the data.
+            \item Represents overall upward or downward movements over time.
+            \item Example: The gradual increase in global temperatures over decades.
+        \end{itemize}
+        
+        \item \textbf{Seasonal (S)}:
+        \begin{itemize}
+            \item The repeating patterns or cycles in data that occur at regular intervals due to seasonal factors.
+            \item Example: Retail sales typically increase during the holiday season each year.
+        \end{itemize}
+        
+        \item \textbf{Residual (R)}:
+        \begin{itemize}
+            \item The random noise or fluctuations in the data after removing trend and seasonal components.
+            \item Represents unpredictable variations.
+            \item Example: An unexpected spike in sales due to a viral social media campaign.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mathematical Representation}
+    A time series can be decomposed using the following additive model:
+    
+    \begin{equation}
+        Y_t = T_t + S_t + R_t 
+    \end{equation}
+
+    Where:
+    \begin{itemize}
+        \item \( Y_t \) = Observed time series value at time \( t \)
+        \item \( T_t \) = Trend component at time \( t \)
+        \item \( S_t \) = Seasonal component at time \( t \)
+        \item \( R_t \) = Residual component at time \( t \)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: Monthly Coffee Sales}
+    To illustrate the decomposition process, consider the monthly sales data of a coffee shop:
+    
+    \begin{itemize}
+        \item \textbf{Trend}: Over several years, sales have increased due to the shop's popularity.
+        \item \textbf{Seasonal}: Higher sales every December as people purchase gifts and coffee for gatherings.
+        \item \textbf{Residual}: A sudden spike in sales one month due to a celebrity endorsement.
+    \end{itemize}
+    
+    \textbf{Decomposing the Data}:
+    \begin{enumerate}
+        \item Remove the trend to focus on seasonal patterns.
+        \item Identify seasonality by observing monthly patterns across years.
+        \item Calculate residuals to analyze unpredictability in sales.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Practical Application}
+    To implement seasonal decomposition in Python, you can use libraries like \texttt{statsmodels}. An example code snippet for seasonal decomposition is provided below:
+    
+    \begin{lstlisting}[language=Python]
+import pandas as pd
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+# Load your time series data
+data = pd.read_csv('coffee_sales.csv', parse_dates=True, index_col='Date')
+
+# Decomposing the time series
+result = seasonal_decompose(data['Sales'], model='additive')
+result.plot()
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    By mastering seasonal decomposition, you can better understand time series data's intricate features, leading to improved forecasting and decision-making.
+
+    \begin{itemize}
+        \item Seasonal decomposition is crucial for effective forecasting.
+        \item Understanding components separately enhances the accuracy of predictions.
+        \item Visualizing these components can aid in discerning underlying patterns.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Forecasting Methods}
+    \begin{block}{Overview of Forecasting Methods for Time Series Data}
+        In time series analysis, forecasting refers to the process of predicting future values based on previously observed values. 
+        We will discuss two foundational forecasting methods:
+        \begin{itemize}
+            \item Naive Forecasting
+            \item Moving Averages
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Naive Forecasting}
+    \begin{block}{Concept}
+        The Naive forecasting method is the simplest form of forecasting. It assumes that the next value in a time series will be the same as the most recent observed value.
+    \end{block}
+    
+    \begin{block}{Formula}
+        \begin{equation}
+        \hat{y}_{t+1} = y_t 
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item \( \hat{y}_{t+1} \) = forecasted value for the next time period
+            \item \( y_t \) = observed value at the current time period
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Naive Forecasting - Example}
+    \begin{block}{Example}
+        Suppose we have a time series of monthly sales: [200, 220, 250, 230].
+        \begin{itemize}
+            \item For the following month, the naive forecast would be:
+            \begin{equation}
+            \hat{y}_5 = 230 \quad (\text{Sales from last month})
+            \end{equation}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item **Simplicity**: Straightforward and requires minimal calculation.
+            \item **Use Cases**: Best for series without trends or seasonal patterns.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Moving Averages}
+    \begin{block}{Concept}
+        The Moving Average (MA) method smoothes a time series by averaging values over a specified number of previous periods. It helps identify trends by reducing random fluctuations.
+    \end{block}
+
+    \begin{block}{Formulas}
+        \begin{itemize}
+            \item \textbf{Simple Moving Average (SMA)} for period \( n \):
+            \begin{equation}
+            \text{SMA}_n = \frac{y_t + y_{t-1} + \ldots + y_{t-n+1}}{n}
+            \end{equation}
+
+            \item \textbf{Weighted Moving Average (WMA)}:
+            \begin{equation}
+            \text{WMA}_n = \frac{w_1 y_t + w_2 y_{t-1} + \ldots + w_n y_{t-n+1}}{w_1 + w_2 + \ldots + w_n}
+            \end{equation}
+            Where \( w \) = weights assigned (sum of weights = 1).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Moving Averages - Example}
+    \begin{block}{Example}
+        Using the sales data [200, 220, 250, 230], let's calculate a 3-month SMA:
+        \begin{equation}
+        \text{SMA}_3 = \frac{200 + 220 + 250}{3} = \frac{670}{3} \approx 223.33
+        \end{equation}
+        Thus, the forecast for month 5 would be approximately 223.33.
+    \end{block}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item **Smoothing Effect**: Mitigates impact of seasonality and irregularities.
+            \item **Choosing \( n \)**: A smaller \( n \) is responsive to changes, while a larger \( n \) provides stability.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Summary}
+        Choosing the appropriate forecasting method depends on the characteristics of the time series data and the forecasting objective.
+        \begin{itemize}
+            \item Naive forecasting provides a quick estimate.
+            \item Moving averages offer a more refined approach for trends.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Next Step}
+        Remember, the next step will be to evaluate the accuracy of these forecasts!
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Evaluating Forecast Accuracy}
+    \begin{block}{Introduction to Forecast Accuracy Metrics}
+        Forecast accuracy is crucial in time series analysis, as it determines the reliability of the predictions made by various forecasting methods. To evaluate how well a forecasting method performs, we utilize several metrics, including:
+        \begin{itemize}
+            \item Mean Absolute Error (MAE)
+            \item Mean Squared Error (MSE)
+            \item Root Mean Squared Error (RMSE)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mean Absolute Error (MAE)}
+    \begin{block}{Definition}
+        MAE measures the average magnitude of the errors in a set of forecasts, without considering their direction. 
+    \end{block}
+    \begin{block}{Formula}
+        \begin{equation}
+        \text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|
+        \end{equation}
+        where \( y_i \) is the actual value, \( \hat{y}_i \) is the forecasted value, and \( n \) is the number of observations.
+    \end{block}
+    \begin{block}{Example}
+        If your actual sales for a week are [200, 220, 250] and your forecasts are [210, 215, 240], then:
+        \begin{equation}
+        \text{MAE} = \frac{10 + 5 + 10}{3} = 8.33
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mean Squared Error (MSE) and Root Mean Squared Error (RMSE)}
+    \begin{block}{Mean Squared Error (MSE)}
+        \begin{itemize}
+            \item **Definition**: MSE captures the average of the squared differences between estimated values and actual values, emphasizing larger errors.
+            \item **Formula**:
+                \begin{equation}
+                \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2
+                \end{equation}
+            \item **Example**:
+                \begin{equation}
+                \text{MSE} = \frac{100 + 25 + 100}{3} = 75
+                \end{equation}
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Root Mean Squared Error (RMSE)}
+        \begin{itemize}
+            \item **Definition**: RMSE is the square root of the MSE and provides a measure of the spread of residuals in the same units as the original data.
+            \item **Formula**:
+                \begin{equation}
+                \text{RMSE} = \sqrt{\text{MSE}}
+                \end{equation}
+            \item **Example**:
+                \begin{equation}
+                \text{RMSE} = \sqrt{75} \approx 8.66
+                \end{equation}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Applications}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item MAE is straightforward, measuring average error regardless of its direction.
+            \item MSE highlights larger errors, making it useful when deviations are critical.
+            \item RMSE offers insight into prediction accuracy, aligned with original data units.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Applications in Context}
+        Accurate forecasts are vital in fields like finance, supply chain management, and climate modeling. Understanding these metrics allows analysts to select the most effective forecasting methods.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Time Series Analysis}
+    \begin{block}{Introduction to Time Series Analysis}
+    Time series analysis involves statistical techniques to analyze time-ordered data. It is vital for:
+    \begin{itemize}
+        \item Forecasting
+        \item Understanding data trends
+        \item Detecting seasonal patterns
+    \end{itemize}
+    Insights derived significantly impact various fields.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Applications by Industry}
+    \begin{enumerate}
+        \item \textbf{Finance:}
+        \begin{itemize}
+            \item Stock Market Prediction: ARIMA and GARCH models for predicting stock prices.
+            \item Risk Management: VaR models assess potential losses in portfolios.
+            \item \textit{Example:} Consistent upward trend leads to estimation of future returns.
+        \end{itemize}
+        
+        \item \textbf{Economics:}
+        \begin{itemize}
+            \item Economic Indicators: Tracking GDP, inflation, unemployment.
+            \item Business Cycles: Identifying expansion and contraction phases.
+            \item \textit{Example:} Historical GDP data helps forecast future growth.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples Continued}
+    \begin{enumerate}
+        \setcounter{enumi}{2} % to continue numbering from previous frame
+        \item \textbf{Environmental Studies:}
+        \begin{itemize}
+            \item Climate Change Analysis: Assessing climate data trends.
+            \item Pollution Monitoring: Analyzing air quality over time.
+            \item \textit{Example:} CO2 concentration analysis assesses policy effectiveness.
+        \end{itemize}
+        
+        \item \textbf{Healthcare:}
+        \begin{itemize}
+            \item Disease Surveillance: Trends in disease rates for outbreak response.
+            \item Patient Flow Analysis: Predicting admissions for resource allocation.
+            \item \textit{Example:} Seasonal flu patterns prepare hospitals for peak season.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Forecasting: Making predictions from historical data.
+            \item Patterns and Trends: Detecting trends and seasonality is crucial.
+            \item Cross-Industry Relevance: Applicable in multiple sectors.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+    Time series analysis enables data-driven decisions across various industries, enhancing planning and operational efficiency.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formula Reference}
+    \begin{block}{Simple Exponential Smoothing}
+        \begin{equation}
+            \hat{y}_{t+1} = \alpha y_t + (1 - \alpha) \hat{y}_t
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item \( \hat{y}_{t+1} \) = forecast for the next period
+            \item \( \alpha \) = smoothing constant (0 < \( \alpha \) < 1)
+            \item \( y_t \) = actual value at time \( t \)
+            \item \( \hat{y}_t \) = forecast at time \( t \)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Case Study: Time Series Forecasting Project}
+    \begin{block}{Overview of Time Series Forecasting}
+        Time series forecasting involves predicting future values based on previously observed values. This method is crucial in various fields such as finance, economics, and environmental science. 
+        The forecasting process helps organizations make informed decisions by providing insights into future trends.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Objectives of the Project}
+    \begin{enumerate}
+        \item \textbf{Develop a Predictive Model}: Use historical data to create a model that forecasts future values.
+        \item \textbf{Evaluate Forecast Accuracy}: Assess the accuracy of the model using relevant statistical metrics.
+        \item \textbf{Optimize the Forecasting Process}: Refine the model based on evaluation results to improve predictions.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Expected Outcomes}
+    \begin{itemize}
+        \item \textbf{Insightful Predictions}: Generate reliable forecasts that can guide strategic planning.
+        \item \textbf{Statistical Knowledge Application}: Apply theoretical concepts of time series analysis in a practical context, enhancing understanding.
+        \item \textbf{Improved Decision-Making}: Equip stakeholders with actionable insights from the forecasts.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Basic Steps in the Forecasting Project}
+    \begin{enumerate}
+        \item \textbf{Data Collection}: Gather historical data relevant to the forecasting objective (e.g., monthly sales data).
+        \item \textbf{Data Preprocessing}: Clean the data by handling missing values and outliers.
+        \item \textbf{Exploratory Data Analysis (EDA)}: Visualize data trends and patterns using line graphs and seasonal decomposition.
+        \item \textbf{Model Selection}: Choose appropriate time series forecasting methods (e.g., ARIMA, Exponential Smoothing).
+        \item \textbf{Model Training}: Split the data into training and testing sets, train the model using the training set.
+        \item \textbf{Model Evaluation}: Use metrics like Mean Absolute Error (MAE), Mean Squared Error (MSE), or Root Mean Squared Error (RMSE) to evaluate model performance.
+        \item \textbf{Forecast Generation}: Use the trained model to make predictions for future time periods.
+        \item \textbf{Result Interpretation and Reporting}: Present findings and implications to stakeholders.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example Illustrations}
+    \begin{block}{ARIMA Model}
+        Illustrate the Autoregressive Integrated Moving Average model framework, showing how each component contributes to forecasting. 
+        The ARIMA formula is given by:
+        \begin{equation}
+            Y_t = \alpha + \phi_1 Y_{t-1} + \phi_2 Y_{t-2} + \cdots + \theta_1 \varepsilon_{t-1} + \theta_2 \varepsilon_{t-2} + \cdots + \varepsilon_t
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item The significance of historical data in making informed predictions.
+        \item The iterative nature of model refinement based on evaluation results.
+        \item The applicability of time series forecasting across different sectors.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    This project illustrates the hands-on application of time series forecasting methods, bridging theory with practice and enabling data-driven decision-making. 
+    Students are encouraged to engage with real datasets and apply techniques learned throughout the course to experience the forecasting process in action.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Takeaways in Time Series Analysis}
+    \begin{block}{Key Concepts Recap}
+        \begin{enumerate}
+            \item \textbf{Definition of Time Series Analysis:} 
+            Involves statistical techniques to analyze time-ordered data, extracting meaningful statistics and identifying patterns over time.
+            
+            \item \textbf{Importance in Data Mining:} 
+            Provides insights into historical patterns, enabling predictive analytics and decision-making in various fields like finance, healthcare, and weather forecasting.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Significant Techniques Highlighted}
+    \begin{itemize}
+        \item \textbf{Trend Analysis:}
+        \begin{itemize}
+            \item Identifying the underlying movement in the data over time.
+            \item \textit{Example:} An increasing trend in monthly sales data may indicate growth in consumer demand.
+        \end{itemize}
+        
+        \item \textbf{Seasonal Decomposition:}
+        \begin{itemize}
+            \item Breaking down data into seasonal components to understand fluctuations.
+            \item \textit{Example:} Retail sales often spike during holidays.
+        \end{itemize}
+
+        \item \textbf{Autoregressive Integrated Moving Average (ARIMA):}
+        \begin{equation}
+        Y_t = \phi_1 Y_{t-1} + \phi_2 Y_{t-2} + ... + \theta_1 \varepsilon_{t-1} + \varepsilon_t
+        \end{equation}
+        where \( Y_t \) is the current value, \( \phi \) are autoregressive terms, and \( \theta \) are moving average terms.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Applications \& Key Points}
+    \begin{block}{Applications & Case Study Insights}
+        \begin{itemize}
+            \item Utilized in diverse industries for forecasting (e.g., stock prices, economic indicators, inventory management).
+            \item Demonstrated forecasting accuracy and practical applications via case study insights.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Data Preparation is Critical:} Handling missing values and transformations is essential for accurate modeling.
+            \item \textbf{Model Evaluation:} Assess performance with metrics like Mean Absolute Error (MAE) and Root Mean Square Error (RMSE).
+            \item \textbf{Real-Time Applications:} Enables immediate decision-making through significant contributions to real-time data processing.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+\end{document}

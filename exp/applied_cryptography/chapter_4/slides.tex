@@ -1,0 +1,755 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+basicstyle=\ttfamily\small,
+keywordstyle=\color{blue},
+commentstyle=\color{gray},
+stringstyle=\color{red},
+breaklines=true,
+frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Chapter 4: Cryptographic Hash Functions}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Cryptographic Hash Functions}
+    \begin{block}{What Are Cryptographic Hash Functions?}
+        Cryptographic hash functions are specialized algorithms that transform input data of any length into a fixed-size string of characters, typically a hexadecimal number. The output, known as the \textbf{hash} or \textbf{digest}, plays a crucial role in various security applications.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Purpose and Importance}
+    \begin{enumerate}
+        \item \textbf{Data Integrity:}
+            \begin{itemize}
+                \item Ensures that any alteration of input data will result in a different hash.
+                \item \textit{Example:} Verifying downloaded software by comparing provided hash with the computed hash.
+            \end{itemize}
+        \item \textbf{Authentication:}
+            \begin{itemize}
+                \item Used in password storage by hashing passwords.
+                \item \textit{Example:} Hashing "mypassword" keeps it confidential.
+            \end{itemize}
+        \item \textbf{Digital Signatures and Certificates:}
+            \begin{itemize}
+                \item Ensures documents have not been altered and binds identity to a document.
+            \end{itemize}
+        \item \textbf{Efficiency:}
+            \begin{itemize}
+                \item Fast computation of hashes is crucial for applications like blockchain.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Characteristics}
+    \begin{itemize}
+        \item \textbf{Deterministic:} Same input yields the same hash output.
+        \item \textbf{Fixed Output Length:} Output is of consistent length (e.g., 256 bits for SHA-256).
+        \item \textbf{Pre-image Resistance:} Infeasible to reverse-engineer the original input from the hash.
+        \item \textbf{Collision Resistance:} Challenging to find two different inputs that produce the same hash.
+        \item \textbf{Avalanche Effect:} Small change in input results in drastically different hash output.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Popular Cryptographic Hash Functions}
+    \begin{itemize}
+        \item \textbf{SHA-256:} Widely used in security applications (e.g., Bitcoin).
+        \item \textbf{SHA-3:} Latest member of the Secure Hash Algorithm family with enhanced security features.
+        \item \textbf{MD5:} Previously popular, now insecure due to vulnerabilities.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    Cryptographic hash functions are foundational for modern cybersecurity. They enable secure data storage, verification, and integrity checks, making knowledge of their properties crucial for safeguarding data in a digital world.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Hash Functions?}
+    % Definition of hash functions
+    \begin{block}{Definition}
+        Hash functions are mathematical algorithms that transform input data (or 'message') into a fixed-size string of characters, typically a hexadecimal number. This output is known as the hash value or digest.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Characteristics of Hash Functions}
+    % Characteristics of hash functions
+    \begin{enumerate}
+        \item \textbf{Determinism:}
+        \begin{itemize}
+            \item A hash function consistently produces the same hash value for the same input.
+            \item Example: Hashing "Hello, World!" yields the output \\ \texttt{65a8e27d8879283831b664bd8b7f0ad4}.
+        \end{itemize}
+
+        \item \textbf{Fixed Output Length:}
+        \begin{itemize}
+            \item The hash value remains of a fixed length regardless of input size.
+            \item Example: Both "abc" and an entire book can yield hash values of 256 bits (e.g., SHA-256).
+        \end{itemize}
+
+        \item \textbf{Computational Efficiency:}
+        \begin{itemize}
+            \item Fast computation of hashes is crucial for applications like verifying data integrity.
+            \item Example: Quickly hashing a document in a digital signature process.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustrative Example}
+    % Example of hash function
+    Consider the hash function SHA-256:
+    \begin{block}{Input and Result}
+        \begin{itemize}
+            \item \textbf{Input Data:} "data123"
+            \item \textbf{Resulting Hash:} \texttt{6f7c5b882d0a138e4f6fdd64e5400270adfef0e1cd2956c7f7e5c7e24fc60012}
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Hash functions are critical in security applications, essential for understanding advanced cryptographic concepts.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Properties of Hash Functions - Introduction}
+    \begin{block}{Key Properties of Hash Functions}
+        Cryptographic hash functions are designed to take an input (or message) and produce a fixed-size string of bytes, typically a digest that appears random. For hash functions to be secure and effective, they must possess several crucial properties.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Properties of Hash Functions - Pre-image Resistance}
+    \begin{enumerate}
+        \item \textbf{Pre-image Resistance}
+        \begin{itemize}
+            \item \textbf{Definition:} Given a hash output \( h \), it should be computationally infeasible to find an input \( x \) such that \( \text{hash}(x) = h \).
+            \item \textbf{Explanation:} If someone knows the hash value, they cannot easily reverse-engineer it to discover the original input.
+            \item \textbf{Example:} If the hash of a password is stored, pre-image resistance ensures that knowing the hash alone does not allow easy recovery of the password.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Properties of Hash Functions - Second Pre-image Resistance and Collision Resistance}
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Second Pre-image Resistance}
+        \begin{itemize}
+            \item \textbf{Definition:} Given an input \( x \) and its hash \( h \), it should be hard to find another input \( x' \) (where \( x' \neq x \)) such that \( \text{hash}(x') = h \).
+            \item \textbf{Explanation:} Prevents the creation of a different file that hashes to the same value, thus preserving authenticity.
+            \item \textbf{Example:} If a user signs a document, crafting a different document with the same hash value undermines the user's signature.
+        \end{itemize}
+
+        \item \textbf{Collision Resistance}
+        \begin{itemize}
+            \item \textbf{Definition:} It should be computationally infeasible to find any two distinct inputs \( x \) and \( y \) such that \( \text{hash}(x) = \text{hash}(y) \).
+            \item \textbf{Explanation:} Collision resistance ensures that no two different messages have the same hash output.
+            \item \textbf{Example:} If two transactions could yield the same hash, a fraudster could create a valid transaction proving the same funds were spent twice.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Properties of Hash Functions - Avalanche Effect}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Avalanche Effect}
+        \begin{itemize}
+            \item \textbf{Definition:} A small change in the input (even changing one bit) should result in a drastic change in the output hash.
+            \item \textbf{Explanation:} Enhances security by making it difficult to predict output changes with minor input variations.
+            \item \textbf{Example:} Hashing `abc` and `abc1` should yield drastically different results, demonstrating the property.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Applications of Hash Functions}
+    \begin{itemize}
+        \item These properties are foundational for ensuring the security and reliability of cryptographic systems.
+        \item Cryptographic hash functions are widely used in:
+        \begin{itemize}
+            \item Digital signatures
+            \item Data integrity verification
+            \item Password hashing
+        \end{itemize}
+        \item Real-world applications depend heavily on these properties to function correctly and securely.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The SHA Family of Algorithms - Overview}
+    % Overview of the SHA family
+    The Secure Hash Algorithm (SHA) family, developed by the National Security Agency (NSA), is a collection of cryptographic hash functions that play a critical role in data integrity and security. 
+    \begin{itemize}
+        \item Transforms input data (of any size) into a fixed-size output (the hash).
+        \item Even minor changes in input produce significantly different outputs.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The SHA Family - Key Variants}
+    % Key SHA variants
+    \begin{enumerate}
+        \item \textbf{SHA-1}
+            \begin{itemize}
+                \item Length: 160-bit hash value.
+                \item Usage: Previously used for data integrity and digital signatures.
+                \item Current Status: Weakened by vulnerabilities (collision attacks).
+                \item Example: Input ``Hello'' yields a SHA-1 hash of \texttt{f5721d4...}.
+            \end{itemize}
+        
+        \item \textbf{SHA-2}
+            \begin{itemize}
+                \item Sub-variants: SHA-224, SHA-256, SHA-384, SHA-512.
+                \item Example: Input ``Hello'' yields a SHA-256 hash of \texttt{2cf24d...}.
+                \item Strengths: More secure than SHA-1 with better collision resistance.
+                \item Usage: Commonly used in security protocols like SSL/TLS.
+            \end{itemize}
+        
+        \item \textbf{SHA-3}
+            \begin{itemize}
+                \item Introduced as an alternative to SHA-2 in 2012.
+                \item Flexible output length (224, 256, 384, 512 bits).
+                \item Architecture: Based on the Keccak sponge construction.
+                \item Example: Input ``Hello'' yields a SHA-3 hash of \texttt{7c211...}.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of the SHA Family}
+    % Key characteristics and importance of SHA
+    \begin{block}{Key Characteristics}
+        \begin{itemize}
+            \item Pre-image Resistance: Infeasible to retrieve input from hash output.
+            \item Collision Resistance: Unlikely for different inputs to produce the same output.
+            \item Avalanche Effect: Small changes in input result in drastic output changes.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Importance}
+        \begin{itemize}
+            \item Integrity Verification: Critical for confirming data integrity, used in software distribution and digital signatures.
+            \item Security Protocols: Essential for SSL/TLS protocols safeguarding web communications.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        Understanding the SHA algorithms is crucial for ensuring data integrity and secure communication, especially as the landscape of cybersecurity evolves.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SHA-1: Strengths and Vulnerabilities - Introduction}
+    % Introduction to SHA-1
+    \begin{itemize}
+        \item \textbf{SHA-1} (Secure Hash Algorithm 1)
+        \begin{itemize}
+            \item Developed by the National Security Agency (NSA) and published by NIST in 1995.
+            \item Produces a 160-bit hash value.
+            \item Used in various security applications and protocols, including TLS, PGP, and SSH.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SHA-1: Strengths and Applications}
+    % Strengths and Applications of SHA-1
+    \begin{block}{Strengths of SHA-1}
+        \begin{enumerate}
+            \item \textbf{Standardized Algorithm}: Widely adopted and trusted.
+            \item \textbf{Speed}: Fast and efficient, suitable for high-performance systems.
+            \item \textbf{Simplicity}: Easy to implement for developers.
+        \end{enumerate}
+    \end{block}
+
+    \begin{block}{Applications of SHA-1}
+        \begin{itemize}
+            \item Digital signatures for integrity and authenticity.
+            \item Version control systems (e.g., Git) for data consistency.
+            \item Used in TLS certificates by early certificate authorities.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SHA-1: Vulnerabilities and Summary}
+    % Known vulnerabilities and summary
+    \begin{block}{Known Vulnerabilities}
+        \begin{enumerate}
+            \item \textbf{Collision Attacks}:
+                \begin{itemize}
+                    \item Practical collisions demonstrated in 2005.
+                    \item "SHAttered" attack in 2017 - two distinct files, same hash.
+                \end{itemize}
+            \item \textbf{Security Level}:
+                \begin{itemize}
+                    \item Reduced hash strength to approximately 63 bits.
+                    \item Increased feasibility for brute force attacks.
+                \end{itemize}
+            \item \textbf{Deprecation}:
+                \begin{itemize}
+                    \item Major tech entities moved to stronger alternatives due to vulnerabilities.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+
+    \begin{block}{Summary}
+        SHA-1 played a vital role but is now obsolete due to vulnerabilities; organizations should transition to more secure algorithms to protect information integrity.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SHA-256 and SHA-3 - Overview}
+    % Overview of SHA-256, SHA-3, and their importance
+    In this slide, we'll explore SHA-256, a prominent member of the SHA-2 family, and SHA-3, the latest addition to the Secure Hash Algorithm suite. 
+    Both algorithms serve crucial roles in maintaining data integrity and secure communications across various applications.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SHA-256 (Secure Hash Algorithm 256-bit)}
+    % Overview of SHA-256 definition, security features, and applications
+    \begin{block}{Definition}
+        SHA-256 is a cryptographic hash function that produces a 256-bit (32-byte) hash value. 
+        It is part of the SHA-2 family, designed by the National Security Agency (NSA) to replace SHA-1.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Security Features}:
+            \begin{itemize}
+                \item \textit{Collision Resistance}: Computationally infeasible to find two distinct inputs yielding the same output.
+                \item \textit{Pre-image Resistance}: Hard to find an original input from a hash value.
+                \item \textit{Second Pre-image Resistance}: Difficult to find a different input that matches a known hash.
+            \end{itemize}
+        
+        \item \textbf{Practical Applications}:
+            \begin{itemize}
+                \item Digital Signatures for verifying authenticity in certificates.
+                \item Blockchain technology to ensure transaction integrity.
+            \end{itemize}
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SHA-256 Hash Calculation Example}
+    % Code snippet for SHA-256 hash calculation
+    \begin{block}{Hash Calculation Example}
+        \begin{lstlisting}[language=Python]
+import hashlib
+
+message = "Hello, World!"
+sha256_hash = hashlib.sha256(message.encode()).hexdigest()
+print(f"SHA-256 Hash: {sha256_hash}")
+        \end{lstlisting}
+        % Output example
+        *Output*: SHA-256 Hash: `315f5bdb76d084c0c9b11e0f600bfb0a80b866c8e9186e8eb0b908774139f30f`
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SHA-3 (Secure Hash Algorithm 3)}
+    % Overview of SHA-3 definition, security features, and practical applications
+    \begin{block}{Definition}
+        SHA-3 is the third generation of the Secure Hash Algorithm family, standardized in 2015. 
+        Unlike SHA-2, SHA-3 is built on the Keccak sponge construction.
+    \end{block}
+
+    \begin{itemize}
+        \item \textbf{Security Features}:
+            \begin{itemize}
+                \item Offers high security against collision and pre-image attacks.
+                \item \textit{Flexibility}: Supports variable output lengths (224, 256, 384, and 512 bits).
+            \end{itemize}
+
+        \item \textbf{Practical Applications}:
+            \begin{itemize}
+                \item Securing messaging, file integrity checks, and blockchain.
+                \item Enhanced resistance against quantum attacks, making it more future-proof.
+            \end{itemize}
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SHA-3 Hash Calculation Example}
+    % Code snippet for SHA-3 hash calculation
+    \begin{block}{Hash Calculation Example}
+        \begin{lstlisting}[language=Python]
+import hashlib
+
+message = "Hello, World!"
+sha3_hash = hashlib.sha3_256(message.encode()).hexdigest()
+print(f"SHA-3 Hash: {sha3_hash}")
+        \end{lstlisting}
+        % Output example
+        *Output*: SHA-3 Hash: `a5b47e9dbdd6b496e9d3aa68500214c9a61a605bdf27e6cb3c34e87b8a5773bc`
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    % Summary of key points and conclusion
+    \begin{itemize}
+        \item Both SHA-256 and SHA-3 offer strong security guarantees essential for today's digital ecosystem.
+        \item SHA-256 is widely used but transitioning towards SHA-3 is recommended due to its enhanced design and flexibility.
+        \item The choice between SHA-2 and SHA-3 depends on specific application requirements, such as output size and quantum threat resilience.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        Understanding SHA-256 and SHA-3 enhances our grasp of cryptographic principles. 
+        These algorithms play significant roles in maintaining data integrity and security across digital platforms.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Cryptographic Hash Functions - Introduction}
+    % Introduction to the role of cryptographic hash functions
+    Cryptographic hash functions are vital in modern cybersecurity, converting input data into a fixed-size string that appears random. This property is essential for various applications that ensure data security.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Cryptographic Hash Functions - Key Applications}
+    % Key applications of cryptographic hash functions
+    \begin{itemize}
+        \item Data Integrity Verification
+        \item Digital Signatures
+        \item Password Hashing
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Data Integrity Verification}
+    \begin{block}{Definition}
+        Ensures that data remains unchanged during storage or transmission.
+    \end{block}
+    \begin{itemize}
+        \item When data is created, a hash is computed and stored alongside the data.
+        \item Upon accessing the data later, the stored hash is compared to the recomputed hash.
+    \end{itemize}
+    \begin{exampleblock}{Example}
+        A software download site might provide a hash value. Users hash the downloaded file to check it matches the provided hash.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Digital Signatures}
+    \begin{block}{Definition}
+        A digital signature uses hash functions to ensure authenticity and integrity of a message.
+    \end{block}
+    \begin{enumerate}
+        \item A sender computes the hash of the message.
+        \item The hash is encrypted with the sender's private key to create a digital signature.
+        \item The receiver decrypts the signature with the sender's public key and verifies it against the message hash.
+    \end{enumerate}
+    \begin{exampleblock}{Example}
+        Email clients use digital signatures to confirm that email content remains unaltered in transit.
+    \end{exampleblock}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Password Hashing}
+    \begin{block}{Definition}
+        Storing passwords securely to protect user accounts.
+    \end{block}
+    \begin{itemize}
+        \item Systems hash user passwords instead of storing them in plaintext.
+        \item On login, the entered password is hashed and compared to the stored hash.
+    \end{itemize}
+    \begin{exampleblock}{Example}
+        If a user sets the password "SecurePass123", the system computes its hash and stores it instead of the plaintext password.
+    \end{exampleblock}
+    \begin{block}{Key Point}
+        Use strong hashing algorithms and include a salt to prevent rainbow table attacks.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Conclusion}
+    % Summary of applications and importance of cryptographic hash functions
+    Cryptographic hash functions are essential for:
+    \begin{itemize}
+        \item Ensuring data integrity by verifying unchanged information.
+        \item Creating digital signatures that authenticate sources and protect content.
+        \item Safeguarding passwords from unauthorized access.
+    \end{itemize}
+    
+    In our digital world, understanding these applications is crucial for data security professionals to protect information and verify its integrity.
+\end{frame}
+
+\begin{frame}
+    \frametitle{Case Study: Practical Use Cases}
+    \begin{block}{Overview}
+        \begin{itemize}
+            \item Analysis of real-world applications of hash functions.
+            \item Focus on their impact on security in software systems.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Introduction to Cryptographic Hash Functions}
+    \begin{itemize}
+        \item Cryptographic hash functions ensure data integrity and authenticity.
+        \item They convert an arbitrary input into a fixed-size string.
+        \item The process is non-reversible, preventing retrieval of the original data.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Real-World Applications}
+    \begin{enumerate}
+        \item Data Integrity Verification
+        \item Digital Signatures
+        \item Password Hashing
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{1. Data Integrity Verification}
+    \begin{itemize}
+        \item \textbf{Example:} Download Verification
+        \begin{itemize}
+            \item Hash value (e.g., SHA-256) is provided when downloading software.
+            \item Compute hash of downloaded file and compare with provided hash.
+        \end{itemize}
+        \item \textbf{Impact on Security:} 
+        \begin{itemize}
+            \item Ensures data received matches original data.
+            \item Prevents corruption and unauthorized changes.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{2. Digital Signatures}
+    \begin{itemize}
+        \item \textbf{Example:} Electronic Contracts
+        \begin{itemize}
+            \item Digital signatures verify sender's identity and document integrity.
+            \item Document is hashed, and the hash is encrypted with the sender's private key.
+        \end{itemize}
+        \item \textbf{Impact on Security:} 
+        \begin{itemize}
+            \item Confirms message authenticity.
+            \item Provides non-repudiation, preventing denial of message sending.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{3. Password Hashing}
+    \begin{itemize}
+        \item \textbf{Example:} User Authentication
+        \begin{itemize}
+            \item Storing only hashed passwords (e.g., using bcrypt).
+            \item During login, the provided password is hashed and compared with the stored hash.
+        \end{itemize}
+        \item \textbf{Impact on Security:}
+        \begin{itemize}
+            \item Shields original passwords even if the database is compromised.
+            \item Enhances user security significantly.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Illustrative Example: Code Snippet}
+    \begin{lstlisting}[language=Python]
+import hashlib
+
+# Function to create a SHA-256 hash of a given input
+def create_hash(input_data):
+    # Encode the input data
+    encoded_data = input_data.encode()
+    # Create a new sha256 hash object
+    hash_object = hashlib.sha256()
+    # Update the hash object with the bytes-like object
+    hash_object.update(encoded_data)
+    # Return the hexadecimal digest of the hash
+    return hash_object.hexdigest()
+
+# Example usage
+print(create_hash("Hello, World!"))  # Outputs: A591A6D40BF420404A513F898CAC38B99151B8D3
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item Hash functions are essential for data integrity and securing communications.
+        \item They play a crucial role in building trust and safeguarding credentials.
+        \item As technology evolves, the reliance on robust hash functions will increase.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future of Hash Functions in Cryptography}
+    \begin{block}{Overview}
+        The development of hash functions is vital for future-proofing security systems, especially with the rise of post-quantum cryptography (PQC).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Hash Functions and Their Properties}
+    \begin{block}{What are Hash Functions?}
+        A hash function is a one-way function that converts input data of any size into a fixed-size string of characters, which appears random.
+    \end{block}
+    \begin{itemize}
+        \item \textbf{Deterministic:} Same input produces the same hash.
+        \item \textbf{Fast Computation:} Quick to compute the hash for any input.
+        \item \textbf{Pre-image Resistance:} Infeasible to retrieve the original input.
+        \item \textbf{Collision Resistance:} Hard to find two inputs yielding the same hash.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Post-Quantum Cryptography (PQC)}
+    \begin{block}{What is PQC?}
+        Post-quantum cryptography refers to algorithms believed to be secure against quantum computer threats, which can solve problems like integer factorization much faster than classical computers.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Developments in Hash Functions}
+    \begin{enumerate}
+        \item \textbf{Enhanced Security Standards:}
+            \begin{itemize}
+                \item Transitioning from SHA-1 to SHA-256 to SHA-3 for better resistance against attacks.
+            \end{itemize}
+        \item \textbf{PQC-Compatible Hash Functions:}
+            \begin{itemize}
+                \item Developing hash functions that are robust against quantum attacks.
+                \item Examples include candidates from NIST’s PQC project.
+            \end{itemize}
+        \item \textbf{Applications in Emerging Technologies:}
+            \begin{itemize}
+                \item Integration in blockchain technology and digital signatures for long-term security.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Examples of Hash Functions}
+    \begin{block}{Integrity Assurance Example}
+        Imagine sending a message: hash the message, send both original and hash. The receiver hashes the original again. If hashes match, message is unaltered.
+    \end{block}
+    \begin{block}{PQC Example}
+        A hybrid approach combining traditional cryptography with quantum-resistant algorithms (like lattice-based hashes).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways}
+    \begin{itemize}
+        \item The impact of quantum computing on traditional cryptographic methods motivates the transition to future-proof hash functions.
+        \item Continuous advancements are necessary to ensure resilience against evolving threats.
+        \item Engagement with standards is crucial for developers to ensure compatibility within security protocols.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Further Reading}
+    \begin{block}{Conclusion}
+        The future of hash functions in cryptography holds promise through evolution and integration of post-quantum designs, ensuring long-term security.
+    \end{block}
+    \begin{itemize}
+        \item NIST Post-Quantum Cryptography Standards
+        \item Research on cryptographic primitives in the age of quantum computing.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Importance of Cryptographic Hash Functions}
+    \begin{itemize}
+        \item \textbf{Definition}: A cryptographic hash function transforms input data into a fixed-size string, creating a unique digest that ensures data integrity.
+        \item \textbf{Key Properties}:
+        \begin{itemize}
+            \item Deterministic: Identical inputs yield identical outputs.
+            \item Quick Computation: Computationally feasible to calculate the hash.
+            \item Pre-image Resistance: Infeasible to reverse the hash.
+            \item Collision Resistance: Unlikely for different inputs to produce the same hash.
+            \item Avalanche Effect: Small input changes produce significantly different hashes.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Applications and Relevance}
+    \begin{enumerate}
+        \item \textbf{Real-World Applications}:
+        \begin{itemize}
+            \item Data Integrity: Confirming file integrity through hash validation.
+            \item Password Storage: Storing hashed passwords for security.
+            \item Digital Signatures: Ensuring authenticity via hashing and encryption.
+        \end{itemize}
+        \item \textbf{Relevance in the Digital Age}:
+        \begin{itemize}
+            \item Evolving Threat Landscape: Need for secure hash functions in light of advancing threats.
+            \item Regulatory Compliance: Required cryptographic practices for sensitive data protection.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Takeaways - Final Thoughts}
+    \begin{itemize}
+        \item \textbf{Foundational Role}: Essential in security protocols like SSL/TLS and cryptocurrencies.
+        \item \textbf{Continuous Evolution}: Need for updates as vulnerabilities are discovered, particularly in post-quantum cryptography.
+        \item \textbf{Importance in Cybersecurity}: Effective use of hash functions is critical for ensuring digital trust and securing sensitive information.
+    \end{itemize}
+    \begin{block}{Example}
+        \textbf{SHA-256 Example:}
+        Given an input message \( M \): "Hello, World!"  
+        The SHA-256 hash function will produce:
+        \begin{equation}
+            \text{Hash}(M) = \text{4d186321c1a7f0f354b297e8914ab240}
+        \end{equation}
+        (in hexadecimal format)
+    \end{block}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,1124 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+  \maketitle
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Overview of SVMs and Neural Networks}
+  \begin{itemize}
+    \item \textbf{Importance in Data Mining and Machine Learning}
+    \item Both SVMs and Neural Networks are widely utilized techniques.
+    \item Essential for solving complex problems in diverse fields:
+      \begin{itemize}
+        \item Finance
+        \item Healthcare
+        \item Social media analytics
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{What are Support Vector Machines?}
+  \begin{itemize}
+    \item \textbf{Definition}: A supervised learning model that classifies binary and multiclass data by finding an optimal hyperplane.
+    \item \textbf{Key Parameter}: The margin - the distance between the closest points of different classes (support vectors).
+    \item \textbf{Example}: 
+      \begin{itemize}
+        \item Distinguishing between two species of flowers based on petal and sepal length.
+        \item SVM identifies a hyperplane that separates the species even with overlapping classes.
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{What are Neural Networks?}
+  \begin{itemize}
+    \item \textbf{Definition}: Structures inspired by the human brain, consisting of interconnected nodes arranged in layers.
+    \item \textbf{Key Feature}: Capable of learning complex relationships in data through backpropagation.
+    \item \textbf{Example}:
+      \begin{itemize}
+        \item In image recognition, a neural network identifies features from pixel values.
+        \item Adjusts weights during training to minimize misclassification of images (e.g., cats vs. dogs).
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Points to Emphasize}
+  \begin{enumerate}
+    \item \textbf{Significance}: Fundamental to building predictive models for generalization to unseen data.
+    \item \textbf{Flexibility}:
+      \begin{itemize}
+        \item SVMs excel with smaller datasets and clear margins.
+        \item Neural networks handle large volumes of complex data.
+      \end{itemize}
+    \item \textbf{Use Cases}:
+      \begin{itemize}
+        \item SVM: Text classification, image recognition.
+        \item Neural Networks: Natural language processing, self-driving vehicles.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Conclusion}
+  \begin{itemize}
+    \item SVMs and neural networks are cornerstones of modern data analysis.
+    \item They provide robust tools for classification and regression tasks.
+    \item Their methodologies enable the solution of intricate problems and the expansion of machine learning applications.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Example Code Snippet}
+  \begin{lstlisting}[language=Python]
+# Example: Python code for a simple SVM using scikit-learn
+
+from sklearn import datasets
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+
+# Load dataset
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+# Split dataset
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# Create SVM model
+model = svm.SVC(kernel='linear')
+model.fit(X_train, y_train)
+
+# Predictions
+predictions = model.predict(X_test)
+
+# Evaluation
+print(classification_report(y_test, predictions))
+  \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Support Vector Machines?}
+    \begin{block}{Definition}
+        Support Vector Machines (SVMs) are a supervised machine learning algorithm primarily used for classification tasks, though they can also be adapted for regression. 
+        The goal of SVM is to find a hyperplane that best separates data into different classes while maximizing the margin between them.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Core Principles of SVMs}
+    \begin{enumerate}
+        \item \textbf{Hyperplane:} 
+            \begin{itemize}
+                \item A hyperplane is a flat, n-1 dimensional surface that splits the data into two classes in an n-dimensional space.
+                \item Mathematically described as:
+                \begin{equation}
+                    w \cdot x + b = 0
+                \end{equation}
+                where \(w\) is the weight vector, \(x\) is the feature vector, and \(b\) is the bias term.
+            \end{itemize}
+        \item \textbf{Support Vectors:} 
+            \begin{itemize}
+                \item The closest data points to the hyperplane are called support vectors. These points are critical in defining the position of the hyperplane.
+            \end{itemize}
+        \item \textbf{Margin:} 
+            \begin{itemize}
+                \item The distance between the hyperplane and the nearest data points from each class is called the margin, which is maximized:
+                \begin{equation}
+                    \text{Maximize } \frac{2}{\|w\|}
+                \end{equation}
+                \item A larger margin indicates a more robust classifier.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of SVMs}
+    \begin{block}{Example}
+        Consider a scenario where we want to classify whether an email is spam or not (two classes: spam and not spam).
+        \begin{itemize}
+            \item Each email can be represented as a vector in a multi-dimensional space based on its features (e.g., word frequency, sender information).
+            \item The SVM will calculate the optimal hyperplane that separates the spam emails from non-spam emails, maximizing the margin.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item SVMs are powerful for high-dimensional data and are effective when the number of dimensions exceeds the number of samples.
+            \item They can also handle non-linearly separable classes using techniques like the kernel trick.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Real-World Applications}
+        \begin{itemize}
+            \item Image classification (e.g., handwriting recognition),
+            \item Text categorization (e.g., sentiment analysis),
+            \item Bioinformatics (e.g., classifying proteins).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Theory - Overview}
+    \begin{itemize}
+        \item Support Vector Machines (SVM) are supervised learning models used for classification tasks.
+        \item The main goal is to identify a hyperplane that best separates different classes in the feature space.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Theory - Decision Boundaries}
+    \begin{block}{Definition}
+        A decision boundary is a hypersurface that partitions the feature space into different classes.
+        \begin{itemize}
+            \item In 2D, it is a line.
+            \item In 3D, it is a plane.
+            \item In higher dimensions, it becomes a hyperplane.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example}
+        Consider a dataset of apples and oranges characterized by features like weight and sweetness.
+        \begin{itemize}
+            \item The SVM aims to find a line (or hyperplane) that separates the two classes with maximum margin.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Theory - Hyperplanes and Margin Maximization}
+    \begin{block}{Hyperplanes}
+        A hyperplane in a d-dimensional space is defined by the equation:
+        \begin{equation}
+            w \cdot x + b = 0
+        \end{equation}
+        where:
+        \begin{itemize}
+            \item \( w \): weight vector (normal to the hyperplane)
+            \item \( x \): input vector
+            \item \( b \): bias term
+        \end{itemize}
+        
+        An optimal hyperplane maximizes the distance (margin) between the nearest points of the two classes.
+    \end{block}
+    
+    \begin{block}{Margin Maximization}
+        The margin \( M \) can be expressed as:
+        \begin{equation}
+            M = \frac{2}{\|w\|}
+        \end{equation}
+        \begin{itemize}
+            \item A larger margin leads to better generalization to unseen data.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Theory - Role of Support Vectors}
+    \begin{block}{Support Vectors}
+        Support vectors are the data points closest to the hyperplane and are essential for defining its position.
+    \end{block}
+    
+    \begin{block}{Visual Representation}
+        \begin{itemize}
+            \item Consider a diagram showing two classes of points, the hyperplane, and the support vectors.
+            \item Indicate the margin between the classes and hyperplane.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Summary of Key Points}
+        \begin{itemize}
+            \item Decision boundaries are hyperplanes that separate classes.
+            \item Hyperplanes are defined by \( w \) and \( b \).
+            \item Maximizing the margin enhances model robustness.
+            \item Only support vectors determine the optimal hyperplane.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Applications - Introduction}
+    Support Vector Machines are supervised learning models used primarily for classification tasks, but they can also be adapted for regression. Their unique ability to find the optimal separating hyperplane makes them highly effective in a diverse array of applications across many industries.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Applications - Real-World Applications}
+    \begin{enumerate}
+        \item \textbf{Healthcare}
+        \begin{itemize}
+            \item Disease Diagnosis: Classifies patient data for diseases such as cancer based on features like tumor size and biomarkers.
+            \item \textit{Example}: Breast cancer detection categorizes tumor masses as benign or malignant.
+        \end{itemize}
+        
+        \item \textbf{Finance}
+        \begin{itemize}
+            \item Credit Scoring: Classifies loan applicants based on historical data and features.
+            \item \textit{Example}: Income level, credit history, and employment status as features.
+        \end{itemize}
+        
+        \item \textbf{Marketing}
+        \begin{itemize}
+            \item Customer Segmentation: Segments customers based on behavior and demographics.
+            \item \textit{Example}: Analyzing purchase histories for targeted advertising.
+        \end{itemize}
+        
+        \item \textbf{Image Recognition}
+        \begin{itemize}
+            \item Facial Recognition: Recognizes and classifies images based on facial features.
+            \item \textit{Example}: Secure access systems and social media tagging.
+        \end{itemize}
+        
+        \item \textbf{Text and Document Classification}
+        \begin{itemize}
+            \item Spam Detection: Categorizes emails as spam or non-spam through text analysis.
+            \item \textit{Example}: Training on labeled datasets to identify spam characteristics.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{SVM Applications - Key Points and Summary}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Flexibility}: Can be applied to various types of data (linear and non-linear) using kernel tricks.
+            \item \textbf{High Dimensionality}: Performs well in high-dimensional spaces, useful in genomics and image processing.
+            \item \textbf{Robustness}: Less affected by outliers compared to other classifiers.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Summary}
+        SVMs have a wide range of applications including healthcare diagnostics, financial analysis, marketing strategies, image recognition, and text classification. Their effectiveness in complex datasets makes them a powerful tool in machine learning. 
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Neural Networks - Part 1}
+    \textbf{Basic Definition of Neural Networks:}
+    \begin{itemize}
+        \item Neural networks are a class of machine learning algorithms inspired by the structure and function of the human brain.
+        \item Composed of interconnected groups of nodes, or "neurons," which work together to process and analyze complex data inputs.
+    \end{itemize}
+    
+    \textbf{Key Features:}
+    \begin{itemize}
+        \item \textbf{Layers:} Input layer, one or more hidden layers, and an output layer.
+        \item \textbf{Neurons:} Each neuron processes input data and passes the output to the next layer. 
+        \item \textbf{Weights \& Biases:} Connections between neurons have weights that adjust as learning proceeds, along with biases that shift the activation function.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Neural Networks - Part 2}
+    \textbf{Significance of Neural Networks:}
+    \begin{enumerate}
+        \item \textbf{Versatility:} Model complex relationships, suitable for tasks such as image recognition, speech recognition, and natural language processing.
+        \item \textbf{Non-linearity:} Capture non-linear interactions due to multi-layer structure and non-linear activation functions.
+        \item \textbf{Learning from Data:} Improve performance with more data through algorithms like backpropagation to minimize prediction errors.
+    \end{enumerate}
+    
+    \textbf{Examples of Applications:}
+    \begin{itemize}
+        \item Image Recognition: Facial recognition software and medical image analysis.
+        \item Natural Language Processing: Chatbots, language translation, and sentiment analysis.
+        \item Autonomous Vehicles: Process sensor data to interpret the vehicle's environment for safe navigation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Neural Networks - Part 3}
+    \textbf{Key Points to Emphasize:}
+    \begin{itemize}
+        \item \textbf{Adaptability:} Learn from data, reducing reliance on explicit programming for each task.
+        \item \textbf{Complexity Management:} Process large amounts of information to uncover hidden patterns.
+        \item \textbf{Cutting-edge Technology:} Advancements in computational power enhance efficiency and applicability across various industries.
+    \end{itemize}
+    
+    \textbf{Illustrative Formula:}
+    \begin{equation}
+        y = f\left(\sum (w_i x_i) + b\right)
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item $y$: Output.
+        \item $f$: Activation function (e.g., sigmoid, tanh, ReLU).
+        \item $w_i$: Weights.
+        \item $x_i$: Inputs.
+        \item $b$: Bias term.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Neural Network Structure - Overview}
+    \begin{block}{Key Components}
+        Neural networks are complex systems modeled after the human brain, designed to recognize patterns and make predictions based on input data. Understanding their structure is crucial for grasping how they work.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Neural Network Structure - Neurons}
+    \begin{enumerate}
+        \item \textbf{Neurons}
+        \begin{itemize}
+            \item \textbf{Definition:} The fundamental building blocks of a neural network, analogous to nerve cells in the human brain.
+            \item \textbf{Function:} Each neuron receives input, processes it, and passes its output to the next layer.
+            \item \textbf{Example:} In image classification, each pixel of an image may be an input to a neuron.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Neural Network Structure - Layers}
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Layers}
+        \begin{itemize}
+            \item \textbf{Input Layer:} Receives raw input data (e.g., pixel values of images).
+            \item \textbf{Hidden Layers:} 
+            \begin{itemize}
+                \item Comprises one or more layers between the input and output layers.
+                \item Each neuron transforms input data through weights and biases.
+                \item The depth varies based on problem complexity.
+            \end{itemize}
+            \item \textbf{Output Layer:} Produces the final output (e.g., number of classes in classification tasks).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Neural Network Structure - Activation Functions}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Activation Functions}
+        \begin{itemize}
+            \item Introduce non-linearity allowing the network to learn complex relationships.
+            \item \textbf{Types of Activation Functions:}
+            \begin{itemize}
+                \item \textbf{Sigmoid:} 
+                \[
+                \text{Sigmoid}(x) = \frac{1}{1 + e^{-x}}
+                \]
+                \item \textbf{ReLU:} 
+                \[
+                \text{ReLU}(x) = \max(0, x)
+                \]
+                \item \textbf{Softmax:} 
+                \[
+                \text{Softmax}(z_i) = \frac{e^{z_i}}{\sum_{j} e^{z_j}}
+                \]
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Neural Network Structure - Summary and Engagement}
+    \begin{itemize}
+        \item \textbf{Summary:} 
+        \begin{itemize}
+            \item Neurons serve as processing units.
+            \item Layers organize neurons for progressive learning.
+            \item Activation functions enable learning of non-linear relationships.
+        \end{itemize}
+        \item \textbf{Engagement Tip:} 
+        \begin{itemize}
+            \item \textit{In-Class Exercise:} Draw a simple neural network structure on the board, label its layers, and discuss the effect of adjusting the number of neurons on performance.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Neural Networks Work - Overview}
+    \begin{block}{Neural Network Processes}
+        Neural networks are powerful computational models inspired by the structure and functioning of the human brain. They learn from data through two primary processes:
+        \begin{itemize}
+            \item \textbf{Forward Propagation}
+            \item \textbf{Backpropagation}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Neural Networks Work - Forward Propagation}
+    \begin{block}{Forward Propagation}
+        \textbf{Definition:} It is the process where inputs are passed through the network to generate an output.
+
+        \textbf{Process:}
+        \begin{itemize}
+            \item \textbf{Input Layer:} Initial data (features) fed into the network.
+            \item \textbf{Weights and Biases:} Adjusted during training.
+            \item \textbf{Activation Functions:} Applied after computing the weighted sum of inputs to produce output.
+        \end{itemize}
+    \end{block}
+
+    \begin{equation}
+        z = w_1x_1 + w_2x_2 + ... + w_nx_n + b
+    \end{equation}
+    \begin{equation}
+        a = f(z)
+    \end{equation}
+
+    \textbf{Example:} Predicting whether an email is spam based on features like word frequency.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Neural Networks Work - Backpropagation}
+    \begin{block}{Backpropagation}
+        \textbf{Definition:} The method used to update weights and biases based on prediction errors.
+
+        \textbf{Process:}
+        \begin{itemize}
+            \item \textbf{Calculate Loss:} Using a loss function (e.g., Mean Squared Error).
+            \item \textbf{Gradient Calculation:} Compute gradients with respect to each weight.
+            \item \textbf{Weight Update:} Adjust weights to minimize loss.
+        \end{itemize}
+        \begin{equation}
+            w = w - \alpha \frac{\partial L}{\partial w}
+        \end{equation}
+    \end{block}
+
+    \textbf{Example:} Adjusting weights when predicted spam probability is too high.
+    
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Learning from data to improve predictions.
+            \item Importance of activation functions for complex patterns.
+            \item Training process integrates forward propagation and backpropagation.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Formulas and Code Snippet}
+    \begin{block}{Loss Function Example}
+        \begin{equation}
+            L = \frac{1}{n} \sum (y_i - \hat{y}_i)^2
+        \end{equation}
+    \end{block}
+
+    \begin{block}{Python Code Snippet}
+    \begin{lstlisting}[language=Python]
+# Update weights using gradient descent
+weights = weights - learning_rate * gradient
+    \end{lstlisting}
+    \end{block}
+
+    \textbf{Conclusion:} Neural networks effectively learn complex patterns in data for various applications like image recognition and natural language processing.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Neural Networks - Introduction}
+    \begin{block}{Overview}
+        Neural networks are powerful tools for machine learning and AI that mimic human brain information processing. 
+        We will explore three main types:
+        \begin{itemize}
+            \item Feedforward Neural Networks (FNN)
+            \item Convolutional Neural Networks (CNN)
+            \item Recurrent Neural Networks (RNN)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Neural Networks - Feedforward Neural Networks}
+    \begin{itemize}
+        \item \textbf{Structure}: Composed of an input layer, hidden layers, and an output layer.
+        \item \textbf{Function}: Information flows in one direction (input to output) with no cycles.
+        \item \textbf{Example}: Used in classification tasks, e.g., identifying images of cats or dogs.
+        \item \textbf{Key Point}: Activation functions like sigmoid or ReLU are critical for neuron outputs and learning.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Neural Networks - Convolutional Neural Networks}
+    \begin{itemize}
+        \item \textbf{Structure}: Consists of convolutional layers, pooling layers, and fully connected layers.
+        \item \textbf{Function}: Extracts features from grid-like data (e.g., images); convolutional layers detect features like edges, while pooling layers reduce dimensionality.
+        \item \textbf{Example}: Commonly used for image and video recognition tasks (e.g., facial recognition).
+        \item \textbf{Key Point}: Convolution operation helps learn spatial hierarchies, making CNNs effective for images.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Neural Networks - Recurrent Neural Networks}
+    \begin{itemize}
+        \item \textbf{Structure}: Contains loops allowing information to be transferred through time (memory).
+        \item \textbf{Function}: Suitable for sequence prediction tasks by connecting past inputs to current outputs.
+        \item \textbf{Example}: Excels in NLP tasks like sentiment analysis and language translation.
+        \item \textbf{Key Point}: Long Short-Term Memory (LSTM) networks are a type of RNN that effectively captures long-range dependencies.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Neural Networks - Comparison Summary}
+    \begin{tabular}{|c|c|c|}
+        \hline
+        \textbf{Type} & \textbf{Architecture} & \textbf{Main Application} \\
+        \hline
+        Feedforward     & Layers in one direction  & Basic classification problems     \\
+        \hline
+        Convolutional   & Convolutional and pooling layers & Image and video analysis     \\
+        \hline
+        Recurrent       & Layers with loops (memory) & Sequence data (text, time series) \\
+        \hline
+    \end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Types of Neural Networks - Conclusion and Next Steps}
+    \begin{block}{Conclusion}
+        Understanding different types of neural networks is crucial for selecting the right model based on data nature and task requirements.
+    \end{block}
+    \begin{block}{Next Steps}
+        Explore applications of neural networks in various fields in the upcoming slide.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Neural Networks - Introduction}
+    \begin{block}{Introduction to Applications}
+        Neural networks, inspired by the human brain, excel in various domains due to their capability to learn patterns and features from data. 
+        They have revolutionized many sectors, ranging from healthcare to finance, by providing solutions that were once unimaginable.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Neural Networks - Key Fields}
+    \begin{enumerate}
+        \item \textbf{Healthcare}
+        \begin{itemize}
+            \item \textbf{Medical Diagnosis}: Neural networks analyze medical images to detect anomalies.
+            \item \textbf{Drug Discovery}: Predictive models identify potential drug candidates.
+        \end{itemize}
+        \item \textbf{Finance}
+        \begin{itemize}
+            \item \textbf{Algorithmic Trading}: Forecasting stock prices and analyzing trends.
+            \item \textbf{Credit Scoring}: Evaluating creditworthiness through historical data.
+        \end{itemize}
+        \item \textbf{Natural Language Processing (NLP)}
+        \begin{itemize}
+            \item \textbf{Sentiment Analysis}: Analyzing public sentiment from reviews and posts.
+            \item \textbf{Machine Translation}: Translating text using models like RNNs and transformers.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Neural Networks - More Fields}
+    \begin{enumerate}
+        \setcounter{enumi}{3} % This will start the numbering from 4
+        \item \textbf{Autonomous Systems}
+        \begin{itemize}
+            \item \textbf{Self-Driving Cars}: Processing sensory data for decision-making.
+            \item \textbf{Drones}: Enabling navigation and environment perception for various tasks.
+        \end{itemize}
+        \item \textbf{Image and Video Recognition}
+        \begin{itemize}
+            \item \textbf{Facial Recognition}: Identifying faces for security and personal devices.
+            \item \textbf{Content Moderation}: Identifying inappropriate user-generated content.
+        \end{itemize}
+        \item \textbf{Gaming}
+        \begin{itemize}
+            \item \textbf{AI Players}: Enhancing video games with intelligent non-playable characters (NPCs).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Neural Networks - Key Points}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item \textbf{Versatility}: Neural networks are adaptable across various fields.
+            \item \textbf{Real-World Impact}: They transform industries through automation and improved decision-making.
+            \item \textbf{Continuous Learning}: Networks improve over time with increased data.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Call to Action}
+        Think about potential areas in your field where neural networks could offer innovative solutions. 
+        Consider initiating discussions or projects around their applications in real-world scenarios.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparative Analysis: SVM vs Neural Networks - Introduction}
+    \begin{itemize}
+        \item Support Vector Machines (SVM) and Neural Networks are powerful algorithms in machine learning.
+        \item Their application depends on data characteristics and problem types.
+        \item This presentation explores effective use cases for each method.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{block}{Support Vector Machines (SVM)}
+        \begin{itemize}
+            \item A supervised learning algorithm mainly for classification tasks.
+            \item Finds the hyperplane that best separates classes in data.
+            \item Effective in high-dimensional spaces with a clear margin of separation.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Neural Networks}
+        \begin{itemize}
+            \item Versatile framework inspired by the human brain, used for classification and regression.
+            \item Contains interconnected layers (input, hidden, output) to learn complex relationships.
+            \item Especially suited for large datasets and unstructured data (e.g., images, text).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{When to Use SVM}
+    \begin{enumerate}
+        \item \textbf{Small to Medium Datasets:} SVM performs well on smaller datasets with manageable computational expense.
+        \item \textbf{High-Dimensional Spaces:} Effective when the feature space is high-dimensional compared to the number of samples.
+        \item \textbf{Clear Margin of Separation:} Excels when a clear boundary separates the classes. 
+        \item \textbf{Example:} Text classification (e.g., spam detection) where features are vectorized.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{When to Use Neural Networks}
+    \begin{enumerate}
+        \item \textbf{Large Datasets:} Neural networks thrive with large data, learning intricate patterns.
+        \item \textbf{Complex Relationships:} Best for problems with highly non-linear input-output relationships.
+        \item \textbf{Unstructured Data:} Well-suited for data types like audio and text that don't fit traditional formats.
+        \item \textbf{Example:} Image and video recognition tasks, leveraging multiple layers for feature learning.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Comparison Summary}
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Criteria} & \textbf{Support Vector Machines} & \textbf{Neural Networks} \\
+            \hline
+            Best for & Small to medium-sized datasets & Large datasets \\
+            \hline
+            Complexity of Data & Linear or clearly separable data & Non-linear, complex relationships \\
+            \hline
+            Data Structure & Structured (numerical/categorical) & Unstructured (images/text) \\
+            \hline
+            Training Time & Faster with fewer features & Slower, scales with complexity \\
+            \hline
+            Interpretability & More interpretable; explains margins & Often viewed as a black box \\
+            \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion and Key Points}
+    \begin{itemize}
+        \item Choose SVM for smaller datasets with well-defined boundaries.
+        \item Opt for Neural Networks when dealing with vast unstructured data and complex modeling.
+        \item Decisions should be guided by dataset nature and specific problem requirements.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in Support Vector Machines (SVM) and Neural Networks - Overview}
+    \begin{block}{Objective}
+        Understand the common difficulties and limitations associated with using SVMs and Neural Networks.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in SVMs and Neural Networks - Complexity and Overfitting}
+    \begin{itemize}
+        \item \textbf{Complexity and Interpretability}
+        \begin{itemize}
+            \item SVMs can be complex with non-linear data due to kernel functions.
+            \item Neural networks often act as "black boxes," complicating decision understanding.
+            \item \textit{Example:} Medical diagnosis requires understanding model decisions.
+        \end{itemize}
+        \item \textbf{Overfitting}
+        \begin{itemize}
+            \item Both algorithms may overfit training data, capturing noise over patterns.
+            \item \textit{Example:} A neural network trained on a small dataset might not generalize well.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in SVMs and Neural Networks - Computational Expense and Parameter Tuning}
+    \begin{itemize}
+        \item \textbf{Computational Expense}
+        \begin{itemize}
+            \item SVMs are expensive for large datasets due to quadratic programming.
+            \item Neural networks require significant resources, especially during training.
+            \item \textit{Example:} Training a deep neural network may take hours or days on GPUs.
+        \end{itemize}
+        \item \textbf{Parameter Tuning}
+        \begin{itemize}
+            \item Necessitates careful selection of hyperparameters (e.g., SVM's C parameter).
+            \item Poor choices lead to suboptimal performance.
+            \item \textit{Example:} An inappropriate C value can cause underfitting or overfitting.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges in SVMs and Neural Networks - Data Requirements and Scalability}
+    \begin{itemize}
+        \item \textbf{Data Requirements}
+        \begin{itemize}
+            \item Neural networks need large labeled datasets to perform well.
+            \item SVMs can handle smaller datasets but struggle with non-separable data.
+            \item \textit{Example:} Neural networks may require thousands of examples in rare disease detection.
+        \end{itemize}
+        \item \textbf{Scalability}
+        \begin{itemize}
+            \item SVMs scale poorly as computational complexity grows with dataset size.
+            \item Neural networks can handle large datasets but may face issues with many classes.
+            \item \textit{Example:} Increasing data size can delay predictions with SVMs.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Conclusion}
+    \begin{itemize}
+        \item Understanding limitations is crucial for applied machine learning.
+        \item Problem domain and available data should guide algorithm choice.
+        \item Hyperparameter tuning and regular evaluations prevent issues like overfitting.
+    \end{itemize}
+    \begin{block}{Conclusion}
+        Recognizing challenges enables informed decisions in algorithm selection and implementation adjustment for better performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Implementation - Overview}
+    Implementing Support Vector Machines (SVMs) and Neural Networks (NNs) in real-world applications requires careful consideration of several best practices. These guidelines help enhance model performance, facilitate training, and increase the interpretability of results.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Implementation - Data Preparation}
+    \begin{enumerate}
+        \item \textbf{Data Preparation:}
+        \begin{itemize}
+            \item \textbf{Normalization:} 
+            Standardize features to ensure that all variables contribute equally to model training.
+            \begin{itemize}
+                \item Example: Scale features using Min-Max or Z-score normalization.
+            \end{itemize}
+            \item \textbf{Feature Selection:}
+            Identify and retain relevant features to reduce dimensionality and improve model efficiency.
+            \begin{itemize}
+                \item Techniques: Recursive Feature Elimination, Feature importance from models.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Implementation - Model Selection and Hyperparameter Tuning}
+    \begin{enumerate}
+        \setcounter{enumi}{1}
+        \item \textbf{Model Selection:}
+        \begin{itemize}
+            \item Choose appropriate algorithms based on the problem type (e.g., classification vs. regression).
+            \begin{itemize}
+                \item SVM is effective for high-dimensional spaces and clear margin separations.
+                \item NNs shine in handling complex, non-linear relationships.
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Hyperparameter Tuning:}
+        \begin{itemize}
+            \item Utilize methods like Grid Search or Random Search to find optimal hyperparameters.
+            \item Common parameters:
+            \begin{itemize}
+                \item SVM: 
+                \begin{itemize}
+                    \item \textbf{C:} Regularization parameter balancing margin maximization and classification error.
+                    \item \textbf{Kernel type:} Linear, polynomial, or RBF affecting decision boundary.
+                \end{itemize}
+                \item NNs: 
+                \begin{itemize}
+                    \item Adjust learning rate, number of layers, and neurons per layer.
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Implementation - Cross-Validation, Evaluation, and Regularization}
+    \begin{enumerate}
+        \setcounter{enumi}{3}
+        \item \textbf{Cross-Validation:}
+        \begin{itemize}
+            \item Implement k-fold cross-validation to mitigate overfitting and assess model performance realistically.
+            \item Example: Use 5-fold CV to partition data into 5 subsets for training and testing.
+        \end{itemize}
+    
+        \item \textbf{Performance Evaluation:}
+        \begin{itemize}
+            \item Utilize metrics such as accuracy, precision, recall, and F1-score for classification performance.
+            \item For regression, consider Mean Absolute Error (MAE) or Root Mean Squared Error (RMSE).
+            \item \textbf{Confusion Matrix:} Useful for visualizing true vs. predicted classifications.
+        \end{itemize}
+    
+        \item \textbf{Regularization Techniques:}
+        \begin{itemize}
+            \item Apply L1 (Lasso) and L2 (Ridge) regularization to prevent overfitting.
+            \item Regularization enhances generalization by penalizing overly complex models.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Implementation - Model Interpretability and Key Points}
+    \begin{enumerate}
+        \setcounter{enumi}{6}
+        \item \textbf{Model Interpretability:}
+        \begin{itemize}
+            \item Use SHAP (SHapley Additive exPlanations) to understand feature contributions to predictions.
+            \item For SVMs: visualize decision boundaries; for NNs: inspect weight distributions and neuron activations.
+        \end{itemize}
+    \end{enumerate}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Effective data preparation and normalization are crucial for both SVM and NN performance.
+            \item Choosing the right model and tuning hyperparameters significantly impacts outcomes.
+            \item Cross-validation and performance metrics are essential for reliable assessment.
+            \item Regularization enhances robustness against overfitting, while interpretability tools clarify model decisions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Best Practices for Implementation - Code Snippet}
+    \begin{block}{Example Code Snippet for Hyperparameter Tuning (SVM using Python)}
+    \begin{lstlisting}[language=Python]
+from sklearn import svm
+from sklearn.model_selection import GridSearchCV
+
+# Define the parameter grid
+param_grid = {'C': [0.1, 1, 10], 'kernel': ['linear', 'rbf']}
+
+# Create a GridSearchCV object
+grid_search = GridSearchCV(svm.SVC(), param_grid, cv=5)
+
+# Fit the model
+grid_search.fit(X_train, y_train)
+
+# Best parameters
+print("Best parameters found: ", grid_search.best_params_)
+    \end{lstlisting}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Highlights}
+    \begin{block}{Summary of Key Points}
+        This slide summarizes the main points discussed regarding Support Vector Machines (SVMs) and Neural Networks (NNs).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Support Vector Machines}
+    \begin{itemize}
+        \item \textbf{Definition}: Supervised learning models that find the optimal hyperplane for class separation.
+        \item \textbf{Key Features}:
+            \begin{itemize}
+                \item \textbf{Margin Maximization}: Aims to maximize the margin between classes.
+                \item \textbf{Kernel Trick}: Transforms data into higher dimensions for better separation.
+            \end{itemize}
+        \item \textbf{Example}: In spam detection, SVM separates emails based on features like word frequency.
+        \item \textbf{Advantages}:
+            \begin{itemize}
+                \item Effective in high-dimensional spaces.
+                \item Robust to overfitting.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Neural Networks}
+    \begin{itemize}
+        \item \textbf{Definition}: Computational models consisting of layers of interconnected nodes (neurons).
+        \item \textbf{Key Features}:
+            \begin{itemize}
+                \item \textbf{Layers}: Includes input layer, hidden layers, and output layer.
+                \item \textbf{Learning Process}: Uses backpropagation to adjust weights based on error rates.
+            \end{itemize}
+        \item \textbf{Example}: In image classification, pixel values are processed by hidden layers to identify handwritten digits.
+        \item \textbf{Advantages}:
+            \begin{itemize}
+                \item Captures complex patterns in data.
+                \item Scalable for large datasets.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Key Takeaways}
+    \begin{itemize}
+        \item \textbf{Choosing the Right Model}:
+            \begin{itemize}
+                \item SVMs: Best for smaller datasets with clear class margins.
+                \item Neural Networks: Ideal for large datasets with non-linear relationships.
+            \end{itemize}
+        \item \textbf{Real-World Applications}:
+            \begin{itemize}
+                \item SVMs: Fraud detection, bioinformatics, face recognition.
+                \item Neural Networks: Image classification, speech recognition, natural language processing, autonomous driving.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Further Insights}
+    \begin{block}{Final Notes}
+        Understanding the strengths and weaknesses of SVMs and Neural Networks is crucial for informed model selection tailored to specific contexts.
+    \end{block}
+    \begin{block}{Engagement}
+        Consider how these models can be integrated into practical applications to enhance predictive performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reflective Questions - Overview}
+    \begin{itemize}
+        \item Questions for students to reflect on their understanding of SVMs and Neural Networks.
+        \item Key concepts include understanding, applications, and real-world implications.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reflective Questions - Understanding SVMs}
+    \begin{block}{Key Concepts to Reflect Upon}
+        \begin{enumerate}
+            \item \textbf{Understanding Support Vector Machines (SVMs)}
+            \begin{itemize}
+                \item What are the key principles behind how SVMs work?
+                \item Can you explain the concept of margin and why it is important in SVMs?
+                \item How does the choice of kernel function impact the performance of SVMs?
+            \end{itemize}
+            \item \textbf{Applications of SVMs}
+            \begin{itemize}
+                \item Provide three real-world applications of SVMs in various fields.
+                \item In what scenarios would you prefer SVMs over other classification algorithms?
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+    \begin{block}{Illustration}
+        \begin{itemize}
+            \item **Margin**: Visualize the decision boundary separating different classes in a 2D space.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reflective Questions - Understanding Neural Networks}
+    \begin{block}{Key Concepts to Reflect Upon}
+        \begin{enumerate}
+            \item \textbf{Understanding Neural Networks}
+            \begin{itemize}
+                \item How would you describe a neural network to someone with no background in machine learning?
+                \item What are the roles of neurons, layers, and activation functions in a neural network?
+            \end{itemize}
+            \item \textbf{Applications of Neural Networks}
+            \begin{itemize}
+                \item Discuss notable applications of neural networks in various domains.
+                \item What are some challenges you might face when training a neural network?
+            \end{itemize}
+        \end{enumerate}
+    \end{block}
+    \begin{block}{Example}
+        \begin{itemize}
+            \item **Image Recognition**: Use of convolutional neural networks (CNNs) in facial recognition technologies.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Reflective Questions - Summary and Code Snippets}
+    \begin{block}{Summary of Reflective Questions}
+        \begin{enumerate}
+            \item **Integration of Knowledge**: Compare SVMs and Neural Networks regarding their learning mechanisms.
+            \item **Critical Thinking**: Reflect on a current technology using SVMs or Neural Networks and its societal implications.
+        \end{enumerate}
+    \end{block}
+    \begin{block}{Formulas}
+        \begin{equation}
+            f(x) = w^T \phi(x) + b
+        \end{equation}
+        Where \( w \) is the weight vector, \( b \) is the bias, and \( \phi(x) \) is the kernel function.
+    \end{block}
+    \begin{block}{Code Snippet}
+        \begin{lstlisting}[language=Python]
+        import numpy as np
+
+        def sigmoid(x):
+            return 1 / (1 + np.exp(-x))
+
+        # Example Neuron
+        inputs = np.array([1.0, 0.5])
+        weights = np.array([0.4, 0.6])
+        bias = 0.1
+        output = sigmoid(np.dot(weights, inputs) + bias)
+        print(output)
+        \end{lstlisting}
+    \end{block}
+\end{frame}
+
+
+\end{document}

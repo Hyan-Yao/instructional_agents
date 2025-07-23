@@ -1,0 +1,683 @@
+\documentclass{beamer}
+
+% Theme choice
+\usetheme{Madrid} % You can change to e.g., Warsaw, Berlin, CambridgeUS, etc.
+
+% Encoding and font
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+% Graphics and tables
+\usepackage{graphicx}
+\usepackage{booktabs}
+
+% Code listings
+\usepackage{listings}
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    breaklines=true,
+    frame=single
+}
+
+% Math packages
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% Colors
+\usepackage{xcolor}
+
+% TikZ and PGFPlots
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+
+% Hyperlinks
+\usepackage{hyperref}
+
+% Title information
+\title{Week 3: Dynamic Programming Basics}
+\author{Your Name}
+\institute{Your Institution}
+\date{\today}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Dynamic Programming}
+    Dynamic Programming (DP) is a powerful algorithmic technique for solving complex problems by breaking them down into simpler subproblems. It is particularly relevant in Reinforcement Learning (RL) as it provides systematic methods for solving Markov Decision Processes (MDPs).
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{itemize}
+        \item \textbf{Markov Decision Processes (MDPs)}: Frameworks for modeling decision-making.
+        \begin{itemize}
+            \item \textbf{States}: Possible situations the agent can be in.
+            \item \textbf{Actions}: Choices available to the agent at each state.
+            \item \textbf{Transition Probabilities}: Probability of moving from one state to another given an action.
+            \item \textbf{Rewards}: Immediate returns received after state transitions.
+        \end{itemize}
+        \item \textbf{Reinforcement Learning (RL)}: Agents learn to make decisions through interaction to maximize cumulative rewards.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Dynamic Programming in RL}
+    Dynamic programming methods, such as Value Iteration and Policy Iteration, enable agents to evaluate and improve their policies iteratively. These methods leverage the principles of optimality and effectively address exploration-exploitation tradeoffs in decision-making.
+
+    \textbf{Examples to Illustrate DP:}
+    \begin{enumerate}
+        \item \textbf{Fibonacci Sequence:} Efficiently calculated with memoization:
+        \begin{equation}
+        F(n) = F(n-1) + F(n-2)
+        \end{equation}
+        \item \textbf{Shortest Path in a Grid:} Using DP to build a table of minimum paths.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary}
+    \begin{itemize}
+        \item Dynamic programming reduces computational time by avoiding repeated calculations (overlapping subproblems) using optimality of substructure.
+        \item It is foundational for developing algorithms that derive optimal policies in reinforcement learning settings, particularly in MDPs.
+        \item Understanding DP principles and methods bridges theoretical decision-making with practical RL implementations.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Dynamic Programming?}
+    \begin{block}{Definition}
+        Dynamic Programming (DP) is a method for solving complex problems by breaking them down into simpler subproblems. 
+        It is useful in circumstances where the problem can be divided into overlapping subproblems that can be solved independently.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Principles of Dynamic Programming}
+    \begin{enumerate}
+        \item \textbf{Optimal Substructure}
+        \begin{itemize}
+            \item An optimal solution to the problem can be constructed from optimal solutions of its subproblems.
+            \item \textbf{Example:} 
+            Consider finding the shortest path in a weighted graph.
+            If the shortest path from vertex A to vertex C passes through vertex B, then the paths from A to B and B to C must also be the shortest paths among their respective vertices.
+            \item \textbf{Formula:} 
+            \[
+            f(n) = \min(f(i) + f(j)) \quad \text{(for all valid } i, j \text{)}
+            \]
+        \end{itemize}
+        
+        \item \textbf{Overlapping Subproblems}
+        \begin{itemize}
+            \item A problem has overlapping subproblems if the same subproblems are solved multiple times.
+            \item \textbf{Example:} The Fibonacci sequence.
+            \item \textbf{Recursive Formula:}
+            \[
+            F(n) = F(n-1) + F(n-2) \quad \text{with base cases } F(0) = 0, F(1) = 1
+            \]
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Benefits of Dynamic Programming}
+    \begin{itemize}
+        \item \textbf{Efficiency:} 
+        By storing previously computed results (memoization or tabulation), dynamic programming reduces time complexity significantly.
+        \item \textbf{Reusability:} 
+        Once a subproblem is solved, its solution can be reused in larger problems, aiding in optimization.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary Key Points}
+    \begin{itemize}
+        \item Dynamic programming is a powerful optimization approach based on solving subproblems and utilizing their solutions.
+        \item Key principles include \textbf{optimal substructure} and \textbf{overlapping subproblems}.
+        \item By storing and reusing solutions, DP saves computational time and enhances performance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Next Steps}
+    In the upcoming slide, we will delve into \textbf{Policy Evaluation} using dynamic programming techniques, particularly through the lens of the Bellman equation. 
+    This will illustrate how these foundational concepts are applied in practice.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policy Evaluation - Introduction}
+    \begin{itemize}
+        \item Policy evaluation is vital in dynamic programming.
+        \item It measures the effectiveness of a policy in generating rewards.
+        \item The process involves calculating the value function for the given policy.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policy Evaluation - The Bellman Equation}
+    \begin{block}{Bellman Equation}
+        The Bellman equation defines the value function \( V^{\pi}(s) \) for a policy \( \pi \):
+
+        \[
+        V^{\pi}(s) = \sum_{a \in A} \pi(a|s) \sum_{s', r} p(s', r | s, a) [ r + \gamma V^{\pi}(s') ]
+        \]
+    \end{block}
+    \begin{itemize}
+        \item \( V^{\pi}(s) \): Value of state \( s \) under policy \( \pi \)
+        \item \( \pi(a|s) \): Probability of action \( a \) in state \( s \)
+        \item \( p(s', r | s, a) \): Transition probability
+        \item \( \gamma \): Discount factor \( (0 < \gamma < 1) \)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policy Evaluation - Procedure and Example}
+    \begin{enumerate}
+        \item \textbf{Initialize}: Set \( V^{\pi}(s) \) for all states to arbitrary values (often zero).
+        \item \textbf{Iterate}: Update the value function:
+        \[
+        V^{\pi}_{\text{new}}(s) = \sum_{a \in A} \pi(a|s) \sum_{s', r} p(s', r | s, a) [ r + \gamma V^{\pi}(s') ]
+        \]
+        \item \textbf{Convergence Check}: Stop when changes are below a threshold.
+    \end{enumerate}
+    
+    \begin{block}{Example}
+        In a grid world with states \( S = \{s_1, s_2\} \) and actions \( A = \{left, right\} \), using a deterministic policy:
+        \begin{itemize}
+            \item Initialize \( V^{\pi}(s_1) = 0, V^{\pi}(s_2) = 0 \)
+            \item Update to find \( V^{\pi}(s_1) = 1 \) after several iterations.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Policy Improvement - Overview}
+    \begin{block}{Overview of Policy Improvement}
+        Policy Improvement is a fundamental process in reinforcement learning that refines a given policy based on evaluations from the value function. By leveraging insights gained from a policy's performance, we systematically enhance the policy.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Understanding Policies and Value Functions}
+    \begin{itemize}
+        \item \textbf{Policy ($\pi$)}: A strategy defining actions an agent should take in each state to maximize cumulative rewards.
+            \begin{itemize}
+                \item Deterministic: Single action per state.
+                \item Stochastic: Probability distribution over actions.
+            \end{itemize}
+        
+        \item \textbf{Value Function ($V$)}: Represents the expected return from each state under policy $\pi$.
+        \begin{equation}
+            V(s) = \mathbb{E}_{\pi} \left[ \sum_{t=0}^{\infty} \gamma^t R_t \,\bigg|\, s_0 = s \right]
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Process of Policy Improvement}
+    \begin{enumerate}
+        \item \textbf{Begin with a Policy}: Start with an arbitrary policy $\pi$.
+        
+        \item \textbf{Policy Evaluation}: Calculate the value function $V^{\pi}(s)$ using the Bellman Equation:
+        \begin{equation}
+            V^{\pi}(s) = \sum_{a \in \mathcal{A}} \pi(a \mid s) \sum_{s'} P(s' \mid s, a) \Big[ R(s, a, s') + \gamma V^{\pi}(s') \Big]
+        \end{equation}
+        
+        \item \textbf{Policy Improvement Step}:
+        \begin{equation}
+            \pi'(s) = \arg\max_{a \in \mathcal{A}} \sum_{s'} P(s' \mid s, a) \Big[R(s, a, s') + \gamma V(s')\Big]
+        \end{equation}
+        
+        \item \textbf{Repeat}: Iterate the process (Policy Evaluation followed by Policy Improvement) until convergence.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example of Policy Improvement}
+    \begin{block}{Example}
+        Consider a simple grid world where an agent moves in directions (up, down, left, right) to reach a goal cell while avoiding penalties.
+        \begin{enumerate}
+            \item Initial Policy: Assume the agent randomly chooses actions.
+            \item Evaluate: Calculate value functions based on the random policy.
+            \item Improve: Update the policy to maximize expected rewards.
+            \item Repeat: Continue until the agent consistently reaches the goal.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Summary}
+    \begin{itemize}
+        \item \textbf{Iteration}: Policy Improvement is cyclic (Policy Evaluation -> Policy Improvement).
+        \item \textbf{Convergence}: Ensures that we converge to the optimal policy maximizing expected return.
+        \item \textbf{Efficiency}: Effective in large state spaces where enumerating actions is impractical.
+    \end{itemize}
+
+    \begin{block}{Summary}
+        In reinforcement learning, Policy Improvement leverages the value function acquired through policy evaluation to refine the agent's strategy, ensuring optimal decision-making through iterative evaluation and improvement.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Iteration - Introduction}
+    \begin{block}{What is Value Iteration?}
+        Value Iteration is a fundamental algorithm in reinforcement learning and dynamic programming designed to solve Markov Decision Processes (MDPs). 
+        It systematically combines policy evaluation and policy improvement in an iterative process.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Iteration - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Dynamic Programming}: 
+        A technique that breaks down complex problems into simpler subproblems, optimizing decisions under uncertainty.
+        
+        \item \textbf{Policy}: 
+        A strategy defining the action an agent should take in each state.
+        
+        \item \textbf{Value Function}: 
+        Estimates how good it is to be in a given state, reflecting the expected return when following a policy.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Iteration - Process Overview}
+    \begin{enumerate}
+        \item \textbf{Initialization}: 
+        Start with an arbitrary value function, often set to zero for all states.
+        
+        \item \textbf{Policy Evaluation}: 
+        For each state, compute the expected value based on possible actions, incorporating immediate and discounted future rewards.
+
+        \item \textbf{Policy Improvement}: 
+        Update the policy by selecting the actions that maximize the expected values from the value function.
+
+        \item \textbf{Convergence Check}: 
+        Repeat until the changes in value function fall below a predefined threshold.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Iteration - Example}
+    Consider a simple grid world:
+
+    \begin{itemize}
+        \item \textbf{Initialization}: $V(s) = 0$ for all states.
+        
+        \item \textbf{Value Update}: Calculate new values:
+        \begin{equation}
+            V_{new}(s) = R(s) + \gamma \sum_{s'} P(s'|s,a)V(s')
+        \end{equation}
+        
+        \item Where:
+        \begin{itemize}
+            \item $R(s)$ = reward for state $s$.
+            \item $\gamma$ = discount factor (0 < $\gamma$ < 1).
+            \item $P$ = transition probability from state $s$ to $s'$ given action $a$.
+        \end{itemize}
+
+        \item \textbf{Repeat}: Continue until the value function stabilizes.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Iteration - Key Points}
+    \begin{itemize}
+        \item \textbf{Convergence}:
+        Guarantees optimal value function in a finite state and action space.
+        
+        \item \textbf{Optimal Policy}:
+        An optimal policy is derived by selecting actions that maximize the value in each state once convergence is achieved.
+        
+        \item \textbf{Applications}:
+        Widely used in robotics, game AI, and operations research.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Value Iteration - Conclusion}
+    Value Iteration provides an elegant solution to find optimal policies in uncertain environments through iterative refinement of the value function and policy. 
+    Understanding its structure lays the groundwork for tackling more complex problems in dynamic programming and enhances algorithmic thinking in reinforcement learning.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Bellman Equation}
+    \begin{block}{What is the Bellman Equation?}
+        The Bellman equation is a foundational concept in dynamic programming and reinforcement learning, establishing a recursive relationship between the value of a state and the values of its subsequent states. 
+        It is essential for algorithms that evaluate and optimize policies within a Markov Decision Process (MDP).
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Mathematical Formulation}
+    \begin{itemize}
+        \item The Bellman equation is applied in two contexts: 
+        \begin{itemize}
+            \item Policy Evaluation
+            \item Optimal Policy Evaluation
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{Policy Evaluation}
+        For a given policy \( \pi \), the Bellman equation is formulated as follows:
+        \begin{equation}
+            V^{\pi}(s) = \sum_{a \in A} \pi(a|s) \sum_{s' \in S} P(s'|s, a) [R(s, a, s') + \gamma V^{\pi}(s')]
+        \end{equation}
+    \end{block}
+
+    \begin{block}{Optimal Policy Evaluation}
+        The equation for optimal policy evaluation is given by:
+        \begin{equation}
+            V^*(s) = \max_{a \in A} \sum_{s' \in S} P(s'|s, a) [R(s, a, s') + \gamma V^*(s')]
+        \end{equation}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points and Example}
+    \begin{itemize}
+        \item \textbf{Recursive Nature}: Value of a state involves immediate rewards and the expected value of future states.
+        \item \textbf{Policy Iteration}: Framework for evaluating and improving policies iteratively.
+        \item \textbf{Optimality}: Focuses on maximizing expected value by choosing the best possible actions.
+    \end{itemize}
+
+    \begin{block}{Example of Bellman Equation}
+        Consider a simple MDP with states \( S = \{A, B\} \) and actions \( A = \{Go, Stay\} \):
+        \begin{itemize}
+            \item Transition Probabilities:
+            \begin{itemize}
+                \item \( P(B|A,Go) = 1 \)
+                \item \( P(A|A,Stay) = 1 \)
+            \end{itemize}
+            \item Immediate Rewards:
+            \begin{itemize}
+                \item \( R(A,Go,B) = 5 \)
+                \item \( R(A,Stay,A) = 1 \)
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Convergence of Dynamic Programming - Overview}
+    \begin{block}{Understanding Convergence}
+        \begin{itemize}
+            \item \textbf{Definition of Convergence:} Refers to the process where an algorithm approaches a fixed point, resulting in no significant change in values or policies through iterations.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Convergence of Dynamic Programming - Conditions}
+    \begin{block}{Conditions for Convergence}
+        To ensure convergence in dynamic programming, the following conditions should be met:
+        \begin{enumerate}
+            \item \textbf{Boundedness:} 
+                \begin{itemize}
+                    \item State and action values remain finite.
+                    \item Example: Rewards bounded in a specific range (e.g., [-10, 10]) lead to finite value functions.
+                \end{itemize}
+            \item \textbf{Discount Factor:} 
+                \begin{itemize}
+                    \item $\gamma$ must satisfy $0 \leq \gamma < 1$.
+                    \item Promotes convergence by valuing immediate rewards more than future rewards.
+                \end{itemize}
+            \item \textbf{Monotonicity:} 
+                \begin{itemize}
+                    \item Updates should bring the value function closer to the optimal solution.
+                    \item Example: Bellman update ensures $V'(s) \geq V(s)$ for all states.
+                \end{itemize}
+            \item \textbf{Cauchy Condition:}
+                \begin{itemize}
+                    \item Successive approximations should diminish in difference over time, represented as $||V_{n+1} - V_n|| < \epsilon$ for large $n$.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Convergence of Dynamic Programming - Significance}
+    \begin{block}{Significance of Convergence in Reinforcement Learning}
+        \begin{itemize}
+            \item \textbf{Stability of Policies:} Converged algorithms yield stable policies, fostering trust in systems (e.g., autonomous robots).
+            \item \textbf{Performance Guarantees:} Convergence assures optimal or near-optimal policies essential for critical applications.
+            \item \textbf{Efficient Learning:} Leads to faster refinement of strategies and reduces computational overhead.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item Convergence is vital for reliable dynamic programming and reinforcement learning.
+            \item Key conditions include boundedness, an appropriate discount factor, monotonicity, and Cauchy conditions.
+            \item Successful convergence improves the effectiveness of RL systems in real-world scenarios.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Dynamic Programming}
+    
+    \begin{block}{Overview}
+        Dynamic programming (DP) is a powerful algorithmic technique that breaks problems into simpler subproblems. It is widely used in reinforcement learning (RL) for systematic problem-solving.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Applications of Dynamic Programming}
+    
+    \begin{enumerate}
+        \item \textbf{Robotics}
+        \item \textbf{Finance}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dynamic Programming in Robotics}
+    
+    \begin{itemize}
+        \item \textbf{Path Planning:} 
+        DP is used to find the most efficient path for robots in a navigation environment.
+        \item \textbf{Example:} 
+        A robot moving from point A to point B while avoiding obstacles calculates routes using DP to minimize costs.
+        \item \textbf{Illustration:} 
+        In a 5x5 grid, DP evaluates the cost to reach each cell, recursively identifying the minimum cost path.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Dynamic Programming in Finance}
+    
+    \begin{itemize}
+        \item \textbf{Portfolio Optimization:} 
+        DP assists in maximizing returns through strategic investment reallocations over time.
+        \item \textbf{Example:} 
+        An investor distributes wealth among assets, with DP evaluating optimal allocations considering changing market conditions.
+        \item \textbf{Bellman Equation:} 
+        \begin{equation}
+            V(s) = \max_a \left( R(s, a) + \gamma \sum_{s'} P(s'|s, a)V(s') \right)
+        \end{equation}
+        Here, \(V\) is the value function, \(R\) is the reward, \(P\) is the transition probability, and \(\gamma\) is the discount factor.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Advantages of Dynamic Programming}
+    
+    \begin{itemize}
+        \item \textbf{Optimal Solutions:} 
+        Guarantees finding optimal solutions by exploring all states and actions.
+        \item \textbf{Efficiency:} 
+        Uses memoization to avoid redundant calculations, improving performance in large state spaces.
+        \item \textbf{Broad Applicability:} 
+        Techniques extend to fields such as operations research, economics, and bioinformatics.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    
+    \begin{block}{Summary}
+        Dynamic programming is essential for addressing complex challenges in reinforcement learning, especially in robotics and finance. It enables systematic exploration of options leading to optimal decision-making solutions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Remember}
+    
+    \begin{itemize}
+        \item DP simplifies problems into manageable subproblems.
+        \item Applications in robotics include path planning and navigation.
+        \item In finance, DP optimizes investment returns through strategic allocations.
+        \item Understanding the Bellman equation is crucial for implementing DP effectively in RL contexts.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Implementing Dynamic Programming in Python}
+    \begin{block}{Introduction}
+        Dynamic Programming (DP) is a powerful technique used for solving complex problems by breaking them down into simpler subproblems.
+        
+        In reinforcement learning, it involves evaluating and improving policies to find the optimal solution. 
+    \end{block}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Key Concepts of DP}
+    \begin{enumerate}
+        \item \textbf{Policy Evaluation}:
+            \begin{itemize}
+                \item Estimates the value of each state in a given policy.
+                \item Value Function: 
+                \begin{equation}
+                    V^\pi(s) = \mathbb{E}\left[ \sum_{t=0}^{\infty} \gamma^t r_t \mid s_0 = s, \pi \right]
+                \end{equation}
+            \end{itemize}
+
+        \item \textbf{Policy Improvement}:
+            \begin{itemize}
+                \item Updates the policy based on the value function.
+                \item Updated Policy: 
+                \begin{equation}
+                    \pi'(s) = \arg\max_a Q^\pi(s, a)
+                \end{equation}
+            \end{itemize}
+
+        \item \textbf{Value Iteration}:
+            \begin{itemize}
+                \item Computes the optimal policy iteratively.
+                \item Bellman Equation:
+                \begin{equation}
+                    V_{new}(s) = \max_a \left( R(s, a) + \gamma \sum_{s'} P(s'|s, a)V(s') \right)
+                \end{equation}
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Python Implementations: Examples}
+    
+    \textbf{Example 1: Policy Evaluation}
+    \begin{lstlisting}[language=Python]
+import numpy as np
+
+def policy_evaluation(policy, rewards, transitions, gamma=0.9, theta=1e-10):
+    V = np.zeros(len(rewards))
+    while True:
+        delta = 0
+        for s in range(len(rewards)):
+            v = 0
+            for a in range(len(policy[s])):
+                for s_next, prob in transitions[s][a].items():
+                    v += policy[s][a] * prob * (rewards[s] + gamma * V[s_next])
+            delta = max(delta, abs(v - V[s]))
+            V[s] = v
+        if delta < theta:
+            break
+    return V
+    \end{lstlisting}
+    
+    \textbf{Example 2: Policy Improvement}
+    \begin{lstlisting}[language=Python]
+def policy_improvement(V, transitions, rewards, gamma=0.9):
+    policy = np.zeros((len(rewards), len(transitions[0])))
+    for s in range(len(rewards)):
+        q_values = np.zeros(len(transitions[0]))
+        for a in range(len(transitions[0])):
+            for s_next, prob in transitions[s][a].items():
+                q_values[a] += prob * (rewards[s] + gamma * V[s_next])
+        best_action = np.argmax(q_values)
+        policy[s][best_action] = 1  # deterministic policy
+    return policy
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Key Takeaways - Concept Overview}
+    \textbf{Key Concepts Covered:}
+    
+    \begin{enumerate}
+        \item \textbf{Dynamic Programming (DP) Fundamentals:}
+        \begin{itemize}
+            \item A method for solving complex problems by breaking them down into simpler subproblems.
+            \item Key principles: \textit{Optimal Substructure} and \textit{Overlapping Subproblems}.
+        \end{itemize}
+
+        \item \textbf{Reinforcement Learning Context:}
+        \begin{itemize}
+            \item DP techniques optimize decision-making processes.
+            \item Helps evaluate and improve policies in stochastic environments to maximize cumulative rewards.
+        \end{itemize}
+
+        \item \textbf{Core Algorithms:}
+        \begin{itemize}
+            \item \textit{Policy Evaluation}
+            \item \textit{Policy Improvement}
+            \item \textit{Value Iteration}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Key Takeaways - Examples}
+    \textbf{Examples:}
+    
+    \begin{itemize}
+        \item \textbf{Policy Evaluation Example:}
+        \begin{itemize}
+            \item A grid world where an agent moves toward a goal.
+            \item Using a policy, we compute expected returns until the value function stabilizes.
+        \end{itemize}
+        
+        \item \textbf{Value Iteration Example:}
+        \begin{itemize}
+            \item In a maze-like environment, we iteratively update each state's value based on available actions and their expected rewards until convergence.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary and Key Takeaways - Key Points and Conclusion}
+    \textbf{Key Points to Emphasize:}
+    
+    \begin{itemize}
+        \item Dynamic programming enhances reinforcement learning through efficient learning and decision-making strategies.
+        \item Effective DP implementation reduces computation time for larger and complex problems in real-time.
+    \end{itemize}
+
+    \textbf{Critical Formula:}
+    \begin{equation}
+     V(s) = \sum_{a} \pi(a|s) \sum_{s', r} p(s', r | s, a) [r + \gamma V(s')]
+    \end{equation}
+
+    \textbf{Conclusion:}
+    Dynamic programming serves as a backbone for reinforcement learning algorithms, providing systematic approaches to evaluate and improve policies, which are vital in uncertain environments.
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,1058 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Title Page Information
+\title[Model Evaluation]{Chapter 8: Model Evaluation and Testing}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Model Evaluation}
+    
+    \begin{block}{What is Model Evaluation?}
+        Model evaluation is a critical step in the machine learning lifecycle that determines how well a model performs on unseen data. An effective evaluation framework enhances the credibility of machine learning models, allowing data scientists and stakeholders to make informed decisions based on predictions.
+    \end{block}  
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Model Evaluation}
+    
+    \begin{itemize}
+        \item \textbf{Reliability:} A well-evaluated model is reliable and can be trusted for real-world applications (e.g., healthcare predictions).
+        
+        \item \textbf{Model Comparison:} Evaluation metrics enable fair comparison of multiple models (e.g., Decision Tree vs. Random Forest).
+        
+        \item \textbf{Understanding Errors:} Helps identify error types, offering insights into data quality or model complexity.
+        
+        \item \textbf{Improving Generalization:} Ensures models generalize well to new data, avoiding overfitting.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Evaluation Metrics and Example}
+    
+    \begin{block}{Key Evaluation Metrics}
+        \begin{itemize}
+            \item \textbf{Accuracy:} Ratio of correctly predicted instances to total instances. 
+            \item \textbf{Precision and Recall:} Measures of relevance in classification tasks.
+            \item \textbf{F1 Score:} Harmonic mean of precision and recall.
+            \item \textbf{ROC-AUC:} Understands trade-off between true positive and false positive rates.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example Scenario}
+        In predicting house prices, evaluate performance on a validation dataset by:
+        \begin{itemize}
+            \item Comparing predicted prices with actual sales.
+            \item Assessing consistency of underestimations or overestimations across neighborhoods.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Model Evaluation? - Definition}
+    \begin{block}{Definition}
+        \textbf{Model Evaluation} is the process of assessing how well a machine learning model performs on a given task compared to expected outcomes. It involves the comparison of predicted results against actual results to determine the model's accuracy, reliability, and overall effectiveness.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Model Evaluation? - Role in the Machine Learning Lifecycle}
+    \begin{enumerate}
+        \item \textbf{Feedback Mechanism:} Provides crucial feedback for understanding whether the model is learning intended patterns or making random guesses.
+        \item \textbf{Model Selection:} Helps to choose the best model from a pool of candidates, ensuring the one that generalizes best to unseen data is selected.
+        \item \textbf{Hyperparameter Tuning:} Evaluates how various parameters affect model performance, leading to the discovery of optimal settings.
+        \item \textbf{Quantifying Performance:} Uses metrics like accuracy, precision, recall, and F1-score to quantitatively measure success, aiding informed decision-making.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What is Model Evaluation? - Example and Key Points}
+    \textbf{Example:} In a medical diagnosis application:
+    \begin{itemize}
+        \item \textbf{Testing Phase:} The model predicts for new, unseen patient data.
+        \item \textbf{Evaluation:} Predictions are compared to actual diagnoses from doctors.
+        \item \textbf{Outcome:} If correct predictions are at 85%, evaluate if this accuracy is acceptable for clinical use.
+    \end{itemize}
+    
+    \textbf{Key Points to Emphasize:}
+    \begin{itemize}
+        \item Essential for ensuring machine learning models are trustworthy.
+        \item Prevents overfitting; models may excel on training data but fail in real-world scenarios.
+        \item Continuous evaluation is crucial in maintaining and improving model performance over time.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Why Evaluate Models?}
+    \begin{block}{Understanding the Importance of Model Evaluation}
+        Model evaluation is the process of assessing the performance of a machine learning model using various metrics and techniques. This step is crucial for several reasons.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Reasons to Evaluate Models}
+    \begin{enumerate}
+        \item \textbf{Improving Accuracy:}
+            \begin{itemize}
+                \item Evaluation helps understand model performance on unseen data, leading to adjustments for better predictions.
+                \item Example: A spam detector might initially flag 20\% of legitimate emails as spam. Evaluation identifies this issue for refinement.
+            \end{itemize}
+        \item \textbf{Building Reliability:}
+            \begin{itemize}
+                \item Reliable models minimize the risk of incorrect predictions. Evaluation ensures consistent performance across datasets.
+                \item Example: In medical diagnostics, models predicting tumor characteristics must be reliable to avoid misdiagnoses.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Continuing Reasons & Key Points}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Identifying Overfitting and Underfitting:}
+            \begin{itemize}
+                \item Evaluation on a validation set reveals if a model is overfitting (too complex) or underfitting (too simplistic).
+                \item Illustration: A model performing well on training data but poorly on validation data is overfitted.
+            \end{itemize}
+        \item \textbf{Choosing the Best Model:}
+            \begin{itemize}
+                \item Helps in systematically identifying the best model from multiple candidates.
+                \item Example: Evaluating three algorithms for predicting house prices on the same test set aids in choosing the most effective one.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Remember}
+    \begin{itemize}
+        \item \textbf{Continuous Improvement:} Regular evaluation incorporates new data and adapt to changing environments.
+        \item \textbf{Transparency:} Promotes understanding of how machine learning systems make decisions.
+        \item \textbf{Ethical Considerations:} Identifies biases and ensures fair treatment across diverse populations.
+    \end{itemize}
+    \begin{block}{Concluding Thought}
+        Model evaluation is essential for creating robust, accurate, and ethical machine learning systems. Investing time in evaluation leads to future success and reliability.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Evaluation Metrics - Introduction}
+    \begin{block}{Introduction to Evaluation Metrics}
+        In machine learning, evaluating model performance is essential. 
+        Just as we assess students through exams, models must be tested to ensure accurate predictions.
+        This slide provides an overview of evaluation metrics commonly used to determine model performance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Evaluation Metrics - Key Evaluation Metrics}
+    \begin{enumerate}
+        \item \textbf{Accuracy}
+        \begin{itemize}
+            \item \textbf{Definition}: Ratio of correctly predicted instances to total instances.
+            \item \textbf{Example}: 80 out of 100 predictions correct gives an accuracy of 80\%.
+            \item \textbf{Best Use Case}: Suitable when classes are balanced.
+        \end{itemize}
+        
+        \item \textbf{Precision}
+        \begin{itemize}
+            \item \textbf{Definition}: Ratio of correctly predicted positives to total predicted positives.
+            \item \textbf{Example}: 30 true positives out of 50 predicted positives gives 60\% precision.
+            \item \textbf{Best Use Case}: Important where false positives are critical (e.g., spam detection).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Evaluation Metrics - More Key Metrics}
+    \begin{enumerate}
+        \setcounter{enumi}{2}
+        \item \textbf{Recall (Sensitivity)}
+        \begin{itemize}
+            \item \textbf{Definition}: Ratio of correctly predicted positives to all actual positives.
+            \item \textbf{Example}: 30 correct predictions out of 40 actual positives gives 75\% recall.
+            \item \textbf{Best Use Case}: Crucial in medical diagnoses where capturing all positives is essential.
+        \end{itemize}
+        
+        \item \textbf{F1 Score}
+        \begin{itemize}
+            \item \textbf{Definition}: Harmonic mean of precision and recall.
+            \item \textbf{Example}: Precision of 0.6 and recall of 0.75 gives an F1 score of 0.67.
+            \item \textbf{Best Use Case}: Useful for balancing precision and recall in imbalanced datasets.
+        \end{itemize}
+        
+        \item \textbf{ROC-AUC}
+        \begin{itemize}
+            \item \textbf{Definition}: Measures the model's ability to distinguish between classes.
+            \item \textbf{Example}: An AUC of 0.9 indicates 90\% of the time, predicting positives higher than negatives.
+            \item \textbf{Best Use Case}: Evaluates binary classification models, especially with varying thresholds.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Evaluation Metrics - Key Points and Conclusion}
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Model evaluation ensures accuracy in predictive modeling.
+            \item Understanding different metrics is crucial for selecting the right one for the task.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Conclusion}
+        Evaluating models using the appropriate metrics is vital for developing effective machine learning solutions. 
+        Understanding these metrics refines your models and enhances decision-making based on predictions.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Concept Overview}
+    \begin{itemize}
+        \item \textbf{What is Accuracy?}
+        \begin{itemize}
+            \item Accuracy measures the proportion of correct predictions in a classification model.
+            \item It gives an overall performance evaluation of the model.
+        \end{itemize}
+        \item \textbf{When to Use Accuracy?}
+        \begin{itemize}
+            \item Suitable for balanced datasets.
+            \item Good starting point for model evaluations.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Formula and Explanation}
+    \begin{block}{Accuracy Formula}
+        \begin{equation}
+            \text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Predictions}} = \frac{TP + TN}{TP + TN + FP + FN}
+        \end{equation}
+    \end{block}
+    \begin{itemize}
+        \item Where:
+        \begin{itemize}
+            \item \textbf{TP (True Positives)}: Correctly predicted positive cases.
+            \item \textbf{TN (True Negatives)}: Correctly predicted negative cases.
+            \item \textbf{FP (False Positives)}: Incorrectly predicted positive cases.
+            \item \textbf{FN (False Negatives)}: Incorrectly predicted negative cases.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Accuracy - Interpretation and Example}
+    \begin{itemize}
+        \item \textbf{Example:}
+        Consider a weather prediction model:
+        \begin{itemize}
+            \item Correctly predicted rain on 30 days (TP = 30).
+            \item Correctly predicted no rain on 60 days (TN = 60).
+            \item Mistakenly predicted rain on 10 days (FP = 10).
+            \item Overlooked rain on 10 days (FN = 10).
+        \end{itemize}
+        \item \textbf{Calculated Accuracy:}
+        \begin{equation}
+            \text{Accuracy} = \frac{30 + 60}{100} = \frac{90}{100} = 0.9 \quad \text{(or 90\% accuracy)}
+        \end{equation}
+        \item \textbf{Key Considerations:}
+        \begin{itemize}
+            \item Accuracy is easy to understand but can be misleading in imbalanced datasets.
+            \item Should be used alongside other metrics like precision and recall.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Definition}
+    \begin{block}{Definition of Precision}
+        Precision is a metric used in evaluating the performance of a classification model. It quantifies the accuracy of the positive predictions made by the model, measuring how many of the instances predicted as positive are actually positive.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Importance}
+    \begin{itemize}
+        \item \textbf{Context Relevance:} Crucial in cases with high cost of false positives, like medical diagnostics, where errors can cause anxiety or unnecessary procedures.
+        
+        \item \textbf{Complement to Recall:} Precision works alongside recall, which measures the model's ability to identify all relevant instances. Together, they present a holistic view of a model's performance.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Formula and Use Cases}
+    \begin{block}{Formula}
+        The formula for calculating precision is given by:
+        \begin{equation}
+            \text{Precision} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Positives (FP)}}
+        \end{equation}
+        \begin{itemize}
+            \item \textbf{True Positives (TP):} The number of correct positive predictions.
+            \item \textbf{False Positives (FP):} The number of incorrect positive predictions.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Use Cases}
+        \begin{itemize}
+            \item \textbf{Email Filtering:} Determines how many flagged emails are truly spam.
+            \item \textbf{Image Recognition:} Minimizes false alarms in detecting objects.
+            \item \textbf{Financial Fraud Detection:} Reduces false positives in legitimate transactions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Precision - Key Points and Conclusion}
+    \begin{itemize}
+        \item Precision is essential when false positives lead to significant consequences.
+        \item High precision reflects the model's ability to accurately identify positive cases.
+        \item It should not be viewed in isolation; balancing precision with recall is necessary for effective model evaluation.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        Precision is a critical metric in assessing model performance, guiding stakeholders to make informed decisions in high-stakes situations. Understanding precision enriches the analysis and facilitates improvements in machine learning models.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Engagement and Thought Provocation}
+    \begin{block}{Note to Students}
+        As you engage with the concept of precision, consider how it applies to your own experiences or industries. Reflect on situations where true and false positives bear real consequences. 
+        \newline
+        \textbf{Questions to Consider:}
+        \begin{itemize}
+            \item How can understanding precision enhance decision-making in your field?
+            \item What are the implications of misclassifying positive cases in critical scenarios?
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recall - Part 1}
+    \begin{block}{What is Recall?}
+        Recall is a fundamental metric in model evaluation, especially for classification tasks. 
+        It measures how well a model can identify relevant instances within a dataset, indicating the percentage of actual positive cases correctly identified.
+    \end{block}
+
+    \begin{block}{Formula}
+        Recall can be mathematically expressed as:
+        \begin{equation}
+            \text{Recall} = \frac{\text{True Positives (TP)}}{\text{True Positives (TP)} + \text{False Negatives (FN)}}
+        \end{equation}
+    \end{block}
+    
+    \begin{itemize}
+        \item \textbf{True Positives (TP)}: Correctly identified positive instances.
+        \item \textbf{False Negatives (FN)}: Positive instances incorrectly identified as negative.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recall - Part 2}
+    \begin{block}{Significance of Recall}
+        \begin{itemize}
+            \item Recall is crucial in scenarios where failing to identify a positive case can have serious consequences.
+            \item Examples:
+                \begin{itemize}
+                    \item Medical diagnoses (e.g., identifying diseases)
+                    \item Fraud detection (e.g., identifying fraudulent transactions)
+                \end{itemize}
+            \item It should be balanced with precision, which measures the accuracy of positive predictions.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Recall - Part 3}
+    \begin{block}{Example for Better Understanding}
+        Consider a model detecting a rare disease:
+        \begin{itemize}
+            \item True Positives (TP): The model identifies 80 out of 100 positive cases correctly.
+            \item False Negatives (FN): The model misses 20 positive cases.
+        \end{itemize}
+        Using the recall formula:
+        \begin{equation}
+            \text{Recall} = \frac{80}{80 + 20} = \frac{80}{100} = 0.8
+        \end{equation}
+        This indicates the model has a recall of 80\%, meaning it correctly identifies 80\% of actual positives.
+    \end{block}
+
+    \begin{block}{Key Points to Remember}
+        \begin{itemize}
+            \item High Recall is vital in critical scenarios (e.g., health, safety).
+            \item Recall is part of the precision-recall trade-off.
+            \item Always interpret recall in the context of the specific problem at hand.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Next Steps}
+    On the upcoming slide, we will explore the \textbf{F1-Score}, which combines precision and recall into a single metric for a comprehensive evaluation of model performance.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1-Score}
+    \begin{block}{Definition of the F1-Score}
+        The F1-score is a crucial evaluation metric in machine learning, particularly for classification problems with class imbalance. It combines both precision and recall into a single score that balances the trade-offs.
+    \end{block}
+    \begin{itemize}
+        \item **Precision**: Accuracy of positive predictions.
+        \item **Recall**: Ability to find all relevant cases.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1-Score - Formula}
+    The F1-score is calculated using the formula:
+    \begin{equation}
+        F1 = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}} 
+    \end{equation}
+    Where:
+    \begin{itemize}
+        \item Precision: \( \frac{TP}{TP + FP} \)
+        \item Recall: \( \frac{TP}{TP + FN} \)
+    \end{itemize}
+    Definitions:
+    \begin{itemize}
+        \item **TP**: True Positives
+        \item **FP**: False Positives
+        \item **FN**: False Negatives
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{F1-Score - Interpretation}
+    \begin{itemize}
+        \item **Range**: 0 to 1. Score of 1 = perfect precision and recall; Score of 0 = poor performance.
+        \item **Balance**: Useful for imbalanced datasets. Emphasizes the model's performance on the minority class.
+    \end{itemize}
+    \begin{block}{Example}
+        Consider a weather prediction model:
+        \begin{itemize}
+            \item True Positives (TP): 70
+            \item True Negatives (TN): 900
+            \item False Positives (FP): 30
+            \item False Negatives (FN): 50
+        \end{itemize}
+        Calculating:
+        \begin{itemize}
+            \item Precision: \( \frac{70}{100} = 0.7 \)
+            \item Recall: \( \frac{70}{120} \approx 0.583 \)
+            \item \( F1 \approx 0.636 \)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{When to Use Each Metric - Introduction}
+    \begin{block}{Importance of Choosing the Right Metric}
+        Choosing the right evaluation metric is vital for assessing the performance of machine learning models. Different metrics offer distinct insights and are suited to various problem types. Understanding the context and goals of your analysis can guide your choice.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{When to Use Each Metric - Key Metrics Overview}
+    \begin{enumerate}
+        \item \textbf{Accuracy}
+            \begin{itemize}
+                \item Best for balanced datasets.
+                \item Example: Email spam detection is a good fit when spam and non-spam are equal.
+            \end{itemize}
+        
+        \item \textbf{Precision}
+            \begin{itemize}
+                \item Ideal when false positives are costly.
+                \item Example: Medical diagnostics aim to correctly identify sick patients, minimizing false alarms.
+            \end{itemize}
+        
+        \item \textbf{Recall (Sensitivity)}
+            \begin{itemize}
+                \item Useful when missing positive instances is critical.
+                \item Example: Detecting fraud where missing a fraudulent transaction is detrimental.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{When to Use Each Metric - Continued}
+    \begin{enumerate}[resume]
+        \item \textbf{F1-Score}
+            \begin{itemize}
+                \item Balances precision and recall.
+                \item Example: Classifying rare diseases where both metrics are equally important.
+            \end{itemize}
+
+        \item \textbf{AUC-ROC}
+            \begin{itemize}
+                \item Evaluates model performance across thresholds, particularly in imbalanced classes.
+                \item Example: In binary classification, understanding trade-offs between true and false positive rates is crucial.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{When to Use Each Metric - Key Points and Summary Checklist}
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Align metric choice with business objectives and application context.
+            \item Assess the nature of the data and consequences of false positives/negatives.
+            \item Complement quantitative metrics with qualitative analysis for complete understanding.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Summary Checklist}
+        \begin{itemize}
+            \item Is the dataset balanced? Use accuracy.
+            \item Are false positives costly? Focus on precision.
+            \item Are false negatives affordable? Focus on recall.
+            \item Is balance crucial? Use F1-score.
+            \item Need to evaluate over thresholds? Use AUC-ROC.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{When to Use Each Metric - Conclusion}
+    \begin{block}{Conclusion}
+        Selecting the right evaluation metric is a strategic decision. As you develop models, consider the unique demands of your problem domain to choose the metric that best represents performance and aligns with your objectives.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Confusion Matrix - Introduction}
+    \begin{block}{Understanding the Confusion Matrix}
+        A \textbf{Confusion Matrix} is a table used to evaluate the performance of a classification model. It provides insight into the model's performance by displaying counts of true and false predictions, categorized by their actual classes.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Confusion Matrix - Key Concepts}
+    \begin{itemize}
+        \item \textbf{True Positives (TP)}: Correctly predicted positive instances.
+        \item \textbf{True Negatives (TN)}: Correctly predicted negative instances.
+        \item \textbf{False Positives (FP)}: Incorrectly predicted as positive (Type I error).
+        \item \textbf{False Negatives (FN)}: Incorrectly predicted as negative (Type II error).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Confusion Matrix - Structure}
+    A simple representation of a confusion matrix is illustrated below:
+
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            & \textbf{Actual Positive} & \textbf{Actual Negative} \\
+            \hline
+            \textbf{Predicted Positive} & TP & FP \\
+            \hline
+            \textbf{Predicted Negative} & FN & TN \\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Confusion Matrix - Importance}
+    The confusion matrix helps you:
+    \begin{itemize}
+        \item Visualize how many instances were correctly classified versus misclassified.
+        \item Understand the types of errors your model is making.
+        \item Calculate evaluation metrics such as accuracy, precision, recall, and F1-score.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Confusion Matrix - Derived Metrics}
+    \begin{enumerate}
+        \item \textbf{Accuracy} = \(\frac{TP + TN}{TP + TN + FP + FN}\) - Overall correctness of the model.
+        \item \textbf{Precision} = \(\frac{TP}{TP + FP}\) - Accuracy of positive predictions.
+        \item \textbf{Recall (Sensitivity)} = \(\frac{TP}{TP + FN}\) - Ability to find relevant cases.
+        \item \textbf{F1-Score} = \(\frac{2 \times (Precision \times Recall)}{Precision + Recall}\) - Harmonic mean of Precision and Recall.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Confusion Matrix - Example Scenario}
+    \textbf{Consider a medical diagnosis model predicting disease:}
+
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            & \textbf{Actual Disease} & \textbf{No Disease} \\
+            \hline
+            \textbf{Predicted Disease} & 50 (TP) & 10 (FP) \\
+            \hline
+            \textbf{Predicted No Disease} & 5 (FN) & 35 (TN) \\
+            \hline
+        \end{tabular}
+    \end{center}
+    
+    \begin{itemize}
+        \item TP = 50: Correctly diagnosed patients.
+        \item TN = 35: Correctly identified healthy individuals.
+        \item FP = 10: Healthy individuals wrongly diagnosed.
+        \item FN = 5: Sick patients wrongly deemed healthy.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Confusion Matrix - Key Takeaway}
+    The confusion matrix is a foundational tool for data scientists. It helps in understanding model performance, which is crucial for improving predictive accuracy, especially in real-world applications like healthcare and finance.
+    
+    \begin{block}{In Summary}
+        By understanding the confusion matrix, you'll be better equipped to analyze classification models and make informed decisions for optimization and improvement.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ROC and AUC - Overview}
+    \begin{block}{ROC Curve}
+        The ROC curve is a graphical representation illustrating the diagnostic ability of a binary classifier as its discrimination threshold is varied.
+    \end{block}
+
+    \begin{block}{Key Metrics}
+        \begin{itemize}
+            \item **True Positive Rate (TPR)**: Proportion of actual positives correctly identified:
+            \[
+            TPR = \frac{TP}{TP + FN}
+            \]
+            \item **False Positive Rate (FPR)**: Proportion of actual negatives incorrectly identified as positives:
+            \[
+            FPR = \frac{FP}{FP + TN}
+            \]
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ROC and AUC - Example and Interpretation}
+    \begin{block}{Example}
+        In a medical test for a disease, at a certain threshold:
+        \begin{itemize}
+            \item TPR = 0.8 (80 out of 100 sick patients identified)
+            \item FPR = 0.1 (10 out of 100 healthy patients incorrectly identified as sick)
+        \end{itemize}
+        This represents a point on the ROC curve.
+    \end{block}
+
+    \begin{block}{Area Under the Curve (AUC)}
+        The AUC summarizes the ROC curve performance, ranging from 0 to 1:
+        \begin{itemize}
+            \item **AUC = 0.5**: Model performs no better than chance.
+            \item **AUC = 1.0**: Model perfectly distinguishes between classes.
+            \item **0.7 ≤ AUC < 0.8**: Acceptable performance.
+            \item **0.8 ≤ AUC < 0.9**: Excellent performance.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{ROC and AUC - Summary and Key Points}
+    \begin{block}{Summary}
+        The ROC curve is an essential tool for evaluating classification models, illustrating the trade-offs between sensitivity and specificity. The AUC provides a concise performance score, helping in model selection for predictive tasks.
+    \end{block}
+
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item ROC and AUC are crucial for understanding classification metrics.
+            \item Particularly useful for imbalanced datasets.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Visual Illustration}
+        A plot illustrating TPR vs FPR with curves at varying thresholds, highlighting points representing different performance metrics.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Cross-Validation}
+    \begin{block}{Importance of Cross-Validation Techniques}
+        Cross-validation is a statistical method used to evaluate the performance of machine learning models. It involves partitioning the original training data into smaller subsets, training the model on some subsets, and validating it on the remaining subsets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Why is Cross-Validation Important?}
+    \begin{itemize}
+        \item \textbf{Avoid Overfitting:} Detects when a model performs well on training data but poorly on unseen data.
+        \begin{itemize}
+            \item \textit{Question:} How many times have you trained a model that looked great in terms of accuracy but failed in real-world applications?
+        \end{itemize}
+        
+        \item \textbf{Better Use of Data:} Utilizes all data points for training and validation, maximizing the use of limited datasets.
+        \begin{itemize}
+            \item \textit{Example:} In a dataset with 100 instances, different combinations of data are used instead of a fixed 70-30 split.
+        \end{itemize}
+        
+        \item \textbf{Model Performance Stability:} Provides reliable performance estimates by averaging results over different folds, thus reducing the variability in evaluation metrics.
+        \begin{itemize}
+            \item \textit{Key Point:} A single train-test split may give misleading results; cross-validation mitigates this risk.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Cross-Validation Techniques}
+    \begin{enumerate}
+        \item \textbf{K-Fold Cross-Validation:}
+        \begin{itemize}
+            \item Data is divided into 'k' subsets (or folds). The model is trained on 'k-1' folds and validated on the remaining fold. This process is repeated 'k' times.
+            \item \textit{Example:} If k=5, the model will train 5 times, using a different fold for validation each time.
+        \end{itemize}
+        
+        \item \textbf{Stratified K-Fold:}
+        \begin{itemize}
+            \item Ensures each fold has a representative proportion of each class, important for imbalanced datasets.
+            \item \textit{Example:} In a binary classification problem with 90\% of one class, this method retains the distribution in each fold.
+        \end{itemize}
+        
+        \item \textbf{Leave-One-Out Cross-Validation (LOOCV):}
+        \begin{itemize}
+            \item A special case of K-Fold where K equals the number of instances. Each iteration uses one instance as the validation set.
+            \item \textit{Example:} For 100 instances, the model trains 100 times, each time leaving out one instance for validation.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways and Conclusion}
+    \begin{itemize}
+        \item Cross-validation is essential for assessing how machine learning models will perform on unseen data.
+        \item It leverages limited datasets efficiently and provides better insight into a model's predictive power.
+        \item Implementing cross-validation can save time and resources by guiding the model selection process before deployment.
+    \end{itemize}
+    
+    \begin{block}{Conclusion}
+        Understanding and implementing cross-validation is crucial for developing robust and reliable machine learning models. How might you apply cross-validation to your own data models?
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Effective Comparison of Models}
+    \begin{block}{Understanding Model Evaluation}
+        Accurately assessing the performance of machine learning models is crucial for making impactful comparisons, identifying the model that best fits your application.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Evaluation Metrics}
+    \begin{enumerate}
+        \item \textbf{Accuracy:} Proportion of true results. Useful for balanced classes.
+        \item \textbf{Precision:} Correctly predicted positives vs. all predicted positives. Important to minimize false positives.
+        \item \textbf{Recall (Sensitivity):} Correctly predicted positives vs. all actual positives. Critical for minimizing false negatives.
+        \item \textbf{F1 Score:} Harmonic mean of precision and recall. Balances both metrics.
+        \item \textbf{ROC-AUC:} Measures how well the model distinguishes classes, ranging from 0 (no discrimination) to 1 (perfect discrimination).
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Strategies for Effective Model Comparison}
+    \begin{itemize}
+        \item \textbf{Use Cross-Validation:} Techniques like k-fold cross-validation improve reliability by using multiple subsets for training and validation.
+        \item \textbf{Visual Comparison:} Graphical representations (like ROC curves) can provide insights on model performance.
+        \item \textbf{Statistical Testing:} Tests (e.g., paired t-tests) help identify if performance differences are significant.
+    \end{itemize}
+    
+    \begin{block}{Key Points to Emphasize}
+        \begin{itemize}
+            \item Context matters for metric preference.
+            \item Use multiple metrics for a comprehensive view.
+            \item Data quality directly impacts metrics' effectiveness.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Reflection Questions}
+        - What model evaluation would you select for a medical diagnosis model, and why?
+        - How might metrics differ for spam detection vs. customer segmentation?
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Common Pitfalls in Model Evaluation}
+  \begin{block}{Introduction}
+    Model evaluation is a critical step in the machine learning process, ensuring that our models perform well on unseen data. However, common pitfalls can lead to misleading conclusions about a model's performance. Understanding these pitfalls helps in making informed decisions and improving models.
+  \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Common Pitfalls}
+  \begin{enumerate}
+    \item Overfitting to the Evaluation Metric
+    \item Ignoring Data Leakage
+    \item Inadequate Cross-Validation
+    \item Misinterpreting the Results of Evaluation Metrics
+    \item Neglecting Model Validation on Real-World Data
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Overfitting to the Evaluation Metric}
+  \begin{itemize}
+    \item \textbf{Concept:} Overfitting occurs when a model learns too much from the training data, including noise, leading to poor performance on unseen data.
+    \item \textbf{Example:} A model may achieve high accuracy on a validation set if tuned specifically for accuracy but fails on real-world data.
+    \item \textbf{Solution:} Use multiple metrics (e.g., accuracy, precision, recall) and validate on a separate test set to assess generalization.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Ignoring Data Leakage}
+  \begin{itemize}
+    \item \textbf{Concept:} Data leakage occurs when information from outside the training dataset is used to create the model, leading to overly optimistic performance estimates.
+    \item \textbf{Example:} Including future data points or using features that are outcomes of the target variable can bias results.
+    \item \textbf{Solution:} Ensure proper data splitting (train-test split) and avoid using features unavailable at prediction time.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Inadequate Cross-Validation}
+  \begin{itemize}
+    \item \textbf{Concept:} Inefficient cross-validation can provide an incomplete picture of model performance.
+    \item \textbf{Example:} Using a single validation fold may lead to results not representative of the model's potential performance.
+    \item \textbf{Solution:} Use k-fold cross-validation to assess model performance reliably across different data subsets.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Misinterpreting Evaluation Metrics}
+  \begin{itemize}
+    \item \textbf{Concept:} Relying on one evaluation metric can distort model performance interpretation.
+    \item \textbf{Example:} A model may have high accuracy but poor recall, missing many positive cases; critical in contexts like medical diagnoses.
+    \item \textbf{Solution:} Use comprehensive evaluation metrics according to the problem context (e.g., ROC-AUC, F1 score).
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Neglecting Validation on Real-World Data}
+  \begin{itemize}
+    \item \textbf{Concept:} Validating models only on training and predefined test sets may not reflect real-world scenarios.
+    \item \textbf{Example:} A weather forecasting model might perform well historically but fail due to changing climate conditions.
+    \item \textbf{Solution:} Continuously monitor model performance on live data and update models as necessary.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Key Takeaways}
+  \begin{itemize}
+    \item Validate model performance with multiple metrics and in real-world scenarios.
+    \item Be vigilant for data leakage and ensure proper data handling.
+    \item Use robust cross-validation techniques for realistic insights into model performance.
+    \item Continuous evaluation is crucial for maintaining model reliability.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Metrics - Overview}
+    \begin{block}{Overview of Evaluation Metrics in Machine Learning}
+        Evaluating the performance of a model is crucial to understanding its effectiveness. 
+        The right evaluation metrics help assess model performance and guide improvements. 
+        This summary encapsulates key metrics discussed and their importance.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Metrics - Accuracy}
+    \begin{block}{1. Accuracy}
+        \textbf{Definition:} 
+        Accuracy is the ratio of correctly predicted instances to the total instances.\\
+
+        \textbf{Formula:} 
+        \begin{equation}
+            \text{Accuracy} = \frac{\text{True Positives} + \text{True Negatives}}{\text{Total Instances}}
+        \end{equation}
+        
+        \textbf{Example:}
+        If a model makes 80 correct predictions out of 100 total predictions, the accuracy is 0.8 or 80\%.\\
+
+        \textbf{Key Point:} 
+        Best used when target classes are balanced. May be misleading with imbalanced datasets.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Metrics - Additional Metrics}
+    \begin{enumerate}
+        \item \textbf{Precision}
+            \begin{itemize}
+                \item Definition: Measures true positive predictions over the total predicted positives.
+                \item Formula: 
+                \[
+                \text{Precision} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Positives}}
+                \]
+                \item Example: In spam detection, if 30 emails detected as spam, and 25 are actual spam, then precision is \( \approx 0.83 \).
+                \item Key Point: Crucial when the cost of false positives is high.
+            \end{itemize}
+        
+        \item \textbf{Recall (Sensitivity)}
+            \begin{itemize}
+                \item Definition: Assesses the ability to find all relevant cases (true positives).
+                \item Formula: 
+                \[
+                \text{Recall} = \frac{\text{True Positives}}{\text{True Positives} + \text{False Negatives}}
+                \]
+                \item Example: If a model detects 25 out of 30 actual spam emails, recall is \( \approx 0.83 \).
+                \item Key Point: Important where failing to identify positives has serious consequences.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Summary of Key Metrics - F1 Score and ROC-AUC}
+    \begin{enumerate}[resume]
+        \item \textbf{F1 Score}
+            \begin{itemize}
+                \item Definition: Harmonic mean of precision and recall, balancing both metrics.
+                \item Formula: 
+                \[
+                \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
+                \]
+                \item Example: If precision and recall are both 0.83, then F1 score is \( \approx 0.83 \).
+                \item Key Point: Use when needing to balance precision and recall.
+            \end{itemize}
+
+        \item \textbf{ROC-AUC}
+            \begin{itemize}
+                \item Definition: Measures ability to distinguish between classes, plotting true positive rate vs. false positive rate.
+                \item Example: AUC of 0.5 suggests random guessing, while 1 indicates perfect prediction.
+                \item Key Point: Useful for binary classification and trade-offs between true and false positives.
+            \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Importance of Metrics and Conclusion}
+    \begin{block}{Importance of Metrics}
+        \begin{itemize}
+            \item \textbf{Guidance for Improvement:} Identifies areas for model enhancement.
+            \item \textbf{Comparative Analysis:} Facilitates comparison across models.
+            \item \textbf{Context-Specific Decision Making:} Aids in selecting appropriate metrics based on context.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Conclusion}
+        These metrics are foundational in evaluating machine learning models. 
+        Understanding and applying them can lead to better model development and insights into model strengths and weaknesses.
+    \end{block}
+
+    \begin{block}{Discussion Points}
+        \begin{itemize}
+            \item Are there scenarios where accuracy might not suffice?
+            \item How would you prioritize precision vs. recall in your projects?
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Questions and Discussion on Model Evaluation and Testing}
+    \begin{itemize}
+        \item Open floor for questions and discussion
+        \item Engage with key concepts presented earlier
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts in Model Evaluation}
+    \begin{enumerate}
+        \item \textbf{Purpose of Model Evaluation:}
+        \begin{itemize}
+            \item Determines model performance on unseen data
+            \item Identifies areas for improvement
+        \end{itemize}
+        
+        \item \textbf{Common Evaluation Metrics:}
+        \begin{itemize}
+            \item Accuracy, Precision, Recall, F1-Score
+        \end{itemize}
+        
+        \item \textbf{Cross-Validation:}
+        \begin{itemize}
+            \item Technique for assessing model generalization
+            \item Methods: k-fold, stratified k-fold
+        \end{itemize}
+        
+        \item \textbf{Overfitting vs. Underfitting:}
+        \begin{itemize}
+            \item Importance of balancing model complexity
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Engaging Questions for Discussion}
+    \begin{itemize}
+        \item How to ensure effective model generalization?
+        \item Strategies to improve performance based on metrics?
+        \item Experiences of significant model adjustments based on a metric?
+        \item Importance of using multiple evaluation metrics?
+    \end{itemize}
+
+    \begin{block}{Examples for Context}
+        \begin{itemize}
+            \item \textbf{Example 1:} 95\% accuracy does not guarantee effectiveness; consider imbalanced classes.
+            \item \textbf{Example 2:} Discuss precision and recall in spam detection models.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+
+\end{document}

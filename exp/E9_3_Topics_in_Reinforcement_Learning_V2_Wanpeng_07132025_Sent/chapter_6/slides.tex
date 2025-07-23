@@ -1,0 +1,965 @@
+\documentclass[aspectratio=169]{beamer}
+
+% Theme and Color Setup
+\usetheme{Madrid}
+\usecolortheme{whale}
+\useinnertheme{rectangles}
+\useoutertheme{miniframes}
+
+% Additional Packages
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{positioning}
+\usepackage{hyperref}
+
+% Custom Colors
+\definecolor{myblue}{RGB}{31, 73, 125}
+\definecolor{mygray}{RGB}{100, 100, 100}
+\definecolor{mygreen}{RGB}{0, 128, 0}
+\definecolor{myorange}{RGB}{230, 126, 34}
+\definecolor{mycodebackground}{RGB}{245, 245, 245}
+
+% Set Theme Colors
+\setbeamercolor{structure}{fg=myblue}
+\setbeamercolor{frametitle}{fg=white, bg=myblue}
+\setbeamercolor{title}{fg=myblue}
+\setbeamercolor{section in toc}{fg=myblue}
+\setbeamercolor{item projected}{fg=white, bg=myblue}
+\setbeamercolor{block title}{bg=myblue!20, fg=myblue}
+\setbeamercolor{block body}{bg=myblue!10}
+\setbeamercolor{alerted text}{fg=myorange}
+
+% Set Fonts
+\setbeamerfont{title}{size=\Large, series=\bfseries}
+\setbeamerfont{frametitle}{size=\large, series=\bfseries}
+\setbeamerfont{caption}{size=\small}
+\setbeamerfont{footnote}{size=\tiny}
+
+% Code Listing Style
+\lstdefinestyle{customcode}{
+  backgroundcolor=\color{mycodebackground},
+  basicstyle=\footnotesize\ttfamily,
+  breakatwhitespace=false,
+  breaklines=true,
+  commentstyle=\color{mygreen}\itshape,
+  keywordstyle=\color{blue}\bfseries,
+  stringstyle=\color{myorange},
+  numbers=left,
+  numbersep=8pt,
+  numberstyle=\tiny\color{mygray},
+  frame=single,
+  framesep=5pt,
+  rulecolor=\color{mygray},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  tabsize=2,
+  captionpos=b
+}
+\lstset{style=customcode}
+
+% Custom Commands
+\newcommand{\hilight}[1]{\colorbox{myorange!30}{#1}}
+\newcommand{\source}[1]{\vspace{0.2cm}\hfill{\tiny\textcolor{mygray}{Source: #1}}}
+\newcommand{\concept}[1]{\textcolor{myblue}{\textbf{#1}}}
+\newcommand{\separator}{\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}}
+
+% Footer and Navigation Setup
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.3\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+    \usebeamerfont{author in head/foot}\insertshortauthor
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+    \usebeamerfont{title in head/foot}\insertshorttitle
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,center]{date in head/foot}%
+    \usebeamerfont{date in head/foot}
+    \insertframenumber{} / \inserttotalframenumber
+  \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Turn off navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% Title Page Information
+\title[Deep Q-Networks]{Deep Q-Networks}
+\author[J. Smith]{John Smith, Ph.D.}
+\institute[University Name]{
+  Department of Computer Science\\
+  University Name\\
+  \vspace{0.3cm}
+  Email: email@university.edu\\
+  Website: www.university.edu
+}
+\date{\today}
+
+% Document Start
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+    \frametitle{Introduction to Deep Q-Networks}
+    \begin{block}{Overview of Deep Q-Networks (DQNs)}
+        Deep Q-Networks represent an integration of **Q-learning** and **deep learning**, allowing reinforcement learning agents to learn optimal strategies in complex environments.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Concepts}
+    \begin{enumerate}
+        \item \textbf{Q-learning Basics:} 
+        \begin{itemize}
+            \item A model-free algorithm that learns action values.
+            \item Uses the Q-function \( Q(s, a) \) to estimate expected future rewards.
+        \end{itemize}
+        
+        \item \textbf{Deep Learning's Contribution:}
+        \begin{itemize}
+            \item Traditional Q-learning uses tables for Q-values, limiting scalability.
+            \item Utilizes deep neural networks to approximate the Q-function for high-dimensional inputs (e.g., images).
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Significance in Reinforcement Learning}
+    \begin{itemize}
+        \item \textbf{Scalability:} 
+        \begin{itemize}
+            \item Can learn policies in vast state spaces (e.g., playing Atari games).
+        \end{itemize}
+        \item \textbf{Generalization:}
+        \begin{itemize}
+            \item Deep learning enables better performance across unseen states.
+        \end{itemize}
+    \end{itemize}
+    
+    \begin{block}{What We'll Cover in This Chapter}
+        \begin{enumerate}
+            \item Background on Q-learning.
+            \item Architecture of DQNs.
+            \item Training and optimization techniques.
+            \item Applications and case studies.
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Background on Q-learning - Overview}
+    \begin{itemize}
+        \item Q-learning is a value-based reinforcement learning algorithm.
+        \item Enables an agent to learn optimal actions to maximize cumulative rewards.
+        \item Model-free approach: learns directly from experience without a model of the environment.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Background on Q-learning - Key Concepts}
+    \begin{itemize}
+        \item \textbf{Agent}: The learner or decision-maker.
+        \item \textbf{Environment}: The external system the agent interacts with.
+        \item \textbf{State (s)}: Current situation representation of the agent.
+        \item \textbf{Action (a)}: Any potential move the agent can make.
+        \item \textbf{Reward (r)}: Feedback indicating the success of an action.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Background on Q-learning - Q-Value Function and Update Rule}
+    \begin{block}{Q-Value Function}
+        The Q-value function, denoted as \( Q(s, a) \), indicates the expected utility of taking action \( a \) in state \( s \).
+    \end{block}
+    
+    \begin{block}{Update Formula}
+        The core update rule for adjusting Q-values is:
+        \[
+        Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+        \]
+        Where:
+        \begin{itemize}
+            \item \( \alpha \) (learning rate): Determines how much new information overrides old information.
+            \item \( r \): Reward received after taking action \( a \).
+            \item \( \gamma \) (discount factor): Balances immediate and future rewards.
+            \item \( s' \): New state after executing action \( a \).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{The Role of Neural Networks in DQNs - Overview}
+    \begin{itemize}
+        \item Deep Q-Networks (DQNs) utilize neural networks to estimate Q-values.
+        \item Enables scaling to larger, more complex environments.
+        \item Addresses limitations of traditional Q-learning due to the curse of dimensionality.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{What are Q-values?}
+    \begin{itemize}
+        \item \textbf{Definition:} Q-values represent expected future rewards for taking action \( a \) in state \( s \).
+        \item \textbf{Objective of DQNs:} Learn function \( Q^* \) to maximize expected rewards over time:
+        \begin{equation}
+            Q^* = \max \mathbb{E}[R_t | s_t, a_t]
+        \end{equation}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{How Neural Networks Help Reduce Complexity}
+    \begin{enumerate}
+        \item \textbf{Function Approximation:}
+        \begin{itemize}
+            \item Generalizes from limited experiences.
+            \item Predicts Q-values for unvisited state-action pairs through experience replay memory.
+        \end{itemize}
+
+        \item \textbf{Handling High Dimensionality:}
+        \begin{itemize}
+            \item Neural networks process high-dimensional input (e.g., raw pixels).
+            \item Transforms it into a lower-dimensional representation.
+        \end{itemize}
+
+        \item \textbf{Continuous Learning:}
+        \begin{itemize}
+            \item Updates improve approximations of Q-values over time.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Components of DQNs}
+    \begin{itemize}
+        \item \textbf{Input Layer:} Captures state representations (e.g., pixel data).
+        \item \textbf{Hidden Layers:} Process input data, applying non-linear transformations.
+        \item \textbf{Output Layer:} Represents Q-values for each potential action.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Example: Playing Atari Games}
+    \begin{itemize}
+        \item Consider the Atari game \textit{Breakout}:
+        \begin{itemize}
+            \item Inputs: Raw pixel frames.
+            \item DQN processes frames to approximate Q-values for actions like:
+            \begin{itemize}
+                \item Move left
+                \item Move right
+                \item Fire
+            \end{itemize}
+            \item As gameplay progresses, the network refines its strategy based on experiences.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{itemize}
+        \item Neural networks enable DQNs to approximate Q-values in complex environments.
+        \item Facilitate development of intelligent systems that adapt and improve decision-making.
+        \item Synthesis of deep learning and reinforcement learning empowers nuanced strategies in diverse scenarios.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{DQN Architecture - Overview}
+    \begin{itemize}
+        \item Deep Q-Networks (DQNs) use a neural network architecture.
+        \item They approximate Q-values in complex environments, enabling effective decision-making.
+        \item The architecture consists of three main components:
+        \begin{itemize}
+            \item Input Layer
+            \item Hidden Layers
+            \item Output Layer
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{DQN Architecture - Components}
+    \begin{block}{1. Input Layer}
+        \begin{itemize}
+            \item **Purpose**: Receives the current state representation.
+            \item **Examples**: 
+            \begin{itemize}
+                \item Game frame image
+                \item Simple state variables: [position, speed]
+            \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{2. Hidden Layers}
+        \begin{itemize}
+            \item **Purpose**: Apply transformations to learn complex features.
+            \item **Common Structures**: 
+            \begin{itemize}
+                \item Fully Connected Layers
+                \item Convolutional Layers
+            \end{itemize}
+            \item **Activation Functions**: Typically use Rectified Linear Units (ReLU).
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{3. Output Layer}
+        \begin{itemize}
+            \item **Purpose**: Represents action value estimates.
+            \item **Structure**: Number of neurons equals the number of possible actions.
+            \item **Example**: In a game with four actions, outputs a four-dimensional vector.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{DQN Architecture - Key Points & Conclusion}
+    \begin{itemize}
+        \item **Q-values**: Quantify expected future rewards based on current state and actions taken.
+        \item **Learning Objective**: Minimize difference between predicted and target Q-values.
+        \[
+        Q(s, a) \leftarrow R + \gamma \max_{a'} Q(s', a')
+        \]
+        \item **Example Setup**: Inputs a 4-dimensional state vector; uses two hidden layers with ReLU, outputs Q-values for four actions.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        Understanding DQN architecture is crucial for approximating Q-values effectively, improving agent decision-making in complex environments.
+    \end{block}
+
+    \begin{block}{Next Steps}
+        Transition to the next slide: **Experience Replay** mechanism.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Experience Replay - Overview}
+    \begin{itemize}
+        \item Experience Replay is a technique for enhancing the training efficiency of Deep Q-Networks (DQNs).
+        \item It stores past experiences and samples from them during training.
+        \item Key benefits:
+        \begin{itemize}
+            \item Efficient learning from diverse past experiences.
+            \item Improved stability in training.
+            \item Enhanced convergence speed in learning.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Experience Replay - How It Works}
+    \begin{enumerate}
+        \item \textbf{Experience Storage:}
+        \begin{itemize}
+            \item Tuple format: 
+            \[
+            (s_t, a_t, r_t, s_{t+1})
+            \]
+            \item Where \(s_t\) = state, \(a_t\) = action, \(r_t\) = reward, and \(s_{t+1}\) = next state.
+        \end{itemize}
+        
+        \item \textbf{Replay Buffer:}
+        \begin{itemize}
+            \item Stores tuples, limited in size. Older experiences are discarded when exceeded.
+        \end{itemize}
+        
+        \item \textbf{Sampling:}
+        \begin{itemize}
+            \item Experiences are randomly sampled to break correlations, stabilizing the training process.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Experience Replay - Benefits and Example}
+    \begin{block}{Benefits}
+        \begin{itemize}
+            \item Efficient learning from a variety of past experiences.
+            \item Stability in Q-value updates via averaged samples.
+            \item Faster convergence to optimal strategies.
+        \end{itemize}
+    \end{block}
+    
+    \begin{block}{Example}
+        Without Experience Replay:
+        \begin{itemize}
+            \item A unique situation encountered once may not result in effective learning.
+        \end{itemize}
+        With Experience Replay:
+        \begin{itemize}
+            \item The agent can revisit situations through stored experiences.
+            \item E.g., 
+            \[
+            (s_t: \text{being pursued}, a_t: \text{run}, r_t: -1, s_{t+1}: \text{safe location})
+            \]
+        \end{itemize}
+    \end{block}
+    
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Target Network Updates - Overview}
+    \begin{block}{Introduction}
+        In Deep Q-Networks (DQNs), the instability in training is primarily due to the correlation between estimated Q-values and their corresponding targets. Target Networks are introduced to mitigate this issue.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Target Network Updates - Concepts}
+    \begin{enumerate}
+        \item \textbf{Target Networks vs. Main Networks:}
+        \begin{itemize}
+            \item DQNs utilize a Main Network (Q-network) for generating Q-values based on the current policy.
+            \item The Target Network calculates target Q-values, aiding in the Main Network updates.
+        \end{itemize}
+        
+        \item \textbf{Purpose of Target Networks:}
+        \begin{itemize}
+            \item Stabilizes training by providing a consistent target.
+            \item Reduces correlation with rapidly changing Main Network parameters.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Target Network Updates - Mechanism and Benefits}
+    \begin{block}{Update Mechanism}
+        The Target Network is updated less frequently than the Main Network, typically every N steps:
+        \begin{equation}
+            Q_{\text{target}} \leftarrow Q_{\text{main}} \quad \text{(updated every N steps)}
+        \end{equation}
+    \end{block}
+
+    \begin{block}{Benefits of Target Networks}
+        \begin{itemize}
+            \item \textbf{Stability in Learning:} Decoupling target values from turbulent Q-values results in stable training.
+            \item \textbf{Reduced Variance:} The Target Network lowers the variance in updates, reducing oscillations or divergence.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Target Network Updates - Example and Summary}
+    \begin{block}{Example}
+        Consider an agent playing a game using a single neural network:
+        \begin{itemize}
+            \item High variance in learning due to constant updates leads to possible learning failure.
+            \item A Target Network allows for stable calculation of expected future rewards based on less volatile Q-values.
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Points}
+        \begin{itemize}
+            \item Target Networks are essential for stabilizing learning in DQNs.
+            \item Infrequent updates mitigate harmful correlations, aiding convergence.
+            \item They strike a balance between exploration and convergence stability.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Process of DQNs - Overview}
+    In this section, we will detail the training process of Deep Q-Networks (DQNs), which includes:
+    \begin{itemize}
+        \item Data collection mechanism
+        \item Dual-network architecture for updates
+        \item Optimization of the network to minimize loss
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Process of DQNs - Data Collection}
+    \textbf{1. Data Collection}
+    \begin{itemize}
+        \item \textbf{Experience Replay Buffer}
+        \begin{itemize}
+            \item DQNs utilize an experience replay buffer to store agent experiences, which consist of tuples \((s_t, a_t, r_t, s_{t+1})\).
+            \begin{itemize}
+                \item \(s_t\): state at time \(t\)
+                \item \(a_t\): action taken at state \(s_t\)
+                \item \(r_t\): reward received after action \(a_t\)
+                \item \(s_{t+1}\): next state after action
+            \end{itemize}
+            \item Random sampling from the buffer helps break correlation between consecutive samples, improving training stability.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Process of DQNs - Example Data}
+    \textbf{Example:}
+    Consider an agent learning to play a game by collecting experiences:
+    \begin{itemize}
+        \item \(s_t\): Current game state (position, score)
+        \item \(a_t\): Action taken (jump/move right)
+        \item \(r_t\): Reward received (+1 for hitting a target, -1 for missing)
+        \item \(s_{t+1}\): New game state after action
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Process of DQNs - Network Updates}
+    \textbf{2. Network Updates}
+    DQNs employ two networks:
+    \begin{itemize}
+        \item \textbf{Main Network}
+            \begin{itemize}
+                \item Updated at every time step based on sampled experiences from the replay buffer.
+            \end{itemize}
+        \item \textbf{Target Network}
+            \begin{itemize}
+                \item Updated less frequently to stabilize training by providing consistent targets for Q-values.
+            \end{itemize}
+    \end{itemize}
+    \textbf{Update Mechanism:}
+    \begin{equation}
+    Q(s_t, a_t) = \text{MainNetwork}(s_t)
+    \end{equation}
+    \begin{equation}
+    Q^{target} = r_t + \gamma \max_a Q_{target}(s_{t+1}, a)
+    \end{equation}
+    where \(\gamma\) is the discount factor.
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Process of DQNs - Loss Minimization}
+    \textbf{3. Loss Minimization}
+    The goal of training is to minimize the loss:
+    \begin{itemize}
+        \item \textbf{Loss Function} 
+        \begin{equation}
+        L = \frac{1}{N} \sum (Q(s_t, a_t) - Q^{target})^2
+        \end{equation}
+        where \(N\) is the number of sampled experiences.
+    \end{itemize}
+    \textbf{Key Points:}
+    \begin{itemize}
+        \item Replay buffer provides diverse experiences for better learning.
+        \item Target networks prevent oscillations and training instability.
+        \item Periodic updates of the target network stabilize training.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Process of DQNs - Summary}
+    \textbf{Summary:}
+    The training process of DQNs is essential for learning effective policies in complex environments. 
+    Key methods:
+    \begin{itemize}
+        \item Leveraging experience replay
+        \item Maintaining target networks
+        \item Minimizing loss through Mean Squared Error (MSE)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Training Process of DQNs - Code Snippet}
+    \textbf{Brief Code Snippet (Pseudo-code):}
+    \begin{lstlisting}[language=Python]
+# Pseudo-code for training loop
+for episode in range(num_episodes):
+    state = env.reset()
+    done = False
+    while not done:
+        action = select_action(state)  # Epsilon-greedy selection
+        next_state, reward, done = env.step(action)
+        replay_buffer.add(state, action, reward, next_state, done)
+        
+        # Sample mini-batch from replay buffer
+        minibatch = replay_buffer.sample(batch_size)
+        # Update main network
+        for s, a, r, s_next, done in minibatch:
+            target = r + (1 - done) * gamma * max(Q_target(s_next, a))
+            loss = (Q_main(s, a) - target)**2
+            # Backpropagation to update weights
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Applications of Deep Q-Networks}
+    \begin{block}{Overview}
+        Deep Q-Networks (DQNs) leverage deep learning for decision-making in complex environments. Their profound impact is notable in various fields, especially gaming and robotics, showcasing the algorithm's adaptability and power in solving real-world problems.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Applications of DQNs}
+    \begin{enumerate}
+        \item \textbf{Gaming}
+        \begin{itemize}
+            \item \textbf{Breakout (Atari Game):}
+            \begin{itemize}
+                \item Learned to play at a superhuman level through trial and error.
+                \item \textit{How?} Translates pixel data into states to maximize rewards.
+            \end{itemize}
+            \item \textbf{AlphaGo:}
+            \begin{itemize}
+                \item Pivotal in developing the AI that defeated a world champion in Go.
+                \item \textit{How?} Combined deep reinforcement learning with tree search methods.
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Robotics}
+        \begin{itemize}
+            \item \textbf{Autonomous Navigation:}
+            \begin{itemize}
+                \item Helps robots navigate environments and avoid obstacles.
+            \end{itemize}
+            \item \textbf{Manipulation Tasks:}
+            \begin{itemize}
+                \item Used for object manipulation, like picking and placing items.
+            \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Healthcare}
+        \begin{itemize}
+            \item \textbf{Personalized Treatment Planning:}
+            \begin{itemize}
+                \item Optimizes treatment plans based on patient data.
+            \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Points to Emphasize}
+    \begin{itemize}
+        \item \textbf{Learning through Interaction:} DQNs learn optimal actions through environment interactions, often leading to novel strategies.
+        \item \textbf{Generalization Capabilities:} DQNs generalize well to similar tasks, ideal for environments without explicit programming.
+        \item \textbf{Combining Exploration and Exploitation:} Balance between exploring unknown actions and exploiting known rewards is crucial for success.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        Deep Q-Networks exemplify AI capabilities to master complex tasks and make autonomous decisions, with significant applications in gaming and robotics.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Challenges and Limitations of Deep Q-Networks (DQNs)}
+    
+    \begin{block}{Overview}
+        Deep Q-Networks (DQNs) have revolutionized reinforcement learning, particularly in complex environments. However, their application is not without challenges. Understanding these issues is crucial for effective application and development of DQNs.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Challenges in Training DQNs - Part 1}
+    
+    \begin{enumerate}
+        \item \textbf{Overfitting}
+        \begin{itemize}
+            \item \textbf{Explanation:} The model performs well on training data but fails to generalize to unseen data, exploiting specific patterns.
+            \item \textbf{Example:} A DQN trained to play "Breakout" may perform poorly on new scenarios.
+            \item \textbf{Mitigation:} 
+                \begin{itemize}
+                    \item Experience replay
+                    \item Target network stabilization
+                \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Instability}
+        \begin{itemize}
+            \item \textbf{Explanation:} Variance in training performance due to interactions between the neural network and learning updates.
+            \item \textbf{Example:} Sudden policy changes can lead to large fluctuations in Q-values.
+            \item \textbf{Mitigation:} 
+                \begin{itemize}
+                    \item Experience replay buffers
+                    \item Separate target networks
+                \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Common Challenges in Training DQNs - Part 2}
+    
+    \begin{enumerate}[resume]
+        \item \textbf{Sample Inefficiency}
+        \begin{itemize}
+            \item \textbf{Explanation:} DQNs require a large number of interactions to learn effectively, leading to sample inefficiency.
+            \item \textbf{Example:} Learning an effective policy in a high-dimensional space may require millions of interaction steps, which is impractical.
+            \item \textbf{Mitigation:} 
+                \begin{itemize}
+                    \item Prioritized experience replay
+                \end{itemize}
+        \end{itemize}
+        
+        \item \textbf{Real-World Limitations}
+        \begin{itemize}
+            \item \textbf{Explanation:} DQNs struggle with noise and unmodeled dynamics in real-world applications.
+            \item \textbf{Example:} A robotic arm trained in simulation may fail due to variations in weight and unforeseen obstacles.
+            \item \textbf{Mitigation:} 
+                \begin{itemize}
+                    \item Domain randomization
+                \end{itemize}
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Takeaways and Conclusion}
+
+    \begin{itemize}
+        \item \textbf{Key Challenges:} Overfitting, instability, sample inefficiency, and real-world limitations are critical in DQN training.
+        \item \textbf{Importance of Understanding:} Addressing these challenges requires a combination of theoretical knowledge and practical application methods.
+        \item \textbf{Effective Strategies:} Modifying training processes and using additional techniques enhance robustness and applicability of DQNs.
+    \end{itemize}
+
+    \begin{block}{Conclusion}
+        While DQNs are powerful reinforcement learning tools, their inherent challenges require careful consideration and strategic approaches to optimize performance in both simulated and real environments.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Future Directions in Deep Q-Networks (DQNs)}
+    \begin{block}{Overview}
+        Deep Q-Networks (DQNs) have significantly advanced the field of reinforcement learning (RL). Ongoing research aims to address existing challenges and limitations while exploring enhancements in DQN architectures and methodologies.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Future Directions - Part 1}
+    \begin{enumerate}
+        \item \textbf{Enhanced Exploration Techniques}
+        \begin{itemize}
+            \item \textbf{Curiosity-Driven Exploration}: Rewards agents for exploring novel states.
+            \item \textbf{Noisy Networks}: Introduces noise in action selection to diversify behavior.
+        \end{itemize}
+        \item \textbf{Improved Stability and Generalization}
+        \begin{itemize}
+            \item \textbf{Double Q-Learning}: Reduces overestimation bias with two value function estimators.
+            \item \textbf{Dueling Network Architectures}: Separates value and advantage estimates for efficient learning.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Key Future Directions - Part 2}
+    \begin{enumerate}\setcounter{enumi}{3}
+        \item \textbf{Integration of Model-based Approaches}
+        \begin{itemize}
+            \item \textbf{Hybrid Models}: Combines model-free and model-based RL to enhance action selection.
+        \end{itemize}
+        \item \textbf{Scalability to Real-world Applications}
+        \begin{itemize}
+            \item \textbf{Hierarchical Reinforcement Learning}: Decomposes tasks for better decision-making in complex environments.
+            \item \textbf{Real-Time Adaptation}: Allows DQNs to adapt to dynamic environments.
+        \end{itemize}
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q-Learning Update Rule}
+    \begin{block}{Formula Reference}
+        The Q-Learning update rule can be defined as follows:
+        \begin{equation}
+        Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+        \end{equation}
+    Where:
+    \begin{itemize}
+        \item $s$: current state
+        \item $a$: action taken
+        \item $r$: reward received
+        \item $s'$: next state
+        \item $\alpha$: learning rate
+        \item $\gamma$: discount factor
+    \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Closing Key Points}
+    \begin{itemize}
+        \item The evolution of DQNs emphasizes enhancements in exploration techniques, stability, generalization, and applicability to real-world problems.
+        \item Future developments in architecture will lead to more robust and scalable agents, capable of thriving in complex and diverse environments.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Engagement Prompt}
+    \begin{block}{Discussion}
+        Consider potential applications in your field. How could these advancements in DQNs change the way agents interact and learn in your area of interest?
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Part 1}
+    \begin{block}{Summary of Key Takeaways from the Chapter on Deep Q-Networks (DQNs)}
+        \begin{enumerate}
+            \item \textbf{Understanding DQNs}:
+                \begin{itemize}
+                    \item DQNs integrate deep learning with Q-learning to learn effective policies.
+                    \item A DQN approximates the Q-value function using a neural network.
+                \end{itemize}
+            \item \textbf{Key Components}:
+                \begin{itemize}
+                    \item \textbf{Experience Replay}: Breaks correlation between samples, stabilizing training.
+                    \item \textbf{Target Network}: Periodically updated to stabilize training and mitigate Q-value divergence.
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Part 2}
+    \begin{block}{Impact on Reinforcement Learning}
+        \begin{enumerate}
+            \item DQNs achieved human-level performance in complex environments like Atari and Go.
+            \item The methodology has applications in various fields beyond gaming, including:
+                \begin{itemize}
+                    \item Robotics
+                    \item Autonomous vehicles
+                    \item Healthcare
+                \end{itemize}
+        \end{enumerate}
+    \end{block}
+
+    \begin{block}{Advantages \& Challenges}
+        \begin{itemize}
+            \item \textbf{Advantages}:
+                \begin{itemize}
+                    \item Generalization across states due to function approximation.
+                    \item Handles high-dimensional input spaces, such as images.
+                \end{itemize}
+            \item \textbf{Challenges}:
+                \begin{itemize}
+                    \item Instability and divergence during training.
+                    \item Requires careful hyperparameter tuning to optimize performance.
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion - Part 3}
+    \begin{block}{Future Directions}
+        Ongoing research aims to enhance DQNs through:
+        \begin{itemize}
+            \item Integration of new techniques such as:
+                \begin{itemize}
+                    \item Double Q-learning
+                    \item Prioritized experience replay
+                    \item Dueling network architectures
+                \end{itemize}
+        \end{itemize}
+    \end{block}
+
+    \begin{block}{Key Formula}
+        The Bellman equation for updating the action-value function \( Q(s, a) \):
+        \begin{equation}
+            Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
+        \end{equation}
+        where:
+        \begin{itemize}
+            \item \( \alpha \): learning rate
+            \item \( r \): immediate reward
+            \item \( \gamma \): discount factor
+            \item \( s' \): next state after action \( a \)
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Q\&A Session}
+    \begin{block}{Objective}
+        Open the floor for questions and discussions regarding Deep Q-Networks (DQNs) and facilitate a deeper understanding of the material covered.
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Overview of Deep Q-Networks}
+    \begin{itemize}
+        \item \textbf{What is a Deep Q-Network?}
+        \begin{itemize}
+            \item A type of reinforcement learning algorithm that utilizes deep learning to approximate the Q-value function.
+            \item DQNs use neural networks to estimate the expected future rewards for each action taken in a given state.
+        \end{itemize}
+        \item \textbf{Key Concepts:}
+        \begin{itemize}
+            \item Q-Learning: An off-policy reinforcement learning algorithm that seeks to find the optimal action-selection policy.
+            \item Experience Replay: A technique where a replay buffer stores past experiences to improve learning stability.
+            \item Target Network: A separate Q-network used to stabilize the training process.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Discussion Topics and Key Points}
+    \begin{itemize}
+        \item \textbf{Example Questions to Guide Discussion:}
+        \begin{itemize}
+            \item What challenges might arise in training a DQN?
+            \item How does experience replay impact the efficiency of learning in DQNs?
+            \item Can you explain the difference between the greedy policy and epsilon-greedy strategy?
+        \end{itemize}
+        \item \textbf{Key Points to Emphasize:}
+        \begin{itemize}
+            \item DQNs can converge to optimal strategies under certain conditions with careful tuning.
+            \item The use of neural networks allows DQNs to generalize from fewer examples.
+            \item DQNs have been successfully applied in various domains including gaming and robotics.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Essential Formula}
+    \begin{block}{Q-Learning Update Rule}
+        \begin{equation}
+        Q(s, a) \leftarrow Q(s, a) + \alpha \left( r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right)
+        \end{equation}
+        Where:
+        \begin{itemize}
+            \item $s$ = current state
+            \item $a$ = current action
+            \item $r$ = reward received
+            \item $s'$ = next state
+            \item $\alpha$ = learning rate
+            \item $\gamma$ = discount factor
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Code Snippet}
+    \begin{lstlisting}[language=Python]
+import numpy as np
+import random
+from collections import deque
+
+class DQNAgent:
+    def __init__(self):
+        self.memory = deque(maxlen=2000)
+        self.gamma = 0.95  # discount rate
+        self.epsilon = 1.0  # exploration rate
+        self.epsilon_min = 0.01
+        self.epsilon_decay = 0.995
+
+    def remember(self, state, action, reward, next_state, done):
+        self.memory.append((state, action, reward, next_state, done))
+    
+    def replay(self, batch_size):
+        minibatch = random.sample(self.memory, batch_size)
+        # Update DQN here using Q-Learning update rule
+    \end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+    \frametitle{Conclusion}
+    \begin{block}{Summary}
+        This session allows participants to clarify doubts, explore topics of interest, and strengthen their understanding of Deep Q-Networks. Encourage engagement and complex questions to further enrich the learning experience.
+    \end{block}
+\end{frame}
+
+
+\end{document}
