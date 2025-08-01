@@ -7,10 +7,8 @@ from ADDIE import ADDIE
 
 
 def load_catalog(catalog_dir: str = "catalog", catalog_name: str = "merged_catalog") -> dict:
-    # 设置目录路径和合并后的 JSON 文件路径
     merged_file = os.path.join(catalog_dir, f"{catalog_name}.json")
 
-    # 尝试加载合并后的 JSON 文件
     try:
         with open(merged_file, "r", encoding="utf-8") as f:
             data_catalog = json.load(f)
@@ -18,7 +16,6 @@ def load_catalog(catalog_dir: str = "catalog", catalog_name: str = "merged_catal
         print(f"❌ Failed to load {catalog_name}.json: {e}")
         return {}
 
-    # 示例输出：打印每个部分的字段名
     for section, content in data_catalog.items():
         if isinstance(content, dict):
             print(f"{section}: {list(content.keys())} fields loaded.")
@@ -116,16 +113,16 @@ if __name__ == "__main__":
     parser.add_argument(
         "--copilot", 
         type=str,
-        nargs='?',  # 表示该参数是可选的，但若提供就需附带字符串
-        const="default_copilot",  # 若用户写了 --copilot 但没提供值，则赋默认值 "default"
+        nargs='?',  # optional, provided with string if available
+        const="default_copilot",  # If user provides --copilot but no value, use "default"
         help="Enable copilot mode. Optionally specify copilot source name."
     )
 
     parser.add_argument(
         "--catalog", 
         type=str,
-        nargs='?',  # 表示该参数是可选的，但若提供就需附带字符串
-        const="default_catalog",  # 若用户写了 --catalog 但没提供值，则赋默认值 "default"
+        nargs='?',  # optional, provided with string if available
+        const="default_catalog",  # If user provides --catalog but no value, use "default"
         help="Enable catalog mode. Optionally specify catalog source name."
     )
 

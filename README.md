@@ -158,9 +158,3 @@ ls eval/your_experiment_name/validation_reports/
 ## 📜 License
 
 MIT License
-
----
-
-## ✍️ Author
-
-EduAgents Team – DaRL, ASU
