@@ -196,6 +196,9 @@ class EvaluationAgent:
         results = {}
         all_scores = []  # List to store all scores for the overall summary
 
+        print("Starting evaluation of course materials...")
+        print(f"Total file types to evaluate: {[ len(files) for file_type, files in file_data.items() if files]}")
+
         for file_type, files in file_data.items():
             if not files:  # Skip empty file lists
                 continue
@@ -264,9 +267,9 @@ class CourseEvaluationSystem:
         self.evaluator = EvaluationAgent(self.llm)
         self.exp_name = exp_name
 
-        self.eval_dir = Path(f"eval/{self.exp_name}/evaluation_results")
+        self.eval_dir = Path(f"eval/{model_name}-Evaluation_{self.exp_name}/evaluation_results")
         self.eval_dir.mkdir(parents=True, exist_ok=True)
-        self.valid_dir = Path(f"eval/{self.exp_name}/validation_reports")
+        self.valid_dir = Path(f"eval/{model_name}-Evaluation_{self.exp_name}/validation_reports")
         self.valid_dir.mkdir(parents=True, exist_ok=True)
 
     def read_file_content(self, filepath: str) -> str:
@@ -320,7 +323,6 @@ class CourseEvaluationSystem:
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(results['overall_summary'], f, indent=2, ensure_ascii=False)
         
-        '''
         # Save markdown summary
         md_path = output_dir / "evaluation_summary.md"
         with open(md_path, 'w', encoding='utf-8') as f:
@@ -340,8 +342,6 @@ class CourseEvaluationSystem:
                         f.write(f"- {metric}: {score}\n")
                     f.write("\n")
         
-        print(f"Saved evaluation results: {json_path}, {md_path}")
-        '''
         print(f"Saved evaluation results: {json_path}")
 
 def main(model_name, exp_name):
@@ -402,7 +402,6 @@ def main(model_name, exp_name):
     
     print("Evaluation complete!")
     
-    '''
     # Run validation agents
     for file_type, files in file_data.items():
         for file_info in files:
@@ -426,7 +425,6 @@ def main(model_name, exp_name):
                 )
     
     print("Validation complete.")
-    '''
     
     # Print summary
     print("\n" + "="*50)

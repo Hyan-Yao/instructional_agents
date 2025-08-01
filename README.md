@@ -1,4 +1,4 @@
-# EduAgents - Intelligent Instructional Design Workflow
+# INSTRUCTIONAL AGENTS: LLM Agents on Automated Course Material Generation for Teaching Faculties
 
 An AI-powered instructional design system based on the ADDIE model for automated course creation and evaluation.
 
@@ -18,7 +18,7 @@ Create or edit `config.json`:
 ### 2. Install Dependencies
 
 ```bash
-pip install openai pandas pathlib
+pip install openai pandas pathlib pdflatex
 ```
 
 ---
