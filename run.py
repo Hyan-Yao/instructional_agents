@@ -7,6 +7,17 @@ from ADDIE import ADDIE
 
 
 def load_catalog(catalog_dir: str = "catalog", catalog_name: str = "merged_catalog") -> dict:
+    if catalog_dir == "copilot" and catalog_name == "default_copilot":
+        default_copilot = {
+            "learning_objectives": "",
+            "syllabus": "",
+            "slides": "",
+            "script": "",
+            "assessment": "",
+            "overall": ""
+        }
+        return default_copilot
+
     merged_file = os.path.join(catalog_dir, f"{catalog_name}.json")
 
     try:

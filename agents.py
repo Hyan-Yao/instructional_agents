@@ -2,7 +2,7 @@ import os
 from typing import List, Dict
 from openai import OpenAI
 import time
- 
+
 
 class LLM:
     def __init__(self, model_name: str = "gpt-4o-mini"):

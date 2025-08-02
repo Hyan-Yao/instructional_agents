@@ -140,21 +140,17 @@ class ADDIERunner:
             print(f"\n{'#'*50}\nDeliberation {i+1}/{len(foundation_deliberations)}: {deliberation.name}\n{'#'*50}\n")
             
             # Get user suggestion if copilot mode is enabled
-            '''
-            user_suggestion = None
+            user_suggestion = ""
             if self.addie.copilot:
                 print("\nWould you like to add any suggestions before starting this deliberation? (press Enter to skip)")
                 user_suggestion = input("Your suggestion: ").strip()
-                if not user_suggestion:
-                    user_suggestion = None
-            '''
-            user_suggestion = ""
+
             if self.addie.copilot:
                 print("\nLoading user suggestions from copilot catalog...")
-                user_suggestion = f'''###User Feedback:
-                Suggestions for learning objectives: {self.addie.copilot_catalog.get("learning_objectives", None)}
-                Suggestions for syllabus: {self.addie.copilot_catalog.get("syllabus", None)}
-                Suggestions for overall package: {self.addie.copilot_catalog.get("overall", None)}
+                user_suggestion = f'''###User Feedback: {user_suggestion}
+                Suggestions for learning objectives: {self.addie.copilot_catalog.get("learning_objectives", "")}
+                Suggestions for syllabus: {self.addie.copilot_catalog.get("syllabus", "")}
+                Suggestions for overall package: {self.addie.copilot_catalog.get("overall", "")}
                 \n\n'''
                 print(f"User suggestions loaded: {user_suggestion}")
             
@@ -175,8 +171,6 @@ class ADDIERunner:
             self._save_result(deliberation, result)
             
             # Check if user wants to proceed or retry in copilot mode
-            '''
-            #FLAG<1>#
             if self.addie.copilot:
                 retried = self._check_for_retry(deliberation, i+1)  # +1 to skip the course name
                 if not retried:
@@ -184,8 +178,6 @@ class ADDIERunner:
                     i += 1
             else:
                 i += 1
-            '''
-            i += 1
 
         # After running the syllabus design deliberation, process the syllabus
         self._process_syllabus()
@@ -266,14 +258,10 @@ class ADDIERunner:
         print(f"\n{'#'*40}\nSlides Generation for Chapter {chapter_idx+1}: {len(self.chapters)}: {chapter['title']}\n{'#'*40}\n")
 
         # Get user suggestion if copilot mode is enabled
-        '''#FLAG<1>#
-        user_suggestion = None
+        user_suggestion = ""
         if self.addie.copilot:
             print("\nWould you like to add any suggestions before starting slides creation? (press Enter to skip)")
             user_suggestion = input("Your suggestion: ").strip()
-            if not user_suggestion:
-                user_suggestion = None
-        '''
         
         # Create context for slides deliberation
         slides_context = {
@@ -286,30 +274,25 @@ class ADDIERunner:
         }
         if self.addie.copilot:
             print("\nLoading user suggestions from copilot catalog...")
-            slides_context["slides"] = self.addie.copilot_catalog.get("slides", [])
-            slides_context['script'] = self.addie.copilot_catalog.get("script", [])
-            slides_context['assessment'] = self.addie.copilot_catalog.get("assessment", [])
-            slides_context['overall'] = self.addie.copilot_catalog.get("overall", "")
+            slides_context["slides"] += self.addie.copilot_catalog.get("slides", "")
+            slides_context['script'] += self.addie.copilot_catalog.get("script", "")
+            slides_context['assessment'] += self.addie.copilot_catalog.get("assessment", "")
+            slides_context['overall'] += self.addie.copilot_catalog.get("overall", "")
             print(f"User suggestions loaded: {slides_context['slides']}, {slides_context['script']}, {slides_context['assessment']}, {slides_context['overall']}")
 
         # Create a SlidesDeliberation instance for this chapter
         slides_deliberation = self._create_slides_deliberation(chapter, f"chapter_{chapter_idx+1}")
         
         # Store original context for retries
-        '''
-        #FLAG<1>#
         original_context = slides_context.copy()
         previous_suggestions = []
         if user_suggestion:
             previous_suggestions.append(user_suggestion)
-        '''
         
         # Run the SlidesDeliberation
         slides_deliberation.run(chapter, slides_context)
 
         # Retry logic for slides generation
-        '''
-        #FLAG<1>#
         if self.addie.copilot:
             retry_loop = True
             while retry_loop:
@@ -352,8 +335,6 @@ class ADDIERunner:
                 satisfaction = input("Your choice (1 or 2): ").strip()
                 if satisfaction == "1":
                     retry_loop = False
-        '''
-    
     
     def _create_slides_deliberation(self, chapter, chapter_dir_name):
         """
