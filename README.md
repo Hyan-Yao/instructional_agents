@@ -2,6 +2,18 @@
 
 An AI-powered instructional design system based on the ADDIE model for automated course creation and evaluation.
 
+```
+@misc{yao2025instructionalagentsllmagents,
+  title={Instructional Agents: LLM Agents on Automated Course Material Generation for Teaching Faculties},
+  author={Yao, Huaiyuan and Xu, Wanpeng and Turnau, Justin and Kellam, Nadia and Wei, Hua},
+  year={2025},
+  eprint={2508.19611},
+  archivePrefix={arXiv},
+  primaryClass={cs.AI},
+  url={https://arxiv.org/abs/2508.19611},
+}
+```
+
 ---
 
 ## 🔧 Quick Start
