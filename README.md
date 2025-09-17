@@ -1,5 +1,12 @@
 # INSTRUCTIONAL AGENTS: LLM Agents on Automated Course Material Generation for Teaching Faculties
 
+
+![visitors](https://visitor-badge.laobi.icu/badge?page_id=wingsweihua.instructional_agents&style=flat)
+![Website](https://img.shields.io/website?url=https%3A%2F%2Fhyan-yao.github.io%2Finstructional_agents_homepage%2F&up_message=Instructional%20Agents&style=flat)
+![GitHub Repo stars](https://img.shields.io/github/stars/Hyan-Yao/instructional_agents?style=flat&color=red)
+
+
+
 An AI-powered instructional design system based on the ADDIE model for automated course creation and evaluation.
 
 ```
